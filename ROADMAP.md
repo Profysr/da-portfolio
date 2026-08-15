@@ -1,0 +1,330 @@
+# DA Portfolio — Roadmap
+
+> **How to read this file:** Work through phases top to bottom. Each phase lists tasks and any ❓ questions that need answering before work begins. No code is written until the questions for that phase are answered.
+
+---
+
+## Ground Rules
+
+1. **Pages** go in `src/pages/` — one file per page (e.g. `src/pages/HomePage.jsx`).
+2. **Sections** live inside their page folder — e.g. `src/pages/HomePage/sections/Hero.jsx`.
+3. **Reusable UI components** (not in `src/components/ui/`) go in `src/components/` — e.g. `src/components/layout/PageWrapper.jsx`, `src/components/nav/Navbar.jsx`.
+4. **Never put static data inside a component.** If a component has hardcoded strings/arrays, move them to `src/data/idx.js` and import from there. If an existing component already has static data, refactor it out first.
+5. **Write JSX/JS.** The data file (`idx.js`) is plain JS with JSDoc types. Components are `.jsx`, hooks/utilities are `.js`.
+6. **Use `@tabler/icons-react` exclusively for icons.** No inline SVGs, no `lucide-react`.
+7. **Responsive by default.** Every section must work at 375 px (mobile) up to 1440 px (desktop). Use Tailwind breakpoints (`sm:`, `md:`, `lg:`). Test at key widths: 375, 768, 1024, 1440.
+8. **Ask before you act.** If anything is unclear, stop and ask. Confirm the plan for a phase before writing any code for it.
+9. **`stitch/` is inspiration, not a spec.** The design files (`DESIGN.md`, `code.html`) describe a vibe — dark cinematic, electric violet, glassmorphism — but you are free to adapt or skip anything that doesn't fit the actual content.
+
+---
+
+## Phase 0 — Housekeeping & Pre-flight ✅ (DONE)
+
+- [x] Remove `transition-link.tsx` (Next.js-only dependency)
+- [x] Remove `custom-cursor.tsx` (kept `smooth-cursor.tsx`)
+- [x] Remove `App.css` (Vite boilerplate)
+- [x] Refactor `command-palette.tsx` — remove `next-view-transitions`, `next-themes`, `cmdk`, `@tabler/icons-react` only, data-driven from props
+- [x] Replace all `lucide-react` icons with `@tabler/icons-react`
+- [x] Install missing Radix packages (`@radix-ui/react-slot`, `@radix-ui/react-tooltip`)
+- [x] Fix pre-existing TS errors (`blur-fade.tsx`, `border-beam.tsx`, `particles.tsx`)
+- [x] Create `CODEGUIDE.md` — component catalogue and file descriptions
+- [x] Create `src/data/idx.js` — single source of truth with placeholder data
+
+**Result:** Codebase compiles clean. All icons are tabler. Palette is data-driven.
+
+---
+
+## Phase 1 — Layout Shell & Design System Foundation
+
+**Goal:** A working page skeleton with correct dark-theme styling, navigation, and scroll behavior.
+
+### Tasks
+- [ ] 1.1 Replace `index.css` theme tokens with the DESIGN.md palette
+  - Primary: Electric Violet `#d0bcff`
+  - Surfaces: `#131313` background, `#1c1b1b` container-low, `#201f1f` container
+  - Text: `#e5e2e1` on-surface, `#cbc3d7` variant
+  - Border radius scale: sm `0.25rem`, default `0.5rem`, md `0.75rem`, lg `1rem`, xl `1.5rem`
+- [ ] 1.2 Create `src/hooks/use-theme.js` — light/dark toggle hook (dark is primary; light mode optional)
+- [ ] 1.3 Create `src/components/layout/PageWrapper.jsx` — max-width `1200px` container, section vertical rhythm (`py-24` / `gap-24`)
+- [ ] 1.4 Create `src/components/sections/Navbar.jsx` — fixed top nav with logo text + section link buttons
+- [ ] 1.5 Create `src/components/sections/Footer.jsx` — minimal footer with copyright + social links
+- [ ] 1.6 Wire up `App.tsx` — import `PageWrapper`, render `<Outlet />` pattern for sections
+
+### ❓ Questions
+1. **Nav layout:** Do you want a **fixed top navbar**, the **floating Dock** (already in App.tsx), **both**, or **neither** (scroll-only with CTA buttons)?
+2. **Logo text:** What word or name appears in the nav/logo position? Your initials? "DA"?
+3. **Light mode:** Keep dark-only, or implement a toggle? If toggle, default to dark and let users switch?
+
+---
+
+## Phase 2 — Hero Section
+
+**Goal:** First-screen impact — animated name, headline, CTA buttons, background effect.
+
+### Tasks
+- [ ] 2.1 Create `src/pages/HomePage/sections/Hero.jsx`
+- [ ] 2.2 Wire up `AnimatedName` for the name reveal — currently says "Shivy", replace with your actual name suffix cycle (e.g. "DA" + "niel" / "ta" — **❓ what suffix cycle do you want?**)
+- [ ] 2.3 Add `KineticText` or `AuroraText` for the tagline/headline
+- [ ] 2.4 Add `ShinyButton` CTAs — "View Projects" (scrolls to #projects) + "Get in Touch" (scrolls to #contact)
+- [ ] 2.5 Background effect — choose one:
+  - `Particles` (subtle mouse-reactive dots)
+  - `BackgroundGradient` (animated radial gradient)
+  - Port the WebGL shader from `stitch/code.html` into a `src/components/effects/ShaderBackground.jsx`
+- [ ] 2.6 Scroll-down indicator — animated chevron at the bottom
+
+### ❓ Questions
+1. **Your name:** What name should cycle in the hero? What two suffixes should `AnimatedName` swap between?
+2. **Tagline:** What's your one-line pitch? (e.g. "Data Analyst · Agency Founder · Open Source Contributor")
+3. **CTA links:** "View Projects" → `#projects`, "Get in Touch" → `#contact` — correct?
+4. **Background:** Particles, gradient, or custom shader?
+
+---
+
+## Phase 3 — About Me + Stats + Skills
+
+**Goal:** Who you are, where you are, social proof numbers, and skill grid.
+
+### Tasks
+- [ ] 3.1 Create `src/pages/HomePage/sections/About.jsx`
+- [ ] 3.2 Layout: avatar image (left/top), bio paragraph (right/bottom), location + email metadata
+- [ ] 3.3 Social links row — GitHub, LinkedIn, X using `Button` outline variant + tabler icons
+- [ ] 3.4 Stats row using `NumberTicker` — pulls values from `idx.js` (`stats` array: commits, projects, clients, articles)
+- [ ] 3.5 Skills grid — responsive grid of skill categories from `idx.js` (`skills` array), each category as a `Card` or badge cluster
+- [ ] 3.6 Decorative accent — `Globe` or `DottedMap` positioned as a background element (absolute, low opacity)
+
+### ❓ Questions
+1. **Avatar:** Do you have a photo/avatar image to use? If yes, path/URL? If no, use initials placeholder?
+2. **Social links:** Any additional platforms beyond GitHub, LinkedIn, X? (Add to `idx.js → personal.socials`)
+3. **Stats values:** Are the placeholder numbers in `idx.js` (2500 commits, 40 projects, 15 clients, 60 articles) roughly correct, or should I update them?
+4. **Skills layout:** Badge cluster (wrapping flex) or `BentoGrid` cards per category?
+
+---
+
+## Phase 4 — Consistency (GitHub Heatmap + 2 Feature Cards)
+
+**Goal:** Show contribution rhythm and two signature capabilities.
+
+### Tasks
+- [ ] 4.1 Create `src/pages/HomePage/sections/Consistency.jsx`
+- [ ] 4.2 GitHub heatmap — use `DottedMap` with a full-year simulated contribution density pattern (no API needed — decorative/illustrative). Each dot = a commit; density varies by "week".
+- [ ] 4.3 Two `Card` components with `BorderBeam` animation, placed side-by-side (responsive: stacked on mobile)
+- [ ] 4.4 Card content — data from a new `consistency` block in `idx.js`:
+  - `consistency.cards[0]` — Open Source / Contributions
+  - `consistency.cards[1]` — Client Delivery / Agency Work
+
+### ❓ Questions
+1. **Heatmap data:** Use a simulated pattern (no GitHub API), or do you want to embed a real GitHub contribution graph via the GitHub API? (Real requires your username + API token or public scraping.)
+2. **Card 1 theme:** "Open Source & Contributions" — good?
+3. **Card 2 theme:** "Client Delivery & Agency Work" — good? Or different theme?
+4. **Card layout:** Side-by-side on desktop, stacked on mobile? Or something else?
+
+---
+
+## Phase 5 — Experience (Timeline with TracingBeam)
+
+**Goal:** Work history as a vertical scroll-linked timeline.
+
+### Tasks
+- [ ] 5.1 Create `src/pages/HomePage/sections/Experience.jsx`
+- [ ] 5.2 Use `TracingBeam` as the vertical timeline spine (already in `src/components/ui/`)
+- [ ] 5.3 Each entry is a `Card` with: role, company, date range, description paragraph, tech `Badge`s
+- [ ] 5.4 "Present" → green `Badge` with dot indicator. Past roles → muted `Badge`.
+- [ ] 5.5 Data from `idx.js → experience` array
+- [ ] 5.6 Section heading with `Heading` component or custom styled `<h2>`
+
+### ❓ Questions
+1. **Does the order in `idx.js → experience` match the chronological order you want?** (Currently: Founder first, then OSS contributor — is that right?)
+2. **Any experience entries beyond the two placeholders?** If yes, add them to `idx.js` now or as you go.
+3. **Tech badges:** Show all `tech[]` items from `idx.js`, or only the top 3–4 per role?
+
+---
+
+## Phase 6 — Education + Certificates
+
+**Goal:** Academic credentials and professional certificates.
+
+### Tasks
+- [ ] 6.1 Create `src/pages/HomePage/sections/Education.jsx`
+- [ ] 6.2 Education entries — simpler card stack or inline timeline style
+- [ ] 6.3 Create `src/pages/HomePage/sections/Certificates.jsx`
+- [ ] 6.4 Horizontal scroll carousel using `Marquee` (infinite scroll, pause on hover)
+- [ ] 6.5 Each cert card: certificate name, issuer, date, credential link (tabler `IconExternalLink`)
+- [ ] 6.6 Data from `idx.js → education` and `idx.js → certificates`
+
+### ❓ Questions
+1. **Education layout:** Timeline style (same as Experience) or simple card list?
+2. **Certificates:** Are all four placeholders in `idx.js` real? Any to remove or add?
+3. **Certificate images:** Do you have badge/logo images? If yes, add `image` field to `idx.js`. If no, skip and use icon-only cards.
+
+---
+
+## Phase 7 — Projects
+
+**Goal:** Showcase your best work with filtering.
+
+### Tasks
+- [ ] 7.1 Create `src/pages/HomePage/sections/Projects.jsx`
+- [ ] 7.2 Layout: `BentoGrid` with `BentoCard` for each project from `idx.js → projects`
+- [ ] 7.3 Each card: project title, description, tech `Badge`s, GitHub/live link buttons
+- [ ] 7.4 `BorderBeam` on hover for featured/starred project(s)
+- [ ] 7.5 **Filter tabs** — "All" / "Data" / "Web" / "Open Source" (filter by project `tech` overlap with a tag list) — **❓ tabs yes or flat grid?**
+- [ ] 7.6 Empty state if filter returns no results
+
+### ❓ Questions
+1. **Filter tabs:** Yes or no? (Tab system adds UI complexity — confirm you want it.)
+2. **Project data:** Currently two placeholders in `idx.js`. Do you have more real projects to add? Add them now or during content fill?
+3. **Project images:** Do you have screenshots/thumbnails? If yes, path pattern? If no, use colored placeholder divs with icon.
+
+---
+
+## Phase 8 — Kanban Board (Current Activities + Vision)
+
+**Goal:** Visual representation of what you're doing now vs. future goals — agency/contributor identity.
+
+### Tasks
+- [ ] 8.1 Create `src/pages/HomePage/sections/KanbanBoard.jsx`
+- [ ] 8.2 Two columns: "Current Activities" | "Vision"
+- [ ] 8.3 Each column: list of cards from `idx.js → kanbanCurrent` / `idx.js → kanbanVision`
+- [ ] 8.4 Card: title, description, status indicator (colored dot — green in-progress, gray todo, blue done)
+- [ ] 8.5 Subtle hover animation — lift + `SpotlightGlow`
+- [ ] 8.6 Section heading with tagline about open source + agency
+
+### ❓ Questions
+1. **Column headers:** "Current Activities" / "Vision" — good labels?
+2. **More cards?** Currently 3 per column in `idx.js`. Enough or add more?
+3. **Status colors:** Green (in-progress), Gray (todo), Blue (done) — OK? Want different colors?
+4. **Drag & drop:** No (static showcase), or yes (adds complexity with state management)?
+
+---
+
+## Phase 9 — Blog / Writings Section
+
+**Goal:** Showcase thought leadership with post previews.
+
+### Tasks
+- [ ] 9.1 Create `src/pages/HomePage/sections/Blog.jsx`
+- [ ] 9.2 Layout: vertical card list (each card = post preview) or horizontal scroll
+- [ ] 9.3 Each card: title, excerpt, formatted date, tags as `Badge`s
+- [ ] 9.4 "Read all posts →" link at the bottom (links to `/blog` or scrolls to blog section)
+- [ ] 9.5 Wire up `CommandPalette` (already built) — blog posts from `idx.js → blogs` should appear in the "Recent Writing" group
+- [ ] 9.6 Show max 3 posts on the page; palette shows up to 8
+
+### ❓ Questions
+1. **Layout:** Card list or horizontal scroll?
+2. **Link behavior:** "Read all" links to a separate `/blog` page (not yet built, Phase 11 stretch) or just `#blog` anchor?
+3. **Post data:** Three placeholders in `idx.js`. Real posts coming later, or do you have existing writing to add now?
+
+---
+
+## Phase 10 — Contact CTA
+
+**Goal:** Final conversion section.
+
+### Tasks
+- [ ] 10.1 Create `src/pages/HomePage/sections/Contact.jsx`
+- [ ] 10.2 `Spotlight` or `SpotlightGlow` on the section container (cursor-following glow)
+- [ ] 10.3 `ShinyButton` — "Send me an email" (`mailto:hello@da-portfolio.dev`)
+- [ ] 10.4 Social links repeat (GitHub, LinkedIn, X)
+- [ ] 10.5 **Optional:** Simple contact form (name + email + message → `mailto:` or a service like Formspree) — **❓ real form or mailto link?**
+
+### ❓ Questions
+1. **Form:** Real HTML form (needs backend/Formspree) or just a styled `mailto:` link?
+2. **Email address:** Is `hello@da-portfolio.dev` correct, or do you want a different address?
+
+---
+
+## Phase 11 — Polish, Scroll Animations & Responsiveness
+
+**Goal:** Smooth feel everywhere, mobile-friendly, production-ready.
+
+### Tasks
+- [ ] 11.1 Wrap every section in `BlurFade` (from `src/components/ui/`) for scroll-reveal entrance
+- [ ] 11.2 Add `Highlighter` (rough-notation) annotations to key phrases — your name, "Data Analyst", agency name
+- [ ] 11.3 Verify mobile layout at 375 px — all sections readable, no overflow, nav accessible
+- [ ] 11.4 Test `SmoothCursor` — verify it disables on touch devices (already handled by media query)
+- [ ] 11.5 Lazy-load heavy components: `Globe`, `Particles`, `SmoothCursor` via `React.lazy()` + `Suspense`
+- [ ] 11.6 `CommandPalette` integration — press ⌘K / Ctrl+K, verify search filters, nav scrolls to sections, social links open
+- [ ] 11.7 Add `prefers-reduced-motion` media query — disable animations for users who prefer it
+
+### ❓ Questions
+1. **Reduced motion:** Should we respect `prefers-reduced-motion`? (Yes by default, but confirming.)
+2. **Loading state:** Any skeleton/spinner preference while lazy components load? (Or let `Suspense` fallback handle it.)
+
+---
+
+## Phase 12 — Content Fill, SEO & Deploy
+
+**Goal:** Real content, final polish, production build.
+
+### Tasks
+- [ ] 12.1 **You fill in** `src/data/idx.js` — all real data (personal info, experience, projects, blogs, etc.)
+- [ ] 12.2 Replace placeholder images — avatar, project screenshots (store in `src/assets/` or CDN)
+- [ ] 12.3 SEO — add `<title>`, `<meta name="description">`, Open Graph tags to `index.html`
+- [ ] 12.4 Favicon — add `favicon.ico` or SVG favicon to `public/`
+- [ ] 12.5 Run `npm run build` — verify zero TypeScript errors, zero lint errors, clean production bundle
+- [ ] 12.6 Deploy — Vercel recommended (zero-config Vite), or Netlify, or GitHub Pages
+
+### ❓ Questions
+1. **Domain:** Do you have a custom domain ready? If yes, which host?
+2. **Deploy target:** Vercel, Netlify, or GitHub Pages? (Vercel is fastest for Vite + React.)
+3. **Analytics:** Add Plausible / Google Analytics / none? (Plausible recommended for privacy.)
+
+---
+
+## Quick-Reference: File Structure Per Phase
+
+```
+src/
+├── data/
+│   └── idx.js                        ← Single source of truth (all content)
+├── hooks/
+│   └── use-theme.js                  ← Phase 1
+├── components/
+│   ├── layout/
+│   │   ├── PageWrapper.jsx           ← Phase 1
+│   │   └── Section.jsx               ← Phase 1 (BlurFade wrapper)
+│   ├── nav/
+│   │   └── Navbar.jsx                ← Phase 1 (or remove if Dock-only)
+│   ├── sections/
+│   │   ├── Footer.jsx                ← Phase 1
+│   │   ├── Hero.jsx                  ← Phase 2 (HomePage)
+│   │   ├── About.jsx                 ← Phase 3 (HomePage)
+│   │   ├── Consistency.jsx           ← Phase 4 (HomePage)
+│   │   ├── Experience.jsx            ← Phase 5 (HomePage)
+│   │   ├── Education.jsx             ← Phase 6 (HomePage)
+│   │   ├── Certificates.jsx          ← Phase 6 (HomePage)
+│   │   ├── Projects.jsx              ← Phase 7 (HomePage)
+│   │   ├── KanbanBoard.jsx           ← Phase 8 (HomePage)
+│   │   ├── Blog.jsx                  ← Phase 9 (HomePage)
+│   │   └── Contact.jsx               ← Phase 10 (HomePage)
+│   └── effects/
+│       └── ShaderBackground.jsx      ← Phase 2 (if choosing shader)
+├── pages/
+│   └── HomePage/
+│       ├── HomePage.jsx              ← Assembles all sections
+│       └── sections/                 ← (empty — sections live in components/sections/)
+└── App.tsx                           ← Root shell (SmoothCursor + Dock, Phase 1)
+```
+
+---
+
+## Questions Summary
+
+| # | Question | Phase | Your Answer |
+|---|---|---|---|
+| 1 | Nav: Dock / top bar / both / neither? | 1 | ❓ |
+| 2 | Logo text (initials / "DA" / something else)? | 1 | ❓ |
+| 3 | Light mode toggle or dark-only? | 1 | ❓ |
+| 4 | Hero name suffix cycle? | 2 | ❓ |
+| 5 | Tagline / one-line pitch? | 2 | ❓ |
+| 6 | Hero background: Particles / Gradient / Shader? | 2 | ❓ |
+| 7 | Avatar photo or initials placeholder? | 3 | ❓ |
+| 8 | Are placeholder stats/skills roughly correct? | 3 | ❓ |
+| 9 | Skills: badges or BentoGrid cards? | 3 | ❓ |
+| 10 | GitHub heatmap: simulated or real API? | 4 | ❓ |
+| 11 | Consistency card 2 theme? | 4 | ❓ |
+| 12 | Project filter tabs: yes or flat grid? | 7 | ❓ |
+| 13 | Kanban: drag-and-drop or static? | 8 | ❓ |
+| 14 | Contact: real form or mailto link? | 10 | ❓ |
+| 15 | Deploy target: Vercel / Netlify / GitHub Pages? | 12 | ❓ |
+| 16 | Analytics: Plausible / GA / none? | 12 | ❓ |
