@@ -14,13 +14,6 @@ import {
   IconCode,
   IconActivity,
   IconSparkles,
-  IconNetwork,
-  IconBinaryTree,
-  IconPlugConnected,
-  IconMapPin,
-  IconWorld,
-  IconLayersLinked,
-  IconTerminal2,
 } from "@tabler/icons-react";
 
 /**
