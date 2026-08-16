@@ -64,6 +64,11 @@
   --chart-3: #bec6e0;
   --chart-4: #3c4a5e;
   --chart-5: #2a2a2a;
+  --color-1: oklch(66.2% 0.225 25.9);
+  --color-2: oklch(60.4% 0.26 302);
+  --color-3: oklch(69.6% 0.165 251);
+  --color-4: oklch(80.2% 0.134 225);
+  --color-5: oklch(90.7% 0.231 133);
 }
 
 /* Light mode kept as a muted variant — dark is the default */
@@ -245,6 +250,37 @@ code {
     0%, 100% { opacity: 0; }
     50%      { opacity: 1; }
   }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  --animate-wiggle: wiggle 0.4s ease-in-out;
+  --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
+  --color-color-5: var(--color-5);
+  --color-color-4: var(--color-4);
+  --color-color-3: var(--color-3);
+  --color-color-2: var(--color-2);
+  --color-color-1: var(--color-1)
+;
+@keyframes rainbow {
+   0% {
+     background-position: 0%;
+     }
+   100% {
+     background-position: 200%;
+     }
+   }}
+
+.animate-wiggle {
+  animation: wiggle 0.4s ease-in-out;
+}
+.hover\:animate-wiggle:hover {
+  animation: wiggle 0.4s ease-in-out;
 }
 
 /* ── Base layer (applied via @apply, not `@layer base` nesting issues) ── */
@@ -259,4 +295,12 @@ body {
 
 html {
   font-family: var(--font-sans);
+}
+
+.dark {
+  --color-1: oklch(66.2% 0.225 25.9);
+  --color-2: oklch(60.4% 0.26 302);
+  --color-3: oklch(69.6% 0.165 251);
+  --color-4: oklch(80.2% 0.134 225);
+  --color-5: oklch(90.7% 0.231 133);
 }

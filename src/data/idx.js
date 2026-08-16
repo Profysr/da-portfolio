@@ -35,14 +35,16 @@ export const socials = [
     icon: IconBrandGithub,
     url: "https://github.com/",
     label: "GitHub",
+    aria: "github",
   },
   {
     platform: "linkedin",
     icon: IconBrandLinkedin,
     url: "https://linkedin.com/in/",
     label: "LinkedIn",
+    aria: "linkedin",
   },
-  { platform: "x", icon: IconBrandX, url: "https://x.com/", label: "X" },
+  { platform: "x", icon: IconBrandX, url: "https://x.com/", label: "X", aria: "x" },
 ];
 
 /* ============================================================
@@ -245,6 +247,12 @@ export const blogs = [
     tags: ["Career", "Open Source"],
   },
 ];
+
+export const animatedName = {
+  suffixes: ["", " Ahmad"],
+  cycleMs: 3500,
+  holdAfterExitMs: 500,
+};
 
 export const stats = [
   { label: "Commits", value: 2500, suffix: "+" },

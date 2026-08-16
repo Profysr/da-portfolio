@@ -48,7 +48,7 @@ function TopBar() {
       className={`sticky top-4 z-50 flex items-center justify-center pointer-events-none transition-transform duration-300 ${visible ? "translate-y-0" : "-translate-y-20"
         }`}
     >
-      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/70 backdrop-blur-xl border border-border rounded-full shadow-lg">
+      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/25 backdrop-blur-xl border border-border rounded-full shadow-lg">
         <a
           href="#hero"
           aria-label="Home"
@@ -132,17 +132,12 @@ function BottomDock() {
 /* ------------------------------------------------------------------ */
 export function Layout({ children, className = "" }) {
   return (
-    <>
-      <div
-        className={cn(
-          "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
-          className
-        )}
-      >
+    <div className="flex flex-col min-h-screen bg-[#151516] text-foreground">
+      <div className={cn("mx-auto w-full max-w-7xl px-4 sm:px-6", className)}>
         <TopBar />
         <main className="min-h-screen">{children}</main>
       </div>
       <BottomDock />
-    </>
+    </div>
   );
 }

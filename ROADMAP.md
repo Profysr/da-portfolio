@@ -7,7 +7,7 @@
 ## Ground Rules
 
 1. **Pages** go in `src/pages/` — one file per page (e.g. `src/pages/HomePage.jsx`).
-2. **Sections** live inside their page folder — e.g. `src/pages/HomePage/sections/Hero.jsx`.
+2. **Sections** live in `src/sections/<PageName>/` — e.g. `src/sections/HomePage/Hero.jsx`.
 3. **Reusable UI components** (not in `src/components/ui/`) go in `src/components/` — e.g. `src/components/layout/PageWrapper.jsx`, `src/components/nav/Navbar.jsx`.
 4. **Never put static data inside a component.** If a component has hardcoded strings/arrays, move them to `src/data/idx.js` and import from there. If an existing component already has static data, refactor it out first.
 5. **Write JSX/JS.** The data file (`idx.js`) is plain JS with JSDoc types. Components are `.jsx`, hooks/utilities are `.js`.
@@ -299,10 +299,21 @@ src/
 │   │   └── Contact.jsx               ← Phase 10 (HomePage)
 │   └── effects/
 │       └── ShaderBackground.jsx      ← Phase 2 (if choosing shader)
+├── sections/
+│   └── HomePage/
+│       ├── Hero.jsx                  ← Phase 2
+│       ├── About.jsx                 ← Phase 3
+│       ├── Consistency.jsx           ← Phase 4
+│       ├── Experience.jsx            ← Phase 5
+│       ├── Education.jsx             ← Phase 6
+│       ├── Certificates.jsx          ← Phase 6
+│       ├── Projects.jsx              ← Phase 7
+│       ├── KanbanBoard.jsx           ← Phase 8
+│       ├── Blog.jsx                  ← Phase 9
+│       └── Contact.jsx               ← Phase 10
 ├── pages/
 │   └── HomePage/
-│       ├── HomePage.jsx              ← Assembles all sections
-│       └── sections/                 ← (empty — sections live in components/sections/)
+│       └── HomePage.jsx              ← Assembles all sections from src/sections/HomePage/
 └── App.tsx                           ← Root shell (SmoothCursor + Dock, Phase 1)
 ```
 
