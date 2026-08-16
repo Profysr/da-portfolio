@@ -99,12 +99,12 @@ const BentoCard = ({
             <div className="flex items-center gap-2">
               {Icon && (
                 <span className="p-1 rounded-md bg-primary/10 border border-primary/20 text-primary shrink-0">
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon />
                 </span>
               )}
               <div>
                 {title && (
-                  <h3 className="text-xs sm:text-sm font-semibold tracking-tight text-white">
+                  <h3 className="text-xs sm:text-sm font-semibold tracking-tight text-white text-left">
                     {title}
                   </h3>
                 )}

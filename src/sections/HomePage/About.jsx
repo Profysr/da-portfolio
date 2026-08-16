@@ -25,8 +25,6 @@ import { StatCard } from "@/components/StatCard";
  *  Main About Section Component
  * ───────────────────────────────────────────────────────────── */
 export default function About() {
-  const stats = about.stats;
-
   const bentoItems = [
     // 1. About Me Card
     {
@@ -41,21 +39,6 @@ export default function About() {
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {personal.bio}
             </p>
-            {/* <div className="flex flex-wrap gap-1.5">
-              {skills
-                .slice(0, 4)
-                .flatMap((cat) =>
-                  cat.items.slice(0, 2).map((skill) => (
-                    <span
-                      key={skill}
-                      className="inline-flex px-2 py-0.5 rounded-md border border-primary/15 bg-primary/[0.06] text-[10px] font-medium text-primary/90"
-                    >
-                      {skill}
-                    </span>
-                  )),
-                )
-                .slice(0, 8)}
-            </div> */}
           </div>
 
           <div className="pt-2.5 border-t border-white/10 flex items-center justify-between mt-auto">
@@ -78,6 +61,7 @@ export default function About() {
         </BentoCard>
       ),
     },
+
     // 2. Globe Card
     {
       id: "location-globe",
@@ -111,66 +95,24 @@ export default function About() {
         </BentoCard>
       ),
     },
-    // 3. Stat: Industry
-    {
-      id: "stat-industry",
-      className:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-1",
-      delay: 0.12,
+
+    // 3-6. Dynamic Stat Cards mapped directly into the array
+    ...about.stats.map((stat, index) => ({
+      id: `stat-${stat.id}`,
+      className: stat.spanClass,
+      delay: 0.12 + index * 0.02,
       content: (
         <StatCard
-          title={stats.industry.title}
-          value={stats.industry.value}
-          subtext={stats.industry.subtext}
-          icon={IconClock}
+          title={stat.title}
+          value={stat.value}
+          subtext={stat.subtext}
+          icon={stat.icon}
+          isCompact={stat.isCompact}
+          className="h-full"
         />
       ),
-    },
-    // 4. Stat: Projects Built
-    {
-      id: "stat-projects",
-      className:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-1 md:col-start-11 md:row-start-1",
-      delay: 0.14,
-      content: (
-        <StatCard
-          title={stats.projects.title}
-          value={stats.projects.value}
-          icon={IconFolderCode}
-          isCompact
-        />
-      ),
-    },
-    // 5. Stat: Hours Logged
-    {
-      id: "stat-hours",
-      className:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-2",
-      delay: 0.16,
-      content: (
-        <StatCard
-          title={stats.hours.title}
-          value={stats.hours.value}
-          subtext={stats.hours.subtext}
-          icon={IconActivity}
-        />
-      ),
-    },
-    // 6. Stat: Automations
-    {
-      id: "stat-automations",
-      className:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-3",
-      delay: 0.18,
-      content: (
-        <StatCard
-          title={stats.automations.title}
-          value={stats.automations.value}
-          icon={IconRobot}
-          isCompact
-        />
-      ),
-    },
+    })),
+
     // 7. Favorite Stack Card
     {
       id: "favorite-stack",
@@ -199,6 +141,7 @@ export default function About() {
         </BentoCard>
       ),
     },
+
     // 8. Contact Card
     {
       id: "connect-card",
@@ -220,7 +163,13 @@ export default function About() {
 
   return (
     <Section id="about" className="relative py-10 sm:pt-14" noFade>
-      <Particles className="absolute inset-0" quantity={200} ease={60} color="#ffffff" size={0.75} />
+      <Particles
+        className="absolute inset-0"
+        quantity={200}
+        ease={60}
+        color="#ffffff"
+        size={0.75}
+      />
 
       {/* Section Header */}
       {/* <BlurFade inView delay={0}>

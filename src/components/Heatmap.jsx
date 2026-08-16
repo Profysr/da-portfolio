@@ -19,18 +19,19 @@ function mulberry32(seed) {
   };
 }
 
+// GitHub Dark Theme standard green levels
 const LEVEL_COLORS = [
-  "bg-white/[0.05] border border-white/[0.04]",
-  "bg-primary/25 border border-primary/20",
-  "bg-primary/50 border border-primary/40",
-  "bg-primary/75 border border-primary/60",
-  "bg-primary border border-primary shadow-[0_0_8px_rgba(208,188,255,0.4)]",
+  "bg-[#161b22] border border-[#21262d]", // Level 0 (None)
+  "bg-[#0e4429] border border-[#0e4429]", // Level 1 (Low)
+  "bg-[#006d32] border border-[#006d32]", // Level 2 (Medium-Low)
+  "bg-[#26a641] border border-[#26a641]", // Level 3 (Medium-High)
+  "bg-[#39d353] border border-[#39d353]", // Level 4 (High)
 ];
 
 const LEVEL_COUNTS = [0, 2, 5, 8, 14];
 
 export function HeatmapGrid({
-  weeks = 16,
+  weeks = 32,
   githubUsername = "Profysr",
   className = "",
 }) {
@@ -56,7 +57,7 @@ export function HeatmapGrid({
       const spike = rand() < 0.08 ? rand() * 9 : 0;
       const level = Math.min(
         4,
-        Math.max(0, Math.round((base * trend + spike) / 2.6))
+        Math.max(0, Math.round((base * trend + spike) / 2.6)),
       );
 
       const count =
@@ -92,7 +93,9 @@ export function HeatmapGrid({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className={cn("w-full flex flex-col justify-between h-full", className)}>
+      <div
+        className={cn("w-full flex flex-col justify-between h-full", className)}
+      >
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className="font-semibold text-white">
@@ -104,16 +107,19 @@ export function HeatmapGrid({
             href={`https://github.com/${githubUsername}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] text-primary/80 hover:text-primary transition-colors flex items-center gap-1"
+            className="text-[11px] text-emerald-400/90 hover:text-emerald-400 transition-colors flex items-center gap-1"
           >
             @{githubUsername}
           </a>
         </div>
 
         <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-          <div className="flex gap-[3px] min-w-max justify-center sm:justify-start">
+          <div className="flex gap-xs w-full justify-between items-center">
             {weeksData.map((week, wIdx) => (
-              <div key={wIdx} className="flex flex-col gap-[3px]">
+              <div
+                key={wIdx}
+                className="flex flex-col gap-xs"
+              >
                 {week.map((day, dIdx) => {
                   const isCellActive = revealed;
                   const displayLevel = isCellActive ? day.level : 0;
@@ -122,16 +128,20 @@ export function HeatmapGrid({
                     <Tooltip key={day.date}>
                       <TooltipTrigger asChild>
                         <div
+                          /* Scaled dimensions on bigger viewports: h-3 w-3 -> sm:h-3.5 sm:w-3.5 -> md:h-4 md:w-4 -> lg:h-[18px] lg:w-[18px] */
                           className={cn(
-                            "h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-xs transition-all duration-300 hover:scale-130 hover:z-20 cursor-pointer",
-                            LEVEL_COLORS[displayLevel]
+                            "h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 rounded-xs transition-all duration-300 hover:scale-125 hover:z-20 cursor-pointer",
+                            LEVEL_COLORS[displayLevel],
                           )}
                           style={{
                             transitionDelay: `${(wIdx * 7 + dIdx) * 4}ms`,
                           }}
                         />
                       </TooltipTrigger>
-                      <TooltipContent side="top" className="text-[11px] px-2.5 py-1">
+                      <TooltipContent
+                        side="top"
+                        className="text-[11px] px-2.5 py-1"
+                      >
                         <div className="font-semibold text-white">
                           {day.count}{" "}
                           {day.count === 1 ? "contribution" : "contributions"}
@@ -155,7 +165,7 @@ export function HeatmapGrid({
             {LEVEL_COLORS.map((color, i) => (
               <div
                 key={i}
-                className={cn("h-2.5 w-2.5 rounded-xs", color)}
+                className={cn("h-2.5 w-2.5 md:h-3 md:w-3 rounded-xs", color)}
               />
             ))}
             <span>More</span>

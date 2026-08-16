@@ -100,33 +100,48 @@ export const personal = {
 
 export const about = {
   heading: "About Me",
-  // subheading: "A look into my background, core engineering pillars, and focus areas.",
-  stats: {
-    industry: {
+  subheading:
+    "A look into my background, core engineering pillars, and focus areas.",
+  stats: [
+    {
+      id: "industry",
       title: "In Industry",
       value: "2 Yrs 8 Mos",
       subtext: "Experience",
       icon: IconClock,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-1",
     },
-    projects: {
+    {
+      id: "projects",
       title: "Projects Built",
       value: "40+",
       subtext: "Delivered",
       icon: IconFolderCode,
+      isCompact: true,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-1 md:col-start-11 md:row-start-1",
     },
-    hours: {
+    {
+      id: "hours",
       title: "Hours Logged",
       value: "4,280+",
       subtext: "Deep Focus",
       icon: IconActivity,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-2",
     },
-    automations: {
+    {
+      id: "automations",
       title: "Automations",
       value: "150+",
       subtext: "Deployed",
       icon: IconRobot,
+      isCompact: true,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-3",
     },
-  },
+  ],
 };
 
 export const SkillsAndTools = [
@@ -189,14 +204,36 @@ export const favoriteStack = {
 };
 
 export const contributions = {
-  heading: "Contributions & Velocity",
-  subheading: "A live snapshot of build velocity, open-source output, and development metrics.",
+  heading: "Github",
+  subheading:
+    "A live snapshot of build velocity, open-source contributions, and development consistency.",
   githubUsername: "Profysr",
   heatmapWeeks: 32, // Sleek wider heatmap
   stats: [
-    { label: "Commits Logged", value: 2500, suffix: "+", icon: IconGitBranch, badge: "Year to Date" },
-    { label: "Achievements", value: 10, suffix: "+", icon: IconClock, badge: "Tracked" },
-    { label: "Repositories", value: 38, suffix: "", icon: IconCode, badge: "Public & Private" },
+    {
+      label: "Repositories",
+      value: 38,
+      suffix: "",
+      icon: IconCode,
+      badge: "Public & Private",
+      spanClass: "md:col-span-2 md:col-start-9 md:row-start-1", // Div 2
+    },
+    {
+      label: "Achievements",
+      value: 10,
+      suffix: "+",
+      icon: IconClock,
+      badge: "Tracked",
+      spanClass: "md:col-span-2 md:col-start-9 md:row-start-2", // Div 3
+    },
+    {
+      label: "Commits Logged",
+      value: 2500,
+      suffix: "+",
+      icon: IconGitBranch,
+      badge: "Year to Date",
+      spanClass: "md:col-span-2 md:row-span-2 md:col-start-11 md:row-start-1", // Div 4 (L-Shape overlap)
+    },
   ],
 };
 
