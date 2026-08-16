@@ -79,43 +79,46 @@
 
 ---
 
-## Phase 3 — About Me + Stats + Skills
+## Phase 3 — About Me + Stats + Skills 🔄 (IN PROGRESS)
 
 **Goal:** Who you are, where you are, social proof numbers, and skill grid.
 
 ### Tasks
-- [ ] 3.1 Create `src/pages/HomePage/sections/About.jsx`
-- [ ] 3.2 Layout: avatar image (left/top), bio paragraph (right/bottom), location + email metadata
-- [ ] 3.3 Social links row — GitHub, LinkedIn, X using `Button` outline variant + tabler icons
-- [ ] 3.4 Stats row using `NumberTicker` — pulls values from `idx.js` (`stats` array: commits, projects, clients, articles)
-- [ ] 3.5 Skills grid — responsive grid of skill categories from `idx.js` (`skills` array), each category as a `Card` or badge cluster
-- [ ] 3.6 Decorative accent — `Globe` or `DottedMap` positioned as a background element (absolute, low opacity)
+- [x] 3.1 Create `src/sections/HomePage/About.jsx`
+- [x] 3.2 Layout: Globe card (left/5-col), bio sidebar (right/7-col), then Skills (7-col) + Stats (5-col) stacked below
+- [x] 3.3 Social links row — GitHub, LinkedIn, X using tabler icon `Button` outline variants, pulled from `idx.js → personal.socials`
+- [x] 3.4 Stats column — 4 stacked `NumberTicker` cards pulling from `idx.js → stats` (Commits, Projects, DaysSpent, Articles)
+- [x] 3.5 Skills grid — BentoCard per category from `idx.js → skills`, 3 cards in a grid (Automations / Engineering / Tools)
+- [x] 3.6 Decorative accent — `Globe` with location badge + GMT live indicator, replacing the open `DottedMap` slot
 
-### ❓ Questions
-1. **Avatar:** Do you have a photo/avatar image to use? If yes, path/URL? If no, use initials placeholder?
+**Result:** Section renders. Globe with live GMT time, bio with avatar + socials, skill bento cards, animated stat numbers.
+
+### ❓ Questions (Phase 3) — Pending
+1. **Avatar:** Do you have a photo/avatar image to use? If yes — path/URL? If no, initials placeholder is already in place.
 2. **Social links:** Any additional platforms beyond GitHub, LinkedIn, X? (Add to `idx.js → personal.socials`)
-3. **Stats values:** Are the placeholder numbers in `idx.js` (2500 commits, 40 projects, 15 clients, 60 articles) roughly correct, or should I update them?
-4. **Skills layout:** Badge cluster (wrapping flex) or `BentoGrid` cards per category?
+3. **Stats values:** Are the placeholder numbers in `idx.js` (2500 commits, 40 projects, 1000 days, 60 articles) roughly correct?
+4. **Skills layout:** ✅ BentoCard grid confirmed.
 
 ---
 
-## Phase 4 — Consistency (GitHub Heatmap + 2 Feature Cards)
+## Phase 4 — "What I Build" — Consistency Heatmap + Stats
 
-**Goal:** Show contribution rhythm and two signature capabilities.
+**Goal:** Show contribution rhythm and build velocity through a bento grid layout.
 
 ### Tasks
-- [ ] 4.1 Create `src/pages/HomePage/sections/Consistency.jsx`
-- [ ] 4.2 GitHub heatmap — use `DottedMap` with a full-year simulated contribution density pattern (no API needed — decorative/illustrative). Each dot = a commit; density varies by "week".
-- [ ] 4.3 Two `Card` components with `BorderBeam` animation, placed side-by-side (responsive: stacked on mobile)
-- [ ] 4.4 Card content — data from a new `consistency` block in `idx.js`:
-  - `consistency.cards[0]` — Open Source / Contributions
-  - `consistency.cards[1]` — Client Delivery / Agency Work
+- [x] 4.1 Create `src/sections/HomePage/Consistency.jsx`
+- [x] 4.2 Heatmap — 52×7 JSX grid rendered with deterministic seeded PRNG (no API, no `document.write`, consistent pattern across renders), `consistency.heatmap` config from `idx.js`
+- [x] 4.3 Activity card — 8-col span: heading, contribution count, heatmap cells with 5 intensity levels, "Less…More" legend
+- [x] 4.4 Stats column — 4-col span: 4 stacked BentoCards (Hours Logged / Automations / Repositories / Lines Committed) using `SpotlightGlow` + `Card` primitives
+- [x] 4.5 Section styling unified with About.jsx approach: `Card` + `SpotlightGlow` + `BlurFade` throughout
+- [x] 4.6 Future GitHub hook: component structure leaves a clear integration point for real data (see `initiateRealGitHubData()` comment in Consistency.jsx for Phase 11–12 options: Vercel serverless fn, pre-generated JSON at build time, or `VITE_GITHUB_TOKEN` API call)
 
-### ❓ Questions
-1. **Heatmap data:** Use a simulated pattern (no GitHub API), or do you want to embed a real GitHub contribution graph via the GitHub API? (Real requires your username + API token or public scraping.)
-2. **Card 1 theme:** "Open Source & Contributions" — good?
-3. **Card 2 theme:** "Client Delivery & Agency Work" — good? Or different theme?
-4. **Card layout:** Side-by-side on desktop, stacked on mobile? Or something else?
+**Result:** Section renders. Deterministic heatmap, 4 stat cards with icons from `idx.js → consistency`, section heading "What I Build".
+
+### ❓ Questions (Phase 4)
+1. **The heading & copy:** "What I Build" + "A snapshot of build velocity and open-source output." — alternate wording?
+2. **Stat card values:** 4,280+ hrs / 150 automations / 38 repos / 120K+ LOC — keep, or update to your real numbers?
+3. **Future integration:** When you want real GitHub data, the path is clear in Consistency.jsx — confirmed.
 
 ---
 
