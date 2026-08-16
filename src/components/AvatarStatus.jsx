@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { AnimatedShinyText } from "./ui/animated-shiny-text";
 import { IconArrowRight } from "@tabler/icons-react";
 import { personal } from "@/data/idx";
@@ -8,7 +7,8 @@ import { personal } from "@/data/idx";
  *  Timezone Helper (GMT+5:00 - Islamabad / Karachi)
  * ============================================================ */
 const getStatus = () => {
-  if (typeof window === "undefined") return { status: "Available", dotColor: "green" };
+  if (typeof window === "undefined")
+    return { status: "Online", dotColor: "green" };
 
   try {
     const hour = parseInt(
@@ -17,16 +17,16 @@ const getStatus = () => {
         hour: "numeric",
         hour12: false,
       }).format(new Date()),
-      10
+      10,
     );
 
-    // Available between 9:00 AM and 11:00 PM (GMT+5)
+    // Online between 9:00 AM and 11:00 PM (GMT+5)
     if (hour >= 9 && hour < 23) {
-      return { status: "Available", dotColor: "green" };
+      return { status: "Online", dotColor: "green" };
     }
     return { status: "Away", dotColor: "amber" };
   } catch {
-    return { status: "Available", dotColor: "green" };
+    return { status: "Online", dotColor: "green" };
   }
 };
 
@@ -38,8 +38,8 @@ export function AvatarStatus() {
   const isGreen = dotColor === "green";
 
   return (
-    <div className="relative flex flex-col items-center justify-center">
-      {/* Profile Avatar */}
+    // Added gap-4 here to control spacing between avatar and badge
+    <div className="relative flex flex-col items-center justify-center gap-4">
       <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full p-0.5 bg-linear-to-br from-primary/70 via-primary/30 to-transparent shadow-xl">
         <img
           src={personal.avatar || "/avatar.jpg"}
@@ -50,7 +50,8 @@ export function AvatarStatus() {
 
       <div
         className={cn(
-          "group rounded-full mt-4 border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+          // Removed mt-4 from here since the parent now handles the gap
+          "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-surface-high dark:hover:bg-surface",
         )}
       >
         <AnimatedShinyText className="inline-flex items-center justify-center gap-1.5 px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
@@ -58,17 +59,19 @@ export function AvatarStatus() {
             <span
               className={cn(
                 "absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping",
-                isGreen ? "bg-emerald-400" : "bg-amber-400"
+                isGreen ? "bg-emerald-400" : "bg-amber-400",
               )}
             />
             <span
               className={cn(
                 "relative inline-flex h-2 w-2 rounded-full",
-                isGreen ? "bg-emerald-500" : "bg-amber-500"
+                isGreen ? "bg-emerald-500" : "bg-amber-500",
               )}
             />
           </span>
-          <span>{status}</span>
+          <span className="text-sm sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80r">
+            {status}
+          </span>
           <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
         </AnimatedShinyText>
       </div>

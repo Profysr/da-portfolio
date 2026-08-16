@@ -248,12 +248,6 @@ export const blogs = [
   },
 ];
 
-export const animatedName = {
-  suffixes: ["", " Ahmad"],
-  cycleMs: 3500,
-  holdAfterExitMs: 500,
-};
-
 export const stats = [
   { label: "Commits", value: 2500, suffix: "+" },
   { label: "Projects", value: 40 },
