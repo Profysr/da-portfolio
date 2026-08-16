@@ -100,7 +100,7 @@ export const personal = {
 
 export const about = {
   heading: "About Me",
-  subheading: "A look into my background, core engineering pillars, and focus areas.",
+  // subheading: "A look into my background, core engineering pillars, and focus areas.",
   stats: {
     industry: {
       title: "In Industry",
@@ -129,58 +129,17 @@ export const about = {
   },
 };
 
-// Note: Replace these skills and tools with the one provided below "SkillsAndTools"
-export const skills = [
-  {
-    category: "Automations & AI",
-    items: ["Power Automate", "n8n", "MCP Servers", "Tampermonkey", "Powershell"],
-  },
-  {
-    category: "Engineering & Backend",
-    items: ["Python", "React", "Django", "TypeScript", "Node.js", "FastAPI"],
-  },
-  {
-    category: "Platforms & Cloud",
-    items: ["Docker", "AWS", "PostgreSQL", "Git & GitHub", "Linux"],
-  },
-  {
-    category: "Conceptual & Design",
-    items: ["System & Architecture Design", "Data Structure & Algorithms", "Claude Code", "MCPs"],
-  },
-];
-
-export const tools = [
-  { name: "Python", icon: "/tools/python.svg", category: "Language" },
-  { name: "React", icon: "/tools/react.svg", category: "Frontend" },
-  { name: "TypeScript", icon: "/tools/typescript.svg", category: "Language" },
-  { name: "Next.js", icon: "/tools/nextjs-dark.svg", category: "Fullstack" },
-  { name: "Docker", icon: "/tools/docker.svg", category: "DevOps" },
-  { name: "Azure", icon: "/tools/azure.svg", category: "Cloud" },
-  { name: "Tailwind CSS", icon: "/tools/tailwind.svg", category: "Styling" },
-  { name: "Node.js", icon: "/tools/nodejs.svg", category: "Runtime" },
-  { name: "Git", icon: "/tools/git.svg", category: "VCS" },
-  { name: "MongoDB", icon: "/tools/mongodb.svg", category: "Database" },
-  { name: "SQL", icon: "/tools/sql.svg", category: "Database" },
-  { name: "PowerShell", icon: "/tools/powershell.svg", category: "Automation" },
-  { name: "VS Code", icon: "/tools/vscode.svg", category: "Editor" },
-  { name: "Figma", icon: "/tools/figma.svg", category: "Design" },
-  { name: "JavaScript", icon: "/tools/javascript.svg", category: "Language" },
-  { name: "HTML5", icon: "/tools/html.svg", category: "Frontend" },
-  { name: "CSS3", icon: "/tools/css.svg", category: "Styling" },
-  { name: "Rust", icon: "/tools/rust-dark.svg", category: "Language" },
-];
-
 export const SkillsAndTools = [
   {
     category: "Automations & AI",
     items: [
-      { name: "Power Automate", icon: null, subCategory: null },
-      { name: "n8n", icon: null, subCategory: null },
-      { name: "MCP Servers", icon: null, subCategory: null },
-      { name: "Tampermonkey", icon: null, subCategory: null },
+      { name: "Power Automate", img: null, subCategory: null },
+      { name: "n8n", img: null, subCategory: null },
+      { name: "MCP Servers", img: null, subCategory: null },
+      { name: "Tampermonkey", img: null, subCategory: null },
       {
         name: "PowerShell",
-        icon: "/tools/powershell.svg",
+        img: "/tools/powershell.svg",
         subCategory: "Automation",
       },
     ],
@@ -188,35 +147,35 @@ export const SkillsAndTools = [
   {
     category: "Engineering & Backend",
     items: [
-      { name: "Python", icon: "/tools/python.svg", subCategory: "Language" },
-      { name: "React", icon: "/tools/react.svg", subCategory: "Frontend" },
-      { name: "Django", icon: null, subCategory: null },
+      { name: "Python", img: "/tools/python.svg", subCategory: "Language" },
+      { name: "React", img: "/tools/react.svg", subCategory: "Frontend" },
+      { name: "Django", img: null, subCategory: null },
       {
         name: "TypeScript",
-        icon: "/tools/typescript.svg",
+        img: "/tools/typescript.svg",
         subCategory: "Language",
       },
-      { name: "Node.js", icon: "/tools/nodejs.svg", subCategory: "Runtime" },
-      { name: "FastAPI", icon: null, subCategory: null },
+      { name: "Node.js", img: "/tools/nodejs.svg", subCategory: "Runtime" },
+      { name: "FastAPI", img: null, subCategory: null },
     ],
   },
   {
     category: "Platforms & Cloud",
     items: [
-      { name: "Docker", icon: "/tools/docker.svg", subCategory: "DevOps" },
-      { name: "AWS", icon: null, subCategory: null },
-      { name: "PostgreSQL", icon: null, subCategory: null },
-      { name: "Git & GitHub", icon: "/tools/git.svg", subCategory: "VCS" },
-      { name: "Linux", icon: null, subCategory: null },
+      { name: "Docker", img: "/tools/docker.svg", subCategory: "DevOps" },
+      { name: "AWS", img: null, subCategory: null },
+      { name: "PostgreSQL", img: null, subCategory: null },
+      { name: "Git & GitHub", img: "/tools/git.svg", subCategory: "VCS" },
+      { name: "Linux", img: null, subCategory: null },
     ],
   },
   {
     category: "Conceptual & Design",
     items: [
-      { name: "System & Architecture Design", icon: null, subCategory: null },
-      { name: "Data Structure & Algorithms", icon: null, subCategory: null },
-      { name: "Claude Code", icon: null, subCategory: null },
-      { name: "MCPs", icon: null, subCategory: null },
+      { name: "System & Architecture Design", img: null, subCategory: null },
+      { name: "Data Structure & Algorithms", img: null, subCategory: null },
+      { name: "Claude Code", img: null, subCategory: null },
+      { name: "MCPs", img: null, subCategory: null },
     ],
   },
 ];
@@ -236,9 +195,8 @@ export const contributions = {
   heatmapWeeks: 32, // Sleek wider heatmap
   stats: [
     { label: "Commits Logged", value: 2500, suffix: "+", icon: IconGitBranch, badge: "Year to Date" },
-    { label: "Hours Coding", value: 4280, suffix: "+", icon: IconClock, badge: "Tracked" },
+    { label: "Achievements", value: 10, suffix: "+", icon: IconClock, badge: "Tracked" },
     { label: "Repositories", value: 38, suffix: "", icon: IconCode, badge: "Public & Private" },
-    { label: "Automations & PRs", value: 150, suffix: "+", icon: IconRobot, badge: "Shipped" },
   ],
 };
 
