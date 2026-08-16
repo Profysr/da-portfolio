@@ -34,26 +34,24 @@
 
 ---
 
-## Phase 1 — Layout Shell & Design System Foundation
+## Phase 1 — Layout Shell & Design System Foundation ✅ (DONE)
 
-**Goal:** A working page skeleton with correct dark-theme styling, navigation, and scroll behavior.
+**Decisions locked:**
+- Nav: **Dock only** (no top navbar)
+- Logo: **"DA"** text placeholder in Dock
+- Light mode: **Dark-only**, no toggle
 
 ### Tasks
-- [ ] 1.1 Replace `index.css` theme tokens with the DESIGN.md palette
+- [x] 1.1 Replace `index.css` theme tokens with the DESIGN.md palette
   - Primary: Electric Violet `#d0bcff`
-  - Surfaces: `#131313` background, `#1c1b1b` container-low, `#201f1f` container
-  - Text: `#e5e2e1` on-surface, `#cbc3d7` variant
-  - Border radius scale: sm `0.25rem`, default `0.5rem`, md `0.75rem`, lg `1rem`, xl `1.5rem`
-- [ ] 1.2 Create `src/hooks/use-theme.js` — light/dark toggle hook (dark is primary; light mode optional)
-- [ ] 1.3 Create `src/components/layout/PageWrapper.jsx` — max-width `1200px` container, section vertical rhythm (`py-24` / `gap-24`)
-- [ ] 1.4 Create `src/components/sections/Navbar.jsx` — fixed top nav with logo text + section link buttons
-- [ ] 1.5 Create `src/components/sections/Footer.jsx` — minimal footer with copyright + social links
-- [ ] 1.6 Wire up `App.tsx` — import `PageWrapper`, render `<Outlet />` pattern for sections
-
-### ❓ Questions
-1. **Nav layout:** Do you want a **fixed top navbar**, the **floating Dock** (already in App.tsx), **both**, or **neither** (scroll-only with CTA buttons)?
-2. **Logo text:** What word or name appears in the nav/logo position? Your initials? "DA"?
-3. **Light mode:** Keep dark-only, or implement a toggle? If toggle, default to dark and let users switch?
+  - Surfaces: `#131313` background, `#1c1b1b` surface-low, `#201f1f` surface, `#2a2a2a` surface-high
+  - Text: `#e5e2e1` foreground, `#cbc3d7` muted
+  - Border radius: sm `0.25rem`, md `0.5rem`, lg `0.75rem`, xl `1rem`, 2xl `1.5rem`
+- [x] 1.2 Light mode skipped — dark is the only theme
+- [x] 1.3 Create `src/components/layout/PageWrapper.jsx` — `max-w-6xl` container, responsive padding
+- [x] 1.4 Create `src/components/layout/Section.jsx` — `py-20 sm:py-24 lg:py-28` wrapper with optional `BlurFade` reveal (default on, `noFade` prop to disable)
+- [x] 1.5 Update `App.tsx` — `SmoothCursor` + `Dock` nav only; "DA" logo slot + Contact / GitHub / LinkedIn links; section mount point documented in comments
+- [x] 1.6 Update eslint config — include `.jsx` files in lint scope
 
 ---
 
@@ -72,11 +70,11 @@
   - Port the WebGL shader from `stitch/code.html` into a `src/components/effects/ShaderBackground.jsx`
 - [ ] 2.6 Scroll-down indicator — animated chevron at the bottom
 
-### ❓ Questions
-1. **Your name:** What name should cycle in the hero? What two suffixes should `AnimatedName` swap between?
-2. **Tagline:** What's your one-line pitch? (e.g. "Data Analyst · Agency Founder · Open Source Contributor")
+### ❓ Questions (Phase 2)
+1. **Your name:** What name should cycle in the hero? What two suffixes should `AnimatedName` swap between? (e.g. "Bilal" + "" / "Ahmad")
+2. **Tagline:** What's your one-line pitch? (Currently in `idx.js`: "Forward Deployed and Software Engineer")
 3. **CTA links:** "View Projects" → `#projects`, "Get in Touch" → `#contact` — correct?
-4. **Background:** Particles, gradient, or custom shader?
+4. **Background:** Particles, gradient, or custom WebGL shader?
 
 ---
 

@@ -1,3 +1,15 @@
+import {
+  IconHome,
+  IconUser,
+  IconBriefcase,
+  IconFolderCode,
+  IconBook,
+  IconMail,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconBrandX,
+} from "@tabler/icons-react";
+
 /**
  * ============================================================
  *  src/data/idx.js
@@ -5,111 +17,38 @@
  *
  *  Every section (Hero, About, Experience, etc.) reads data
  *  from this file. To update your portfolio, edit here only.
- *
- *  Fields are plain JS — JSDoc types for documentation.
  * ============================================================
  */
 
-/**
- * @typedef {Object} SocialLink
- * @property {string} platform  — e.g. "github", "linkedin", "twitter"
- * @property {string} url
- * @property {string} label     — display name
- */
+export const nav = [
+  { id: "hero", label: "Home", icon: IconHome },
+  { id: "about", label: "About", icon: IconUser },
+  { id: "experience", label: "Experience", icon: IconBriefcase },
+  { id: "projects", label: "Projects", icon: IconFolderCode },
+  { id: "blog", label: "Blog", icon: IconBook },
+  { id: "contact", label: "Contact", icon: IconMail },
+];
 
-/**
- * @typedef {Object} PersonalInfo
- * @property {string} name        — full name shown in hero
- * @property {string} tagline     — short role descriptor
- * @property {string} bio         — longer about-me paragraph
- * @property {string} avatar      — path or URL to profile image
- * @property {string} location    — city, country
- * @property {string} email
- * @property {string} resumeUrl   — path to PDF resume (optional)
- * @property {SocialLink[]} socials
- */
-
-/**
- * @typedef {Object} SkillCategory
- * @property {string} category   — e.g. "Frontend", "Data"
- * @property {string[]} items    — individual skill names
- */
-
-/**
- * @typedef {Object} ExperienceItem
- * @property {string} id
- * @property {string} role
- * @property {string} company
- * @property {string} start       — e.g. "Jan 2023"
- * @property {string} end         — e.g. "Present" or "Mar 2024"
- * @property {string} description — short paragraph
- * @property {string[]} tech      — skills/tools used
- * @property {boolean} [current]  — true if still working here
- */
-
-/**
- * @typedef {Object} EducationItem
- * @property {string} id
- * @property {string} degree
- * @property {string} institution
- * @property {string} start
- * @property {string} end
- * @property {string} [description]
- * @property {string[]} [highlights] — bullet-point achievements
- */
-
-/**
- * @typedef {Object} Certificate
- * @property {string} id
- * @property {string} name
- * @property {string} issuer
- * @property {string} date        — e.g. "2024"
- * @property {string} url          — credential link
- * @property {string} [image]      — optional badge image path
- */
-
-/**
- * @typedef {Object} Project
- * @property {string} id
- * @property {string} title
- * @property {string} description
- * @property {string[]} tech
- * @property {string} [github]
- * @property {string} [live]
- * @property {string} [image]      — project screenshot/thumbnail
- */
-
-/**
- * @typedef {Object} KanbanCard
- * @property {string} id
- * @property {string} title
- * @property {string} description
- * @property {"todo"|"in-progress"|"done"} status
- * @property {"current"|"vision"} category  — "current" = Current Activities, "vision" = Vision
- */
-
-/**
- * @typedef {Object} BlogPost
- * @property {string} id
- * @property {string} title
- * @property {string} excerpt
- * @property {string} date        — ISO date "YYYY-MM-DD"
- * @property {string} url
- * @property {string[]} tags
- */
-
-/**
- * @typedef {Object} Stat
- * @property {string} label        — e.g. "Commits"
- * @property {number} value        — e.g. 2500
- * @property {string} [suffix]     — e.g. "+"
- */
+export const socials = [
+  {
+    platform: "github",
+    icon: IconBrandGithub,
+    url: "https://github.com/",
+    label: "GitHub",
+  },
+  {
+    platform: "linkedin",
+    icon: IconBrandLinkedin,
+    url: "https://linkedin.com/in/",
+    label: "LinkedIn",
+  },
+  { platform: "x", icon: IconBrandX, url: "https://x.com/", label: "X" },
+];
 
 /* ============================================================
  *  👇 EDIT EVERYTHING BELOW THIS LINE
  * ============================================================ */
 
-/** @type {PersonalInfo} */
 export const personal = {
   name: "Bilal Ahmad",
   tagline: "Forward Deployed and Software Engineer",
@@ -117,21 +56,13 @@ export const personal = {
         contributors, and run a one-person digital agency
         focused on analytics and intelligent systems.`,
   avatar: "/avatar.jpg",
+  logo: "/logo.svg",
   location: "Pakistan",
   email: "hello@da-portfolio.dev",
   resumeUrl: "/resume.pdf",
-  socials: [
-    { platform: "github", url: "https://github.com/", label: "GitHub" },
-    {
-      platform: "linkedin",
-      url: "https://linkedin.com/in/",
-      label: "LinkedIn",
-    },
-    { platform: "x", url: "https://x.com/", label: "X" },
-  ],
+  socials,
 };
 
-/** @type {SkillCategory[]} */
 export const skills = [
   {
     category: "Automations",
@@ -147,7 +78,6 @@ export const skills = [
   },
 ];
 
-/** @type {ExperienceItem[]} */
 export const experience = [
   {
     id: "exp-1",
@@ -173,7 +103,6 @@ export const experience = [
   },
 ];
 
-/** @type {EducationItem[]} */
 export const education = [
   {
     id: "edu-1",
@@ -191,7 +120,6 @@ export const education = [
   },
 ];
 
-/** @type {Certificate[]} */
 export const certificates = [
   {
     id: "cert-1",
@@ -223,7 +151,6 @@ export const certificates = [
   },
 ];
 
-/** @type {Project[]} */
 export const projects = [
   {
     id: "proj-1",
@@ -244,7 +171,6 @@ export const projects = [
   },
 ];
 
-/** @type {KanbanCard[]} */
 export const kanban = [
   {
     id: "kc-1",
@@ -290,14 +216,6 @@ export const kanban = [
   },
 ];
 
-// Backward-compatible aliases (deprecated — use `kanban` + `category` filter instead)
-/** @type {KanbanCard[]} */
-export const kanbanCurrent = kanban.filter((c) => c.category === "current");
-
-/** @type {KanbanCard[]} */
-export const kanbanVision = kanban.filter((c) => c.category === "vision");
-
-/** @type {BlogPost[]} */
 export const blogs = [
   {
     id: "blog-1",
@@ -328,7 +246,6 @@ export const blogs = [
   },
 ];
 
-/** @type {Stat[]} */
 export const stats = [
   { label: "Commits", value: 2500, suffix: "+" },
   { label: "Projects", value: 40 },
