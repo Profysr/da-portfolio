@@ -57,26 +57,25 @@
 
 **Result:** Codebase compiles clean. Dark cinematic theme, floating TopBar + Dock, command palette fully wired with keyboard + button, icons passed as props from `idx.js`.
 
-## Phase 2 — Hero Section
+## Phase 2 — Hero Section ✅ (DONE)
 
 **Goal:** First-screen impact — animated name, headline, CTA buttons, background effect.
 
 ### Tasks
-- [ ] 2.1 Create `src/pages/HomePage/sections/Hero.jsx`
-- [ ] 2.2 Wire up `AnimatedName` for the name reveal — currently says "Shivy", replace with your actual name suffix cycle (e.g. "DA" + "niel" / "ta" — **❓ what suffix cycle do you want?**)
-- [ ] 2.3 Add `KineticText` or `AuroraText` for the tagline/headline
-- [ ] 2.4 Add `ShinyButton` CTAs — "View Projects" (scrolls to #projects) + "Get in Touch" (scrolls to #contact)
-- [ ] 2.5 Background effect — choose one:
-  - `Particles` (subtle mouse-reactive dots)
-  - `BackgroundGradient` (animated radial gradient)
-  - Port the WebGL shader from `stitch/code.html` into a `src/components/effects/ShaderBackground.jsx`
-- [ ] 2.6 Scroll-down indicator — animated chevron at the bottom
+- [x] 2.1 Create `src/pages/HomePage/sections/Hero.jsx`
+- [x] 2.2 Wire up `AnimatedName` for the name reveal — currently says "Shivy", replaced with actual name suffix cycle
+- [x] 2.3 Add `KineticText` or `AuroraText` for the tagline/headline
+- [x] 2.4 Add `ShinyButton` CTAs — "View Projects" (scrolls to #projects) + "Get in Touch" (scrolls to #contact)
+- [x] 2.5 Background effect — `BackgroundGradient` (animated radial gradient) implemented
+- [x] 2.6 Scroll-down indicator — animated chevron at the bottom
 
-### ❓ Questions (Phase 2)
-1. **Your name:** What name should cycle in the hero? What two suffixes should `AnimatedName` swap between? (e.g. "Bilal" + "" / "Ahmad")
-2. **Tagline:** What's your one-line pitch? (Currently in `idx.js`: "Forward Deployed and Software Engineer")
-3. **CTA links:** "View Projects" → `#projects`, "Get in Touch" → `#contact` — correct?
-4. **Background:** Particles, gradient, or custom WebGL shader?
+**Result:** Hero section live. Name cycles, tagline kinetic, CTAs wired, animated gradient background, scroll indicator in place.
+
+### ❓ Questions (Phase 2) — Answered
+1. **Your name:** Name cycle settled (see `idx.js → personal.nameCycle`)
+2. **Tagline:** Pitch set in `idx.js → personal.tagline`
+3. **CTA links:** Confirmed → `#projects` / `#contact`
+4. **Background:** `BackgroundGradient` chosen and implemented
 
 ---
 
@@ -326,9 +325,9 @@ src/
 | 1 | Nav: Dock / top bar / both / neither? | 1 | Dock + floating TopBar (glass, max-w-7xl) |
 | 2 | Logo text (initials / "DA" / something else)? | 1 | "DA" text in TopBar left |
 | 3 | Light mode toggle or dark-only? | 1 | Dark-only, no toggle |
-| 4 | Hero name suffix cycle? | 2 | ❓ |
-| 5 | Tagline / one-line pitch? | 2 | ❓ |
-| 6 | Hero background: Particles / Gradient / Shader? | 2 | ❓ |
+| 4 | Hero name suffix cycle? | 2 | ✅ Settled in idx.js → personal.nameCycle |
+| 5 | Tagline / one-line pitch? | 2 | ✅ Settled in idx.js → personal.tagline |
+| 6 | Hero background: Particles / Gradient / Shader? | 2 | ✅ BackgroundGradient chosen and implemented |
 | 7 | Avatar photo or initials placeholder? | 3 | ❓ |
 | 8 | Are placeholder stats/skills roughly correct? | 3 | ❓ |
 | 9 | Skills: badges or BentoGrid cards? | 3 | ❓ |

@@ -18,8 +18,8 @@ Portfolio website for **DA (Data Analyst / Agency)**. Built with **React 19 + Vi
 | cobe | 0.6.5 | Interactive 3D globe |
 | rough-notation | 0.5.1 | Hand-drawn style highlight annotations |
 | svg-dotted-map | 2.0.1 | Dot-map world background |
-| lucide-react | 1.31.0 | ~~Icon library~~ → replaced by tabler-icons-react |
 | @tabler/icons-react | 3.0.0 | Icon library (all UI icons) |
+| lucide-react | 1.31.0 | ~~Legacy icon lib, removed~~ |
 | class-variance-authority | 0.7.1 | Component variant logic |
 | Geist Variable (font) | 5.3.0 | Primary typeface |
 | tw-animate-css | 1.4.0 | Preset animation utilities |
@@ -237,5 +237,5 @@ export const stats         = [ { label, value } ]   // for NumberTicker
 3. All content comes from `src/data/idx.js` — never hardcode content.
 4. All styling via Tailwind utility classes; no CSS module files.
 5. Follow `cn()` pattern from `@/lib/utils` for conditional classes.
-6. Use `lucide-react` for icons unless a special component exists.
+6. Use `@tabler/icons-react` for all icons. No `lucide-react` anywhere.
 7. DESIGN.md style must be respected throughout (dark cinematic, electric violet accents).
