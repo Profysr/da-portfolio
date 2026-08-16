@@ -129,41 +129,7 @@ export const about = {
   },
 };
 
-export const strategies = [
-  {
-    id: "system-design",
-    title: "System Design",
-    description: "Scalable architectures, event-driven pipelines, microservices & caching patterns.",
-    icon: IconNetwork,
-    badge: "Architecture",
-    span: "col-span-12 sm:col-span-6 lg:col-span-3",
-  },
-  {
-    id: "claude-code",
-    title: "Claude Code & AI",
-    description: "Deep agentic workflows, subagent orchestrations, code reasoning & context injection.",
-    icon: IconSparkles,
-    badge: "AI Engineering",
-    span: "col-span-12 sm:col-span-6 lg:col-span-3",
-  },
-  {
-    id: "mcps",
-    title: "Build & Use MCPs",
-    description: "Creating custom Model Context Protocol servers, tool-use interfaces & LLM integrations.",
-    icon: IconPlugConnected,
-    badge: "Protocol Mastery",
-    span: "col-span-12 sm:col-span-6 lg:col-span-3",
-  },
-  {
-    id: "dsa",
-    title: "Data Structures & DSA",
-    description: "Algorithmic optimization, high-throughput data processing & computational efficiency.",
-    icon: IconBinaryTree,
-    badge: "Computer Science",
-    span: "col-span-12 sm:col-span-6 lg:col-span-3",
-  },
-];
-
+// Note: Replace these skills and tools with the one provided below "SkillsAndTools"
 export const skills = [
   {
     category: "Automations & AI",
@@ -176,6 +142,10 @@ export const skills = [
   {
     category: "Platforms & Cloud",
     items: ["Docker", "AWS", "PostgreSQL", "Git & GitHub", "Linux"],
+  },
+  {
+    category: "Conceptual & Design",
+    items: ["System & Architecture Design", "Data Structure & Algorithms", "Claude Code", "MCPs"],
   },
 ];
 
@@ -198,6 +168,57 @@ export const tools = [
   { name: "HTML5", icon: "/tools/html.svg", category: "Frontend" },
   { name: "CSS3", icon: "/tools/css.svg", category: "Styling" },
   { name: "Rust", icon: "/tools/rust-dark.svg", category: "Language" },
+];
+
+export const SkillsAndTools = [
+  {
+    category: "Automations & AI",
+    items: [
+      { name: "Power Automate", icon: null, subCategory: null },
+      { name: "n8n", icon: null, subCategory: null },
+      { name: "MCP Servers", icon: null, subCategory: null },
+      { name: "Tampermonkey", icon: null, subCategory: null },
+      {
+        name: "PowerShell",
+        icon: "/tools/powershell.svg",
+        subCategory: "Automation",
+      },
+    ],
+  },
+  {
+    category: "Engineering & Backend",
+    items: [
+      { name: "Python", icon: "/tools/python.svg", subCategory: "Language" },
+      { name: "React", icon: "/tools/react.svg", subCategory: "Frontend" },
+      { name: "Django", icon: null, subCategory: null },
+      {
+        name: "TypeScript",
+        icon: "/tools/typescript.svg",
+        subCategory: "Language",
+      },
+      { name: "Node.js", icon: "/tools/nodejs.svg", subCategory: "Runtime" },
+      { name: "FastAPI", icon: null, subCategory: null },
+    ],
+  },
+  {
+    category: "Platforms & Cloud",
+    items: [
+      { name: "Docker", icon: "/tools/docker.svg", subCategory: "DevOps" },
+      { name: "AWS", icon: null, subCategory: null },
+      { name: "PostgreSQL", icon: null, subCategory: null },
+      { name: "Git & GitHub", icon: "/tools/git.svg", subCategory: "VCS" },
+      { name: "Linux", icon: null, subCategory: null },
+    ],
+  },
+  {
+    category: "Conceptual & Design",
+    items: [
+      { name: "System & Architecture Design", icon: null, subCategory: null },
+      { name: "Data Structure & Algorithms", icon: null, subCategory: null },
+      { name: "Claude Code", icon: null, subCategory: null },
+      { name: "MCPs", icon: null, subCategory: null },
+    ],
+  },
 ];
 
 export const favoriteStack = {

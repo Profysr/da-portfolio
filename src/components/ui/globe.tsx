@@ -4,7 +4,8 @@ import { useMotionValue, useSpring } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
-const MOVEMENT_DAMPING = 1400
+const MOVEMENT_DAMPING = 1400;
+const GREEN: [number, number, number] = [34 / 255, 197 / 255, 94 / 255];
 
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
@@ -13,13 +14,13 @@ const GLOBE_CONFIG: COBEOptions = {
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
-  dark: 0,
-  diffuse: 0.4,
-  mapSamples: 16000,
-  mapBrightness: 1.2,
-  baseColor: [1, 1, 1],
-  markerColor: [251 / 255, 100 / 255, 21 / 255],
-  glowColor: [1, 1, 1],
+  dark: 1,
+  diffuse: 1, // Higher diffuse to catch light across the sphere
+  mapSamples: 18000, // Slightly higher sample density for sharper landmasses
+  mapBrightness: 3, // Boost dot brightness so continents clearly stand out
+  baseColor: [0.5, 0.5, 0.5] as [number, number, number], // Lighter gray base so it doesn't sink into a black void
+  markerColor: GREEN, // Your vibrant theme marker color
+  glowColor: [0.65, 0.65, 0.65] as [number, number, number], // Bright, clean atmospheric aura around the edge
   markers: [
     { location: [14.5995, 120.9842], size: 0.03 },
     { location: [19.076, 72.8777], size: 0.1 },
@@ -32,7 +33,7 @@ const GLOBE_CONFIG: COBEOptions = {
     { location: [34.6937, 135.5022], size: 0.05 },
     { location: [41.0082, 28.9784], size: 0.06 },
   ],
-}
+};
 
 export function Globe({
   className,

@@ -1,19 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import {
-  personal,
-  about,
-  favoriteStack,
-  tools,
-  socials,
-} from "@/data/idx";
+import { personal, about, favoriteStack, tools, skills } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
+import { AvatarStatus } from "@/components/AvatarStatus";
 import { Globe } from "@/components/ui/globe";
-import { AnimatedBeam } from "@/components/ui/animated-beam";
-import { NumberTicker } from "@/components/ui/number-ticker";
 import { Marquee } from "@/components/ui/marquee";
 import {
   Tooltip,
@@ -31,124 +23,7 @@ import {
   IconActivity,
   IconRobot,
 } from "@tabler/icons-react";
-
-/* ─────────────────────────────────────────────────────────────
- *  Animated Beam Connect Sub-component (div22)
- * ───────────────────────────────────────────────────────────── */
-function AnimatedBeamConnect() {
-  const containerRef = useRef(null);
-  const centerRef = useRef(null);
-  const node1Ref = useRef(null);
-  const node2Ref = useRef(null);
-  const node3Ref = useRef(null);
-  const node4Ref = useRef(null);
-
-  const nodeRefs = [node1Ref, node2Ref, node3Ref, node4Ref];
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative flex h-full min-h-[220px] w-full items-center justify-between px-3 py-2"
-    >
-      {/* Left Column Nodes (GitHub & LinkedIn) */}
-      <div className="flex flex-col justify-around h-full gap-5 z-10">
-        {socials.slice(0, 2).map((soc, idx) => {
-          const IconComp = soc.icon;
-          const ref = nodeRefs[idx];
-          return (
-            <a
-              key={soc.platform}
-              ref={ref}
-              href={soc.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={soc.label}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2 text-muted-foreground shadow-md transition-all duration-300 hover:scale-115 hover:border-primary/50 hover:bg-white/[0.08] hover:text-white"
-            >
-              <IconComp className="h-5 w-5" />
-            </a>
-          );
-        })}
-      </div>
-
-      {/* Center Avatar Node */}
-      <div className="z-10 flex flex-col items-center justify-center">
-        <div
-          ref={centerRef}
-          className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/40 bg-white/[0.05] p-1 shadow-[0_0_20px_rgba(208,188,255,0.15)]"
-        >
-          <img
-            src={personal.avatar || "/avatar.jpg"}
-            alt={personal.name}
-            className="h-full w-full rounded-xl object-cover"
-          />
-        </div>
-        <span className="mt-1.5 text-[10px] font-mono text-muted-foreground">
-          {personal.name.split(" ")[0]}
-        </span>
-      </div>
-
-      {/* Right Column Nodes (X & Email) */}
-      <div className="flex flex-col justify-around h-full gap-5 z-10">
-        {socials.slice(2, 4).map((soc, idx) => {
-          const IconComp = soc.icon;
-          const ref = nodeRefs[idx + 2];
-          const isEmail = soc.platform === "email";
-          return (
-            <a
-              key={soc.platform}
-              ref={ref}
-              href={soc.url}
-              target={isEmail ? "_self" : "_blank"}
-              rel="noopener noreferrer"
-              aria-label={soc.label}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2 text-muted-foreground shadow-md transition-all duration-300 hover:scale-115 hover:border-primary/50 hover:bg-white/[0.08] hover:text-white"
-            >
-              <IconComp className="h-5 w-5" />
-            </a>
-          );
-        })}
-      </div>
-
-      {/* Animated Connector Beams */}
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={node1Ref}
-        toRef={centerRef}
-        duration={3.5}
-        gradientStartColor="#d0bcff"
-        gradientStopColor="#8b5cf6"
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={node2Ref}
-        toRef={centerRef}
-        duration={4}
-        delay={0.5}
-        gradientStartColor="#d0bcff"
-        gradientStopColor="#8b5cf6"
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={centerRef}
-        toRef={node3Ref}
-        duration={3.5}
-        delay={1}
-        gradientStartColor="#d0bcff"
-        gradientStopColor="#8b5cf6"
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={centerRef}
-        toRef={node4Ref}
-        duration={4}
-        delay={1.5}
-        gradientStartColor="#d0bcff"
-        gradientStopColor="#8b5cf6"
-      />
-    </div>
-  );
-}
+import { ContactCard } from "@/components/ContactCard";
 
 /* ─────────────────────────────────────────────────────────────
  *  Main About Section (Exact Bento Grid: 12 Cols x 8 Rows)
@@ -183,29 +58,37 @@ export default function About() {
           className="col-span-12 md:col-span-4 md:row-span-6 md:col-start-1 md:row-start-1"
         >
           <BentoCard
-            title={personal.name}
-            subtitle={personal.tagline}
-            badge="Forward Deployed"
-            className="h-full flex flex-col justify-between"
+            // title={personal.name}
+            // subtitle={personal.tagline}
+            // badge="Forward Deployed"
+            className="h-full"
           >
-            <div className="flex flex-col gap-4 my-auto">
-              <div className="relative h-14 w-14 rounded-2xl p-0.5 bg-linear-to-br from-primary/80 via-primary/30 to-transparent shadow-lg shrink-0">
-                <img
-                  src={personal.avatar || "/avatar.jpg"}
-                  alt={personal.name}
-                  className="h-full w-full rounded-xl object-cover"
-                />
-              </div>
+            <div className="flex flex-col gap-3.5 py-2">
+              <AvatarStatus />
 
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {personal.bio}
               </p>
+
+              <div className="flex flex-wrap gap-1.5">
+                {skills.slice(0, 4).flatMap((cat) =>
+                  cat.items.slice(0, 2).map((skill) => (
+                    <span
+                      key={skill}
+                      className="inline-flex px-2 py-0.5 rounded-md border border-primary/15 bg-primary/[0.06] text-[10px] font-medium text-primary/90"
+                    >
+                      {skill}
+                    </span>
+                  ))
+                ).slice(0, 8)}
+              </div>
             </div>
 
-            <div className="pt-3 border-t border-white/10 flex items-center justify-between mt-auto">
-              <span className="text-[11px] text-muted-foreground font-mono">
-                {personal.location}
-              </span>
+            <div className="pt-2.5 border-t border-white/10 flex items-center justify-between mt-auto">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <IconMapPin className="h-3 w-3 text-primary/70" />
+                <span className="text-[11px] font-mono">{personal.location}</span>
+              </div>
               {personal.resumeUrl && (
                 <a
                   href={personal.resumeUrl}
@@ -262,7 +145,9 @@ export default function About() {
         >
           <BentoCard className="h-full flex flex-col justify-between p-3.5">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-[11px] font-medium">{stats.industry.title}</span>
+              <span className="text-[11px] font-medium">
+                {stats.industry.title}
+              </span>
               <IconClock className="h-3.5 w-3.5 text-primary/70 shrink-0" />
             </div>
             <div className="my-auto">
@@ -284,7 +169,9 @@ export default function About() {
         >
           <BentoCard className="h-full flex items-center justify-between p-3">
             <div className="flex flex-col">
-              <span className="text-[10px] text-muted-foreground">{stats.projects.title}</span>
+              <span className="text-[10px] text-muted-foreground">
+                {stats.projects.title}
+              </span>
               <span className="text-lg font-bold text-white font-mono">
                 {stats.projects.value}
               </span>
@@ -301,7 +188,9 @@ export default function About() {
         >
           <BentoCard className="h-full flex flex-col justify-between p-3.5">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-[11px] font-medium">{stats.hours.title}</span>
+              <span className="text-[11px] font-medium">
+                {stats.hours.title}
+              </span>
               <IconActivity className="h-3.5 w-3.5 text-primary/70 shrink-0" />
             </div>
             <div className="my-auto">
@@ -323,7 +212,9 @@ export default function About() {
         >
           <BentoCard className="h-full flex items-center justify-between p-3">
             <div className="flex flex-col">
-              <span className="text-[10px] text-muted-foreground">{stats.automations.title}</span>
+              <span className="text-[10px] text-muted-foreground">
+                {stats.automations.title}
+              </span>
               <span className="text-lg font-bold text-white font-mono">
                 {stats.automations.value}
               </span>
@@ -353,7 +244,9 @@ export default function About() {
 
             <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1.5">
               <span>Production Ready</span>
-              <span className="text-primary font-medium">{favoriteStack.tag}</span>
+              <span className="text-primary font-medium">
+                {favoriteStack.tag}
+              </span>
             </div>
           </BentoCard>
         </BlurFade>
@@ -371,7 +264,7 @@ export default function About() {
             badge="Live Beams"
             className="h-full min-h-[280px]"
           >
-            <AnimatedBeamConnect />
+            <ContactCard />
           </BentoCard>
         </BlurFade>
 
@@ -408,7 +301,10 @@ export default function About() {
                           </span>
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent side="top" className="text-[10px] px-2 py-0.5">
+                      <TooltipContent
+                        side="top"
+                        className="text-[10px] px-2 py-0.5"
+                      >
                         {tool.category}
                       </TooltipContent>
                     </Tooltip>
