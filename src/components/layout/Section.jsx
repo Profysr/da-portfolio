@@ -1,20 +1,28 @@
 import { forwardRef } from "react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { cn } from "@/lib/utils";
+import { Layout } from "@/components/layout/Layout";
 
 /**
- * Section — vertical rhythm wrapper with optional scroll-reveal.
+ * Section — full-width vertical rhythm wrapper with optional scroll-reveal.
  *
- * @param {string}   className   — extra classes
- * @param {string}   id          — anchor id for in-page nav / command palette
- * @param {number}   delay       — BlurFade delay (seconds)
- * @param {number}   yOffset     — BlurFade vertical offset (px)
- * @param {boolean}  noFade      — skip BlurFade, render plain <section>
- * @param {ReactNode} children
+ * The section itself spans full width so you can apply any background to it.
+ * Content inside is automatically constrained via <Layout> (max-w-7xl + px).
+ * Usage:
+ *   // Full-width gradient background, content stays aligned
+ *   <Section id="hero" className="bg-gradient-to-br from-slate-900 to-black py-24">
+ *     <HeroContent />
+ *   </Section>
+ *
+ *   // Subtle tinted background
+ *   <Section id="about" className="bg-muted/20 py-20">
+ *     <AboutContent />
+ *   </Section>
  */
 export const Section = forwardRef(function Section(
   {
     className,
+    innerClassName,
     id,
     delay = 0,
     yOffset = 8,
@@ -24,27 +32,26 @@ export const Section = forwardRef(function Section(
   },
   ref
 ) {
-  const base = "py-20 sm:py-24 lg:py-28";
+  const base = "w-full py-20 sm:py-24 lg:py-28";
 
-  if (noFade) {
-    return (
-      <section ref={ref} id={id} className={cn(base, className)} {...props}>
+  const content = (
+    <section ref={ref} id={id} className={cn(base, className)} {...props}>
+      <Layout className={innerClassName}>
         {children}
-      </section>
-    );
-  }
+      </Layout>
+    </section>
+  );
+
+  if (noFade) return content;
 
   return (
     <BlurFade
       delay={delay}
       offset={yOffset}
-      className={cn(base, className)}
       inView
       inViewMargin="-80px"
     >
-      <section ref={ref} id={id} {...props}>
-        {children}
-      </section>
+      {content}
     </BlurFade>
   );
 });

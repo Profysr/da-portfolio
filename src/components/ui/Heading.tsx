@@ -1,21 +1,30 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
-const Heading = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => {
+export function Heading({ title, children, className = "" }: { title: string, children: React.ReactNode, className?: string }) {
   return (
-    <div className="bg-background relative flex size-full max-w-lg items-center justify-center overflow-hidden rounded-lg border px-40 pt-8 pb-40 md:pb-60">
-      <span className="pointer-events-none bg-linear-to-b from-black to-gray-300/80 bg-clip-text text-center text-8xl leading-none font-semibold whitespace-pre-wrap text-transparent dark:from-white dark:to-slate-900/10">
-        {title}
-      </span>
-      <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_200%,rgba(0,0,0,0.2),rgba(255,255,255,0))]" />
-      {children}
+    <div
+      className={cn(
+        "relative flex w-full max-w-4xl mx-auto flex-col items-center justify-center overflow-hidden",
+        className
+      )}
+    >
+      {/* Background Watermark Text - Centered & Absolute */}
+      {title && (
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center select-none text-center font-extrabold uppercase leading-none tracking-widest text-foreground/5 dark:text-white/5 text-5xl sm:text-7xl md:text-8xl whitespace-nowrap">
+          {title}
+        </span>
+      )}
+
+      {/* Subtle Radial Glow */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]" />
+
+      {/* Foreground Content */}
+      <div className="relative z-10 flex w-full flex-col items-center justify-center text-center">
+        {children}
+      </div>
     </div>
   );
-};
+}
 
 export default Heading;

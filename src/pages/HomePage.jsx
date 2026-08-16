@@ -1,7 +1,8 @@
 import Hero from "@/sections/HomePage/Hero";
+
 export function HomePage() {
   return (
-    <main>
+    <main className="w-full">
       <Hero />
     </main>
   );
