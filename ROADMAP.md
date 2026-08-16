@@ -37,9 +37,11 @@
 ## Phase 1 — Layout Shell & Design System Foundation ✅ (DONE)
 
 **Decisions locked:**
-- Nav: **Dock only** (no top navbar)
-- Logo: **"DA"** text placeholder in Dock
+- Nav: **Dock + floating TopBar** (glass panel, `max-w-7xl` constrained)
+- Logo: **"DA"** text placeholder in TopBar (left side)
 - Light mode: **Dark-only**, no toggle
+- Command palette: ⌘K / Ctrl+K shortcut + button in TopBar; state owned inline in `App.tsx`; UI isolated in `CommandPaletteUI`
+- Icons: section/social icon components passed as JSX props from `idx.js` → `App.tsx` → palette (no internal icon maps in palette)
 
 ### Tasks
 - [x] 1.1 Replace `index.css` theme tokens with the DESIGN.md palette
@@ -48,12 +50,12 @@
   - Text: `#e5e2e1` foreground, `#cbc3d7` muted
   - Border radius: sm `0.25rem`, md `0.5rem`, lg `0.75rem`, xl `1rem`, 2xl `1.5rem`
 - [x] 1.2 Light mode skipped — dark is the only theme
-- [x] 1.3 Create `src/components/layout/PageWrapper.jsx` — `max-w-6xl` container, responsive padding
+- [x] 1.3 Create `src/components/layout/PageWrapper.jsx` — `max-w-7xl` container, responsive padding
 - [x] 1.4 Create `src/components/layout/Section.jsx` — `py-20 sm:py-24 lg:py-28` wrapper with optional `BlurFade` reveal (default on, `noFade` prop to disable)
-- [x] 1.5 Update `App.tsx` — `SmoothCursor` + `Dock` nav only; "DA" logo slot + Contact / GitHub / LinkedIn links; section mount point documented in comments
+- [x] 1.5 Update `App.tsx` — floating glass TopBar ("DA" logo left, CommandPaletteButton right) + bottom Dock nav with tooltips + hover backgrounds; palette state (open/close, ⌘K, Esc, PALETTE_OPEN_EVENT) lives here
 - [x] 1.6 Update eslint config — include `.jsx` files in lint scope
 
----
+**Result:** Codebase compiles clean. Dark cinematic theme, floating TopBar + Dock, command palette fully wired with keyboard + button, icons passed as props from `idx.js`.
 
 ## Phase 2 — Hero Section
 
@@ -310,9 +312,9 @@ src/
 
 | # | Question | Phase | Your Answer |
 |---|---|---|---|
-| 1 | Nav: Dock / top bar / both / neither? | 1 | ❓ |
-| 2 | Logo text (initials / "DA" / something else)? | 1 | ❓ |
-| 3 | Light mode toggle or dark-only? | 1 | ❓ |
+| 1 | Nav: Dock / top bar / both / neither? | 1 | Dock + floating TopBar (glass, max-w-7xl) |
+| 2 | Logo text (initials / "DA" / something else)? | 1 | "DA" text in TopBar left |
+| 3 | Light mode toggle or dark-only? | 1 | Dark-only, no toggle |
 | 4 | Hero name suffix cycle? | 2 | ❓ |
 | 5 | Tagline / one-line pitch? | 2 | ❓ |
 | 6 | Hero background: Particles / Gradient / Shader? | 2 | ❓ |
