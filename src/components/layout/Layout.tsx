@@ -1,25 +1,5 @@
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils";
-
-/**
- * Layout — single content wrapper for every page and section.
- *
- * Provides:
- *   - Responsive horizontal padding  (px-4 → sm:px-6 → lg:px-8)
- *   - Centered max-width column      (max-w-7xl mx-auto)
- *   - Vertical clearance             (pt-20 clears TopBar, pb-24 clears Dock)
- *
- * Usage:
- *   <Layout>
- *     <HeroSection />
- *     <AboutSection />
- *   </Layout>
- *
- *   Or per-section:
- *   <Layout className="py-16">
- *     <SomeSection />
- *   </Layout>
- */
-
 import { Dock, DockIcon } from "@/components/ui/dock";
 import {
   Tooltip,
@@ -27,12 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  CommandPalette,
-  CommandPaletteButton,
-} from "@/components/CommandPallete";
+import { CommandPaletteButton } from "@/components/CommandPallete";
 import { nav, socials } from "@/data/idx.js";
-import type { ComponentType } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -46,9 +22,33 @@ const DOCK_DISTANCE = 72;
 /*  TopBar                                                             */
 /* ------------------------------------------------------------------ */
 function TopBar() {
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY || currentScrollY < 50) {
+        setVisible(true); // Scrolling UP or at top
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setVisible(false); // Scrolling DOWN
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 flex items-center justify-center pointer-events-none px-4 sm:px-6 lg:px-8">
-      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/70 backdrop-blur-xl border border-border/60 rounded-2xl shadow-lg">
+    // Kept as 'sticky top-4' so it respects parent container widths
+    <header
+      className={`sticky top-4 z-50 flex items-center justify-center pointer-events-none transition-transform duration-300 ${visible ? "translate-y-0" : "-translate-y-20"
+        }`}
+    >
+      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/70 backdrop-blur-xl border border-border rounded-full shadow-lg">
         <a
           href="#hero"
           aria-label="Home"
@@ -75,7 +75,7 @@ function BottomDock() {
         className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 sm:px-6 lg:px-8"
       >
         {nav.map((item) => {
-          const Icon = item.icon as ComponentType<{ size?: number }>;
+          const Icon = item.icon;
           return (
             <DockIcon key={item.id}>
               <Tooltip>
@@ -96,12 +96,12 @@ function BottomDock() {
           );
         })}
 
-        {/* <div className="h-full w-px bg-border/60" />
+        <div className="hidden min-[480px]:block h-full w-px bg-border" />
 
         {socials.slice(0, 2).map((s) => {
-          const SocialIcon = s.icon as ComponentType<{ size?: number }>;
+          const SocialIcon = s.icon;
           return (
-            <DockIcon key={s.platform}>
+            <DockIcon key={s.platform} className="hidden min-[480px]:flex">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -120,27 +120,29 @@ function BottomDock() {
               </Tooltip>
             </DockIcon>
           );
-        })} */}
+        })}
+
       </Dock>
     </TooltipProvider>
   );
 }
 
-
+/* ------------------------------------------------------------------ */
+/*  Layout Component                                                   */
+/* ------------------------------------------------------------------ */
 export function Layout({ children, className = "" }) {
   return (
-    <div
-      className={cn(
-        "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
-        className
-      )}
-    >
-      <CommandPalette />
-      <TopBar />
+    <>
+      <div
+        className={cn(
+          "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
+          className
+        )}
+      >
+        <TopBar />
+        <main className="min-h-screen">{children}</main>
+      </div>
       <BottomDock />
-      <main className="min-h-screen pt-20 pb-24">
-        {children}
-      </main>
-    </div>
+    </>
   );
 }
