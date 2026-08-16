@@ -8,6 +8,19 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
+  IconClock,
+  IconGitBranch,
+  IconRobot,
+  IconCode,
+  IconActivity,
+  IconSparkles,
+  IconNetwork,
+  IconBinaryTree,
+  IconPlugConnected,
+  IconMapPin,
+  IconWorld,
+  IconLayersLinked,
+  IconTerminal2,
 } from "@tabler/icons-react";
 
 /**
@@ -15,7 +28,7 @@ import {
  *  src/data/idx.js
  *  ⚡ Single Source of Truth for the entire portfolio.
  *
- *  Every section (Hero, About, Experience, etc.) reads data
+ *  Every section (Hero, About, Contributions, etc.) reads data
  *  from this file. To update your portfolio, edit here only.
  * ============================================================
  */
@@ -23,6 +36,7 @@ import {
 export const nav = [
   { id: "hero", label: "Home", icon: IconHome },
   { id: "about", label: "About", icon: IconUser },
+  { id: "contributions", label: "Contributions", icon: IconActivity },
   { id: "experience", label: "Experience", icon: IconBriefcase },
   { id: "projects", label: "Projects", icon: IconFolderCode },
   { id: "blog", label: "Blog", icon: IconBook },
@@ -33,8 +47,9 @@ export const socials = [
   {
     platform: "github",
     icon: IconBrandGithub,
-    url: "https://github.com/",
+    url: "https://github.com/Profysr",
     label: "GitHub",
+    handle: "@Profysr",
     aria: "github",
   },
   {
@@ -42,9 +57,25 @@ export const socials = [
     icon: IconBrandLinkedin,
     url: "https://linkedin.com/in/",
     label: "LinkedIn",
+    handle: "Bilal Ahmad",
     aria: "linkedin",
   },
-  { platform: "x", icon: IconBrandX, url: "https://x.com/", label: "X", aria: "x" },
+  {
+    platform: "x",
+    icon: IconBrandX,
+    url: "https://x.com/",
+    label: "X (Twitter)",
+    handle: "@bilalahmad_dev",
+    aria: "x",
+  },
+  {
+    platform: "email",
+    icon: IconMail,
+    url: "mailto:hello@da-portfolio.dev",
+    label: "Email",
+    handle: "hello@da-portfolio.dev",
+    aria: "email",
+  },
 ];
 
 /* ============================================================
@@ -53,32 +84,142 @@ export const socials = [
 
 export const personal = {
   name: "Bilal Ahmad",
-  tagline: "Forward Deployed and Software Engineer",
-  bio: `I turn raw data into decisions. I build tools, mentor
-        contributors, and run a one-person digital agency
-        focused on analytics and intelligent systems.`,
+  tagline: "Forward Deployed & Software Engineer",
+  bio: `I turn raw data into decisions and automate complex engineering workflows. 
+        Specializing in scalable system architecture, full-stack intelligence, 
+        MCP-driven agentic pipelines, and autonomous tooling.`,
   avatar: "/avatar.jpg",
   logo: "/logo.svg",
   location: "Pakistan",
+  locationLabel: "Islamabad, PK → Worldwide",
+  timezone: "GMT+5",
   email: "hello@da-portfolio.dev",
   resumeUrl: "/resume.pdf",
   socials,
 };
 
-export const skills = [
+export const about = {
+  heading: "About Me",
+  subheading: "A look into my background, core engineering pillars, and focus areas.",
+  stats: {
+    industry: {
+      title: "In Industry",
+      value: "2 Yrs 8 Mos",
+      subtext: "Experience",
+      icon: IconClock,
+    },
+    projects: {
+      title: "Projects Built",
+      value: "40+",
+      subtext: "Delivered",
+      icon: IconFolderCode,
+    },
+    hours: {
+      title: "Hours Logged",
+      value: "4,280+",
+      subtext: "Deep Focus",
+      icon: IconActivity,
+    },
+    automations: {
+      title: "Automations",
+      value: "150+",
+      subtext: "Deployed",
+      icon: IconRobot,
+    },
+  },
+};
+
+export const strategies = [
   {
-    category: "Automations",
-    items: ["Power Automate", "Powershell Scripting", "n8n", "Tampermonkey"],
+    id: "system-design",
+    title: "System Design",
+    description: "Scalable architectures, event-driven pipelines, microservices & caching patterns.",
+    icon: IconNetwork,
+    badge: "Architecture",
+    span: "col-span-12 sm:col-span-6 lg:col-span-3",
   },
   {
-    category: "Engineering",
-    items: ["React", "Python", "Django", "TypeScript", "Node.js"],
+    id: "claude-code",
+    title: "Claude Code & AI",
+    description: "Deep agentic workflows, subagent orchestrations, code reasoning & context injection.",
+    icon: IconSparkles,
+    badge: "AI Engineering",
+    span: "col-span-12 sm:col-span-6 lg:col-span-3",
   },
   {
-    category: "Tools & Platforms",
-    items: ["Docker", "AWS", "Notion", "Git & GitHub"],
+    id: "mcps",
+    title: "Build & Use MCPs",
+    description: "Creating custom Model Context Protocol servers, tool-use interfaces & LLM integrations.",
+    icon: IconPlugConnected,
+    badge: "Protocol Mastery",
+    span: "col-span-12 sm:col-span-6 lg:col-span-3",
+  },
+  {
+    id: "dsa",
+    title: "Data Structures & DSA",
+    description: "Algorithmic optimization, high-throughput data processing & computational efficiency.",
+    icon: IconBinaryTree,
+    badge: "Computer Science",
+    span: "col-span-12 sm:col-span-6 lg:col-span-3",
   },
 ];
+
+export const skills = [
+  {
+    category: "Automations & AI",
+    items: ["Power Automate", "n8n", "MCP Servers", "Tampermonkey", "Powershell"],
+  },
+  {
+    category: "Engineering & Backend",
+    items: ["Python", "React", "Django", "TypeScript", "Node.js", "FastAPI"],
+  },
+  {
+    category: "Platforms & Cloud",
+    items: ["Docker", "AWS", "PostgreSQL", "Git & GitHub", "Linux"],
+  },
+];
+
+export const tools = [
+  { name: "Python", icon: "/tools/python.svg", category: "Language" },
+  { name: "React", icon: "/tools/react.svg", category: "Frontend" },
+  { name: "TypeScript", icon: "/tools/typescript.svg", category: "Language" },
+  { name: "Next.js", icon: "/tools/nextjs-dark.svg", category: "Fullstack" },
+  { name: "Docker", icon: "/tools/docker.svg", category: "DevOps" },
+  { name: "Azure", icon: "/tools/azure.svg", category: "Cloud" },
+  { name: "Tailwind CSS", icon: "/tools/tailwind.svg", category: "Styling" },
+  { name: "Node.js", icon: "/tools/nodejs.svg", category: "Runtime" },
+  { name: "Git", icon: "/tools/git.svg", category: "VCS" },
+  { name: "MongoDB", icon: "/tools/mongodb.svg", category: "Database" },
+  { name: "SQL", icon: "/tools/sql.svg", category: "Database" },
+  { name: "PowerShell", icon: "/tools/powershell.svg", category: "Automation" },
+  { name: "VS Code", icon: "/tools/vscode.svg", category: "Editor" },
+  { name: "Figma", icon: "/tools/figma.svg", category: "Design" },
+  { name: "JavaScript", icon: "/tools/javascript.svg", category: "Language" },
+  { name: "HTML5", icon: "/tools/html.svg", category: "Frontend" },
+  { name: "CSS3", icon: "/tools/css.svg", category: "Styling" },
+  { name: "Rust", icon: "/tools/rust-dark.svg", category: "Language" },
+];
+
+export const favoriteStack = {
+  title: "Core Powerhouse",
+  subtitle: "Daily Drivers & Preferred Workflow",
+  stack: "Python • React • n8n • Custom MCPs",
+  tag: "Modern Intelligent Stack",
+  icon: IconSparkles,
+};
+
+export const contributions = {
+  heading: "Contributions & Velocity",
+  subheading: "A live snapshot of build velocity, open-source output, and development metrics.",
+  githubUsername: "Profysr",
+  heatmapWeeks: 32, // Sleek wider heatmap
+  stats: [
+    { label: "Commits Logged", value: 2500, suffix: "+", icon: IconGitBranch, badge: "Year to Date" },
+    { label: "Hours Coding", value: 4280, suffix: "+", icon: IconClock, badge: "Tracked" },
+    { label: "Repositories", value: 38, suffix: "", icon: IconCode, badge: "Public & Private" },
+    { label: "Automations & PRs", value: 150, suffix: "+", icon: IconRobot, badge: "Shipped" },
+  ],
+};
 
 export const experience = [
   {
@@ -246,11 +387,4 @@ export const blogs = [
     url: "#",
     tags: ["Career", "Open Source"],
   },
-];
-
-export const stats = [
-  { label: "Commits", value: 2500, suffix: "+" },
-  { label: "Projects", value: 40 },
-  { label: "DaysSpent", value: 1000, suffix: "+" },
-  { label: "Articles", value: 60 },
 ];
