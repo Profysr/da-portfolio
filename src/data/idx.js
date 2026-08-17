@@ -91,14 +91,6 @@ export const personal = {
   socials,
 };
 
-export const footer = {
-  badge: "Discipline → Consistency → Impact",
-  heading:
-    "20 years ago, today, or 20 years from now: understand the problem, solve it, and you're unstoppable.",
-  ctaLabel: "Say Hello",
-  resumePath: "/resume.pdf",
-};
-
 export const about = {
   heading: "About Me",
   subheading:
@@ -443,4 +435,13 @@ export const FrequentQuestions = {
         "You can reach out directly via email using the contact CTA in the footer, or connect with me on LinkedIn and GitHub. I typically respond within 24 hours.",
     },
   ],
+};
+
+export const footer = {
+  badge: "Get in Touch",
+  heading: "20 years ago, today, or 20 years from now",
+  subheading:
+    "understand the problem, solve it, and you're unstoppable.",
+  ctaLabel: "Say Hello",
+  resumePath: "/resume.pdf",
 };

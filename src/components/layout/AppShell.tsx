@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
 import { Outlet } from "react-router-dom";
+import { motion } from "motion/react";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import {
   Tooltip,
@@ -12,6 +12,7 @@ import {
   CommandPalette,
   CommandPaletteButton,
 } from "@/components/CommandPallete";
+import { DockVisibilityProvider } from "@/components/nav/DockVisibilityProvider";
 import { nav, socials } from "@/data/idx.js";
 import { Footer } from "./Footer";
 
@@ -27,34 +28,18 @@ const DOCK_DISTANCE = 72;
 /*  TopBar — fixed, full-width, hides on scroll down                  */
 /* ------------------------------------------------------------------ */
 
-function TopBar() {
-  const [visible, setVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY < lastScrollY || currentScrollY < 50) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setVisible(false);
-      }
-      setLastScrollY(currentScrollY);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
+function TopBar({ isVisible }: { isVisible: boolean }) {
   return (
     <header
-      className={`fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 flex items-center justify-center pointer-events-none transition-transform duration-300 ${visible ? "translate-y-0" : "-translate-y-20"
-        }`}
+      className={`fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 flex items-center justify-center pointer-events-none transition-transform duration-300 ${
+        isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+      }`}
     >
-      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/25 backdrop-blur-xl border border-border rounded-full shadow-lg">
+      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto h-12 px-4 sm:px-6 bg-background/30 backdrop-blur-xl border border-white/10 rounded-full shadow-lg">
         <a
           href="#hero"
           aria-label="Home"
-          className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
+          className="flex items-center gap-2 font-semibold tracking-tight text-foreground hover:text-primary transition-colors"
         >
           DA
         </a>
@@ -65,105 +50,156 @@ function TopBar() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  BottomDock — fixed, full-width                                     */
+/*  BottomDock — fixed bottom dock with smooth auto-hide              */
 /* ------------------------------------------------------------------ */
-function BottomDock() {
+
+function BottomDock({ isVisible }: { isVisible: boolean }) {
   return (
-    <TooltipProvider delayDuration={0}>
-      <Dock
-        iconSize={DOCK_ICON_SIZE}
-        iconMagnification={DOCK_MAGNIFICATION}
-        iconDistance={DOCK_DISTANCE}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
-      >
-        {nav.map((item) => {
-          const Icon = item.icon;
-          return (
-            <DockIcon key={item.id}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href={`#${item.id}`}
-                    aria-label={item.label}
-                    className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent/50 transition-colors"
-                  >
-                    <Icon size={18} />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{item.label}</p>
-                </TooltipContent>
-              </Tooltip>
-            </DockIcon>
-          );
-        })}
+    <motion.div
+      initial={{ y: 0, opacity: 1 }}
+      animate={{
+        y: isVisible ? 0 : 80,
+        opacity: isVisible ? 1 : 0,
+        scale: isVisible ? 1 : 0.95,
+      }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
+    >
+      <div className={isVisible ? "pointer-events-auto" : "pointer-events-none"}>
+        <TooltipProvider delayDuration={0}>
+          <Dock
+            iconSize={DOCK_ICON_SIZE}
+            iconMagnification={DOCK_MAGNIFICATION}
+            iconDistance={DOCK_DISTANCE}
+            className="border border-white/10 bg-background/50 backdrop-blur-2xl shadow-2xl"
+          >
+            {nav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <DockIcon key={item.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a
+                        href={`#${item.id}`}
+                        aria-label={item.label}
+                        className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 text-zinc-300 hover:text-white transition-all"
+                      >
+                        <Icon size={18} />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <p>{item.label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </DockIcon>
+              );
+            })}
 
-        <div className="hidden min-[480px]:block h-full w-px bg-border" />
+            <div className="hidden min-[480px]:block h-full w-px bg-white/10" />
 
-        {socials.slice(0, 2).map((s) => {
-          const SocialIcon = s.icon;
-          return (
-            <DockIcon key={s.platform} className="hidden min-[480px]:flex">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href={s.url}
-                    aria-label={s.label}
-                    className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent/50 transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SocialIcon size={18} />
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{s.label}</p>
-                </TooltipContent>
-              </Tooltip>
-            </DockIcon>
-          );
-        })}
-      </Dock>
-    </TooltipProvider>
+            {socials.slice(0, 2).map((s) => {
+              const SocialIcon = s.icon;
+              return (
+                <DockIcon key={s.platform} className="hidden min-[480px]:flex">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a
+                        href={s.url}
+                        aria-label={s.label}
+                        className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 text-zinc-300 hover:text-white transition-all"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <SocialIcon size={18} />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <p>{s.label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </DockIcon>
+              );
+            })}
+          </Dock>
+        </TooltipProvider>
+      </div>
+    </motion.div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  AppShell — full-width route wrapper                               */
-/*                                                                     */
-/*  Mounts chrome once for all routes. Pages render via <Outlet />.   */
-/*  Each page section owns its own full-width background and uses     */
-/*  <Layout> inside for content alignment.                            */
-/*                                                                     */
-/*  In App.tsx:                                                        */
-/*    <Route element={<AppShell />}>                                   */
-/*      <Route path="/" element={<HomePage />} />                     */
-/*    </Route>                                                         */
+/*  AppShell — Master Application Shell with Continuous Global Background */
 /* ------------------------------------------------------------------ */
 
 export function AppShell() {
-  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Automatically hide near the bottom so Dock never collides with Footer/CTAs
+      const isNearBottom = windowHeight + currentScrollY >= documentHeight - 380;
+
+      if (isNearBottom) {
+        setIsNavVisible(false);
+      } else if (currentScrollY <= 60) {
+        // At the very top, always show
+        setIsNavVisible(true);
+      } else if (currentScrollY < lastScrollY - 5) {
+        // Scrolling UP -> reveal nav
+        setIsNavVisible(true);
+      } else if (currentScrollY > lastScrollY + 5) {
+        // Scrolling DOWN -> hide nav to maximize content viewport
+        setIsNavVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <>
-      {/* Chrome — full width, renders once across all routes */}
-      <CommandPalette />
-      <TopBar />
+    <DockVisibilityProvider>
+      <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+        {/* Continuous Unified Dot Grid at Root */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-size-[24px_24px]"
+        />
 
-      <div className="flex flex-col gap-2">
-        <Outlet />
+        {/* Global Ambient Glows at Root */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
+        />
+
+        {/* Fixed Navigation & Command Palette */}
+        <CommandPalette />
+        <TopBar isVisible={isNavVisible} />
+
+        {/* Main Content Area */}
+        <main className="relative z-10 w-full flex-1">
+          <Outlet />
+        </main>
+
+        {/* Floating Bottom Dock */}
+        <BottomDock isVisible={isNavVisible} />
+
+        {/* Footer */}
+        <div className="relative z-10 w-full">
+          <Footer />
+        </div>
       </div>
-      <motion.div
-        animate={{
-          y: isFooterVisible ? 100 : 0,
-          opacity: isFooterVisible ? 0 : 1,
-        }}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
-      >
-        <BottomDock />
-      </motion.div>
-      <Footer onFooterInViewChange={setIsFooterVisible} />
-    </>
+    </DockVisibilityProvider>
   );
 }
