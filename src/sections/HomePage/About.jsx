@@ -12,7 +12,6 @@ import {
   IconDownload,
   Icon360View,
   IconClock,
-  IconCode,
   IconGitBranch,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
