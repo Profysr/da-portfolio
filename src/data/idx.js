@@ -230,28 +230,56 @@ export const contributions = {
   ],
 };
 
-export const experience = [
+export const experiences = [
   {
-    id: "exp-1",
-    role: "Founder & Software Engineer",
-    company: "DA Agency",
-    start: "Jan 2022",
-    end: "Present",
-    description:
-      "Run an independent consultancy delivering software solutions, dashboards, and data strategy to growing businesses.",
-    tech: ["Python", "SQL", "Tableau", "React"],
-    current: true,
+    company: "Kynoby",
+    logo: "https://assets.chanhdai.com/images/companies/shadcncraft.svg", // Replace with your logo path
+    url: "https://kynoby.com",
+    location: "London, UK",
+    locationType: "Remote",
+    isCurrent: true,
+    roles: [
+      {
+        id: "kynoby-lead",
+        title: "Software Development Lead",
+        type: "Full-time",
+        period: "2026 — Present",
+        duration: "Current",
+        description:
+          "Managing engineering team, architecting healthcare integrations, and driving technical direction across automation platforms.",
+        skills: ["React", "Next.js", "Django", "PostgreSQL", "Redis", "Celery", "Docker"],
+      },
+      {
+        id: "kynoby-rpa",
+        title: "RPA Engineer",
+        type: "Full-time",
+        period: "03.2025 — 2026",
+        duration: "1y",
+        description:
+          "Engineered clinical software automations integrated with SystmOne, EMIS, and Docman.",
+        skills: ["Power Automate", "AutoHotkey", "JavaScript", "Python"],
+      },
+    ],
   },
   {
-    id: "exp-2",
-    role: "Open Source Contributor",
-    company: "GitHub · Various",
-    start: "2020",
-    end: "Present",
-    description:
-      "Active contributor to analytics and developer-tooling projects; maintain documentation and core modules.",
-    tech: ["GitHub", "Python", "TypeScript"],
-    current: true,
+    company: "Simplamo",
+    logo: "https://assets.chanhdai.com/images/companies/simplamo.webp",
+    url: "https://simplamo.com",
+    location: "Ho Chi Minh City, Viet Nam",
+    locationType: "On-site",
+    isCurrent: false,
+    roles: [
+      {
+        id: "simplamo-sr-fe",
+        title: "Senior Frontend Developer",
+        type: "Full-time",
+        period: "10.2022 — 01.2026",
+        duration: "3y 4m",
+        description:
+          "Led frontend architecture, built component libraries, and optimized application performance.",
+        skills: ["TypeScript", "Next.js", "React Native", "Tailwind CSS", "Agile"],
+      },
+    ],
   },
 ];
 

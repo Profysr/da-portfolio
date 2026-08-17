@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { IconChevronDown, IconSparkles, IconMail, IconArrowRight } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { GradientHeading } from "./ui/Heading";
+import { GradientHeading } from "../../components/ui/Heading";
 import { ExpandableList } from "@/components/ui/expandable-list";
 import { FrequentQuestions, personal } from "@/data/idx";
 
@@ -22,18 +22,16 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
         aria-expanded={isOpen}
       >
         <span
-          className={`text-sm sm:text-base font-medium transition-colors pr-4 ${
-            isOpen ? "text-primary font-semibold" : "text-zinc-200 group-hover:text-white"
-          }`}
+          className={`text-sm sm:text-base font-medium transition-colors pr-4 ${isOpen ? "text-primary font-semibold" : "text-zinc-200 group-hover:text-white"
+            }`}
         >
           {question}
         </span>
         <div
-          className={`p-1.5 rounded-full border transition-all duration-300 shrink-0 ${
-            isOpen
+          className={`p-1.5 rounded-full border transition-all duration-300 shrink-0 ${isOpen
               ? "rotate-180 bg-primary/20 border-primary/40 text-primary shadow-[0_0_12px_rgba(208,188,255,0.3)]"
               : "bg-white/5 border-white/10 text-zinc-400 group-hover:text-white group-hover:border-white/20"
-          }`}
+            }`}
         >
           <IconChevronDown className="w-3.5 h-3.5" />
         </div>
