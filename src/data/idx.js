@@ -30,11 +30,11 @@ import {
 export const nav = [
   { id: "hero", label: "Home", icon: IconHome },
   { id: "about", label: "About", icon: IconUser },
-  { id: "contributions", label: "Contributions", icon: IconActivity },
+  // { id: "contributions", label: "Contributions", icon: IconActivity },
   { id: "experience", label: "Experience", icon: IconBriefcase },
   { id: "projects", label: "Projects", icon: IconFolderCode },
   { id: "blog", label: "Blog", icon: IconBook },
-  { id: "contact", label: "Contact", icon: IconMail },
+  // { id: "contact", label: "Contact", icon: IconMail },
 ];
 
 export const socials = [
@@ -192,9 +192,26 @@ export const SkillsAndTools = [
 export const favoriteStack = {
   title: "Core Powerhouse",
   subtitle: "Daily Drivers & Preferred Workflow",
-  stack: "Python • React • n8n • Custom MCPs",
+  stack: "Python • React • n8n • Custom MCPs • Docker",
   tag: "Modern Intelligent Stack",
   icon: IconSparkles,
+  items: [
+    { name: "Python", img: "/tools/python.svg", role: "Backend & Systems" },
+    { name: "React", img: "/tools/react.svg", role: "Frontend UI" },
+    { name: "Django", img: "/tools/django.svg", role: "Full-Stack" },
+    {
+      name: "Power Automate",
+      img: "/tools/power-automate.svg",
+      role: "Agentic Tooling",
+    },
+    {
+      name: "Claude Code",
+      img: "/tools/claude.png",
+      role: "Agentic Tooling",
+    },
+    { name: "Docker", img: "/tools/docker.svg", role: "Containerization" },
+    { name: "Microservices", img: null, role: "Architecture" },
+  ],
 };
 
 export const contributions = {
@@ -287,67 +304,146 @@ export const experiences = [
 export const education = [
   {
     id: "edu-uml",
-    image: "/experience/umasslowell_logo.jpg",
-    company: "University of Massachusetts, Lowell",
-    role: "B.S. in Computer Science, Minor in Mathematics",
-    date: "2020 — 2024",
+    institution: "University of Massachusetts, Lowell",
+    degree: "Bachelor of Science",
+    fieldOfStudy: "Computer Science",
+    minor: "Mathematics",
+    startDate: "2020",
+    endDate: "2024",
+    grade: "3.8 GPA",
+    activities: "ACM Student Chapter, Distributed Systems Lab",
     description:
-      "Focused on computer science fundamentals, algorithms, and applied mathematics.",
+      "Core focus on algorithms, distributed computing, operating systems, and applied mathematics.",
     location: "Lowell, MA",
-    skills: [
-      "C",
-      "C++",
-      "Java",
-      "Python",
-      "JavaScript",
-      "HTML/CSS",
-      "SQL",
-    ],
-    href: "https://www.uml.edu",
+    skills: ["C/C++", "Python", "Algorithms", "Distributed Systems", "SQL", "Linux"],
+    url: "https://www.uml.edu",
+    image: "/experience/umasslowell_logo.jpg",
   },
   {
-    id: "edu-1",
-    company: "University Name",
-    role: "Bachelor of Science",
-    date: "2018 — 2022",
+    id: "edu-comsats",
+    institution: "COMSATS University",
+    degree: "Associate / Pre-Engineering",
+    fieldOfStudy: "Computer & Information Sciences",
+    startDate: "2018",
+    endDate: "2020",
+    grade: "First Class Honors",
+    activities: "Software Innovation Society",
     description:
-      "Focused on statistics, programming, and data-driven research.",
-    location: "City, Country",
-    skills: ["Statistics", "Python", "R"],
-    href: "#",
+      "Foundation in data structures, computational mathematics, and database management.",
+    location: "Islamabad, PK",
+    skills: ["Data Structures", "OOP", "Database Design", "Mathematics"],
+    url: "https://www.comsats.edu.pk",
+    image: null,
   },
 ];
 
 export const certificates = [
   {
-    id: "cert-1",
+    id: "cert-aws",
+    name: "AWS Certified Solutions Architect",
+    issuingOrg: "Amazon Web Services (AWS)",
+    issueDate: "Jan 2024",
+    expirationDate: "Jan 2027",
+    credentialId: "AWS-PSA-882194",
+    credentialUrl: "https://aws.amazon.com/verification",
+    skills: ["Cloud Architecture", "S3", "EC2", "IAM", "VPC", "Serverless"],
+  },
+  {
+    id: "cert-gcp-data",
     name: "Google Data Analytics Professional Certificate",
-    issuer: "Coursera / Google",
-    date: "2023",
-    url: "#",
+    issuingOrg: "Google / Coursera",
+    issueDate: "Aug 2023",
+    expirationDate: null,
+    credentialId: "GCP-DA-49210",
+    credentialUrl: "https://coursera.org/verify/professional-cert/google-data-analytics",
+    skills: ["SQL", "Data Pipelines", "R", "Tableau", "Data Modeling"],
   },
   {
-    id: "cert-2",
-    name: "AWS Cloud Practitioner",
-    issuer: "Amazon Web Services",
-    date: "2024",
-    url: "#",
+    id: "cert-react",
+    name: "Advanced React & Next.js Architecture",
+    issuingOrg: "Udemy / Vercel Partner",
+    issueDate: "May 2023",
+    expirationDate: null,
+    credentialId: "UC-5928174",
+    credentialUrl: "https://udemy.com/certificate/UC-5928174",
+    skills: ["React 19", "Server Components", "Next.js", "State Machines"],
   },
   {
-    id: "cert-3",
-    name: "React — The Complete Guide",
-    issuer: "Udemy",
-    date: "2023",
-    url: "#",
-  },
-  {
-    id: "cert-4",
-    name: "SQL for Data Science",
-    issuer: "Coursera / UC Davis",
-    date: "2022",
-    url: "#",
+    id: "cert-sql",
+    name: "SQL for Data Science & Distributed Queries",
+    issuingOrg: "UC Davis / Coursera",
+    issueDate: "Nov 2022",
+    expirationDate: null,
+    credentialId: "COURSERA-SQL-38192",
+    credentialUrl: "https://coursera.org/verify/sql-data-science",
+    skills: ["PostgreSQL", "Query Optimization", "Indexing", "ETL"],
   },
 ];
+
+export const awards = [
+  {
+    id: "award-1",
+    title: "Engineering Excellence & Innovation Award",
+    issuer: "Kynoby Leadership",
+    date: "2025",
+    description: "Awarded for architecting healthcare interoperability pipelines reducing clinical data processing latency by 40%.",
+  },
+  {
+    id: "award-2",
+    title: "Dean's Honor List",
+    issuer: "University of Massachusetts",
+    date: "2023",
+    description: "Academic honors in Computer Science & Applied Mathematics.",
+  },
+];
+
+export const aiRecruiterData = {
+  quickPrompts: [
+    {
+      id: "pitch",
+      icon: "⚡",
+      label: "15-Second Executive Pitch",
+      answer: `Bilal is a **Forward Deployed Engineer & Engineering Lead** with 2.8+ years in industry. He bridges deep backend systems (*Python, Django, PostgreSQL*) with agentic automation pipelines (*Custom MCPs, n8n, Power Automate*) and modern React frontends. He currently leads engineering at **Kynoby**, architecting resilient healthcare automation platforms.`,
+    },
+    {
+      id: "stack",
+      icon: "🛠️",
+      label: "Core Stack & MCP Pipelines",
+      answer: `**Core Powerhouse**:
+• **Backend & Systems**: Python, Django, FastAPI, PostgreSQL, Redis, Celery, Docker
+• **AI & Automation**: Model Context Protocol (MCP), n8n, Power Automate, AutoHotkey
+• **Frontend**: React 19, Next.js, TypeScript, Tailwind CSS, Motion
+• **Cloud & DevOps**: AWS, Linux, Git/GitHub, Docker containerization.`,
+    },
+    {
+      id: "achievements",
+      icon: "📈",
+      label: "Key Impact & Metrics @ Kynoby",
+      answer: `At **Kynoby** as Software Development Lead & RPA Engineer:
+• Architected clinical software integrations (SystmOne, EMIS, Docman) reducing manual operational overhead by **40%**.
+• Scaled and managed engineering workflows across healthcare automation products.
+• Built **150+ production automations** logging **4,280+ deep-focus engineering hours**.`,
+    },
+    {
+      id: "education",
+      icon: "🎓",
+      label: "Academic Background & Certifications",
+      answer: `• **B.S. in Computer Science (Minor in Mathematics)** from University of Massachusetts, Lowell (3.8 GPA, Dean's List).
+• **AWS Certified Solutions Architect** & **Google Data Analytics Professional Certified**.
+• Strong foundation in Data Structures, Distributed Algorithms, and High-throughput Systems.`,
+    },
+    {
+      id: "contact",
+      icon: "🤝",
+      label: "Availability & Work Preference",
+      answer: `• **Status**: Open to Forward Deployed, Senior Full-Stack, and AI/Automation Lead roles.
+• **Work Arrangement**: Remote worldwide or Hybrid (Islamabad / London timezone overlap).
+• **Direct Email**: [hello@da-portfolio.dev](mailto:hello@da-portfolio.dev)
+• **ATS Resume**: Available via the top header download button.`,
+    },
+  ],
+};
+
 
 export const projects = [
   {
