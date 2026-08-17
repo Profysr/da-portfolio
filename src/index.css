@@ -134,6 +134,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Offset for fixed TopBar so anchor #ids land below the navbar */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+
 /* ── Headings ─────────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);

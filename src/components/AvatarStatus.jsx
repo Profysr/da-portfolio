@@ -69,7 +69,7 @@ export function AvatarStatus() {
               )}
             />
           </span>
-          <span className="text-sm sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80r">
+          <span className="text-xs sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80r">
             {status}
           </span>
           <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />

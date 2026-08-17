@@ -23,7 +23,7 @@ const FooterCTA = () => (
   <div className="flex flex-wrap items-center justify-center gap-3.5 pt-3">
     <a
       href={personal.email ? `mailto:${personal.email}` : "#"}
-      className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-zinc-950 font-semibold text-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 shadow-[0_0_25px_rgba(208,188,255,0.35)]"
+      className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(208,188,255,0.25)]"
     >
       <span>{footer?.ctaLabel || "Let's Talk"}</span>
       <IconArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -33,9 +33,9 @@ const FooterCTA = () => (
         href={personal.resumeUrl || footer?.resumePath}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/15 bg-white/[0.05] hover:bg-white/[0.1] hover:border-primary/40 text-white font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-md"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/40 text-foreground font-medium text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-md"
       >
-        <IconDownload className="w-4 h-4 text-zinc-300" />
+        <IconDownload className="w-4 h-4 text-muted-foreground" />
         <span>Resume</span>
       </a>
     )}
@@ -46,14 +46,14 @@ const FooterCTA = () => (
  *  2. Bottom Navigation & Socials Contrast Strip
  * ───────────────────────────────────────────────────────────── */
 const FooterNavStrip = () => (
-  <div className="w-full mt-10 rounded-xl bg-zinc-800/80 border border-white/10 text-zinc-300 py-4 px-5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-medium text-xs sm:text-sm backdrop-blur-xl shadow-lg">
+  <div className="w-full mt-8 rounded-md bg-surface-high/50 border border-border/80 text-muted-foreground py-3 px-4 sm:px-5 flex flex-col sm:flex-row items-center justify-between gap-4 font-medium text-xs backdrop-blur-xl">
     {/* Left: Quick Nav Links */}
-    <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center">
+    <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
       {nav.map((item) => (
         <a
           key={item.id}
           href={`#${item.id}`}
-          className="px-2.5 py-1 rounded-md text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-all font-medium text-xs sm:text-sm"
+          className="px-2.5 py-1 rounded text-muted-foreground hover:text-white hover:bg-white/[0.06] transition-all font-medium text-xs"
         >
           {item.label}
         </a>
@@ -71,9 +71,9 @@ const FooterNavStrip = () => (
               target={url.startsWith("http") ? "_blank" : undefined}
               rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
-              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.1] hover:border-primary/30 hover:scale-110 active:scale-95 transition-all duration-200"
+              className="p-1.5 rounded-md text-muted-foreground hover:text-white hover:bg-white/[0.08] hover:scale-110 active:scale-95 transition-all duration-200"
             >
-              <Icon size={18} stroke={1.8} />
+              <Icon size={16} stroke={1.8} />
             </a>
           </TooltipTrigger>
           <TooltipContent side="top" className="text-xs">
@@ -89,7 +89,7 @@ const FooterNavStrip = () => (
  *  3. Bottom Copyright & System Status Metadata
  * ───────────────────────────────────────────────────────────── */
 const BottomMetadata = () => (
-  <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 text-xs text-zinc-500 font-mono">
+  <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 text-xs text-muted-foreground font-mono">
     <p>
       © {new Date().getFullYear()} · {personal.name}. All rights reserved.
     </p>
@@ -109,22 +109,17 @@ export const Footer = () => {
       <Section noFade className="relative py-8 sm:py-12">
         <footer className="w-full overflow-hidden font-sans">
           <div className="flex flex-col gap-4">
-            {/* Elevated Frosted Shady Container */}
-            <div className="relative rounded-lg bg-linear-to-b from-zinc-900/90 via-zinc-950/95 to-black border border-white/15 p-6 sm:p-10 md:p-12 flex flex-col items-center shadow-[0_15px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl overflow-hidden">
+            {/* Elevated Surface Container matching theme tokens */}
+            <div className="relative rounded-md bg-surface border border-border p-6 sm:p-8 md:p-10 flex flex-col items-center shadow-xl backdrop-blur-2xl overflow-hidden">
               {/* Subtle top ambient light ray */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-lg h-56 bg-primary/20 blur-3xl rounded-full"
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-primary/10 blur-3xl rounded-full"
               />
-              {/* Subtle Dot Grid inside container */}
-              {/* <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-size-[20px_20px]"
-              /> */}
 
               {/* Centered CTA Section */}
-              <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center max-w-2xl mx-auto my-auto">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/10 text-primary text-xs font-medium backdrop-blur-md shadow-sm">
+              <div className="relative z-10 flex flex-col items-center justify-center gap-3.5 text-center max-w-2xl mx-auto my-auto">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/10 text-primary text-xs font-medium backdrop-blur-md shadow-xs">
                   <IconSparkles className="h-3.5 w-3.5" />
                   <span>{footer?.badge || "Get in Touch"}</span>
                 </div>
@@ -134,12 +129,12 @@ export const Footer = () => {
                     footer?.heading ||
                     "Ready to build something impactful together?"
                   }
-                  className="text-2xl! sm:text-3xl! md:text-4xl! font-bold tracking-tight text-white max-w-xl"
+                  className="text-2xl! sm:text-3xl! font-bold tracking-tight text-white max-w-xl"
                 />
 
-                <p className="text-xs sm:text-sm md:text-base capitalize text-zinc-400 leading-relaxed max-w-lg">
+                <p className="text-xs sm:text-sm capitalize text-muted-foreground leading-relaxed max-w-lg">
                   {footer?.subheading ||
-                    "Whether you need scalable data pipelines, AI tooling, or full-stack software, let's talk."}
+                    "Whether you need scalable automation, AI tooling, or full-stack software systems, let's talk."}
                 </p>
 
                 <FooterCTA />
@@ -159,3 +154,5 @@ export const Footer = () => {
     </TooltipProvider>
   );
 };
+
+export default Footer;

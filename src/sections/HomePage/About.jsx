@@ -1,6 +1,6 @@
 "use client";
 
-import { personal, about, favoriteStack } from "@/data/idx";
+import { personal, about, contributions } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
@@ -8,29 +8,32 @@ import { AvatarStatus } from "@/components/AvatarStatus";
 import { Globe } from "@/components/ui/globe";
 import {
   IconMapPin,
-  IconSparkles,
   IconWorld,
   IconDownload,
+  Icon360View,
+  IconClock,
+  IconCode,
+  IconGitBranch,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
-import { ToolsMarqueeCard } from "@/components/TechCard";
 import { Particles } from "@/components/ui/particles";
 import { StatCard } from "@/components/StatCard";
+import { HeatmapGrid } from "@/components/Heatmap";
 
 /* ─────────────────────────────────────────────────────────────
- *  Main About Section Component
+ *  Unified About & Contributions Bento Grid
  * ───────────────────────────────────────────────────────────── */
 export default function About() {
   const bentoItems = [
-    // 1. About Me Card
+    // 1. About Me Bio Card
     {
       id: "about-me",
       className:
-        "col-span-12 md:col-span-4 md:row-span-5 md:col-start-1 md:row-start-1",
+        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-1 md:row-start-1",
       delay: 0.05,
       content: (
         <BentoCard className="h-full">
-          <div className="flex flex-col gap-3.5 py-2">
+          <div className="flex flex-col gap-3 py-2">
             <AvatarStatus />
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {personal.bio}
@@ -47,10 +50,10 @@ export default function About() {
                 href={personal.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/15 bg-white/[0.04] text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/15 bg-white/[0.04] text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
               >
                 <IconDownload className="h-3.5 w-3.5 text-primary" />
-                Get Resume
+                Resume
               </a>
             )}
           </div>
@@ -58,21 +61,21 @@ export default function About() {
       ),
     },
 
-    // 2. Globe Card
+    // 2. Interactive Globe Card
     {
       id: "location-globe",
       className:
-        "col-span-12 md:col-span-4 md:row-span-3 md:col-start-5 md:row-start-1",
-      delay: 0.1,
+        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-5 md:row-start-1",
+      delay: 0.08,
       content: (
         <BentoCard
           title="Location & Presence"
           subtitle={personal.locationLabel}
           Icon={IconMapPin}
           badge={personal.timezone}
-          className="h-full min-h-65"
+          className="h-full min-h-60"
         >
-          <div className="relative flex-1 my-1 min-h-40 flex items-center justify-center overflow-hidden">
+          <div className="relative flex-1 my-1 min-h-36 flex items-center justify-center overflow-hidden">
             <Globe className="scale-90 sm:scale-95" />
           </div>
           <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
@@ -92,64 +95,75 @@ export default function About() {
       ),
     },
 
-    // 3-6. Dynamic Stat Cards mapped directly into the array
-    ...about.stats.map((stat, index) => ({
-      id: `stat-${stat.id}`,
-      className: stat.spanClass,
-      delay: 0.12 + index * 0.02,
+{
+      id: "stat-industry",
+      className:
+        "col-span-6 md:col-span-2 md:row-span-3 md:col-start-9 md:row-start-1",
+      delay: 0.14,
       content: (
         <StatCard
-          title={stat.title}
-          value={stat.value}
-          subtext={stat.subtext}
-          icon={stat.icon}
-          isCompact={stat.isCompact}
+          title="Experience"
+          value={about.stats[0]?.value || "2.8+ Yrs"}
+          subtext="In Industry"
+          icon={about.stats[0]?.icon || IconClock}
           className="h-full"
         />
       ),
-    })),
+    },
 
-    // 7. Favorite Stack Card
+    // 6. Stat Card 2: Hours / Commits (Moved UP to top right)
     {
-      id: "favorite-stack",
+      id: "stat-commits",
       className:
-        "col-span-12 md:col-span-4 md:row-span-2 md:col-start-5 md:row-start-4",
-      delay: 0.2,
+        "col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-1",
+      delay: 0.16,
+      content: (
+        <StatCard
+          title="Commits"
+          value={contributions.stats[2]?.value ? `${contributions.stats[2].value}+` : "2,500+"}
+          subtext="Year to Date"
+          icon={IconGitBranch}
+          className="h-full"
+        />
+      ),
+    },
+
+    // 4. GitHub Heatmap Card (Merged into About)
+    {
+      id: "github-heatmap",
+      className:
+        "col-span-12 md:col-span-8 md:row-span-3 md:col-start-1 md:row-start-5",
+      delay: 0.12,
       content: (
         <BentoCard
-          title={favoriteStack.title}
-          subtitle={favoriteStack.subtitle}
-          Icon={IconSparkles}
-          badge="Stack"
-          className="h-full flex flex-col justify-between"
+          title="GitHub Rhythm & Velocity"
+          subtitle="Real-time commits, open-source PRs, and build cadence"
+          Icon={Icon360View}
+          badge={`@${contributions.githubUsername}`}
+          className="h-full justify-between"
         >
-          <div className="p-2.5 rounded-lg border border-primary/20 bg-linear-to-br from-primary/10 via-white/[0.02] to-transparent my-auto">
-            <div className="text-xs font-semibold text-white tracking-tight">
-              {favoriteStack.stack}
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1.5">
-            <span>Production Ready</span>
-            <span className="text-primary font-medium">
-              {favoriteStack.tag}
-            </span>
+          <div className="flex-1 flex items-center justify-center my-auto py-2 overflow-x-auto">
+            <HeatmapGrid
+              weeks={contributions.heatmapWeeks || 30}
+              githubUsername={contributions.githubUsername || "Profysr"}
+            />
           </div>
         </BentoCard>
       ),
     },
-
-    // 8. Contact Card
-    {
+        
+    // 3. Connect & Collaborate Card
+{
       id: "connect-card",
       className:
-        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-9 md:row-start-5",
-      delay: 0.22,
+        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-9 md:row-start-4",
+      delay: 0.1,
       content: (
         <BentoCard
           title="Connect & Collaborate"
           subtitle="Direct network links"
           Icon={IconWorld}
-          className="h-full min-h-70"
+          className="h-full min-h-60"
         >
           <ContactCard />
         </BentoCard>
@@ -158,33 +172,17 @@ export default function About() {
   ];
 
   return (
-    <Section id="about" className="relative" noFade>
+    <Section id="about" className="relative py-12 md:py-16" noFade>
       <Particles
         className="absolute inset-0"
-        quantity={200}
+        quantity={120}
         ease={60}
         color="#ffffff"
-        size={0.75}
+        size={0.7}
       />
 
-      {/* Section Header */}
-      {/* <BlurFade inView delay={0}>
-        <div className="mb-6 sm:mb-8 text-center sm:text-left">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-medium mb-2.5">
-            <IconSparkles className="h-3 w-3" />
-            <span>Profile & Overview</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-headline-md">
-            {about.heading}
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
-            {about.subheading}
-          </p>
-        </div>
-      </BlurFade> */}
-
-      {/* 12-Column x 8-Row Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-8 gap-2.5 sm:gap-3">
+      {/* Unified 12-Column Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-7 gap-3 sm:gap-4">
         {bentoItems.map((item) => (
           <BlurFade
             key={item.id}
@@ -195,8 +193,6 @@ export default function About() {
             {item.content}
           </BlurFade>
         ))}
-
-        <ToolsMarqueeCard />
       </div>
     </Section>
   );
