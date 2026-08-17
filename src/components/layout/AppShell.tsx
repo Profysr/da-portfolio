@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "motion/react";
 import { Outlet } from "react-router-dom";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import {
@@ -12,6 +13,7 @@ import {
   CommandPaletteButton,
 } from "@/components/CommandPallete";
 import { nav, socials } from "@/data/idx.js";
+import { Footer } from "./Footer";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -65,7 +67,6 @@ function TopBar() {
 /* ------------------------------------------------------------------ */
 /*  BottomDock — fixed, full-width                                     */
 /* ------------------------------------------------------------------ */
-
 function BottomDock() {
   return (
     <TooltipProvider delayDuration={0}>
@@ -141,6 +142,8 @@ function BottomDock() {
 /* ------------------------------------------------------------------ */
 
 export function AppShell() {
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+
   return (
     <>
       {/* Chrome — full width, renders once across all routes */}
@@ -150,7 +153,17 @@ export function AppShell() {
       <div className="pb-24">
         <Outlet />
       </div>
-      <BottomDock />
+      <motion.div
+        animate={{
+          y: isFooterVisible ? 100 : 0,
+          opacity: isFooterVisible ? 0 : 1,
+        }}
+        transition={{ duration: 0.35, ease: "easeInOut" }}
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
+      >
+        <BottomDock />
+      </motion.div>
+      <Footer onFooterInViewChange={setIsFooterVisible} />
     </>
   );
 }

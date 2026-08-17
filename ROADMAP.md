@@ -79,7 +79,7 @@
 
 ---
 
-## Phase 3 — About Me + Stats + Skills 🔄 (IN PROGRESS)
+## Phase 3 — About Me + Stats + Skills ✅ (DONE)
 
 **Goal:** Who you are, where you are, social proof numbers, and skill grid.
 
@@ -101,7 +101,7 @@
 
 ---
 
-## Phase 4 — "What I Build" — Consistency Heatmap + Stats
+## Phase 4 — "What I Build" — Consistency Heatmap + Stats ✅ (DONE)
 
 **Goal:** Show contribution rhythm and build velocity through a bento grid layout.
 
@@ -284,11 +284,11 @@ src/
 ├── components/
 │   ├── layout/
 │   │   ├── PageWrapper.jsx           ← Phase 1
-│   │   └── Section.jsx               ← Phase 1 (BlurFade wrapper)
+│   │   ├── Section.jsx               ← Phase 1 (BlurFade wrapper)
+│   │   └── Footer.jsx                ← Phase 1 ✅
 │   ├── nav/
 │   │   └── Navbar.jsx                ← Phase 1 (or remove if Dock-only)
 │   ├── sections/
-│   │   ├── Footer.jsx                ← Phase 1
 │   │   ├── Hero.jsx                  ← Phase 2 (HomePage)
 │   │   ├── About.jsx                 ← Phase 3 (HomePage)
 │   │   ├── Consistency.jsx           ← Phase 4 (HomePage)

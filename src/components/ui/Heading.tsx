@@ -67,10 +67,10 @@ export function GradientHeading({
 }: GradientHeadingProps) {
   return (
     <Component
-      className={cn(
-        "pointer-events-none inline-block bg-linear-to-b from-neutral-950 via-neutral-800 to-neutral-500 bg-clip-text text-center text-5xl sm:text-7xl font-extrabold leading-none tracking-wider text-transparent dark:from-white dark:via-neutral-300 dark:to-neutral-600",
-        className,
-      )}
+    className={cn(
+      "pointer-events-none inline-block bg-linear-to-b from-neutral-950 via-neutral-800 to-neutral-500 bg-clip-text text-center text-5xl sm:text-7xl font-extrabold leading-none tracking-wider text-transparent dark:from-white dark:via-neutral-300 dark:to-neutral-600",
+      className,
+    )}
       style={{
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",

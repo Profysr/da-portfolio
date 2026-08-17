@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { LightRays } from "@/components/ui/light-rays";
-import { RainbowButton } from "@/components/ui/rainbow-button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
@@ -111,17 +111,15 @@ function SocialAndCta({ wiggleIcon, handleIconClick, scrollToProjects }) {
 
         <span className="hidden sm:block h-6 w-px bg-zinc-700/80" aria-hidden />
 
-        <RainbowButton
+        <ShimmerButton
           ref={ctaRef}
           onMouseMove={handleCtaMove}
           onClick={scrollToProjects}
-          variant="outline"
-          size="default"
           className="group inline-flex items-center gap-2 text-sm font-semibold"
         >
           <span>View my work</span>
           <IconArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </RainbowButton>
+        </ShimmerButton>
       </div>
     </BlurFade>
   );

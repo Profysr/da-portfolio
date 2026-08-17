@@ -91,6 +91,13 @@ export const personal = {
   socials,
 };
 
+export const footer = {
+  badge: "Discipline → Consistency → Impact",
+  heading: "20 years ago, today, or 20 years from now: understand the problem, solve it, and you're unstoppable.",
+  ctaLabel: "Say Hello",
+  resumePath: "/resume.pdf",
+};
+
 export const about = {
   heading: "About Me",
   subheading:
