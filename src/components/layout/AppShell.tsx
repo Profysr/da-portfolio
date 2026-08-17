@@ -150,7 +150,7 @@ export function AppShell() {
       <CommandPalette />
       <TopBar />
 
-      <div className="pb-24">
+      <div className="flex flex-col gap-2">
         <Outlet />
       </div>
       <motion.div

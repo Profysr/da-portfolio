@@ -104,7 +104,7 @@ export const Footer = ({ onFooterInViewChange }) => {
 
   return (
     <TooltipProvider>
-      <Section noFade className="py-8 sm:py-12 pb-4 sm:pb-4">
+      <Section noFade className="py-4 sm:py-6">
         <footer
           ref={footerRef}
           className="relative w-full bg-background text-foreground overflow-hidden font-sans"
