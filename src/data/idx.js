@@ -14,6 +14,7 @@ import {
   IconCode,
   IconActivity,
   IconSparkles,
+  IconSchool,
 } from "@tabler/icons-react";
 
 /**
@@ -285,18 +286,35 @@ export const experiences = [
 
 export const education = [
   {
+    id: "edu-uml",
+    image: "/experience/umasslowell_logo.jpg",
+    company: "University of Massachusetts, Lowell",
+    role: "B.S. in Computer Science, Minor in Mathematics",
+    date: "2020 — 2024",
+    description:
+      "Focused on computer science fundamentals, algorithms, and applied mathematics.",
+    location: "Lowell, MA",
+    skills: [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "JavaScript",
+      "HTML/CSS",
+      "SQL",
+    ],
+    href: "https://www.uml.edu",
+  },
+  {
     id: "edu-1",
-    degree: "Bachelor of Science",
-    institution: "University Name",
-    start: "2018",
-    end: "2022",
+    company: "University Name",
+    role: "Bachelor of Science",
+    date: "2018 — 2022",
     description:
       "Focused on statistics, programming, and data-driven research.",
-    highlights: [
-      "Dean's List — 4 semesters",
-      "Senior thesis on predictive modelling",
-      "Data Science Club — President",
-    ],
+    location: "City, Country",
+    skills: ["Statistics", "Python", "R"],
+    href: "#",
   },
 ];
 
@@ -335,19 +353,66 @@ export const projects = [
   {
     id: "proj-1",
     title: "Analytics Dashboard",
+    subtitle: "Real-time KPI dashboard with custom visualisations",
     description:
       "Real-time KPI dashboard with custom visualisations and alerting built for e-commerce clients.",
     tech: ["React", "TypeScript", "D3.js", "Python"],
+    tags: ["React", "TypeScript", "D3.js", "Python"],
+    category: "Web",
+    isFeatured: true,
     github: "#",
     live: "#",
+    githubUrl: "#",
+    liveUrl: "#",
+    image: "/projects/analytics-dashboard.jpg",
   },
   {
     id: "proj-2",
     title: "Data Pipeline Toolkit",
+    subtitle: "Open-source ETL orchestration CLI",
     description:
       "Open-source CLI tool that orchestrates ETL jobs with minimal configuration.",
     tech: ["Python", "Docker", "SQL"],
+    tags: ["Python", "Docker", "SQL"],
+    category: "Automation",
+    isFeatured: false,
     github: "#",
+    live: "#",
+    githubUrl: "#",
+    liveUrl: "#",
+    image: null,
+  },
+  {
+    id: "proj-3",
+    title: "RPA Clinical Automation Suite",
+    subtitle: "Healthcare workflow automation for NHS clinics",
+    description:
+      "End-to-end clinical software automation integrated with SystmOne, EMIS, and Docman systems.",
+    tech: ["Power Automate", "Python", "JavaScript"],
+    tags: ["Power Automate", "Python", "JavaScript", "AutoHotkey"],
+    category: "Automation",
+    isFeatured: true,
+    github: "#",
+    live: "#",
+    githubUrl: "#",
+    liveUrl: "#",
+    image: null,
+  },
+  {
+    id: "proj-4",
+    title: "Agency Portfolio Platform",
+    subtitle: "Dark cinematic portfolio for DA Agency",
+    description:
+      "Single-page portfolio with interactive globe, contribution heatmap, and glassmorphic UI.",
+    tech: ["React", "Motion", "Tailwind CSS", "cobe"],
+    tags: ["React", "Motion", "Tailwind CSS", "cobe"],
+    category: "Web",
+    isFeatured: false,
+    github: "#",
+    live: "#",
+    githubUrl: "#",
+    liveUrl: "#",
+    image: null,
   },
 ];
 

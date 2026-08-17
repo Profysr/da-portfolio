@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IconChevronDown, IconCode, IconExternalLink } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { GradientHeading } from "../ui/Heading";
-import { Badge } from "../ui/badge";
-import { experiences } from "@/data/experience";
+import { GradientHeading } from "@/components/ui/Heading";
+import { Badge } from "@/components/ui/badge";
+import { experiences } from "@/data/idx";
 
 const RoleCard = ({ role, isLastRole }) => {
   const [isOpen, setIsOpen] = useState(false);

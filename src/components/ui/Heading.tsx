@@ -20,7 +20,7 @@ export function Heading({
   return (
     <div
       className={cn(
-        "relative flex w-full max-w-6xl mx-auto flex-col items-center justify-center",
+        "relative flex w-full flex-col items-center justify-center",
         className,
       )}
     >

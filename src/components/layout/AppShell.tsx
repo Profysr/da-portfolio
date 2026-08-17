@@ -12,7 +12,6 @@ import {
   CommandPalette,
   CommandPaletteButton,
 } from "@/components/CommandPallete";
-import { DockVisibilityProvider } from "@/components/nav/DockVisibilityProvider";
 import { nav, socials } from "@/data/idx.js";
 import { Footer } from "./Footer";
 
@@ -165,8 +164,7 @@ export function AppShell() {
   }, [lastScrollY]);
 
   return (
-    <DockVisibilityProvider>
-      <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
         {/* Continuous Unified Dot Grid at Root */}
         <div
           aria-hidden="true"
@@ -200,6 +198,5 @@ export function AppShell() {
           <Footer />
         </div>
       </div>
-    </DockVisibilityProvider>
   );
 }

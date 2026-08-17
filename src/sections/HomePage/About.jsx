@@ -11,10 +11,6 @@ import {
   IconSparkles,
   IconWorld,
   IconDownload,
-  IconFolderCode,
-  IconClock,
-  IconActivity,
-  IconRobot,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
 import { ToolsMarqueeCard } from "@/components/TechCard";
@@ -162,7 +158,7 @@ export default function About() {
   ];
 
   return (
-    <Section id="about" className="relative py-10 sm:pt-14" noFade>
+    <Section id="about" className="relative" noFade>
       <Particles
         className="absolute inset-0"
         quantity={200}

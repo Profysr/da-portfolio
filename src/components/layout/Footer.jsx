@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
-import { motion } from "motion/react";
-import { IconArrowUpRight, IconDownload, IconSparkles } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+  IconDownload,
+  IconSparkles,
+} from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import {
   Tooltip,
@@ -87,7 +90,9 @@ const FooterNavStrip = () => (
  * ───────────────────────────────────────────────────────────── */
 const BottomMetadata = () => (
   <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 text-xs text-zinc-500 font-mono">
-    <p>© {new Date().getFullYear()} · {personal.name}. All rights reserved.</p>
+    <p>
+      © {new Date().getFullYear()} · {personal.name}. All rights reserved.
+    </p>
     <div className="flex items-center gap-2 text-[11px]">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
       <span>Systems Operational ({personal.timezone})</span>
@@ -112,10 +117,10 @@ export const Footer = () => {
                 className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-lg h-56 bg-primary/20 blur-3xl rounded-full"
               />
               {/* Subtle Dot Grid inside container */}
-              <div
+              {/* <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:20px_20px]"
-              />
+                className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-size-[20px_20px]"
+              /> */}
 
               {/* Centered CTA Section */}
               <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center max-w-2xl mx-auto my-auto">
@@ -125,12 +130,16 @@ export const Footer = () => {
                 </div>
 
                 <GradientHeading
-                  text={footer?.heading || "Ready to build something impactful together?"}
+                  text={
+                    footer?.heading ||
+                    "Ready to build something impactful together?"
+                  }
                   className="text-2xl! sm:text-3xl! md:text-4xl! font-bold tracking-tight text-white max-w-xl"
                 />
 
-                <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed max-w-lg">
-                  {footer?.subheading || "Whether you need scalable data pipelines, AI tooling, or full-stack software, let's talk."}
+                <p className="text-xs sm:text-sm md:text-base capitalize text-zinc-400 leading-relaxed max-w-lg">
+                  {footer?.subheading ||
+                    "Whether you need scalable data pipelines, AI tooling, or full-stack software, let's talk."}
                 </p>
 
                 <FooterCTA />

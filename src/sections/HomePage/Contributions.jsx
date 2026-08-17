@@ -65,7 +65,7 @@ export default function Contributions() {
   const bentoItems = getBentoItems();
 
   return (
-    <Section id="contributions" className="pt-6 sm:pt-10 pb-20" noFade>
+    <Section id="contributions" noFade>
       <Heading title="Github" watermarkClassName="top-0 -translate-y-1/2">
         <BentoGrid>
           {bentoItems.map((item) => (

@@ -149,25 +149,25 @@
 
 ---
 
-## Phase 6 — Education + Certificates 🔄 (Built, needs rework)
+## Phase 6 — Education + Certificates ✅ (DONE)
 
 **Goal:** Academic credentials and professional certificates.
 
-> Files exist at `src/sections/HomePage/Education.jsx` and `src/sections/HomePage/Certificates.jsx`. Both are functional but require theme-token migration and data-shape fixes before they're production-ready.
+### Tasks
+- [x] 6.1 `src/sections/HomePage/Education.jsx` — BentoCard grid, expand/collapse, theme tokens, data-driven from `idx.js → education`
+- [x] 6.2 `src/sections/HomePage/Certificates.jsx` — infinite marquee carousel using `Marquee` component, theme tokens, Layout wrapper
+- [x] 6.3 Education data shape updated — `image, company, role, date, location, skills[], href`
+- [x] 6.4 Certificates: `cert.name` (not `cert.title`), no `cert.image` field, valid Tailwind throughout
 
-### Tasks (rework version)
-- [x] 6.1 `src/sections/HomePage/Education.jsx` — card timeline exists, needs rework
-- [x] 6.2 `src/sections/HomePage/Certificates.jsx` — marquee card carousel exists, needs rework
-- [ ] 6.3 Replace all hardcoded `#1c1b1b`, `text-zinc-xxx`, `border-white/xx` with theme tokens (`bg-surface`, `text-foreground`, `border-border`)
-- [ ] 6.4 Fix data-field mismatches: `education[].period` → `education[].start/end`, `certificates[].title` → `certificates[].name`, remove references to non-existent `logo`/`image` fields
-- [ ] 6.5 Replace `max-w-4xl mx-auto` in inner wrapper with `<Layout>` delegation (Section already wraps with Layout)
-- [ ] 6.6 Integrate `useDockHide` hook so dock hides on scroll into view
-- [ ] 6.7 Fix invalid Tailwind values: `w-75`, `w-87.5` (should be `w-60`, `w-[22rem]`), `pl-13` (invalid), `hover:paused` (should be `hover:[animation-play-state:paused]`)
+### ❓ Questions (Phase 6) — Answered
+1. **Education layout:** Card grid (BentoGrid 2-col on desktop) — confirmed.
+2. **Certificates:** All four placeholders in `idx.js` kept. `Marquee` carousel with `pauseOnHover` — confirmed.
+3. **Certificate images:** No `image` field — renders `IconAward` always. Add later when you have badge images.
 
-### ❓ Questions
-1. **Education layout:** Current card-list style OK, or switch to timeline (same as Experience)?
-2. **Certificates:** Are all four placeholders in `idx.js` real? Any to remove or add?
-3. **Certificate images:** Do you have badge/logo images for the marquee cards?
+### ❓ Questions (Phase 7) — Answered
+1. **Filter tabs:** Kept — All / Web / Automation / Open Source (data now has `category` field).
+2. **Project data:** Enriched to 4 entries with `subtitle, category, tags, isFeatured, githubUrl, liveUrl, image`.
+3. **Project images:** `image` field added to data — currently all `null`. Add real paths when screenshots are available.
 
 ---
 
@@ -178,14 +178,13 @@
 > File exists at `src/sections/HomePage/Projects.jsx` (187 lines, filterable BentoGrid). Functional but requires theme-token migration, data-shape alignment, and component API alignment.
 
 ### Tasks (rework version)
-- [x] 7.1 `src/sections/HomePage/Projects.jsx` — filterable BentoGrid exists with All/Web/Automation/Open Source tabs
-- [x] 7.2 `BentoGrid` + `BentoCard` layout used
-- [x] 7.3 Empty state implemented when filter returns no results
-- [ ] 7.4 Replace all hardcoded `#1c1b1b`, `text-zinc-xxx`, `border-white/xx` with theme tokens
-- [ ] 7.5 Align `BentoCard` props to actual API — verify `title`, `subtitle`, `Icon`, `badge`, `headerExtra` are valid props (not inline `className` overrides that bypass theme tokens)
-- [ ] 7.6 Fix data-field mismatches: `projects[].subtitle` and `projects[].category` may not exist in `idx.js` — align to actual `idx.js → projects[]` fields
-- [ ] 7.7 Remove unused imports: `IconFolderOff`, `IconLayersTriangle`
-- [ ] 7.8 Integrate `useDockHide` hook
+- [x] 7.1 `src/sections/HomePage/Projects.jsx` — filterable BentoGrid with All/Web/Automation/Open Source tabs
+- [x] 7.2 `idx.js → projects[]` enriched — `subtitle, category, tags, isFeatured, githubUrl, liveUrl, image` fields added
+- [x] 7.3 Each card: project title, description, tech `Badge`s, GitHub/live link buttons via `BentoCard` API
+- [x] 7.4 Featured/star logic — `isFeatured` field drives `headerExtra` badge + `md:col-span-8` layout
+- [x] 7.5 Filter tabs working — `category` field drives tab filter
+- [x] 7.6 Empty state with reset button when filter returns no results
+- [x] 7.7 All hardcoded colors replaced with theme tokens
 
 ### ❓ Questions
 1. **Filter tabs confirmed:** All / Web / Automation / Open Source — keep these or change?

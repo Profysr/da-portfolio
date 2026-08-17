@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { IconChevronDown, IconSparkles, IconMail, IconArrowRight } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { GradientHeading } from "../../components/ui/Heading";
+import { GradientHeading } from "@/components/ui/Heading";
 import { ExpandableList } from "@/components/ui/expandable-list";
 import { FrequentQuestions, personal } from "@/data/idx";
 
@@ -14,15 +14,15 @@ import { FrequentQuestions, personal } from "@/data/idx";
  * ───────────────────────────────────────────────────────────── */
 const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
   return (
-    <div className="border-b border-white/10 last:border-none py-1.5 transition-colors">
+    <div className="border-b border-border last:border-none py-1.5 transition-colors">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg text-left group transition-all duration-200 hover:bg-white/[0.04] cursor-pointer"
+        className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg text-left group transition-all duration-200 hover:bg-background/5 cursor-pointer"
         aria-expanded={isOpen}
       >
         <span
-          className={`text-sm sm:text-base font-medium transition-colors pr-4 ${isOpen ? "text-primary font-semibold" : "text-zinc-200 group-hover:text-white"
+          className={`text-sm sm:text-base font-medium transition-colors pr-4 ${isOpen ? "text-primary font-semibold" : "text-foreground group-hover:text-foreground"
             }`}
         >
           {question}
@@ -30,7 +30,7 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
         <div
           className={`p-1.5 rounded-full border transition-all duration-300 shrink-0 ${isOpen
               ? "rotate-180 bg-primary/20 border-primary/40 text-primary shadow-[0_0_12px_rgba(208,188,255,0.3)]"
-              : "bg-white/5 border-white/10 text-zinc-400 group-hover:text-white group-hover:border-white/20"
+              : "bg-background/10 border-border text-muted-foreground group-hover:text-foreground group-hover:border-border"
             }`}
         >
           <IconChevronDown className="w-3.5 h-3.5" />
@@ -46,7 +46,7 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="pt-1 pb-4 px-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+            <p className="pt-1 pb-4 px-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {answer}
             </p>
           </motion.div>
@@ -82,20 +82,20 @@ export const FAQ = () => {
               className="text-2xl! sm:text-3xl! lg:text-4xl! text-center! lg:text-left!"
             />
 
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-md leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
               {FrequentQuestions.subheading}
             </p>
           </div>
 
           {/* Quick Contact Card (Elevated Shady Glass) */}
-          <div className="rounded-lg border border-white/15 bg-zinc-900/80 backdrop-blur-2xl p-5 flex flex-col gap-3 shadow-xl hover:border-primary/30 transition-colors">
-            <div className="flex items-center gap-2 text-white text-xs sm:text-sm font-semibold">
+          <div className="rounded-lg border border-border bg-surface backdrop-blur-2xl p-5 flex flex-col gap-3 shadow-xl hover:border-primary/30 transition-colors">
+            <div className="flex items-center gap-2 text-foreground text-xs sm:text-sm font-semibold">
               <span className="p-1.5 rounded-lg bg-primary/15 border border-primary/25 text-primary">
                 <IconMail className="h-3.5 w-3.5" />
               </span>
               <span>Have a specific project in mind?</span>
             </div>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               I'm always open to discussing system architecture, agent workflows, or custom consulting.
             </p>
             <a
@@ -110,7 +110,7 @@ export const FAQ = () => {
 
         {/* Right Column: FAQ Accordion with ExpandableList (Initial 3 Items) */}
         <BlurFade inView delay={0.1} className="w-full lg:w-7/12">
-          <div className="w-full rounded-lg border border-white/15 bg-zinc-900/85 backdrop-blur-2xl p-4 sm:p-6">
+          <div className="w-full rounded-lg border border-border bg-surface backdrop-blur-2xl p-4 sm:p-6">
             <ExpandableList
               items={FrequentQuestions.items}
               initialCount={3}
