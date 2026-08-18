@@ -1,4 +1,4 @@
-import { useRef, Suspense } from "react";
+import { Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { LazyAnimatedShinyText } from "@/components/lazy";
 import { IconArrowRight } from "@tabler/icons-react";
@@ -67,26 +67,26 @@ export function AvatarStatus() {
           }
         >
           <LazyAnimatedShinyText className="inline-flex items-center justify-center gap-1.5 px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-          <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
-            <span
-              className={cn(
-                "absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping",
-                isGreen ? "bg-emerald-400" : "bg-amber-400",
-              )}
-            />
-            <span
-              className={cn(
-                "relative inline-flex h-2 w-2 rounded-full",
-                isGreen ? "bg-emerald-500" : "bg-amber-500",
-              )}
-            />
-          </span>
-          <span className="text-xs sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80r">
-            {status}
-          </span>
-          <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-        </LazyAnimatedShinyText>
-      </Suspense>
+            <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
+              <span
+                className={cn(
+                  "absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping",
+                  isGreen ? "bg-emerald-400" : "bg-amber-400",
+                )}
+              />
+              <span
+                className={cn(
+                  "relative inline-flex h-2 w-2 rounded-full",
+                  isGreen ? "bg-emerald-500" : "bg-amber-500",
+                )}
+              />
+            </span>
+            <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80r">
+              {status}
+            </span>
+            <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </LazyAnimatedShinyText>
+        </Suspense>
       </div>
     </div>
   );
