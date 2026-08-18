@@ -8,7 +8,7 @@
 /* ── DESIGN.md palette: Dark Cinematic / Ethereal Professional ────────── */
 :root {
   /* Surfaces */
-  --background: #131313;
+  --background: #151515;
   --surface-low: #1c1b1b;
   --surface: #201f1f;
   --surface-high: #2a2a2a;
@@ -138,6 +138,32 @@ html {
 section[id] {
   scroll-margin-top: 80px;
 }
+
+/* ── Light Section Context ─────────────────────────────────────────────── */
+/* Wrap a section with class="light-section" to invert to a creamy surface.
+   All theme tokens re-scoped so child components adapt automatically.     */
+.light-section {
+  --background:        #f7f5f2;
+  --surface-low:       #f0ece6;
+  --surface:           #faf8f5;
+  --surface-high:      #ede9e4;
+  --surface-highest:   #e4e0da;
+  --foreground:        #1a1825;
+  --muted-foreground:  #5a5468;
+  --border:            #d6d0c8;
+  --primary:           #5516be;
+  --primary-foreground:#ffffff;
+  --primary-container: #ede9ff;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Cards inside light-section still use the surface token system */
+.light-section .bg-surface       { background-color: var(--surface); }
+.light-section .bg-surface-high  { background-color: var(--surface-high); }
+.light-section .border-border     { border-color: var(--border); }
+.light-section .text-foreground   { color: var(--foreground); }
+.light-section .text-muted-foreground { color: var(--muted-foreground); }
 
 
 /* ── Headings ─────────────────────────────────────────────────────────── */
