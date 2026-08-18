@@ -380,6 +380,26 @@ export const certificates = [
     credentialUrl: "https://coursera.org/verify/sql-data-science",
     skills: ["PostgreSQL", "Query Optimization", "Indexing", "ETL"],
   },
+  {
+    id: "cert-react",
+    name: "Advanced React & Next.js Architecture",
+    issuingOrg: "Udemy / Vercel Partner",
+    issueDate: "May 2023",
+    expirationDate: null,
+    credentialId: "UC-5928174",
+    credentialUrl: "https://udemy.com/certificate/UC-5928174",
+    skills: ["React 19", "Server Components", "Next.js", "State Machines"],
+  },
+  {
+    id: "cert-sql",
+    name: "SQL for Data Science & Distributed Queries",
+    issuingOrg: "UC Davis / Coursera",
+    issueDate: "Nov 2022",
+    expirationDate: null,
+    credentialId: "COURSERA-SQL-38192",
+    credentialUrl: "https://coursera.org/verify/sql-data-science",
+    skills: ["PostgreSQL", "Query Optimization", "Indexing", "ETL"],
+  },
 ];
 
 export const awards = [
