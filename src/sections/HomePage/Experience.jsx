@@ -207,7 +207,7 @@ const ExperienceCard = ({ exp, isLit }) => (
  * Primary section component wrapping the ScrollRail and ExpandableList.
  */
 export const Experience = () => (
-  <Section id="experience" noFade className="py-10 md:py-16">
+  <Section id="experience" noFade className="py-10 md:py-16 relative">
     <ExperienceHeader />
 
     <ScrollRail className="mt-8">

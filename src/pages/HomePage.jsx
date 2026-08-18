@@ -5,6 +5,7 @@ import { Experience } from "@/sections/HomePage/Experience";
 import { Projects } from "@/sections/HomePage/Projects";
 import { Credentials } from "@/sections/HomePage/Credentials";
 import { FAQ } from "@/sections/HomePage/FAQ";
+// import ProjectMomentum from "@/sections/HomePage/ProjectsMomentum";
 
 export function HomePage() {
   return (
@@ -14,10 +15,9 @@ export function HomePage() {
       <TechStack />
       <Experience />
       <Projects />
+      {/* <ProjectMomentum /> */}
       <Credentials />
-
       <FAQ />
-
     </main>
   );
 }

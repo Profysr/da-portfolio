@@ -2,13 +2,17 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { IconChevronDown, IconSparkles, IconMail, IconArrowRight } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconSparkles,
+  IconMail,
+  IconArrowRight,
+} from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { GradientHeading } from "@/components/ui/Heading";
 import { ExpandableList } from "@/components/ui/expandable-list";
 import { FrequentQuestions, personal } from "@/data/idx";
-import { DottedMap } from "@/components/ui/dotted-map";
 
 /* ─────────────────────────────────────────────────────────────
  *  Single FAQ Accordion Item Component
@@ -23,16 +27,20 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
         aria-expanded={isOpen}
       >
         <span
-          className={`text-xs sm:text-sm font-medium transition-colors pr-3 ${isOpen ? "text-primary font-semibold" : "text-foreground group-hover:text-foreground"
-            }`}
+          className={`text-xs sm:text-sm font-medium transition-colors pr-3 ${
+            isOpen
+              ? "text-primary font-semibold"
+              : "text-foreground group-hover:text-foreground"
+          }`}
         >
           {question}
         </span>
         <div
-          className={`p-1 rounded border transition-all duration-300 shrink-0 ${isOpen
-            ? "rotate-180 bg-primary/20 border-primary/40 text-primary"
-            : "bg-surface border-border text-muted-foreground group-hover:text-foreground"
-            }`}
+          className={`p-1 rounded border transition-all duration-300 shrink-0 ${
+            isOpen
+              ? "rotate-180 bg-primary/20 border-primary/40 text-primary"
+              : "bg-surface border-border text-muted-foreground group-hover:text-foreground"
+          }`}
         >
           <IconChevronDown className="w-3.5 h-3.5" />
         </div>
@@ -68,10 +76,14 @@ export const FAQ = () => {
   };
 
   return (
-    <Section id="faq" noFade className="py-6 sm:py-12 relative">
+    <Section id="faq" noFade className="py-6 sm:py-12">
       <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-6">
         {/* Left Column: Header & Direct Reach-out Card */}
-        <BlurFade inView delay={0.05} className="w-full lg:w-5/12 flex flex-col gap-4 lg:sticky lg:top-24">
+        <BlurFade
+          inView
+          delay={0.05}
+          className="w-full lg:w-5/12 flex flex-col gap-4 lg:sticky lg:top-24"
+        >
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/25 bg-primary/10 text-primary text-xs font-medium backdrop-blur-md shadow-xs">
               <IconSparkles className="h-3 w-3" />
@@ -97,7 +109,8 @@ export const FAQ = () => {
               <span>Have a specific project in mind?</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              I'm always open to discussing system architecture, agent workflows, or custom consulting.
+              I'm always open to discussing system architecture, agent
+              workflows, or custom consulting.
             </p>
             <a
               href={`mailto:${personal.email}`}
@@ -115,7 +128,9 @@ export const FAQ = () => {
             <ExpandableList
               items={FrequentQuestions.items}
               initialCount={3}
-              showMoreLabel={(hiddenCount) => `Show more questions (+${hiddenCount})`}
+              showMoreLabel={(hiddenCount) =>
+                `Show more questions (+${hiddenCount})`
+              }
               showLessLabel="Show fewer questions"
               renderItem={(item) => (
                 <FAQAccordionItem

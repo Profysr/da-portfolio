@@ -38,7 +38,7 @@ export function TagFilter({
             type="button"
             onClick={() => onChange?.(val)}
             className={cn(
-              "px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 cursor-none select-none",
+              "px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 select-none",
               isActive
                 ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                 : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-surface-high",
