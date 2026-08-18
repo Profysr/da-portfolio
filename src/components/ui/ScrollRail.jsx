@@ -3,9 +3,10 @@
 import React, {
   createContext,
   useContext,
-  useLayoutEffect,
+  useEffect,
   useRef,
   useState,
+  useCallback,
 } from "react";
 import {
   motion,
@@ -13,56 +14,52 @@ import {
   useTransform,
   useSpring,
   useMotionValueEvent,
-} from "motion/react";
+} from "framer-motion";
 import { cn } from "@/lib/utils";
-
-/**
- * ScrollRail
- * ---------------
- * Same underlying technique as TracingBeam: measure the rail's total height,
- * map scroll progress across it to a spring-smoothed pixel value (`fillY`),
- * and treat that as "how far the line has been drawn."
- *
- * TracingBeam stops there and just draws the gradient at that position.
- * The rail goes one step further — each dot compares its own vertical
- * offset against `fillY` to decide whether it's been "reached" yet, and
- * lights itself + its border accordingly.
- */
 
 const RailContext = createContext(null);
 
 export function ScrollRail({ children, className }) {
   const containerRef = useRef(null);
   const [railHeight, setRailHeight] = useState(0);
-  const offsetsRef = useRef({}); // index -> px offset from container top
+  const [offsets, setOffsets] = useState({});
 
-  const registerOffset = (index, top) => {
-    offsetsRef.current[index] = top;
-  };
-  const getOffset = (index) => offsetsRef.current[index] ?? Infinity;
+  const registerOffset = useCallback((index, top) => {
+    setOffsets((prev) => {
+      if (prev[index] === top) return prev;
+      return { ...prev, [index]: top };
+    });
+  }, []);
 
-  useLayoutEffect(() => {
-    if (containerRef.current) setRailHeight(containerRef.current.offsetHeight);
-  }, [children]);
+  // Update container height
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setRailHeight(entry.contentRect.height);
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"],
   });
 
-  // Pixel position the "fill" has traveled down the rail — identical role
-  // to TracingBeam's y1/y2, just used as a literal draw height here.
   const fillY = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, railHeight]),
-    { stiffness: 380, damping: 60, mass: 0.5 }
+    { stiffness: 300, damping: 40, mass: 0.2 }
   );
 
   return (
-    <RailContext.Provider value={{ containerRef, fillY, registerOffset, getOffset }}>
+    <RailContext.Provider value={{ containerRef, fillY, registerOffset, offsets }}>
       <div ref={containerRef} className={cn("relative", className)}>
-        {/* static track, full height */}
+        {/* Track */}
         <div className="absolute left-3 top-2 bottom-2 w-px bg-border" aria-hidden />
-        {/* animated fill — grows as fillY grows, exactly like the beam's line */}
+        
+        {/* Fill Line */}
         <motion.div
           className="absolute left-3 top-2 w-px bg-primary origin-top"
           style={{ height: fillY }}
@@ -76,44 +73,49 @@ export function ScrollRail({ children, className }) {
 
 ScrollRail.Item = function RailItem({ index, isLast, children, className }) {
   const dotRef = useRef(null);
-  const { containerRef, fillY, registerOffset, getOffset } = useContext(RailContext);
+  const { containerRef, fillY, registerOffset, offsets } = useContext(RailContext);
   const [isLit, setIsLit] = useState(false);
 
-  useLayoutEffect(() => {
-    if (dotRef.current && containerRef.current) {
-      const dotTop = dotRef.current.getBoundingClientRect().top;
-      const containerTop = containerRef.current.getBoundingClientRect().top;
-      registerOffset(index, dotTop - containerTop);
-    }
-  }, [index]);
+  const targetOffset = offsets[index];
 
-  // Every time the scroll-driven fill value changes, check whether it has
-  // reached this dot's offset yet. This replaces the IntersectionObserver
-  // callback — same "cumulative, stays lit once passed" behavior, but
-  // derived from the same motion value that draws the line.
+  // Measure position relative to container
+  useEffect(() => {
+    const measure = () => {
+      if (dotRef.current && containerRef.current) {
+        const dotTop = dotRef.current.getBoundingClientRect().top;
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+        registerOffset(index, Math.max(0, dotTop - containerTop));
+      }
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [index, containerRef, registerOffset]);
+
+  // Two-way scroll listener (Lights ON scrolling down, Lights OFF scrolling up)
   useMotionValueEvent(fillY, "change", (latest) => {
-    const lit = latest >= getOffset(index);
-    setIsLit((prev) => (prev === lit ? prev : lit));
+    if (typeof targetOffset !== "number") return;
+    const shouldBeLit = latest >= (targetOffset - 4);
+    setIsLit((prev) => (prev === shouldBeLit ? prev : shouldBeLit));
   });
 
   return (
     <div className={cn("relative pl-9 sm:pl-10", !isLast && "pb-8 sm:pb-10", className)}>
-      <span
+      <motion.span
         ref={dotRef}
-        className={cn(
-          "absolute left-3 top-2 z-10 flex size-3.5 -translate-x-1/2 items-center justify-center rounded-full border-2 transition-colors duration-300",
-          isLit
-            ? "border-primary bg-primary shadow-[0_0_0_4px] shadow-primary/15"
-            : "border-border bg-background"
-        )}
-      >
-        <span
-          className={cn(
-            "size-1.5 rounded-full transition-opacity duration-300",
-            isLit ? "bg-background opacity-100" : "opacity-0"
-          )}
-        />
-      </span>
+        initial={false}
+        animate={{
+          backgroundColor: isLit ? "var(--primary)" : "var(--background)",
+          borderColor: isLit ? "var(--primary)" : "var(--border)",
+          boxShadow: isLit
+            ? "0 0 10px var(--primary), 0 0 18px var(--primary)"
+            : "0 0 0px transparent",
+          scale: isLit ? 1.2 : 0.85,
+        }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="absolute left-3 top-2 z-10 block size-3.5 -translate-x-1/2 rounded-full border-2"
+      />
 
       {typeof children === "function" ? children({ isLit }) : children}
     </div>
