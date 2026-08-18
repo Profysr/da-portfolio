@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import {
   IconSparkles,
   IconCpu,
@@ -68,7 +68,7 @@ export function TechStack() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${isSelected
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 ${isSelected
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "bg-surface border border-border text-muted-foreground hover:text-white hover:border-primary/40 hover:bg-surface-high"
                     }`}
@@ -80,7 +80,7 @@ export function TechStack() {
           </div>
 
           {/* Categorized Tech Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
             <AnimatePresence mode="popLayout">
               {displayedCategories.map((group, groupIdx) => {
                 const IconComponent = CATEGORY_ICONS[group.category] || IconSparkles;

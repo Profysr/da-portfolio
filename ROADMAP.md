@@ -138,7 +138,7 @@
 - [x] 5.5 Section heading rendered via `GradientHeading` component
 - [x] 5.6 Framer Motion `AnimatePresence` height animation for expand/collapse
 
-> **Note:** Uses `framer-motion` `AnimatePresence` for expand/collapse rather than `TracingBeam`. The implementation is functional; `TracingBeam` can be substituted in a future polish pass.
+> **Note:** Uses `motion` `AnimatePresence` for expand/collapse rather than `TracingBeam`. The implementation is functional; `TracingBeam` can be substituted in a future polish pass.
 
 **Result:** Section renders. Expandable role cards with company headers, tech badges, Present indicator.
 

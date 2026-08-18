@@ -18,6 +18,7 @@ import { ContactCard } from "@/components/ContactCard";
 import { Particles } from "@/components/ui/particles";
 import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
+import { cn } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────────
  *  Unified About & Contributions Bento Grid
@@ -49,7 +50,7 @@ export default function About() {
                 href={personal.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/15 bg-white/[0.04] text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/15 bg-white/4 text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
               >
                 <IconDownload className="h-3.5 w-3.5 text-primary" />
                 Resume
@@ -181,13 +182,13 @@ export default function About() {
       />
 
       {/* Unified 12-Column Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-7 gap-1 sm:gap-2">
         {bentoItems.map((item) => (
           <BlurFade
             key={item.id}
             inView
             delay={item.delay}
-            className={item.className}
+            className={cn(item.className, "bg-surface/50")}
           >
             {item.content}
           </BlurFade>

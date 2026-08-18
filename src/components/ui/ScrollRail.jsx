@@ -14,7 +14,7 @@ import {
   useTransform,
   useSpring,
   useMotionValueEvent,
-} from "framer-motion";
+} from "motion/react";
 import { cn } from "@/lib/utils";
 
 const RailContext = createContext(null);
@@ -101,7 +101,7 @@ ScrollRail.Item = function RailItem({ index, isLast, children, className }) {
   });
 
   return (
-    <div className={cn("relative pl-4 sm:pl-9", !isLast && "pb-6 sm:pb-10", className)}>
+    <div className={cn("relative pl-4 sm:pl-9", !isLast && "pb-4 sm:pb-8", className)}>
       <motion.span
         ref={dotRef}
         initial={false}
