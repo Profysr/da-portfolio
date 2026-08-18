@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { projects } from "@/data/idx";
 import { Particles } from "@/components/ui/particles";
 import { cn } from "@/lib/utils";
+import { TagFilter } from "@/components/TagFilter";
 
 /* ── ExpandableList Component ─────────────────────────────────────── */
 export function ExpandableList({
@@ -373,24 +374,7 @@ export const Projects = () => {
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            {CATEGORIES.map((cat) => {
-              const isActive = activeTab === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveTab(cat)}
-                  className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all duration-200 ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-surface-high"
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
+          <TagFilter items={CATEGORIES} activeValue={activeTab} onChange={setActiveTab} />
 
           {/* Integrated Expandable Grid */}
           <AnimatePresence mode="wait">

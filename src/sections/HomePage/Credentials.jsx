@@ -16,8 +16,8 @@ import { Badge } from "@/components/ui/badge";
 import { education, certificates, awards } from "@/data/idx";
 import { ScrollRail } from "@/components/ui/ScrollRail";
 import { ExpandableList } from "@/components/ui/expandable-list";
+import { TagFilter } from "@/components/TagFilter";
 
-// Tab Configurations
 const TABS = [
   { id: "all", label: "All Credentials" },
   { id: "certs", label: "Certifications & Licenses", count: certificates.length },
@@ -50,38 +50,6 @@ function SectionHeaderTitle({ icon: Icon, title }) {
     <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground pl-0.5 pt-2">
       <Icon className="size-3.5 text-primary" />
       <span>{title}</span>
-    </div>
-  );
-}
-
-function TabFilters({ activeTab, onSelectTab }) {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-1.5 w-full max-w-2xl">
-      {TABS.map((tab) => {
-        const isActive = activeTab === tab.id;
-        return (
-          <button
-            key={tab.id}
-            onClick={() => onSelectTab(tab.id)}
-            className={`px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 ${isActive
-              ? "bg-primary text-primary-foreground shadow-xs"
-              : "bg-surface border border-border text-muted-foreground hover:text-white hover:border-primary/40 hover:bg-surface-high"
-              }`}
-          >
-            <span>{tab.label}</span>
-            {tab.count !== undefined && (
-              <span
-                className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${isActive
-                  ? "bg-primary-foreground/20 text-primary-foreground"
-                  : "bg-white/10 text-muted-foreground"
-                  }`}
-              >
-                {tab.count}
-              </span>
-            )}
-          </button>
-        );
-      })}
     </div>
   );
 }
@@ -326,7 +294,7 @@ export function Credentials() {
         </div>
 
         {/* Filter Tabs */}
-        <TabFilters activeTab={activeTab} onSelectTab={setActiveTab} />
+        <TagFilter items={TABS} activeValue={activeTab} onChange={setActiveTab} />
 
         {/* Cards Content */}
         <div className="w-full">

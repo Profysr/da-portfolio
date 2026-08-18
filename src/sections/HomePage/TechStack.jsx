@@ -17,6 +17,7 @@ import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { Spotlight } from "@/components/ui/spotlight";
+import { TagFilter } from "@/components/TagFilter";
 
 const CATEGORY_ICONS = {
   "Automations & AI": IconCpu,
@@ -59,24 +60,8 @@ export function TechStack() {
           {/* Daily Drivers Callout Strip Component */}
           <FavoriteStack variant="detailed" />
 
-          {/* Category Filter Pills — Responsive Wrap without broken oval border */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 w-full max-w-2xl">
-            {categories.map((cat) => {
-              const isSelected = selectedCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 ${isSelected
-                      ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                      : "bg-surface border border-border text-muted-foreground hover:text-white hover:border-primary/40 hover:bg-surface-high"
-                    }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
+{/* Category Filter Pills */}
+          <TagFilter items={categories} activeValue={selectedCategory} onChange={setSelectedCategory} />
 
           {/* Categorized Tech Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
