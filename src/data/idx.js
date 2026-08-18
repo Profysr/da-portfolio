@@ -83,12 +83,12 @@ export const personal = {
         Specializing in scalable system architecture, full-stack intelligence, 
         MCP-driven agentic pipelines, and autonomous tooling.`,
   avatar: "/avatar.jpg",
-  logo: "/logo.svg",
+  logo: "/sig.png",
   location: "Pakistan",
   locationLabel: "Islamabad, PK → Worldwide",
   timezone: "GMT+5",
   email: "hello@da-portfolio.dev",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/Resume Bilal Ahmad.pdf",
   socials,
 };
 
@@ -659,5 +659,5 @@ export const footer = {
   subheading:
     "understand the problem, solve it, and you're unstoppable.",
   ctaLabel: "Say Hello",
-  resumePath: "/resume.pdf",
+  resumePath: "/Resume Bilal Ahmad.pdf",
 };

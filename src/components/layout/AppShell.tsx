@@ -30,7 +30,15 @@ function TopBar({ isVisible }: { isVisible: boolean }) {
           aria-label="Home"
           className="flex items-center gap-2 font-bold tracking-tight text-white hover:text-primary transition-colors text-sm sm:text-base"
         >
-          DA
+          {personal.logo ? (
+            <img
+              src={personal.logo}
+              alt="Bilal Ahmad"
+              className="h-6 sm:h-7 w-auto object-contain"
+            />
+          ) : (
+            <span>DA</span>
+          )}
         </a>
         {(personal.resumeUrl) && (
           <a
