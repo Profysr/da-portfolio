@@ -57,15 +57,15 @@ function SectionHeaderTitle({ icon: Icon, title }) {
 
 function TabFilters({ activeTab, onSelectTab }) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 w-full max-w-2xl">
+    <div className="flex flex-wrap items-center justify-center gap-1.5 w-full max-w-2xl">
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
           <button
             key={tab.id}
             onClick={() => onSelectTab(tab.id)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 ${isActive
-              ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all duration-200 inline-flex items-center gap-1.5 ${isActive
+              ? "bg-primary text-primary-foreground shadow-xs"
               : "bg-surface border border-border text-muted-foreground hover:text-white hover:border-primary/40 hover:bg-surface-high"
               }`}
           >
