@@ -20,10 +20,10 @@ import {
   IconRobot,
   IconUser,
 } from "@tabler/icons-react";
-import { aiRecruiterData, personal } from "@/data/idx";
+import { aiBotData, personal } from "@/data/idx";
 import { downloadResume } from "@/lib/utils";
 
-export function AIRecruiterModal({ isOpen, onClose }) {
+export function AIBotModal({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -137,7 +137,7 @@ export function AIRecruiterModal({ isOpen, onClose }) {
             ⚡ Quick Recruiter Prompts
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {aiRecruiterData.quickPrompts.map((prompt) => (
+            {aiBotData.quickPrompts.map((prompt) => (
               <button
                 key={prompt.id}
                 type="button"

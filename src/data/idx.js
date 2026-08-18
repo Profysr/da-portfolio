@@ -14,7 +14,6 @@ import {
   IconCode,
   IconActivity,
   IconSparkles,
-  IconSchool,
 } from "@tabler/icons-react";
 
 /**
@@ -419,7 +418,7 @@ export const awards = [
   },
 ];
 
-export const aiRecruiterData = {
+export const aiBotData = {
   quickPrompts: [
     {
       id: "pitch",
