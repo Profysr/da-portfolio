@@ -22,10 +22,10 @@ import { projects } from "@/data/idx";
 const CATEGORIES = ["All", "Web", "Automation", "Open Source"];
 
 const CATEGORY_CONFIG = {
-  Web:           { Icon: IconGlobe,  gradient: "from-blue-500/20 via-indigo-500/10 to-violet-500/20" },
-  Automation:    { Icon: IconRobot,  gradient: "from-violet-500/20 via-purple-500/10 to-fuchsia-500/20" },
-  "Open Source": { Icon: IconCode,   gradient: "from-emerald-500/20 via-teal-500/10 to-cyan-500/20" },
-  default:       { Icon: IconCode,   gradient: "from-zinc-500/20 via-slate-500/10 to-gray-500/20" },
+  Web: { Icon: IconGlobe, gradient: "from-blue-500/20 via-indigo-500/10 to-violet-500/20" },
+  Automation: { Icon: IconRobot, gradient: "from-violet-500/20 via-purple-500/10 to-fuchsia-500/20" },
+  "Open Source": { Icon: IconCode, gradient: "from-emerald-500/20 via-teal-500/10 to-cyan-500/20" },
+  default: { Icon: IconCode, gradient: "from-zinc-500/20 via-slate-500/10 to-gray-500/20" },
 };
 
 const DEFAULT_VISIBLE = 6;
@@ -157,113 +157,110 @@ export const Projects = () => {
 
   return (
     <Section id="projects" noFade className="py-10 md:py-16">
-      <Layout>
-        <div className="flex flex-col items-center gap-7">
-          {/* Header */}
-          <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="outline">PORTFOLIO</Badge>
-            <GradientHeading
-              text="Featured Projects"
-              className="text-3xl! sm:text-5xl!"
-            />
-            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              A showcase of web applications, developer tooling, and workflow automation engines.
-            </p>
-          </div>
-
-          {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-            {CATEGORIES.map((cat) => {
-              const isActive = activeTab === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => handleTabChange(cat)}
-                  className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                      : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-surface-high"
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Responsive Project Grid */}
-          <AnimatePresence mode="wait">
-            {filtered.length > 0 ? (
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="w-full"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                  <AnimatePresence>
-                    {visible.map((project, idx) => (
-                      <ProjectCard
-                        key={project.id}
-                        project={project}
-                        delay={idx * 0.04}
-                      />
-                    ))}
-                  </AnimatePresence>
-                </div>
-
-                {/* Show more / less */}
-                {filtered.length > DEFAULT_VISIBLE && (
-                  <div className="flex justify-center mt-6">
-                    <button
-                      onClick={() => setShowAll((prev) => !prev)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-surface hover:bg-surface-high text-sm font-medium text-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary"
-                    >
-                      {showAll ? (
-                        <>
-                          <IconChevronUp className="size-4" />
-                          <span>Show less</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Load {hiddenCount} more project{hiddenCount !== 1 ? "s" : ""}</span>
-                          <IconChevronDown className="size-4" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            ) : (
-              /* Empty State */
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="w-full flex flex-col items-center justify-center p-10 rounded-md border border-dashed border-border bg-surface text-center space-y-2.5"
-              >
-                <div className="p-2.5 rounded border border-border text-muted-foreground bg-surface-high">
-                  <IconFolderOff className="size-6" />
-                </div>
-                <h4 className="text-sm font-semibold text-foreground">
-                  No projects found
-                </h4>
-                <p className="text-xs text-muted-foreground max-w-sm">
-                  No projects match the selected category filter.
-                </p>
-                <button
-                  onClick={() => handleTabChange("All")}
-                  className="mt-1 text-xs font-medium text-primary hover:underline"
-                >
-                  Reset Filter
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      <div className="flex flex-col items-center gap-7">
+        {/* Header */}
+        <div className="flex flex-col items-center text-center gap-2.5">
+          <Badge variant="outline">PORTFOLIO</Badge>
+          <GradientHeading
+            text="Featured Projects"
+            className="text-3xl! sm:text-5xl!"
+          />
+          <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
+            A showcase of web applications, developer tooling, and workflow automation engines.
+          </p>
         </div>
-      </Layout>
+
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeTab === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => handleTabChange(cat)}
+                className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${isActive
+                    ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                    : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-surface-high"
+                  }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Responsive Project Grid */}
+        <AnimatePresence mode="wait">
+          {filtered.length > 0 ? (
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-full"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                <AnimatePresence>
+                  {visible.map((project, idx) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      delay={idx * 0.04}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              {/* Show more / less */}
+              {filtered.length > DEFAULT_VISIBLE && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setShowAll((prev) => !prev)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-surface hover:bg-surface-high text-sm font-medium text-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary"
+                  >
+                    {showAll ? (
+                      <>
+                        <IconChevronUp className="size-4" />
+                        <span>Show less</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Load {hiddenCount} more project{hiddenCount !== 1 ? "s" : ""}</span>
+                        <IconChevronDown className="size-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            /* Empty State */
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full flex flex-col items-center justify-center p-10 rounded-md border border-dashed border-border bg-surface text-center space-y-2.5"
+            >
+              <div className="p-2.5 rounded border border-border text-muted-foreground bg-surface-high">
+                <IconFolderOff className="size-6" />
+              </div>
+              <h4 className="text-sm font-semibold text-foreground">
+                No projects found
+              </h4>
+              <p className="text-xs text-muted-foreground max-w-sm">
+                No projects match the selected category filter.
+              </p>
+              <button
+                onClick={() => handleTabChange("All")}
+                className="mt-1 text-xs font-medium text-primary hover:underline"
+              >
+                Reset Filter
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </Section>
   );
 };

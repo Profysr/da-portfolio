@@ -53,9 +53,8 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
               {role.title}
             </h4>
             <div
-              className={`shrink-0 p-0.5 sm:p-1 rounded border border-border transition-transform duration-300 ${
-                isOpen ? "rotate-180 bg-white/10 text-white" : "text-muted-foreground"
-              }`}
+              className={`shrink-0 p-0.5 sm:p-1 rounded border border-border transition-transform duration-300 ${isOpen ? "rotate-180 bg-white/10 text-white" : "text-muted-foreground"
+                }`}
             >
               <IconChevronDown className="size-3 sm:size-3.5" />
             </div>
@@ -112,99 +111,97 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
 export const Experience = () => {
   return (
     <Section id="experience" noFade className="py-10 md:py-16">
-      <Layout>
-        {/* Section Header */}
-        <div className="flex flex-col items-center text-center gap-2.5">
-          <Badge variant="outline">CAREER</Badge>
-          <GradientHeading text="Work Experience" className="text-3xl! sm:text-5xl!" />
-          <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-            Engineering leadership, forward deployed solutions, and clinical RPA systems.
-          </p>
-        </div>
+      {/* Section Header */}
+      <div className="flex flex-col items-center text-center gap-2.5">
+        <Badge variant="outline">CAREER</Badge>
+        <GradientHeading text="Work Experience" className="text-3xl! sm:text-5xl!" />
+        <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
+          Engineering leadership, forward deployed solutions, and clinical RPA systems.
+        </p>
+      </div>
 
-        {/* Experience Cards — scroll-lit rail + expandable list */}
-        <ScrollRail className="mt-8 max-w-2xl mx-auto">
-          <ExpandableList
-            items={experiences}
-            initialCount={2}
-            showMoreLabel={(hiddenCount) =>
-              `Show ${hiddenCount} more ${hiddenCount === 1 ? "role" : "roles"}`
-            }
-            showLessLabel="Show less"
-            renderItem={(exp, i) => (
-              <ScrollRail.Item key={exp.id || exp.company} index={i}>
-                {({ isLit }) => (
-                  <div
-                    className={cn(
-                      "rounded-md bg-surface p-3 sm:p-4.5 shadow-lg space-y-4 sm:space-y-5 transition-all duration-500",
-                      isLit
-                        ? "border border-primary/50 shadow-primary/5"
-                        : "border border-border hover:border-primary/30"
+      {/* Experience Cards — scroll-lit rail + expandable list */}
+      <ScrollRail className="mt-8">
+        <ExpandableList
+          items={experiences}
+          initialCount={2}
+          showMoreLabel={(hiddenCount) =>
+            `Show ${hiddenCount} more ${hiddenCount === 1 ? "role" : "roles"}`
+          }
+          showLessLabel="Show less"
+          renderItem={(exp, i) => (
+            <ScrollRail.Item key={exp.id || exp.company} index={i}>
+              {({ isLit }) => (
+                <div
+                  className={cn(
+                    "rounded-md bg-surface p-3 sm:p-4.5 shadow-lg space-y-4 sm:space-y-5 transition-all duration-500",
+                    isLit
+                      ? "border border-primary/50 shadow-primary/5"
+                      : "border border-border hover:border-primary/30"
+                  )}
+                >
+                  {/* Company Header */}
+                  <div className="flex items-start justify-between gap-2.5 sm:gap-3 border-b border-border pb-3 sm:pb-3.5">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="size-8 sm:size-10 rounded border border-border bg-surface-high/60 p-1 flex items-center justify-center shrink-0">
+                        {exp.logo ? (
+                          <img
+                            src={exp.logo}
+                            alt={`${exp.company} logo`}
+                            className="size-full rounded object-contain"
+                          />
+                        ) : (
+                          <IconBriefcase className="size-3.5 sm:size-4 text-primary" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                          <a
+                            href={exp.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm sm:text-lg font-semibold text-foreground hover:text-primary transition-colors inline-flex items-center gap-1 min-w-0 truncate"
+                          >
+                            <span className="truncate">{exp.company}</span>
+                            <IconExternalLink className="size-3 sm:size-3.5 text-muted-foreground hover:text-primary shrink-0" />
+                          </a>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-1.5 sm:gap-x-2 text-[11px] sm:text-xs text-muted-foreground mt-0.5">
+                          <span>{exp.location}</span>
+                          <span className="opacity-50">•</span>
+                          <span className="text-foreground/80">{exp.locationType}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {exp.isCurrent && (
+                      <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 text-[10px] sm:text-[11px] font-medium shrink-0">
+                        <span className="relative flex size-1.5 sm:size-2">
+                          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex size-1.5 sm:size-2 rounded-full bg-emerald-500" />
+                        </span>
+                        Present
+                      </div>
                     )}
-              >
-                {/* Company Header */}
-                <div className="flex items-start justify-between gap-2.5 sm:gap-3 border-b border-border pb-3 sm:pb-3.5">
-                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                    <div className="size-8 sm:size-10 rounded border border-border bg-surface-high/60 p-1 flex items-center justify-center shrink-0">
-                      {exp.logo ? (
-                        <img
-                          src={exp.logo}
-                          alt={`${exp.company} logo`}
-                          className="size-full rounded object-contain"
-                        />
-                      ) : (
-                        <IconBriefcase className="size-3.5 sm:size-4 text-primary" />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                        <a
-                          href={exp.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm sm:text-lg font-semibold text-foreground hover:text-primary transition-colors inline-flex items-center gap-1 min-w-0 truncate"
-                        >
-                          <span className="truncate">{exp.company}</span>
-                          <IconExternalLink className="size-3 sm:size-3.5 text-muted-foreground hover:text-primary shrink-0" />
-                        </a>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-x-1.5 sm:gap-x-2 text-[11px] sm:text-xs text-muted-foreground mt-0.5">
-                        <span>{exp.location}</span>
-                        <span className="opacity-50">•</span>
-                        <span className="text-foreground/80">{exp.locationType}</span>
-                      </div>
-                    </div>
                   </div>
 
-                  {exp.isCurrent && (
-                    <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 text-[10px] sm:text-[11px] font-medium shrink-0">
-                      <span className="relative flex size-1.5 sm:size-2">
-                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex size-1.5 sm:size-2 rounded-full bg-emerald-500" />
-                      </span>
-                      Present
-                    </div>
-                  )}
+                  {/* Roles — single shared rail, dot/line share one x-offset */}
+                  <div>
+                    {exp.roles.map((role, idx) => (
+                      <RoleCard
+                        key={role.id || role.title}
+                        role={role}
+                        isLast={idx === exp.roles.length - 1}
+                        defaultOpen={true}
+                      />
+                    ))}
+                  </div>
                 </div>
-
-                {/* Roles — single shared rail, dot/line share one x-offset */}
-                <div>
-                  {exp.roles.map((role, idx) => (
-                    <RoleCard
-                      key={role.id || role.title}
-                      role={role}
-                      isLast={idx === exp.roles.length - 1}
-                      defaultOpen={true}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-              </ScrollRail.Item>
-            )}
-          />
-        </ScrollRail>
-      </Layout>
+              )}
+            </ScrollRail.Item>
+          )}
+        />
+      </ScrollRail>
     </Section>
   );
 };
