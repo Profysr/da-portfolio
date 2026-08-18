@@ -124,7 +124,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
               )}
               <span className="font-semibold text-xs text-white">{item.name}</span>
               {item.role && (
-                <span className="text-[10px] text-muted-foreground/80 font-mono border-l border-border pl-1.5">
+                <span className="hidden md:flex text-[10px] text-muted-foreground/80 font-mono border-l border-border pl-1.5">
                   {item.role}
                 </span>
               )}
