@@ -4,18 +4,19 @@ import { useRef, useState, Suspense } from "react";
 import { LazyLightRays } from "@/components/lazy";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
-import { IconArrowRight, IconChevronDown, IconSparkles } from "@tabler/icons-react";
+import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { personal, socials, favoriteStack } from "@/data/idx";
+import { personal, socials } from "@/data/idx";
 import { AvatarStatus } from "@/components/AvatarStatus";
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { FavoriteStack } from "@/components/FavoriteStack";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 
 /* ============================================================
  *  Animated Name & Headline Sub-component

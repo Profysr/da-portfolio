@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
 
@@ -54,29 +54,43 @@ const COMMUNITY_WRITINGS = [
 ];
 
 /* ── Minimalist Row Item ───────────────────────────────────────────── */
-function ActivityRow({ title, description, link }) {
+function ActivityRow({ title, description, link, icon: Icon }) {
+  const isExternal = link.startsWith("http");
+
   return (
-    <div className="group flex items-center justify-between py-4 border-b border-border/60 hover:border-border transition-colors duration-200">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 pr-4">
-        <span className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-          {title}
-        </span>
-        <span className="hidden sm:inline text-muted-foreground/40">•</span>
-        <span className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
-          {description}
-        </span>
+    <a
+      href={link}
+      target={isExternal ? "_blank" : "_self"}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className="group flex items-center justify-between w-full px-5 py-4 rounded-md border border-border/40 bg-zinc-950/80 hover:bg-zinc-900/60 hover:border-border transition-all duration-200 cursor-pointer"
+    >
+      <div className="flex items-center gap-3 pr-4">
+        {Icon && (
+          <span className="shrink-0 text-foreground text-lg">
+            <Icon className="size-5" />
+          </span>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+          <span className="text-sm sm:text-base font-medium text-foreground group-hover:text-white transition-colors">
+            {title}
+          </span>
+
+          {description && (
+            <>
+              <span className="hidden sm:inline text-muted-foreground/30">
+                •
+              </span>
+              <span className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
+                {description}
+              </span>
+            </>
+          )}
+        </div>
       </div>
 
-      <a
-        href={link}
-        target={link.startsWith("http") ? "_blank" : "_self"}
-        rel={link.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="shrink-0 inline-flex items-center gap-1 text-xs font-medium text-foreground bg-surface-high/60 hover:bg-surface-high border border-border px-3 py-1.5 rounded-full transition-all group-hover:border-primary/40"
-      >
-        <span>View</span>
-        <IconArrowUpRight className="size-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-      </a>
-    </div>
+      <IconArrowRight className="size-4 shrink-0 text-muted-foreground/70 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" />
+    </a>
   );
 }
 

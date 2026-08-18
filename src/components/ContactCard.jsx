@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { AnimatedBeam } from "@/components/ui/animated-beam";
+import { useRef, Suspense } from "react";
+import { LazyAnimatedBeam } from "@/components/lazy";
 import { personal, socials } from "@/data/idx";
 import {
   Tooltip,
@@ -7,6 +7,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
+const SuspenseBeam = ({ fromRef, toRef, ...props }) => (
+  <Suspense
+    fallback={
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="h-px w-full bg-white/5" />
+      </div>
+    }
+  >
+    <LazyAnimatedBeam fromRef={fromRef} toRef={toRef} {...props} />
+  </Suspense>
+);
 
 export function ContactCard() {
   const containerRef = useRef(null);
@@ -101,7 +113,7 @@ export function ContactCard() {
         </div>
 
         {/* Animated Beams */}
-        <AnimatedBeam
+        <SuspenseBeam
           containerRef={containerRef}
           fromRef={node1Ref}
           toRef={centerRef}
@@ -111,7 +123,7 @@ export function ContactCard() {
           gradientStartColor="#a855f7"
           gradientStopColor="#d0bcff"
         />
-        <AnimatedBeam
+        <SuspenseBeam
           containerRef={containerRef}
           fromRef={node2Ref}
           toRef={centerRef}
@@ -122,7 +134,7 @@ export function ContactCard() {
           gradientStartColor="#a855f7"
           gradientStopColor="#d0bcff"
         />
-        <AnimatedBeam
+        <SuspenseBeam
           containerRef={containerRef}
           fromRef={node3Ref}
           toRef={centerRef}
@@ -134,7 +146,7 @@ export function ContactCard() {
           gradientStartColor="#a855f7"
           gradientStopColor="#d0bcff"
         />
-        <AnimatedBeam
+        <SuspenseBeam
           containerRef={containerRef}
           fromRef={node4Ref}
           toRef={centerRef}

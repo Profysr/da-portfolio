@@ -1,5 +1,6 @@
+import { useRef, Suspense } from "react";
 import { cn } from "@/lib/utils";
-import { AnimatedShinyText } from "./ui/animated-shiny-text";
+import { LazyAnimatedShinyText } from "@/components/lazy";
 import { IconArrowRight } from "@tabler/icons-react";
 import { personal } from "@/data/idx";
 
@@ -54,7 +55,18 @@ export function AvatarStatus() {
           "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-surface-high dark:hover:bg-surface",
         )}
       >
-        <AnimatedShinyText className="inline-flex items-center justify-center gap-1.5 px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+        <Suspense
+          fallback={
+            <span className="inline-flex items-center justify-center gap-1.5 px-4 py-1 text-xs sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80r">
+              <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
+                <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping bg-emerald-400" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              {status}
+            </span>
+          }
+        >
+          <LazyAnimatedShinyText className="inline-flex items-center justify-center gap-1.5 px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
           <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
             <span
               className={cn(
@@ -73,7 +85,8 @@ export function AvatarStatus() {
             {status}
           </span>
           <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-        </AnimatedShinyText>
+        </LazyAnimatedShinyText>
+      </Suspense>
       </div>
     </div>
   );
