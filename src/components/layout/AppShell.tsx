@@ -60,7 +60,6 @@ const DOCK_DISTANCE = 96;
 /* ------------------------------------------------------------------ */
 /*  BottomDock — fixed bottom dock with smooth auto-hide              */
 /* ------------------------------------------------------------------ */
-
 function BottomDock({
   isVisible,
   onAIClick,
@@ -182,10 +181,10 @@ export function AppShell() {
   return (
     <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
       {/* Continuous Unified Dot Grid at Root */}
-      <div
+      {/* <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-size-[24px_24px]"
-      />
+      /> */}
 
       {/* Global Ambient Glows at Root */}
       <div
@@ -196,11 +195,7 @@ export function AppShell() {
         aria-hidden="true"
         className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
       />
-
-      {/* Physics-driven spring cursor — desktop only, auto-disables on touch */}
       <SmoothCursor />
-
-      {/* TopBar with Logo + Resume button */}
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
@@ -208,16 +203,9 @@ export function AppShell() {
         <Outlet />
       </main>
 
-      {/* Unified Bottom Dock — Nav icons + AI trigger as final item, zero collision */}
       <BottomDock isVisible={isNavVisible} onAIClick={() => setIsAIOpen(true)} />
-
-      {/* AI Recruiter Modal — controlled from AppShell so Dock button works */}
       <AIRecruiterModal isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
-
-      {/* Footer */}
-      <div className="relative z-10 w-full">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

@@ -37,7 +37,7 @@ export function TechStack() {
       : SkillsAndTools.filter((cat) => cat.category === selectedCategory);
 
   return (
-    <Section id="stack" noFade className="py-10 md:py-16 overflow-hidden">
+    <Section id="stack" noFade className="py-10 md:py-16 overflow-hidden relative">
       {/* Ambient Spotlight behind section */}
       <Spotlight
         className="-top-40 left-1/4 opacity-30"
@@ -68,11 +68,10 @@ export function TechStack() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
-                    isSelected
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${isSelected
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "bg-surface border border-border text-muted-foreground hover:text-white hover:border-primary/40 hover:bg-surface-high"
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>

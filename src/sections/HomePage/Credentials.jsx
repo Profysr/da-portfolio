@@ -23,8 +23,13 @@ const TABS = [
   { id: "awards", label: "Honors & Awards", count: awards?.length || 0 },
 ];
 
+const CERT_LIMIT = 6;
+const AWARD_LIMIT = 4;
+
 export function Credentials() {
   const [activeTab, setActiveTab] = useState("all");
+  const [showAllCerts, setShowAllCerts] = useState(false);
+  const [showAllAwards, setShowAllAwards] = useState(false);
 
   return (
     <Section id="credentials" noFade className="py-10 md:py-16">
@@ -86,13 +91,13 @@ export function Credentials() {
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-                  {certificates.map((cert, idx) => (
+                  {(showAllCerts ? certificates : certificates.slice(0, CERT_LIMIT)).map((cert, idx) => (
                     <motion.div
                       key={cert.id || idx}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.25, delay: idx * 0.04 }}
-                      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group"
+                      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-sm flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group"
                     >
                       <div className="space-y-2.5">
                         <div className="flex items-start justify-between gap-2.5">
@@ -101,7 +106,7 @@ export function Credentials() {
                               <IconCertificate className="size-4" />
                             </div>
                             <div>
-                              <h4 className="text-sm sm:text-base font-semibold text-white group-hover:text-primary transition-colors">
+                              <h4 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
                                 {cert.name}
                               </h4>
                               <p className="text-xs text-muted-foreground">
@@ -109,26 +114,24 @@ export function Credentials() {
                               </p>
                             </div>
                           </div>
-                          <span className="font-mono text-[11px] text-zinc-400 shrink-0 bg-white/5 border border-border px-2 py-0.5 rounded">
+                          <span className="font-mono text-[11px] text-muted-foreground shrink-0 bg-surface-high/80 border border-border px-2 py-0.5 rounded">
                             {cert.issueDate}
                           </span>
                         </div>
 
-                        {/* Credential ID */}
                         {cert.credentialId && (
                           <div className="text-[11px] font-mono text-muted-foreground/70">
                             Credential ID:{" "}
-                            <span className="text-zinc-300">{cert.credentialId}</span>
+                            <span className="text-foreground/70">{cert.credentialId}</span>
                           </div>
                         )}
 
-                        {/* Skills */}
                         {cert.skills && cert.skills.length > 0 && (
                           <div className="flex flex-wrap gap-1 pt-0.5">
                             {cert.skills.map((skill) => (
                               <span
                                 key={skill}
-                                className="inline-flex items-center rounded border border-border bg-surface-high/40 px-2 py-0.5 text-[10px] font-mono text-zinc-300"
+                                className="inline-flex items-center rounded border border-border bg-surface-high/60 px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
                               >
                                 {skill}
                               </span>
@@ -137,10 +140,9 @@ export function Credentials() {
                         )}
                       </div>
 
-                      {/* Verify Link */}
                       {cert.credentialUrl && cert.credentialUrl !== "#" && (
                         <div className="pt-2.5 border-t border-border flex items-center justify-between">
-                          <span className="text-[11px] text-emerald-400 inline-flex items-center gap-1">
+                          <span className="text-[11px] text-emerald-600 inline-flex items-center gap-1">
                             <IconCheck className="size-3" />
                             <span>Verified</span>
                           </span>
@@ -158,6 +160,20 @@ export function Credentials() {
                     </motion.div>
                   ))}
                 </div>
+
+                {/* Show more certs */}
+                {certificates.length > CERT_LIMIT && (
+                  <div className="flex justify-center pt-1">
+                    <button
+                      onClick={() => setShowAllCerts((p) => !p)}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                    >
+                      {showAllCerts
+                        ? "Show fewer certifications"
+                        : `Show all ${certificates.length} certifications`}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -178,16 +194,16 @@ export function Credentials() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.25, delay: idx * 0.04 }}
-                      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group"
+                      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-sm flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group"
                     >
                       <div className="space-y-2.5">
                         <div className="flex items-start justify-between gap-2.5">
                           <div className="flex items-center gap-2.5">
-                            <div className="size-8 rounded border border-border bg-white/[0.04] flex items-center justify-center text-primary shrink-0">
+                            <div className="size-8 rounded border border-border bg-surface-high/60 flex items-center justify-center text-primary shrink-0">
                               <IconSchool className="size-4" />
                             </div>
                             <div>
-                              <h4 className="text-sm sm:text-base font-semibold text-white">
+                              <h4 className="text-sm sm:text-base font-semibold text-foreground">
                                 {edu.institution}
                               </h4>
                               <p className="text-xs text-primary font-medium">
@@ -196,7 +212,7 @@ export function Credentials() {
                               </p>
                             </div>
                           </div>
-                          <span className="font-mono text-[11px] text-zinc-400 shrink-0 bg-white/5 border border-border px-2 py-0.5 rounded">
+                          <span className="font-mono text-[11px] text-muted-foreground shrink-0 bg-surface-high/80 border border-border px-2 py-0.5 rounded">
                             {edu.startDate} — {edu.endDate}
                           </span>
                         </div>
@@ -209,7 +225,7 @@ export function Credentials() {
                         )}
 
                         {edu.description && (
-                          <p className="text-xs text-zinc-300 leading-relaxed">
+                          <p className="text-xs text-muted-foreground leading-relaxed">
                             {edu.description}
                           </p>
                         )}
@@ -219,7 +235,7 @@ export function Credentials() {
                             {edu.skills.map((skill) => (
                               <span
                                 key={skill}
-                                className="inline-flex items-center rounded border border-border bg-surface-high/40 px-2 py-0.5 text-[10px] font-mono text-zinc-300"
+                                className="inline-flex items-center rounded border border-border bg-surface-high/60 px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
                               >
                                 {skill}
                               </span>
@@ -259,36 +275,50 @@ export function Credentials() {
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-                  {awards.map((award, idx) => (
+                  {(showAllAwards ? awards : awards.slice(0, AWARD_LIMIT)).map((award, idx) => (
                     <motion.div
                       key={award.id || idx}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.25, delay: idx * 0.04 }}
-                      className="rounded-md border border-border bg-surface p-4 shadow-lg space-y-1.5 hover:border-primary/40 transition-all"
+                      className="rounded-md border border-border bg-surface p-4 shadow-sm space-y-1.5 hover:border-primary/40 transition-all"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <div className="size-7 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                          <div className="size-7 rounded bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
                             <IconAward className="size-3.5" />
                           </div>
                           <div>
-                            <h4 className="text-xs sm:text-sm font-semibold text-white">
+                            <h4 className="text-xs sm:text-sm font-semibold text-foreground">
                               {award.title}
                             </h4>
                             <p className="text-[11px] text-muted-foreground">{award.issuer}</p>
                           </div>
                         </div>
-                        <span className="font-mono text-[10px] text-zinc-400 bg-white/5 border border-border px-1.5 py-0.5 rounded">
+                        <span className="font-mono text-[10px] text-muted-foreground bg-surface-high/80 border border-border px-1.5 py-0.5 rounded">
                           {award.date}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-300 pl-9 leading-relaxed">
+                      <p className="text-xs text-muted-foreground pl-9 leading-relaxed">
                         {award.description}
                       </p>
                     </motion.div>
                   ))}
                 </div>
+
+                {/* Show more awards */}
+                {awards.length > AWARD_LIMIT && (
+                  <div className="flex justify-center pt-1">
+                    <button
+                      onClick={() => setShowAllAwards((p) => !p)}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                    >
+                      {showAllAwards
+                        ? "Show fewer awards"
+                        : `Show all ${awards.length} awards`}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
