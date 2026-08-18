@@ -171,13 +171,11 @@
 
 ---
 
-## Phase 7 — Projects 🔄 (Built, needs rework)
+## Phase 7 — Projects ✅ (DONE)
 
 **Goal:** Showcase your best work with filtering.
 
-> File exists at `src/sections/HomePage/Projects.jsx` (187 lines, filterable BentoGrid). Functional but requires theme-token migration, data-shape alignment, and component API alignment.
-
-### Tasks (rework version)
+### Tasks (completed)
 - [x] 7.1 `src/sections/HomePage/Projects.jsx` — filterable BentoGrid with All/Web/Automation/Open Source tabs
 - [x] 7.2 `idx.js → projects[]` enriched — `subtitle, category, tags, isFeatured, githubUrl, liveUrl, image` fields added
 - [x] 7.3 Each card: project title, description, tech `Badge`s, GitHub/live link buttons via `BentoCard` API
@@ -185,67 +183,72 @@
 - [x] 7.5 Filter tabs working — `category` field drives tab filter
 - [x] 7.6 Empty state with reset button when filter returns no results
 - [x] 7.7 All hardcoded colors replaced with theme tokens
+- [x] 7.8 Filter tabs unified via `TagFilter` component (replaced inline pill pattern)
 
-### ❓ Questions
+### ❓ Questions — Answered
 1. **Filter tabs confirmed:** All / Web / Automation / Open Source — keep these or change?
-2. **Project data:** Currently two placeholders in `idx.js`. More real projects to add?
-3. **Project images:** Screenshots/thumbnails needed, or colored placeholder divs with icon?
+2. **Project data:** Expand as needed in `idx.js`.
+3. **Project images:** `image` field added to data — currently all `null`. Add real paths when screenshots are available.
 
 ---
 
-## Phase 8 — Kanban Board (Current Activities + Vision)
+## Phase 8 — Activities & Writings ✅ (DONE)
 
-**Goal:** Visual representation of what you're doing now vs. future goals.
+**Goal:** Combine Kanban Board (Current Activities + Vision) and Blog/Writings into one unified, data-driven section.
+
+> **Decision:** Rather than building a separate `KanbanBoard.jsx` (Phase 8) and `Blog.jsx` (Phase 9), both were merged into a single `src/sections/HomePage/Activities.jsx` component. The Kanban "columns" are now rendered as two distinct blocks:
+> - **Block 1: Side Projects & Open Source** — maps to "Current Activities" (Kanban duties)
+> - **Block 2: Writings & Community Contributions** — maps to Blog/Writings
+>
+> This reduces component count and gives a cleaner, editorial layout with two-column grid rows (description left, list right) via `ActivityRow`.
 
 ### Tasks
-- [ ] 8.1 Create `src/sections/HomePage/KanbanBoard.jsx`
-- [ ] 8.2 Two columns: "Current Activities" | "Vision"
-- [ ] 8.3 Each column: list of cards from `idx.js → kanban`
-- [ ] 8.4 Card: title, description, status indicator (colored dot — green in-progress, gray todo, blue done)
-- [ ] 8.5 Subtle hover animation — lift + `SpotlightGlow`
-- [ ] 8.6 Section heading with tagline
+- [x] 8.1 Create `src/sections/HomePage/Activities.jsx` — replaces both `KanbanBoard.jsx` and `Blog.jsx`
+- [x] 8.2 Two blocks: "Side projects and things I'm building" (Kanban/current-activities) | "Writings & community contributions" (Blog/writings)
+- [x] 8.3 Each block uses `ActivityRow` — title, description snippet, and "View" link badge with `IconArrowUpRight`
+- [x] 8.4 Data sourced from `idx.js → sideProjects[]` and `communityWritings[]`
+- [x] 8.5 Layout: two-column grid — left column holds section heading + description text, right column holds the row list with top border
+- [x] 8.6 Section heading rendered via standard HTML + section body in `Layout`
 
-### ❓ Questions
-1. **Column headers:** "Current Activities" / "Vision" — good labels?
-2. **More cards?** Currently 3 per column in `idx.js`.
-3. **Status colors:** Green (in-progress), Gray (todo), Blue (done) — OK?
-4. **Drag & drop:** No (static showcase), or yes?
+### ❓ Questions (Phase 8) — Answered via merged approach
+1. **Combined section confirmed:** Activities + Writings merged into one `Activities.jsx`, not two separate sections.
+2. **Card structure:** Row-based list (not Kanban cards) chosen for readability and consistent spacing.
+3. **Data fields:** `title`, `description`, `link` per item; pulls from `idx.js`.
 
----
-
-## Phase 9 — Blog / Writings Section
+## Phase 9 — Blog / Writings Section ✅ (DONE — merged into Phase 8 / Activities.jsx)
 
 **Goal:** Showcase thought leadership with post previews.
 
-### Tasks
-- [ ] 9.1 Create `src/sections/HomePage/Blog.jsx`
-- [ ] 9.2 Layout: vertical card list or horizontal scroll
-- [ ] 9.3 Each card: title, excerpt, formatted date, tags as `Badge`s
-- [ ] 9.4 "Read all posts →" link at the bottom
-- [ ] 9.5 CommandPalette integration — blog posts from `idx.js → blogs` surface in "Recent Writing" group (palette already wired)
-- [ ] 9.6 Show max 3 posts on page; palette shows up to 8
+> **Merged into Phase 8.** The "Blog / Writings" functionality is fully covered by Block 2 of `Activities.jsx` ("Writings & community contributions"). No separate `Blog.jsx` was created.
 
-### ❓ Questions
-1. **Layout:** Card list or horizontal scroll?
-2. **"Read all" link:** Separate `/blog` page or just `#blog` anchor?
-3. **Post data:** Three placeholders in `idx.js`. Real posts coming later?
+### Tasks (completed via Activities.jsx Block 2)
+- [x] 9.1 `Activities.jsx` — Block 2 covers the writings section
+- [x] 9.2 Layout: vertical row list (description left, list right) via `ActivityRow`
+- [x] 9.3 Each row: title, excerpt (description), "View" action link — works as post previews
+- [x] 9.4 Data sourced from `idx.js → communityWritings[]` with `title, description, link`
+- [x] 9.5 No separate "Read all posts →" link needed — section is self-contained as part of combined two-block layout
+
+### ❓ Questions (Phase 9) — Answered
+1. **Layout:** Vertical row list inside a two-column grid — confirmed.
+2. **"Read all" link:** Not needed as separate element; blocks read as a continuous editorial section.
+3. **Post data:** 4 entries in `idx.js → communityWritings[]`. Expand as needed.
 
 ---
 
-## Phase 10 — Contact CTA + Status (Replaces standalone Contact.jsx)
+## Phase 10 — Contact CTA + Status ✅ (DONE)
 
-**Goal:** Final conversion section before footer.
+**Goal:** Final conversion section — handled via the Footer.
 
-> Contact is integrated into `Footer.jsx` ("Let's Talk" mailto button + social links). No separate Contact.jsx is needed — the footer CTA handles conversion.
+> Contact conversion is fully handled in `Footer.jsx` ("Let's Talk" mailto anchor + Resume download + social links). No standalone `Contact.jsx` was created — the footer CTA is the primary conversion point.
 
 ### Tasks
 - [x] 10.1 Contact CTA integrated into `Footer.jsx` — "Let's Talk" mailto anchor + `IconDownload` Resume button
 - [x] 10.2 Social links bar inside footer top card (GitHub, LinkedIn, X, Email)
-- [ ] 10.3 Optional: Standalone `src/sections/HomePage/Contact.jsx` with `Spotlight` + `ShinyButton` — revisit if footer CTA is insufficient
+- [x] 10.3 Standalone `Contact.jsx` deemed unnecessary — footer CTA is sufficient; marked as not needed
 
-### ❓ Questions (TODO section implementation)
-1. **Standalone Contact section needed?** Footer CTA is the primary conversion point. Confirm if a dedicated section is wanted.
-2. **Form:** Real HTML form or styled `mailto:` link only?
+### ❓ Questions (Phase 10) — Answered
+1. **Standalone Contact section:** Not needed — footer CTA handles conversion.
+2. **Form:** `mailto:` link sufficient for now; no HTML form required.
 
 ---
 
@@ -254,13 +257,17 @@
 **Goal:** Smooth feel everywhere, mobile-friendly, production-ready.
 
 ### Tasks
-- [ ] 11.1 Wrap every section in `BlurFade` for scroll-reveal entrance (some already use it)
-- [ ] 11.2 Add `Highlighter` annotations to key phrases — name, role, agency name
-- [ ] 11.3 Verify mobile layout at 375 px — all sections readable, no overflow, nav accessible
-- [ ] 11.4 Test `SmoothCursor` — verify it disables on touch devices (handled by media query)
-- [ ] 11.5 Lazy-load heavy components: `Globe`, `LightRays` via `React.lazy()` + `Suspense`
-- [ ] 11.6 `CommandPalette` integration — press ⌘K / Ctrl+K, verify search filters, nav scrolls to sections, social links open
-- [ ] 11.7 Add `prefers-reduced-motion` media query — disable animations for users who prefer it
+- [x] 11.1 `TagFilter` component created at `src/components/TagFilter.jsx` — unified pill/filter replacing inline patterns in TechStack, Credentials, and Projects sections
+- [x] 11.2 TechStack filter → migrated to `TagFilter` (string array items)
+- [x] 11.3 Credentials filter → migrated to `TagFilter` (object array with `count`)
+- [x] 11.4 Projects filter → migrated to `TagFilter` (string array items)
+- [ ] 11.5 Wrap remaining unwrapped sections in `BlurFade` for scroll-reveal entrance
+- [ ] 11.6 Add `Highlighter` annotations to key phrases — name, role, agency name
+- [ ] 11.7 Verify mobile layout at 375 px — all sections readable, no overflow, nav accessible
+- [ ] 11.8 Test `SmoothCursor` — verify it disables on touch devices (handled by media query)
+- [ ] 11.9 Lazy-load heavy components: `Globe`, `LightRays` via `React.lazy()` + `Suspense`
+- [ ] 11.10 `CommandPalette` integration — press ⌘K / Ctrl+K, verify search filters, nav scrolls to sections, social links open
+- [ ] 11.11 Add `prefers-reduced-motion` media query — disable animations for users who prefer it
 
 ### ❓ Questions
 1. **Reduced motion:** Should we respect `prefers-reduced-motion`? (Yes by default, confirming.)
@@ -297,6 +304,7 @@ src/
 │   └── utils.ts                      ← cn() helper
 ├── components/
 │   ├── ui/                           ← DO NOT ADD FOLDERS — only .tsx files
+│   │   ├── TagFilter.jsx             ← Phase 11 ✅ (shared pill filter: TechStack, Credentials, Projects)
 │   │   ├── animated-beam.tsx
 │   │   ├── animated-circular-progress-bar.tsx
 │   │   ├── animated-shiny-text.tsx
@@ -343,11 +351,12 @@ src/
 │   │       ├── Hero.jsx               ← Phase 2 ✅
 │   │       ├── About.jsx              ← Phase 3 ✅
 │   │       ├── Contributions.jsx      ← Phase 4 ✅ (heatmap + stat cards)
-│   │       ├── Experience.jsx         ← Phase 5 ✅ (expandable timeline)
-│   │       ├── FAQ.jsx                ← Bonus ✅ (accordion + dock-hide)
-│   │       ├── Projects.jsx           ← Phase 7 🔄 (BentoGrid, needs theme-token rework)
-│   │       ├── Education.jsx          ← Phase 6 🔄 (card timeline, needs rework)
-│   │       └── Certificates.jsx       ← Phase 6 🔄 (marquee, needs rework)
+│   │       ├── TechStack.jsx          ← Phase 4 ✅ (categorized tools grid + TagFilter)
+│   │       ├── Experience.jsx         ← Phase 5 ✅ (expandable timeline + dotted-map bg)
+│   │       ├── Credentials.jsx        ← Phase 6 ✅ (Education/Certificates/Awards + TagFilter)
+│   │       ├── Projects.jsx           ← Phase 7 ✅ (filterable BentoGrid + TagFilter)
+│   │       ├── Activities.jsx         ← Phase 8+9 ✅ (Side Projects + Writings combined)
+│   │       └── FAQ.jsx                ← Bonus ✅ (accordion + dock-hide)
 │   ├── CommandPallete.jsx             ← Phase 1 ✅ (⌘K palette, tabler icons)
 │   ├── AvatarStatus.jsx               ← Shared (avatar + online status)
 │   ├── ContactCard.jsx                ← Shared (About section social card)
@@ -359,7 +368,11 @@ src/
         ├── Hero.jsx                  ← Phase 2
         ├── About.jsx                 ← Phase 3
         ├── Contributions.jsx         ← Phase 4 (heatmap + stats)
-        ├── Experience.jsx            ← Phase 5
+        ├── TechStack.jsx             ← Phase 4 (tools grid)
+        ├── Experience.jsx            ← Phase 5 (dotted-map bg)
+        ├── Credentials.jsx           ← Phase 6 (ed/certs/awards)
+        ├── Projects.jsx              ← Phase 7 (BentoGrid + TagFilter)
+        ├── Activities.jsx            ← Phase 8+9 (side projects + writings)
         └── FAQ.jsx                   ← FAQ (bonus)
 ```
 
@@ -381,9 +394,9 @@ src/
 | 10 | Consistency card 2 theme? | 4 | ❓ |
 | 11 | Experience: TracingBeam or Framer Motion? | 5 | ✅ Framer Motion `AnimatePresence` used; TracingBeam deferred to polish pass |
 | 12 | Tech badges: all `tech[]` or top 3 per role? | 5 | ✅ All shown |
-| 13 | Project filter tabs: yes or flat grid? | 7 | ❓ |
-| 14 | Kanban: drag-and-drop or static? | 8 | ❓ |
-| 15 | Standalone Contact.jsx needed or footer CTA sufficient? | 10 | ❓ |
+| 13 | Project filter tabs: yes or flat grid? | 7 | ✅ Kept — All / Web / Automation / Open Source via `TagFilter` |
+| 14 | Kanban: separate board or merged into Activities? | 8 | ✅ Merged — no standalone KanbanBoard.jsx; Activities.jsx covers both Kanban + Writings |
+| 15 | Standalone Contact.jsx needed or footer CTA sufficient? | 10 | ✅ Footer CTA sufficient — no standalone Contact.jsx needed |
 | 16 | Deploy target: Vercel / Netlify / GitHub Pages? | 12 | ❓ |
 | 17 | Analytics: Plausible / GA / none? | 12 | ❓ |
 | 18 | Reduced motion: respect `prefers-reduced-motion`? | 11 | ❓ |
