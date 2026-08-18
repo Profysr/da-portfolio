@@ -70,7 +70,7 @@ export const FAQ = () => {
 
   return (
     <Section id="faq" noFade className="py-6 sm:py-12">
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-10">
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-6">
         {/* Left Column: Header & Direct Reach-out Card */}
         <BlurFade inView delay={0.05} className="w-full lg:w-5/12 flex flex-col gap-4 lg:sticky lg:top-24">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
@@ -90,7 +90,7 @@ export const FAQ = () => {
           </div>
 
           {/* Quick Contact Card */}
-          <div className="rounded-md border border-border bg-surface p-4 sm:p-5 flex flex-col gap-2.5 shadow-lg hover:border-primary/30 transition-colors">
+          <div className="rounded-md border border-border bg-surface-high p-4 sm:p-5 flex flex-col gap-2.5 shadow-lg hover:border-primary/30 transition-colors">
             <div className="flex items-center gap-2 text-foreground text-xs sm:text-sm font-semibold">
               <span className="p-1 rounded bg-primary/15 border border-primary/25 text-primary">
                 <IconMail className="h-3.5 w-3.5" />
@@ -112,7 +112,7 @@ export const FAQ = () => {
 
         {/* Right Column: FAQ Accordion */}
         <BlurFade inView delay={0.1} className="w-full lg:w-7/12">
-          <div className="w-full rounded-md border border-border bg-surface p-3.5 sm:p-5 shadow-lg">
+          <div className="w-full rounded-md border border-border bg-surface-high p-3.5 sm:p-5 shadow-lg">
             <ExpandableList
               items={FrequentQuestions.items}
               initialCount={3}
