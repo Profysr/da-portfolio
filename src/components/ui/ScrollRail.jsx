@@ -57,11 +57,11 @@ export function ScrollRail({ children, className }) {
     <RailContext.Provider value={{ containerRef, fillY, registerOffset, offsets }}>
       <div ref={containerRef} className={cn("relative", className)}>
         {/* Track */}
-        <div className="absolute left-3 top-2 bottom-2 w-px bg-border" aria-hidden />
+        <div className="absolute left-1.5 sm:left-3 top-2 bottom-2 w-px bg-border" aria-hidden />
         
         {/* Fill Line */}
         <motion.div
-          className="absolute left-3 top-2 w-px bg-primary origin-top"
+          className="absolute left-1.5 sm:left-3 top-2 w-px bg-primary origin-top"
           style={{ height: fillY }}
           aria-hidden
         />
@@ -101,7 +101,7 @@ ScrollRail.Item = function RailItem({ index, isLast, children, className }) {
   });
 
   return (
-    <div className={cn("relative pl-9 sm:pl-10", !isLast && "pb-8 sm:pb-10", className)}>
+    <div className={cn("relative pl-4 sm:pl-9", !isLast && "pb-6 sm:pb-10", className)}>
       <motion.span
         ref={dotRef}
         initial={false}
@@ -114,7 +114,7 @@ ScrollRail.Item = function RailItem({ index, isLast, children, className }) {
           scale: isLit ? 1.2 : 0.85,
         }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="absolute left-3 top-2 z-10 block size-3.5 -translate-x-1/2 rounded-full border-2"
+        className="absolute left-1.5 sm:left-3 top-2 z-10 block size-3 sm:size-3.5 -translate-x-1/2 rounded-full border-2"
       />
 
       {typeof children === "function" ? children({ isLit }) : children}
