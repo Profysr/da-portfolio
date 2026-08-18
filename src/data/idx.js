@@ -175,7 +175,9 @@ export const SkillsAndTools = [
       { name: "AWS", img: null, subCategory: null },
       { name: "PostgreSQL", img: null, subCategory: null },
       { name: "Git & GitHub", img: "/tools/git.svg", subCategory: "VCS" },
-      { name: "Linux", img: null, subCategory: null },
+      { name: "SystmOne", img: null, subCategory: null },
+      { name: "EMIS", img: null, subCategory: null },
+      { name: "Docman", img: null, subCategory: null },
     ],
   },
   {

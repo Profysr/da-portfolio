@@ -91,8 +91,8 @@ export function TechStack() {
                       {/* Group Header */}
                       <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
                         <div className="flex items-center gap-2">
-                          <div className="size-6 rounded border border-border bg-white/[0.03] flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
-                            <IconComponent className="size-3.5" />
+                          <div className="size-5 rounded border border-border bg-white/5 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
+                            <IconComponent className="size-4.5" />
                           </div>
                           <h4 className="text-sm sm:text-base font-semibold text-white">
                             {group.category}
@@ -114,7 +114,7 @@ export function TechStack() {
                               <img
                                 src={item.img}
                                 alt={item.name}
-                                className="size-3.5 object-contain shrink-0"
+                                className="size-6 object-contain shrink-0"
                               />
                             )}
                             <span className="font-medium text-[11px] sm:text-xs">{item.name}</span>

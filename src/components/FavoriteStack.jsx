@@ -49,10 +49,10 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
                   <img
                     src={item.img}
                     alt={item.name}
-                    className="size-3.5 object-contain shrink-0"
+                    className="size-5 object-contain shrink-0"
                   />
                 ) : (
-                  <FallbackIcon className="size-3.5 text-primary shrink-0" />
+                  <FallbackIcon className="size-5 text-primary shrink-0" />
                 )}
                 <span className="text-[11px] font-medium text-zinc-200 whitespace-nowrap">
                   {item.name}
@@ -77,7 +77,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-border">
         <div className="flex items-center gap-2.5">
           <div className="flex size-7 items-center justify-center rounded bg-primary/20 text-primary shrink-0">
-            <IconSparkles className="size-4" />
+            <IconSparkles className="size-6" />
           </div>
           <div>
             <span className="text-[10px] font-semibold text-white uppercase tracking-wider block">
@@ -108,10 +108,10 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
                 <img
                   src={item.img}
                   alt={item.name}
-                  className="size-4 object-contain shrink-0"
+                  className="size-5 object-contain shrink-0"
                 />
               ) : (
-                <FallbackIcon className="size-4 text-primary shrink-0" />
+                <FallbackIcon className="size-5 text-primary shrink-0" />
               )}
               <span className="font-semibold text-xs text-white">{item.name}</span>
               {item.role && (
