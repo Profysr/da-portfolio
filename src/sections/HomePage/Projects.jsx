@@ -10,10 +10,7 @@ import {
   IconRobot,
   IconCode,
   IconChevronDown,
-  IconChevronUp,
   IconLock,
-  IconBuildingHospital,
-  IconBuildingStore,
   IconTerminal,
   IconCheck,
   IconServer,
@@ -25,18 +22,97 @@ import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { projects } from "@/data/idx";
 import { Particles } from "@/components/ui/particles";
+import { cn } from "@/lib/utils";
+
+/* ── ExpandableList Component ─────────────────────────────────────── */
+export function ExpandableList({
+  items,
+  initialCount = 3,
+  renderItem,
+  showMoreLabel,
+  showLessLabel = "Show less",
+  className,
+  listClassName,
+  buttonClassName,
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const canExpand = items.length > initialCount;
+  const visibleItems = isExpanded ? items : items.slice(0, initialCount);
+  const hiddenCount = Math.max(0, items.length - initialCount);
+
+  const defaultShowMore =
+    typeof showMoreLabel === "function"
+      ? showMoreLabel(hiddenCount)
+      : showMoreLabel || `Show more (${hiddenCount} more)`;
+
+  return (
+    <div className={cn("w-full flex flex-col", className)}>
+      <div className={cn("w-full flex flex-col", listClassName)}>
+        <AnimatePresence initial={false}>
+          {visibleItems.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {renderItem(item, index)}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {canExpand && (
+        <div className="pt-8 flex items-center justify-center">
+          <button
+            type="button"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className={cn(
+              "group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-primary/40 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all duration-300 shadow-sm backdrop-blur-md",
+              buttonClassName,
+            )}
+          >
+            <span>{isExpanded ? showLessLabel : defaultShowMore}</span>
+            <IconChevronDown
+              className={cn(
+                "h-4 w-4 text-primary transition-transform duration-300",
+                isExpanded ? "rotate-180" : "group-hover:translate-y-0.5",
+              )}
+            />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 /* ── Category & Domain Helpers ─────────────────────────────────────── */
 const CATEGORIES = ["All", "Web", "Automation", "Open Source"];
 
 const CATEGORY_CONFIG = {
-  Web: { Icon: IconGlobe, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
-  Automation: { Icon: IconRobot, color: "text-purple-400", bg: "bg-purple-500/10 border-purple-500/20" },
-  "Open Source": { Icon: IconCode, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
-  default: { Icon: IconCode, color: "text-zinc-400", bg: "bg-zinc-500/10 border-zinc-500/20" },
+  Web: {
+    Icon: IconGlobe,
+    color: "text-blue-400",
+    bg: "bg-blue-500/10 border-blue-500/20",
+  },
+  Automation: {
+    Icon: IconRobot,
+    color: "text-purple-400",
+    bg: "bg-purple-500/10 border-purple-500/20",
+  },
+  "Open Source": {
+    Icon: IconCode,
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10 border-emerald-500/20",
+  },
+  default: {
+    Icon: IconCode,
+    color: "text-zinc-400",
+    bg: "bg-zinc-500/10 border-zinc-500/20",
+  },
 };
-
-const DEFAULT_VISIBLE = 4;
 
 /* ── Fallback Hero Blueprint Component ──────────────────────────────── */
 function ProjectBlueprintHero({ project, config }) {
@@ -54,12 +130,14 @@ function ProjectBlueprintHero({ project, config }) {
           <span className="size-2.5 rounded-full bg-amber-500/80 inline-block" />
           <span className="size-2.5 rounded-full bg-emerald-500/80 inline-block" />
           <span className="ml-2 text-[10px] text-muted-foreground/70 truncate">
-            {project.id}.config.ts
+            {project.id}.config.js
           </span>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className={`px-1.5 py-0.5 rounded text-[9.5px] font-medium border ${config.bg} ${config.color}`}>
+          <span
+            className={`px-1.5 py-0.5 rounded text-[9.5px] font-medium border ${config.bg} ${config.color}`}
+          >
             {project.category}
           </span>
         </div>
@@ -102,20 +180,14 @@ function ProjectBlueprintHero({ project, config }) {
 }
 
 /* ── Project Card Component ───────────────────────────────────────── */
-function ProjectCard({ project, delay = 0 }) {
+function ProjectCard({ project }) {
   const config = CATEGORY_CONFIG[project.category] || CATEGORY_CONFIG.default;
   const CatIcon = config.Icon;
   const hasImage = project.image && !project.image.endsWith("null");
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.97 }}
-      transition={{ duration: 0.28, delay }}
-      className="flex flex-col rounded-md border border-border bg-surface shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 overflow-hidden group"
-    >
-      {/* 1. Header Media Section: Real Image OR High-Tech Blueprint Hero */}
+    <article className="flex flex-col h-full rounded-md border border-border bg-surface shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 overflow-hidden group">
+      {/* 1. Header Media Section */}
       {hasImage ? (
         <div className="relative h-48 w-full overflow-hidden shrink-0 border-b border-border">
           <img
@@ -137,16 +209,13 @@ function ProjectCard({ project, delay = 0 }) {
 
       {/* 2. Main Body Content */}
       <div className="flex flex-col flex-1 p-4 sm:p-5 gap-4">
-
         {/* Industry & Access Metadata Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 pb-2.5">
-          {/* Industry Tag */}
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
             <span className="inline-block size-1.5 rounded-full bg-primary" />
             <span>{project.industry || "Software Engineering"}</span>
           </div>
 
-          {/* Status Indicators: Private/Public & Live/Internal */}
           <div className="flex items-center gap-2 text-[10.5px]">
             {project.isPrivate ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-amber-500/20 bg-amber-500/10 text-amber-400 font-medium">
@@ -160,7 +229,8 @@ function ProjectCard({ project, delay = 0 }) {
 
             {project.isHosted ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 font-medium">
-                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Hosted
+                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />{" "}
+                Live Hosted
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border bg-surface-high/60 text-muted-foreground">
@@ -231,7 +301,7 @@ function ProjectCard({ project, delay = 0 }) {
           </div>
         )}
 
-        {/* Spacer & Bottom Action Links */}
+        {/* Bottom Action Links */}
         <div className="mt-auto pt-3 border-t border-border flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             {project.github && project.github !== "#" ? (
@@ -263,28 +333,20 @@ function ProjectCard({ project, delay = 0 }) {
             </a>
           )}
         </div>
-
       </div>
-    </motion.article>
+    </article>
   );
 }
 
 /* ── Main Section Wrapper ─────────────────────────────────────────── */
 export const Projects = () => {
   const [activeTab, setActiveTab] = useState("All");
-  const [showAll, setShowAll] = useState(false);
 
   const filtered = projects.filter((p) =>
-    activeTab === "All" ? true : p.category?.toLowerCase() === activeTab.toLowerCase()
+    activeTab === "All"
+      ? true
+      : p.category?.toLowerCase() === activeTab.toLowerCase(),
   );
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setShowAll(false);
-  };
-
-  const visible = showAll ? filtered : filtered.slice(0, DEFAULT_VISIBLE);
-  const hiddenCount = filtered.length - DEFAULT_VISIBLE;
 
   return (
     <Section id="projects" noFade className="py-10 md:py-16 relative">
@@ -305,7 +367,8 @@ export const Projects = () => {
               className="text-3xl! sm:text-5xl!"
             />
             <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              Production software systems, clinical RPA suites, and open-source developer tooling.
+              Production software systems, clinical RPA suites, and open-source
+              developer tooling.
             </p>
           </div>
 
@@ -316,11 +379,12 @@ export const Projects = () => {
               return (
                 <button
                   key={cat}
-                  onClick={() => handleTabChange(cat)}
-                  className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all duration-200 ${isActive
+                  onClick={() => setActiveTab(cat)}
+                  className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all duration-200 ${
+                    isActive
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-surface-high"
-                    }`}
+                  }`}
                 >
                   {cat}
                 </button>
@@ -328,7 +392,7 @@ export const Projects = () => {
             })}
           </div>
 
-          {/* Project Grid - Spacious 2-Column Layout */}
+          {/* Integrated Expandable Grid */}
           <AnimatePresence mode="wait">
             {filtered.length > 0 ? (
               <motion.div
@@ -339,39 +403,16 @@ export const Projects = () => {
                 transition={{ duration: 0.2 }}
                 className="w-full"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  <AnimatePresence>
-                    {visible.map((project, idx) => (
-                      <ProjectCard
-                        key={project.id}
-                        project={project}
-                        delay={idx * 0.05}
-                      />
-                    ))}
-                  </AnimatePresence>
-                </div>
-
-                {/* Show More Button */}
-                {filtered.length > DEFAULT_VISIBLE && (
-                  <div className="flex justify-center mt-8">
-                    <button
-                      onClick={() => setShowAll((prev) => !prev)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-surface hover:bg-surface-high text-sm font-medium text-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary"
-                    >
-                      {showAll ? (
-                        <>
-                          <IconChevronUp className="size-4" />
-                          <span>Show Less</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Load {hiddenCount} More Project{hiddenCount !== 1 ? "s" : ""}</span>
-                          <IconChevronDown className="size-4" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
+                <ExpandableList
+                  items={filtered}
+                  initialCount={4}
+                  showMoreLabel={(hiddenCount) =>
+                    `Load ${hiddenCount} More Project${hiddenCount !== 1 ? "s" : ""}`
+                  }
+                  showLessLabel="Show Less"
+                  listClassName="grid grid-cols-1 lg:grid-cols-2 gap-3"
+                  renderItem={(project) => <ProjectCard project={project} />}
+                />
               </motion.div>
             ) : (
               /* Empty State */
@@ -391,7 +432,7 @@ export const Projects = () => {
                   No projects match the selected category filter.
                 </p>
                 <button
-                  onClick={() => handleTabChange("All")}
+                  onClick={() => setActiveTab("All")}
                   className="mt-1 text-xs font-medium text-primary hover:underline"
                 >
                   Reset Filter
