@@ -13,6 +13,7 @@ import { nav, socials, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
 import { AIRecruiterModal } from "@/components/AIRecruiterModal";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import { downloadResume } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
@@ -40,16 +41,15 @@ function TopBar({ isVisible }: { isVisible: boolean }) {
             <span>DA</span>
           )}
         </a>
-        {(personal.resumeUrl) && (
-          <a
-            href={personal.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+        {personal.resumeUrl && (
+          <button
+            type="button"
+            onClick={() => downloadResume(personal.resumeUrl)}
             className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded sm:rounded-md border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/40 text-foreground font-medium text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-md"
           >
             <IconDownload className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
             <span>Resume</span>
-          </a>
+          </button>
         )}
       </div>
     </header>

@@ -21,6 +21,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { aiRecruiterData, personal } from "@/data/idx";
+import { downloadResume } from "@/lib/utils";
 
 export function AIRecruiterModal({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
@@ -237,15 +238,14 @@ export function AIRecruiterModal({ isOpen, onClose }) {
       <ModalFooter className="justify-between items-center text-xs">
         <div className="flex items-center gap-2">
           {personal.resumeUrl && (
-            <a
-              href={personal.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => downloadResume(personal.resumeUrl)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-xs text-white hover:bg-white/10 hover:border-primary/40 transition-all"
             >
               <IconFileDownload className="size-3.5 text-primary" />
               <span>Download ATS Resume</span>
-            </a>
+            </button>
           )}
           <a
             href={`mailto:${personal.email}`}

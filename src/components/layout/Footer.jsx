@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { nav, socials, personal, footer } from "@/data/idx";
 import { GradientHeading } from "../ui/Heading";
+import { downloadResume } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────────
  *  1. Footer CTA Action Buttons
@@ -29,15 +30,14 @@ const FooterCTA = () => (
       <IconArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
     </a>
     {(personal.resumeUrl || footer?.resumePath) && (
-      <a
-        href={personal.resumeUrl || footer?.resumePath}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={() => downloadResume(personal.resumeUrl || footer?.resumePath)}
         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/40 text-foreground font-medium text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-md"
       >
         <IconDownload className="w-4 h-4 text-muted-foreground" />
         <span>Resume</span>
-      </a>
+      </button>
     )}
   </div>
 );

@@ -18,7 +18,7 @@ import { ContactCard } from "@/components/ContactCard";
 import { Particles } from "@/components/ui/particles";
 import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
-import { cn } from "@/lib/utils";
+import { cn, downloadResume } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────────
  *  Unified About & Contributions Bento Grid
@@ -46,15 +46,14 @@ export default function About() {
               <span className="text-[11px] font-mono">{personal.location}</span>
             </div>
             {personal.resumeUrl && (
-              <a
-                href={personal.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => downloadResume(personal.resumeUrl)}
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/15 bg-white/4 text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
               >
                 <IconDownload className="h-3.5 w-3.5 text-primary" />
                 Resume
-              </a>
+              </button>
             )}
           </div>
         </BentoCard>
