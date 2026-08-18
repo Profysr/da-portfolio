@@ -11,7 +11,6 @@ import {
   IconCheck,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { Layout } from "@/components/layout/Layout";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { education, certificates, awards } from "@/data/idx";

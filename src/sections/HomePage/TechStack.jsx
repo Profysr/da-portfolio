@@ -8,13 +8,12 @@ import {
   IconServer,
   IconBrandReact,
   IconCloud,
-  IconCheck,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
-import { SkillsAndTools, favoriteStack } from "@/data/idx";
+import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { Spotlight } from "@/components/ui/spotlight";
