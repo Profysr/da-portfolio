@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "motion/react";
 import { Dock, DockIcon } from "@/components/ui/dock";
@@ -9,9 +9,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { IconDownload, IconSparkles } from "@tabler/icons-react";
-import { nav, socials, personal } from "@/data/idx.js";
+import { nav, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
-import { AIRecruiterModal } from "@/components/AIRecruiterModal";
+import { AIBotModal } from "@/components/AIBotModal";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import { downloadResume } from "@/lib/utils";
 
@@ -188,12 +188,6 @@ export function AppShell() {
 
   return (
     <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
-      {/* Continuous Unified Dot Grid at Root */}
-      {/* <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-size-[24px_24px]"
-      /> */}
-
       {/* Global Ambient Glows at Root */}
       <div
         aria-hidden="true"
@@ -208,11 +202,13 @@ export function AppShell() {
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
       <main className="relative z-10 w-full flex-1">
-        <Outlet />
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <BottomDock isVisible={isNavVisible} onAIClick={() => setIsAIOpen(true)} />
-      <AIRecruiterModal isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
+      <AIBotModal isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
       <Footer />
     </div>
   );

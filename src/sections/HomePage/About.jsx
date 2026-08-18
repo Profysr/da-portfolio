@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
 import { AvatarStatus } from "@/components/AvatarStatus";
-import { Globe } from "@/components/ui/globe";
+import { LazyGlobe, LazyParticles } from "@/components/lazy";
 import {
   IconMapPin,
   IconWorld,
@@ -15,10 +15,10 @@ import {
   IconGitBranch,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
-import { Particles } from "@/components/ui/particles";
 import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
 import { cn, downloadResume } from "@/lib/utils";
+import { Suspense } from "react";
 
 /* ─────────────────────────────────────────────────────────────
  *  Unified About & Contributions Bento Grid
@@ -75,7 +75,9 @@ export default function About() {
           className="h-full min-h-60"
         >
           <div className="relative flex-1 my-1 min-h-36 flex items-center justify-center overflow-hidden">
-            <Globe className="scale-90 sm:scale-95" />
+            <Suspense fallback={<div className="flex-1 flex items-center justify-center text-xs text-muted-foreground/50">Loading globe...</div>}>
+              <LazyGlobe className="scale-90 sm:scale-95" />
+            </Suspense>
           </div>
           <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -172,13 +174,15 @@ export default function About() {
 
   return (
     <Section id="about" className="relative py-12 md:py-16" noFade>
-      <Particles
-        className="absolute inset-0"
-        quantity={120}
-        ease={60}
-        color="#ffffff"
-        size={0.7}
-      />
+      <Suspense fallback={null}>
+        <LazyParticles
+          className="absolute inset-0"
+          quantity={120}
+          ease={60}
+          color="#ffffff"
+          size={0.7}
+        />
+      </Suspense>
 
       {/* Unified 12-Column Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-7 gap-1 sm:gap-2">

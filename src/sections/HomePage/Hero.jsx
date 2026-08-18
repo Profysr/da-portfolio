@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { LightRays } from "@/components/ui/light-rays";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { useRef, useState, Suspense } from "react";
+import { LazyLightRays } from "@/components/lazy";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
 import { IconArrowRight, IconChevronDown, IconSparkles } from "@tabler/icons-react";
@@ -150,13 +149,15 @@ export default function Hero() {
       id="hero"
       className="relative w-full overflow-hidden pt-28 pb-16 sm:pt-36 md:pt-44 flex items-center justify-center"
     >
-      <LightRays
+      <Suspense fallback={null}>
+  <LazyLightRays
         count={10}
         color="rgba(160, 210, 255, 0.25)"
         blur={50}
         speed={10}
         className="opacity-80"
       />
+    </Suspense>
 
       <TooltipProvider delayDuration={0}>
         <Layout className="relative z-10 flex flex-col items-center justify-center gap-8">
