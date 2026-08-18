@@ -8,6 +8,7 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { GradientHeading } from "@/components/ui/Heading";
 import { ExpandableList } from "@/components/ui/expandable-list";
 import { FrequentQuestions, personal } from "@/data/idx";
+import { DottedMap } from "@/components/ui/dotted-map";
 
 /* ─────────────────────────────────────────────────────────────
  *  Single FAQ Accordion Item Component
@@ -22,18 +23,16 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
         aria-expanded={isOpen}
       >
         <span
-          className={`text-xs sm:text-sm font-medium transition-colors pr-3 ${
-            isOpen ? "text-primary font-semibold" : "text-foreground group-hover:text-foreground"
-          }`}
+          className={`text-xs sm:text-sm font-medium transition-colors pr-3 ${isOpen ? "text-primary font-semibold" : "text-foreground group-hover:text-foreground"
+            }`}
         >
           {question}
         </span>
         <div
-          className={`p-1 rounded border transition-all duration-300 shrink-0 ${
-            isOpen
-              ? "rotate-180 bg-primary/20 border-primary/40 text-primary"
-              : "bg-surface border-border text-muted-foreground group-hover:text-foreground"
-          }`}
+          className={`p-1 rounded border transition-all duration-300 shrink-0 ${isOpen
+            ? "rotate-180 bg-primary/20 border-primary/40 text-primary"
+            : "bg-surface border-border text-muted-foreground group-hover:text-foreground"
+            }`}
         >
           <IconChevronDown className="w-3.5 h-3.5" />
         </div>
@@ -69,7 +68,7 @@ export const FAQ = () => {
   };
 
   return (
-    <Section id="faq" noFade className="py-6 sm:py-12">
+    <Section id="faq" noFade className="py-6 sm:py-12 relative">
       <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-6">
         {/* Left Column: Header & Direct Reach-out Card */}
         <BlurFade inView delay={0.05} className="w-full lg:w-5/12 flex flex-col gap-4 lg:sticky lg:top-24">
