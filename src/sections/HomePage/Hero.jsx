@@ -77,9 +77,8 @@ function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
 
   const getIconClass = (label) => {
     const isWiggling = wiggleIcon === label.toLowerCase();
-    return `text-zinc-300 hover:text-white transition-all duration-300 ${
-      isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
-    }`;
+    return `text-zinc-300 hover:text-white transition-all duration-300 ${isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
+      }`;
   };
 
   return (

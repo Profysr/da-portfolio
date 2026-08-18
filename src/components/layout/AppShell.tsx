@@ -12,6 +12,7 @@ import { IconDownload, IconSparkles } from "@tabler/icons-react";
 import { nav, socials, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
 import { AIRecruiterModal } from "@/components/AIRecruiterModal";
+import { SmoothCursor } from "@/components/ui/smooth-cursor";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
@@ -195,6 +196,9 @@ export function AppShell() {
         aria-hidden="true"
         className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
       />
+
+      {/* Physics-driven spring cursor — desktop only, auto-disables on touch */}
+      <SmoothCursor />
 
       {/* TopBar with Logo + Resume button */}
       <TopBar isVisible={isNavVisible} />

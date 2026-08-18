@@ -8,6 +8,7 @@ import { Layout } from "@/components/layout/Layout";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
+import { TracingBeam } from "@/components/ui/tracing-beam";
 
 const RoleCard = ({ role, defaultOpen = true }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -99,76 +100,78 @@ export const Experience = () => {
             </p>
           </div>
 
-          {/* Experience Cards */}
-          <div className="w-full space-y-5">
-            {experiences.map((exp, expIdx) => (
-              <motion.div
-                key={exp.company + expIdx}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.35, delay: expIdx * 0.08 }}
-                className="rounded-md bg-surface border border-border p-4 sm:p-6 shadow-xl space-y-5 hover:border-primary/30 transition-all"
-              >
-                {/* Company Header */}
-                <div className="flex items-start justify-between gap-3 border-b border-border pb-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="size-10 rounded border border-border bg-white/[0.03] p-1 flex items-center justify-center shrink-0">
-                      {exp.logo ? (
-                        <img
-                          src={exp.logo}
-                          alt={`${exp.company} logo`}
-                          className="size-full rounded object-contain"
-                        />
-                      ) : (
-                        <IconBriefcase className="size-4 text-primary" />
-                      )}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={exp.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-base sm:text-lg font-semibold text-white hover:text-primary transition-colors inline-flex items-center gap-1.5"
-                        >
-                          {exp.company}
-                          <IconExternalLink className="size-3.5 text-muted-foreground hover:text-primary" />
-                        </a>
+          {/* Experience Cards wrapped in scroll-linked tracing beam */}
+          <TracingBeam className="pl-4">
+            <div className="w-full space-y-5">
+              {experiences.map((exp, expIdx) => (
+                <motion.div
+                  key={exp.company + expIdx}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: expIdx * 0.08 }}
+                  className="rounded-md bg-surface border border-border p-4 sm:p-6 shadow-xl space-y-5 hover:border-primary/30 transition-all"
+                >
+                  {/* Company Header */}
+                  <div className="flex items-start justify-between gap-3 border-b border-border pb-3.5">
+                    <div className="flex items-center gap-3">
+                      <div className="size-10 rounded border border-border bg-white/[0.03] p-1 flex items-center justify-center shrink-0">
+                        {exp.logo ? (
+                          <img
+                            src={exp.logo}
+                            alt={`${exp.company} logo`}
+                            className="size-full rounded object-contain"
+                          />
+                        ) : (
+                          <IconBriefcase className="size-4 text-primary" />
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                        <span>{exp.location}</span>
-                        <span>•</span>
-                        <span className="text-foreground/80">{exp.locationType}</span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={exp.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-base sm:text-lg font-semibold text-white hover:text-primary transition-colors inline-flex items-center gap-1.5"
+                          >
+                            {exp.company}
+                            <IconExternalLink className="size-3.5 text-muted-foreground hover:text-primary" />
+                          </a>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                          <span>{exp.location}</span>
+                          <span>•</span>
+                          <span className="text-foreground/80">{exp.locationType}</span>
+                        </div>
                       </div>
                     </div>
+
+                    {/* Status Badge */}
+                    {exp.isCurrent && (
+                      <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[11px] font-medium shrink-0">
+                        <span className="relative flex size-2">
+                          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+                        </span>
+                        Present
+                      </div>
+                    )}
                   </div>
 
-                  {/* Status Badge */}
-                  {exp.isCurrent && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[11px] font-medium shrink-0">
-                      <span className="relative flex size-2">
-                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
-                      </span>
-                      Present
-                    </div>
-                  )}
-                </div>
-
-                {/* Roles Timeline Container */}
-                <div className="relative pl-2.5 ml-1.5 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-border">
-                  {exp.roles.map((role) => (
-                    <RoleCard
-                      key={role.id || role.title}
-                      role={role}
-                      defaultOpen={true}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                  {/* Roles Timeline Container */}
+                  <div className="relative pl-2.5 ml-1.5 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-border">
+                    {exp.roles.map((role) => (
+                      <RoleCard
+                        key={role.id || role.title}
+                        role={role}
+                        defaultOpen={true}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </TracingBeam>
         </div>
       </Layout>
     </Section>

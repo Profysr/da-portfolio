@@ -9,6 +9,7 @@ import {
   IconHierarchy,
 } from "@tabler/icons-react";
 import { Marquee } from "@/components/ui/marquee";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { favoriteStack } from "@/data/idx";
 import { cn } from "@/lib/utils";
 
@@ -69,10 +70,18 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
   return (
     <div
       className={cn(
-        "w-full sm:max-w-3xl rounded-md border border-primary/30 bg-surface p-4 sm:p-5 flex flex-col gap-3.5 shadow-lg",
+        "relative w-full sm:max-w-3xl rounded-md border border-primary/30 bg-surface p-4 sm:p-5 flex flex-col gap-3.5 shadow-lg overflow-hidden",
         className
       )}
     >
+      {/* Animated scanning border beam */}
+      <BorderBeam
+        colorFrom="#d0bcff"
+        colorTo="transparent"
+        duration={8}
+        size={140}
+        borderWidth={1.5}
+      />
       {/* Card Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-border">
         <div className="flex items-center gap-2.5">

@@ -16,6 +16,8 @@ import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { SkillsAndTools, favoriteStack } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
+import { Spotlight } from "@/components/ui/spotlight";
 
 const CATEGORY_ICONS = {
   "Automations & AI": IconCpu,
@@ -35,7 +37,12 @@ export function TechStack() {
       : SkillsAndTools.filter((cat) => cat.category === selectedCategory);
 
   return (
-    <Section id="stack" noFade className="py-10 md:py-16">
+    <Section id="stack" noFade className="py-10 md:py-16 overflow-hidden">
+      {/* Ambient Spotlight behind section */}
+      <Spotlight
+        className="-top-40 left-1/4 opacity-30"
+        fill="#d0bcff"
+      />
       <Layout>
         <div className="flex flex-col items-center gap-7">
           {/* Section Header */}
@@ -85,8 +92,16 @@ export function TechStack() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.25, delay: groupIdx * 0.04 }}
-                    className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all group"
+                    className="relative rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all group"
                   >
+                    {/* Pointer-following glow border */}
+                    <GlowingEffect
+                      disabled={false}
+                      proximity={80}
+                      spread={30}
+                      blur={0}
+                      borderWidth={1}
+                    />
                     <div>
                       {/* Group Header */}
                       <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
