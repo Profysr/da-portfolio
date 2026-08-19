@@ -3,6 +3,10 @@ import {
   IconBrandLinkedin,
   IconBrandX,
   IconMail,
+  IconClock,
+  IconFolderCode,
+  IconActivity,
+  IconRobot,
 } from "@tabler/icons-react";
 
 export const socials = [
@@ -54,4 +58,51 @@ export const personal = {
   email: "hello@da-portfolio.dev",
   resumeUrl: "/Resume Bilal Ahmad.pdf",
   socials,
+};
+
+export const about = {
+  heading: "About Me",
+  subheading:
+    "A look into my background, core engineering pillars, and focus areas.",
+  stats: [
+    {
+      id: "industry",
+      title: "In Industry",
+      value: "2 Yrs 8 Mos",
+      subtext: "Experience",
+      icon: IconClock,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-1",
+    },
+    {
+      id: "projects",
+      title: "Projects Built",
+      value: "40+",
+      subtext: "Delivered",
+      icon: IconFolderCode,
+      isCompact: true,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-1 md:col-start-11 md:row-start-1",
+    },
+    {
+      id: "hours",
+      title: "Hours Logged",
+      value: "4,280+",
+      subtext: "Deep Focus",
+      icon: IconActivity,
+      isCompact: true,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-2",
+    },
+    {
+      id: "automations",
+      title: "Automations",
+      value: "150+",
+      subtext: "Deployed",
+      icon: IconRobot,
+      isCompact: true,
+      spanClass:
+        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-3",
+    },
+  ],
 };
