@@ -238,7 +238,6 @@ export function ActivityAndWritings() {
             <Badge variant="light">BUILDING & WRITING</Badge>
             <GradientHeading
               text="Activity & Contributions"
-              className="text-3xl! sm:text-5xl!"
             />
             <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
               Open experiments, developer tools, and essays on engineering patterns I've shipped or published.
