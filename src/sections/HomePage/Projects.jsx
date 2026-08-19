@@ -21,6 +21,7 @@ import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { projects } from "@/data/idx";
 import { TagFilter } from "@/components/TagFilter";
+import { TechPill } from "@/components/TechPill";
 import { LazyParticles } from "@/components/lazy";
 import { Suspense } from "react";
 import { ExpandableList } from "@/components/ui/expandable-list";
@@ -287,13 +288,12 @@ function ProjectCard({ project }) {
             </span>
             <div className="flex flex-wrap gap-1">
               {project.tech.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center rounded border border-border bg-surface-high/40 px-2 py-0.5 font-mono text-[10px] text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
+                  <TechPill
+                    key={tag}
+                    name={tag}
+                    size="sm"
+                  />
+                ))}
             </div>
           </div>
         )}

@@ -17,6 +17,7 @@ import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 // import { Spotlight } from "@/components/ui/spotlight";
+import { TechPill } from "@/components/TechPill";
 import { TagFilter } from "@/components/TagFilter";
 
 const CATEGORY_ICONS = {
@@ -112,30 +113,16 @@ export function TechStack() {
                       </div>
 
                       {/* Tech Chips */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.items.map((item) => (
-                          <div
-                            key={item.name}
-                            className="inline-flex items-center gap-1.5 rounded border border-border bg-surface-high/40 px-2.5 py-1 text-xs text-zinc-200 hover:border-primary/40 hover:text-white transition-all cursor-default"
-                          >
-                            {item.img && (
-                              <img
-                                src={item.img}
-                                alt={item.name}
-                                className="size-6 object-contain shrink-0"
-                              />
-                            )}
-                            <span className="font-medium text-[11px] sm:text-xs">
-                              {item.name}
-                            </span>
-                            {item.subCategory && (
-                              <span className="text-[10px] text-muted-foreground/70 font-mono border-l border-border pl-1.5">
-                                {item.subCategory}
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+<div className="flex flex-wrap gap-1.5">
+                          {group.items.map((item) => (
+                            <TechPill
+                              key={item.name}
+                              name={item.name}
+                              subCategory={item.subCategory ?? undefined}
+                              size="md"
+                            />
+                          ))}
+                        </div>
                     </div>
                   </motion.div>
                 );

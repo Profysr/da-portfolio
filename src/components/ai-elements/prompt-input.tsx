@@ -450,7 +450,7 @@ export const PromptInputActionAddScreenshot = ({
 
   const handleSelect = useCallback(
     async (event: Event) => {
-      onSelect?.(event);
+      onSelect?.(event as any);
       if (event.defaultPrevented) {
         return;
       }

@@ -13,6 +13,7 @@ import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { ExpandableList } from "@/components/ui/expandable-list";
+import { TechPill } from "@/components/TechPill";
 import { ScrollRail } from "@/components/ui/ScrollRail";
 import { cn } from "@/lib/utils";
 
@@ -155,12 +156,11 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
                 {role.skills && role.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1 sm:gap-1.5 pt-0.5">
                     {role.skills.map((skill) => (
-                      <span
+                      <TechPill
                         key={skill}
-                        className="inline-flex items-center rounded border border-border bg-surface-high/40 px-1.5 sm:px-2 py-0.5 font-mono text-[9.5px] sm:text-[10px] text-zinc-300"
-                      >
-                        {skill}
-                      </span>
+                        name={skill}
+                        size="sm"
+                      />
                     ))}
                   </div>
                 )}
