@@ -47,7 +47,7 @@ export const SkillsAndTools = [
       },
       {
         name: "PostgreSQL",
-        img: "/tools/postgressql-icon.svg",
+        img: "/tools/postgres.svg",
         subCategory: null,
       },
       { name: "Mongodb", img: "/tools/mongodb.svg", subCategory: null },

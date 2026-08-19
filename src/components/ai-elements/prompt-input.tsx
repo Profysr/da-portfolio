@@ -429,7 +429,7 @@ export const PromptInputActionAddAttachments = ({
   );
 
   return (
-    <DropdownMenuItem {...props} onSelect={handleSelect}>
+    <DropdownMenuItem {...props} onSelect={handleSelect as any}>
       <ImageIcon className="mr-2 size-4" /> {label}
     </DropdownMenuItem>
   );
@@ -474,7 +474,7 @@ export const PromptInputActionAddScreenshot = ({
   );
 
   return (
-    <DropdownMenuItem {...props} onSelect={handleSelect}>
+    <DropdownMenuItem {...props} onSelect={handleSelect as any}>
       <Monitor className="mr-2 size-4" />
       {label}
     </DropdownMenuItem>
@@ -1238,7 +1238,7 @@ export const PromptInputSubmit = ({
         onStop();
         return;
       }
-      onClick?.(e);
+      onClick?.(e as any);
     },
     [isGenerating, onStop, onClick]
   );
@@ -1314,11 +1314,11 @@ export const PromptInputSelectValue = ({
 export type PromptInputHoverCardProps = ComponentProps<typeof HoverCard>;
 
 export const PromptInputHoverCard = ({
-  openDelay = 0,
-  closeDelay = 0,
+  openDelay: _openDelay,
+  closeDelay: _closeDelay,
   ...props
-}: PromptInputHoverCardProps) => (
-  <HoverCard closeDelay={closeDelay} openDelay={openDelay} {...props} />
+}: PromptInputHoverCardProps & { openDelay?: number; closeDelay?: number }) => (
+  <HoverCard {...props} />
 );
 
 export type PromptInputHoverCardTriggerProps = ComponentProps<
