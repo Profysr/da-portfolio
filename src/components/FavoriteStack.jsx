@@ -76,7 +76,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
     >
       {/* Animated scanning border beam */}
       <BorderBeam
-        colorFrom="#d0bcff"
+        colorFrom="#FFDA27"
         colorTo="transparent"
         duration={8}
         size={140}

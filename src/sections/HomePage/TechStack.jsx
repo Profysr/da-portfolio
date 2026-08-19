@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { Spotlight } from "@/components/ui/spotlight";
+// import { Spotlight } from "@/components/ui/spotlight";
 import { TagFilter } from "@/components/TagFilter";
 
 const CATEGORY_ICONS = {
@@ -37,12 +37,16 @@ export function TechStack() {
       : SkillsAndTools.filter((cat) => cat.category === selectedCategory);
 
   return (
-    <Section id="stack" noFade className="py-10 md:py-16 overflow-hidden relative">
+    <Section
+      id="stack"
+      noFade
+      className="py-10 md:py-16 overflow-hidden relative"
+    >
       {/* Ambient Spotlight behind section */}
-      <Spotlight
+      {/* <Spotlight
         className="-top-40 left-1/4 opacity-30"
-        fill="#d0bcff"
-      />
+        fill="#FFDA27"
+      /> */}
       <Layout>
         <div className="flex flex-col items-center gap-7">
           {/* Section Header */}
@@ -53,21 +57,27 @@ export function TechStack() {
               className="text-3xl! sm:text-5xl!"
             />
             <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              Production tools, runtimes, and agentic orchestration frameworks I use to build scalable systems.
+              Production tools, runtimes, and agentic orchestration frameworks I
+              use to build scalable systems.
             </p>
           </div>
 
           {/* Daily Drivers Callout Strip Component */}
           <FavoriteStack variant="detailed" />
 
-{/* Category Filter Pills */}
-          <TagFilter items={categories} activeValue={selectedCategory} onChange={setSelectedCategory} />
+          {/* Category Filter Pills */}
+          <TagFilter
+            items={categories}
+            activeValue={selectedCategory}
+            onChange={setSelectedCategory}
+          />
 
           {/* Categorized Tech Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
             <AnimatePresence mode="popLayout">
               {displayedCategories.map((group, groupIdx) => {
-                const IconComponent = CATEGORY_ICONS[group.category] || IconSparkles;
+                const IconComponent =
+                  CATEGORY_ICONS[group.category] || IconSparkles;
                 return (
                   <motion.div
                     key={group.category}
@@ -115,7 +125,9 @@ export function TechStack() {
                                 className="size-6 object-contain shrink-0"
                               />
                             )}
-                            <span className="font-medium text-[11px] sm:text-xs">{item.name}</span>
+                            <span className="font-medium text-[11px] sm:text-xs">
+                              {item.name}
+                            </span>
                             {item.subCategory && (
                               <span className="text-[10px] text-muted-foreground/70 font-mono border-l border-border pl-1.5">
                                 {item.subCategory}

@@ -86,7 +86,9 @@ function BottomDock({
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
     >
-      <div className={isVisible ? "pointer-events-auto" : "pointer-events-none"}>
+      <div
+        className={isVisible ? "pointer-events-auto" : "pointer-events-none"}
+      >
         <TooltipProvider delayDuration={0}>
           <Dock
             iconSize={DOCK_ICON_SIZE}
@@ -118,7 +120,10 @@ function BottomDock({
             })}
 
             {/* Vertical Divider */}
-            <div className="mx-1 h-5 w-px bg-white/15 self-center" aria-hidden="true" />
+            <div
+              className="mx-1 h-5 w-px bg-white/15 self-center"
+              aria-hidden="true"
+            />
 
             {/* AI Assistant Trigger */}
             <DockIcon>
@@ -128,9 +133,9 @@ function BottomDock({
                     type="button"
                     onClick={onAIClick}
                     aria-label="Open AI Recruiter Assistant"
-                    className="relative flex p-2 items-center justify-center rounded-full bg-primary/20"
+                    className="relative flex p-2 items-center justify-center rounded-full bg-[#d0bcff]/20"
                   >
-                    <IconSparkles className="text-primary" />
+                    <IconSparkles className="text-[#d0bcff]" />
 
                     {/* Adjusted Status Dot */}
                     <span className="absolute top-0 right-0.5 flex size-2">

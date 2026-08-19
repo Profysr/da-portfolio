@@ -121,7 +121,7 @@ export function ContactCard() {
           endYOffset={-6}
           duration={3}
           gradientStartColor="#a855f7"
-          gradientStopColor="#d0bcff"
+          gradientStopColor="#FFDA27"
         />
         <SuspenseBeam
           containerRef={containerRef}
@@ -132,7 +132,7 @@ export function ContactCard() {
           duration={3}
           delay={0.4}
           gradientStartColor="#a855f7"
-          gradientStopColor="#d0bcff"
+          gradientStopColor="#FFDA27"
         />
         <SuspenseBeam
           containerRef={containerRef}
@@ -144,7 +144,7 @@ export function ContactCard() {
           delay={0.2}
           reverse
           gradientStartColor="#a855f7"
-          gradientStopColor="#d0bcff"
+          gradientStopColor="#FFDA27"
         />
         <SuspenseBeam
           containerRef={containerRef}
@@ -156,7 +156,7 @@ export function ContactCard() {
           delay={0.6}
           reverse
           gradientStartColor="#a855f7"
-          gradientStopColor="#d0bcff"
+          gradientStopColor="#FFDA27"
         />
       </div>
     </TooltipProvider>
