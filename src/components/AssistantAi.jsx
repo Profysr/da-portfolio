@@ -21,7 +21,6 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import {
-  IconRobot,
   IconCopy,
   IconCheck,
   IconArrowUp,
@@ -79,13 +78,12 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
                 <Message from="assistant" className="flex-1 min-w-0">
                   <div className="relative group">
                     <MessageContent className="text-xs sm:text-sm leading-relaxed">
-                    {/* <MessageContent> */}
                       <MessageResponse>{msg.content}</MessageResponse>
                     </MessageContent>
 
                     <button
                       onClick={() => onCopy(msg.content, msg.id)}
-                      className="absolute top-2.5 right-2.5 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:opacity-100 bg-surface border border-border text-muted-foreground hover:text-white transition-all shadow-xs cursor-pointer"
+                      className="p-1.5 rounded opacity-0 group-hover:opacity-100 hover:opacity-100 bg-surface border border-border text-muted-foreground hover:text-white transition-all shadow-xs cursor-pointer"
                       title="Copy response"
                     >
                       {copiedId === msg.id ? (
@@ -127,7 +125,6 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
           </div>
         )}
       </ConversationContent>
-
       <ConversationScrollButton />
     </Conversation>
   );
