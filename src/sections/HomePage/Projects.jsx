@@ -56,24 +56,27 @@ function ProjectBlueprintHero({ project, config }) {
   const CatIcon = config.Icon;
 
   return (
-    <div className="relative h-48 w-full bg-surface-high/60 border-b border-border p-3.5 flex flex-col justify-between overflow-hidden font-mono select-none">
-      {/* Background Subtle Mesh Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px]" />
+    <div className="relative h-48 w-full bg-zinc-950/90 border-b border-border/80 p-3.5 flex flex-col justify-between overflow-hidden font-mono select-none">
+      {/* Background Blueprint Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0f_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0f_1px,transparent_1px)] bg-size-[16px_16px]" />
+
+      {/* Top Subtle Amber Glow Effect */}
+      <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-3/4 h-24 bg-amber-500/10 blur-2xl pointer-events-none rounded-full" />
 
       {/* Mock Terminal/Editor Window Bar */}
-      <div className="relative z-10 flex items-center justify-between border-b border-border/60 pb-2">
+      <div className="relative z-10 flex items-center justify-between border-b border-border/60 pb-2.5">
         <div className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-full bg-rose-500/80 inline-block" />
-          <span className="size-2.5 rounded-full bg-amber-500/80 inline-block" />
-          <span className="size-2.5 rounded-full bg-emerald-500/80 inline-block" />
-          <span className="ml-2 text-[10px] text-muted-foreground/70 truncate">
+          <span className="size-2.5 rounded-full bg-rose-500/90 inline-block shadow-sm" />
+          <span className="size-2.5 rounded-full bg-amber-500/90 inline-block shadow-sm" />
+          <span className="size-2.5 rounded-full bg-emerald-500/90 inline-block shadow-sm" />
+          <span className="ml-2 text-xs font-medium text-zinc-400 truncate">
             {project.id}.config.js
           </span>
         </div>
 
         <div className="flex items-center gap-1.5">
           <span
-            className={`px-1.5 py-0.5 rounded text-[9.5px] font-medium border ${config.bg} ${config.color}`}
+            className={`px-2 py-0.5 rounded-md text-[10px] font-semibold border tracking-wide uppercase ${config.bg || "bg-amber-500/10"} ${config.color || "text-amber-400"} border-amber-500/30`}
           >
             {project.category}
           </span>
@@ -81,37 +84,101 @@ function ProjectBlueprintHero({ project, config }) {
       </div>
 
       {/* Dynamic Architecture Visualizer Snippet */}
-      <div className="relative z-10 my-auto py-2 flex items-center justify-between px-2 gap-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-zinc-300 font-semibold">
-            <CatIcon className={`size-4 ${config.color}`} />
-            <span>{project.title}</span>
+      <div className="relative z-10 my-auto py-2 flex items-center justify-between px-1 gap-3">
+        <div className="space-y-1.5 min-w-0">
+          <div className="flex items-center gap-2 text-sm text-zinc-100 font-semibold tracking-tight truncate">
+            <CatIcon
+              className={`size-4 shrink-0 ${config.color || "text-amber-400"}`}
+            />
+            <span className="truncate">{project.title}</span>
           </div>
-          <p className="text-[10.5px] text-muted-foreground/80 font-mono line-clamp-1">
-            // Strategy: {project.strategies?.[0] || "Event-Driven Processing"}
+          <p className="text-xs text-amber-300/80 font-mono line-clamp-1">
+            <span className="text-zinc-500">// Strategy:</span>{" "}
+            {project.strategies?.[0] || "Event-Driven Processing"}
           </p>
         </div>
 
         {/* Pipeline / Node Mock graphic */}
-        <div className="hidden sm:flex items-center gap-1.5 shrink-0 opacity-75">
-          <div className="p-1.5 rounded bg-surface border border-border text-primary">
-            <IconCpu className="size-3.5" />
+        <div className="hidden sm:flex items-center gap-2 shrink-0">
+          <div className="p-1.5 rounded-md bg-zinc-900 border border-zinc-700/60 text-amber-400 shadow-inner">
+            <IconCpu className="size-4" />
           </div>
-          <span className="w-3 h-px bg-border" />
-          <div className="p-1.5 rounded bg-surface border border-border text-emerald-400">
-            <IconServer className="size-3.5" />
+          <span className="w-4 h-px bg-zinc-700 border-t border-dashed border-zinc-500" />
+          <div className="p-1.5 rounded-md bg-zinc-900 border border-zinc-700/60 text-emerald-400 shadow-inner">
+            <IconServer className="size-4" />
           </div>
         </div>
       </div>
 
       {/* Bottom Status Ribbon */}
-      <div className="relative z-10 flex items-center justify-between text-[10px] text-muted-foreground/70 border-t border-border/40 pt-1.5">
-        <span className="flex items-center gap-1">
-          <IconTerminal className="size-3 text-muted-foreground" />
-          <span>{project.isPrivate ? "Proprietary Core" : "Open Source"}</span>
+      <div className="relative z-10 flex items-center justify-between text-[11px] text-zinc-400 border-t border-border/60 pt-2">
+        <span className="flex items-center gap-1.5">
+          <IconTerminal className="size-3.5 text-amber-400/90" />
+          <span className="font-medium text-zinc-300">
+            {project.isPrivate ? "Proprietary Core" : "Open Source"}
+          </span>
         </span>
-        <span>{project.industry || "General Engineering"}</span>
+        <span className="text-zinc-400">
+          {project.industry || "General Engineering"}
+        </span>
       </div>
+    </div>
+  );
+}
+
+
+/* ── Reusable Project Card Footer Component ────────────────────────── */
+function ProjectCardFooter({ 
+  github, 
+  live, 
+  isPrivate, 
+  fallbackText = "Internal deployment — preview unavailable" 
+}) {
+  const hasGithub = Boolean(github && github !== "#");
+  const hasLive = Boolean(live && live !== "#");
+  const hasAnyContent = hasGithub || hasLive || isPrivate;
+
+  return (
+    <div className="mt-auto pt-3 border-t border-border flex items-center justify-between gap-2 min-h-[42px]">
+      {hasAnyContent ? (
+        <>
+          <div className="flex items-center gap-2">
+            {hasGithub ? (
+              <a
+                href={github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-surface-high/60 hover:bg-surface-high border border-border px-3 py-1.5 rounded transition-colors"
+              >
+                <IconBrandGithub className="size-3.5" />
+                <span>Source</span>
+              </a>
+            ) : isPrivate ? (
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground/60 italic">
+                <IconLock className="size-3 text-muted-foreground/50" /> Private Repository
+              </span>
+            ) : null}
+          </div>
+
+          {hasLive && (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:opacity-90 px-3.5 py-1.5 rounded transition-opacity ml-auto"
+            >
+              <span>Live Demo</span>
+              <IconExternalLink className="size-3.5" />
+            </a>
+          )}
+        </>
+      ) : (
+        /* Fallback message when no links or private status exist */
+        <div className="w-full flex items-center gap-2 text-xs font-mono text-muted-foreground/50 py-0.5">
+          <IconLock className="size-3.5 shrink-0 text-muted-foreground/40" />
+          <span>{fallbackText}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -132,7 +199,7 @@ function ProjectCard({ project }) {
             alt={project.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-linear-to-t from-surface via-transparent to-black/30" />
 
           {/* Floating Category Pill */}
           <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded border border-border/80 bg-surface/90 backdrop-blur-md text-[10.5px] font-medium text-foreground shadow-xs">
@@ -172,29 +239,27 @@ function ProjectCard({ project }) {
             )}
           </div>
         </div>
-
         {/* Title & Core Subtitle/Description */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+            <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
               {project.title}
             </h3>
-            {project.isFeatured && (
+            {/* {project.isFeatured && (
               <span className="shrink-0 px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-[10px] font-semibold text-primary">
                 Featured
               </span>
-            )}
+            )} */}
           </div>
-          {project.subtitle && (
+          {/* {project.subtitle && (
             <p className="text-xs font-medium text-foreground/80">
               {project.subtitle}
             </p>
-          )}
+          )} */}
           <p className="text-xs text-muted-foreground leading-relaxed">
             {project.description}
           </p>
         </div>
-
         {/* Strategies & Engineering Patterns Used */}
         {project.strategies && project.strategies.length > 0 && (
           <div className="space-y-1.5">
@@ -214,7 +279,6 @@ function ProjectCard({ project }) {
             </div>
           </div>
         )}
-
         {/* Full Tech Stack Pills */}
         {project.tech?.length > 0 && (
           <div className="space-y-1.5">
@@ -233,39 +297,8 @@ function ProjectCard({ project }) {
             </div>
           </div>
         )}
-
         {/* Bottom Action Links */}
-        <div className="mt-auto pt-3 border-t border-border flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {project.github && project.github !== "#" ? (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-surface-high/60 hover:bg-surface-high border border-border px-3 py-1.5 rounded transition-colors"
-              >
-                <IconBrandGithub className="size-3.5" />
-                <span>Source</span>
-              </a>
-            ) : project.isPrivate ? (
-              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/60 italic">
-                <IconLock className="size-3" /> Private Repository
-              </span>
-            ) : null}
-          </div>
-
-          {project.live && project.live !== "#" && (
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:opacity-90 px-3.5 py-1.5 rounded transition-opacity"
-            >
-              <span>Live Demo</span>
-              <IconExternalLink className="size-3.5" />
-            </a>
-          )}
-        </div>
+        <ProjectCardFooter github={project.github} isPrivate={project.isPrivate} live={project.live} />
       </div>
     </article>
   );
