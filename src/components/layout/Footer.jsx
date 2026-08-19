@@ -24,7 +24,7 @@ const FooterCTA = () => (
   <div className="flex flex-wrap items-center justify-center gap-3.5 pt-3">
     <a
       href={personal.email ? `mailto:${personal.email}` : "#"}
-      className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(208,188,255,0.25)]"
+      className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-all duration-300 active:scale-95 shadow-[0_0_20px_rgba(208,188,255,0.25)]"
     >
       <span>{footer?.ctaLabel || "Let's Talk"}</span>
       <IconArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -33,9 +33,9 @@ const FooterCTA = () => (
       <button
         type="button"
         onClick={() => downloadResume(personal.resumeUrl || footer?.resumePath)}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/40 text-foreground font-medium text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-md"
+        className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/40 text-foreground font-medium text-xs sm:text-sm transition-all duration-300 active:scale-95 backdrop-blur-md"
       >
-        <IconDownload className="w-4 h-4 text-muted-foreground" />
+        <IconDownload className="w-4 h-4 text-muted-foreground transition-transform duration-300 group-hover:translate-y-0.5" />
         <span>Resume</span>
       </button>
     )}
