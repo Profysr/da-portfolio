@@ -72,14 +72,14 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
           <div key={msg.id} className="w-full">
             {msg.role === "assistant" ? (
               <div className="flex items-start gap-3 w-full max-w-[92%]">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-surface-high border border-border/80 text-primary shadow-xs mt-0.5">
+                {/* <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-surface-high border border-border/80 text-primary shadow-xs mt-0.5">
                   <IconRobot className="size-4.5" />
-                </div>
+                </div> */}
 
                 <Message from="assistant" className="flex-1 min-w-0">
                   <div className="relative group">
-                    {/* <MessageContent className="bg-surface-high/80 border border-border text-foreground/90 rounded-2xl rounded-tl-sm px-4.5 py-3.5 text-xs sm:text-sm leading-relaxed shadow-sm"> */}
-                    <MessageContent>
+                    <MessageContent className="text-xs sm:text-sm leading-relaxed">
+                    {/* <MessageContent> */}
                       <MessageResponse>{msg.content}</MessageResponse>
                     </MessageContent>
 
@@ -100,34 +100,31 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
             ) : (
               <div className="flex items-start justify-end gap-3 w-full ml-auto max-w-[85%]">
                 <Message from="user" className="flex-1 min-w-0">
-                  {/* <MessageContent className="bg-primary/15 border border-primary/30 text-foreground font-medium rounded-2xl rounded-tr-sm px-4.5 py-3 text-xs sm:text-sm leading-relaxed shadow-sm ml-auto"> */}
-                  <MessageContent>
+                  <MessageContent className="rounded! py-1.5! text-xs sm:text-sm leading-relaxed">
                     <MessageResponse>{msg.content}</MessageResponse>
                   </MessageContent>
                 </Message>
-
-                {/* <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/20 border border-primary/30 text-primary shadow-xs mt-0.5">
-                  <IconUser className="size-4.5" />
-                </div> */}
               </div>
             )}
           </div>
         ))}
 
         {isTyping && (
-          <ShimmerButton
-            borderRadius="4px"
-            shimmerSize="0.04em"
-            shimmerDuration="2.5s"
-            shimmerColor="var(--primary, #3b82f6)"
-            background="var(--surface-high, rgba(255, 255, 255, 0.05))"
-            className="px-2.5 py-1 text-[11px] font-mono font-medium text-muted-foreground cursor-default border-border pointer-events-none"
-          >
-            <span className="flex items-center gap-1.5">
-              <span className="size-1 rounded-full bg-primary animate-pulse" />
-              Thinking...
-            </span>
-          </ShimmerButton>
+          <div className="flex items-center gap-2.5 w-full max-w-[92%]">
+            <ShimmerButton
+              borderRadius="4px"
+              shimmerSize="0.04em"
+              shimmerDuration="2.5s"
+              shimmerColor="var(--primary, #3b82f6)"
+              background="var(--surface-high, rgba(255, 255, 255, 0.05))"
+              className="px-2.5 py-1 text-[11px] font-mono font-medium text-muted-foreground cursor-default border-border pointer-events-none"
+            >
+              <span className="flex items-center gap-1.5">
+                <span className="size-1 rounded-full bg-primary animate-pulse" />
+                Thinking...
+              </span>
+            </ShimmerButton>
+          </div>
         )}
       </ConversationContent>
 
