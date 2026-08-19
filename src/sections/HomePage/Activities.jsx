@@ -54,6 +54,12 @@ const COMMUNITY_WRITINGS = [
       "Integrating lightweight open-weights LLMs into terminal pipelines",
     link: "#",
   },
+  {
+    title: "Agentic Workflows in CLI",
+    description:
+      "Integrating lightweight open-weights LLMs into terminal pipelines",
+    link: "#",
+  },
 ];
 
 /* ── Minimalist Row Item ───────────────────────────────────────────── */
@@ -65,7 +71,7 @@ function ActivityRow({ title, description, link, icon: Icon }) {
       href={link}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="group flex items-center justify-between w-full px-5 py-4 rounded-md border-b border-border/20 hover:border hover:border-border transition-all duration-300 cursor-pointer"
+      className="group flex items-center justify-between w-full px-5 py-4 border-b border-border/20 last:border-b-0 hover:bg-white/2 transition-all duration-200 cursor-pointer"
     >
       <div className="flex items-center gap-3 pr-4">
         {Icon && (
@@ -111,11 +117,17 @@ export function ActivityAndWritings() {
               </p>
             </div>
 
-            <div className="lg:col-span-7 bg-surface">
-              {SIDE_PROJECTS.map((item, idx) => (
-                <ActivityRow key={idx} {...item} />
-              ))}
-            </div>
+            <ExpandableList
+              items={SIDE_PROJECTS}
+              initialCount={4}
+              showMoreLabel={(hiddenCount) =>
+                `Show more projects (${hiddenCount} more)`
+              }
+              showLessLabel="Show fewer projects"
+              className="lg:col-span-7"
+              listClassName="bg-surface rounded border border-border py-2"
+              renderItem={(item, idx) => <ActivityRow key={idx} {...item} />}
+            />
           </div>
 
           {/* Block 2: Writing & Community Contributions */}
@@ -131,11 +143,17 @@ export function ActivityAndWritings() {
               </p>
             </div>
 
-            <div className="lg:col-span-7 bg-surface">
-              {COMMUNITY_WRITINGS.map((item, idx) => (
-                <ActivityRow key={idx} {...item} />
-              ))}
-            </div>
+            <ExpandableList
+              items={COMMUNITY_WRITINGS}
+              initialCount={4}
+              showMoreLabel={(hiddenCount) =>
+                `Show more writings (${hiddenCount} more)`
+              }
+              showLessLabel="Show fewer writings"
+              className="lg:col-span-7"
+              listClassName="bg-surface rounded border border-border py-2"
+              renderItem={(item, idx) => <ActivityRow key={idx} {...item} />}
+            />
           </div>
         </div>
       </Layout>
