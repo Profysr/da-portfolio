@@ -283,7 +283,7 @@ export function AssistantAi({ open, onOpenChange }) {
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerPortal>
         {/* <DrawerOverlay className="bg-black/75 backdrop-blur-md" /> */}
-        <DrawerContent className="bg-surface flex flex-col max-w-4xl mx-auto min-h-[95vh]">
+        <DrawerContent className="bg-surface flex flex-col max-w-4xl mx-auto h-[95vh] overflow-hidden">
           <ChatHeader />
           <ChatMessageList
             messages={messages}
