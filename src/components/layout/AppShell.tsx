@@ -11,7 +11,7 @@ import {
 import { IconDownload, IconSparkles } from "@tabler/icons-react";
 import { nav, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
-import { AIBotModal } from "@/components/AIBotModal";
+import { AssistantAi } from "@/components/AssistantAi";
 import { downloadResume } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -211,7 +211,7 @@ export function AppShell() {
       </main>
 
       <BottomDock isVisible={isNavVisible} onAIClick={() => setIsAIOpen(true)} />
-      <AIBotModal isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
+      <AssistantAi open={isAIOpen} onOpenChange={setIsAIOpen} />
       <Footer />
     </div>
   );
