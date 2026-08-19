@@ -91,7 +91,7 @@ function CertificateCard({ cert, index }) {
 
       {cert.credentialUrl && cert.credentialUrl !== "#" && (
         <div className="pt-2.5 border-t border-border flex items-center justify-between">
-          <Badge variant="lightSuccess">
+          <Badge variant={"lightSuccess"}>
             <IconCheck className="size-3" />
             <span>Verified</span>
           </Badge>

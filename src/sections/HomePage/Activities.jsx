@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  IconArrowUpRight,
-} from "@tabler/icons-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
 import { ExpandableList } from "@/components/ui/expandable-list";
@@ -62,8 +60,8 @@ const COMMUNITY_WRITINGS = [
   },
 ];
 
-/* ── Minimalist Row Item ───────────────────────────────────────────── */
-function ActivityRow({ title, description, link, icon: Icon }) {
+/* ── Redesigned Row Item ───────────────────────────────────────────── */
+function ActivityRow({ title, description, link, icon: Icon, idx }) {
   const isExternal = link.startsWith("http");
 
   return (
@@ -71,17 +69,25 @@ function ActivityRow({ title, description, link, icon: Icon }) {
       href={link}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="group flex items-center justify-between w-full px-5 py-4 border-b border-border/20 last:border-b-0 hover:bg-white/2 transition-all duration-200 cursor-pointer"
+      className="group relative flex items-center gap-2 w-full px-2.5 py-4 border-b border-border/20 last:border-b-0 hover:bg-muted/50 rounded-xl transition-all duration-200 cursor-pointer"
     >
-      <div className="flex items-center gap-3 pr-4">
+      {/* Top-Left Circular Index Badge */}
+      {!Icon && typeof idx === "number" && (
+        <span className="flex items-center justify-center p-2 rounded-full bg-muted border border-border text-muted-foreground text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-200 shadow-sm">
+          {idx + 1}
+        </span>
+      )}
+
+      {/* Main Content Area */}
+      <div className="flex items-center gap-3 pr-4 min-w-0">
         {Icon && (
-          <span className="shrink-0 text-foreground text-lg">
-            <Icon className="size-5" />
+          <span className="shrink-0 p-2 rounded-lg bg-background border border-border/40 text-foreground group-hover:border-border transition-colors">
+            <Icon className="size-4" />
           </span>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-          <span className="text-sm font-medium text-foreground group-hover:text-white transition-colors whitespace-nowrap truncate">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 min-w-0">
+          <span className="text-sm font-medium text-foreground transition-colors truncate">
             {title}
           </span>
 
@@ -93,7 +99,14 @@ function ActivityRow({ title, description, link, icon: Icon }) {
         </div>
       </div>
 
-      <IconArrowUpRight className="size-4 shrink-0 text-muted-foreground/70 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" />
+      {/* Chevron Button with Rotating Dashed Border */}
+      <div className="relative shrink-0 flex items-center justify-center w-8 h-8 rounded-full ml-auto">
+        {/* Animated Dashed Ring */}
+        <div className="absolute inset-0 rounded-full border border-dashed border-muted-foreground group-hover:border-primary group-hover:rotate-180 transition-all duration-500 ease-out" />
+
+        {/* Chevron Icon */}
+        <IconArrowUpRight className="size-4 text-muted-foreground group-hover:text-primary transition-all duration-200" />
+      </div>
     </a>
   );
 }
@@ -126,7 +139,9 @@ export function ActivityAndWritings() {
               showLessLabel="Show fewer projects"
               className="lg:col-span-7"
               listClassName="bg-surface rounded border border-border py-2"
-              renderItem={(item, idx) => <ActivityRow key={idx} {...item} />}
+              renderItem={(item, idx) => (
+                <ActivityRow key={item.id || idx} idx={idx} {...item} />
+              )}
             />
           </div>
 
@@ -152,7 +167,9 @@ export function ActivityAndWritings() {
               showLessLabel="Show fewer writings"
               className="lg:col-span-7"
               listClassName="bg-surface rounded border border-border py-2"
-              renderItem={(item, idx) => <ActivityRow key={idx} {...item} />}
+              renderItem={(item, idx) => (
+                <ActivityRow key={item.id || idx} idx={idx} {...item} />
+              )}
             />
           </div>
         </div>
