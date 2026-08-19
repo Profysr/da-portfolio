@@ -12,7 +12,6 @@ import { IconDownload, IconSparkles } from "@tabler/icons-react";
 import { nav, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
 import { AIBotModal } from "@/components/AIBotModal";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import { downloadResume } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -202,7 +201,6 @@ export function AppShell() {
         aria-hidden="true"
         className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
       />
-      <SmoothCursor />
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
