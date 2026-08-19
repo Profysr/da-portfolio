@@ -51,7 +51,7 @@ export function TechStack() {
         <div className="flex flex-col items-center gap-7">
           {/* Section Header */}
           <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="outline">ARSENAL & TOOLS</Badge>
+            <Badge variant="light">ARSENAL & TOOLS</Badge>
             <GradientHeading
               text="Technologies & Stack"
               className="text-3xl! sm:text-5xl!"

@@ -155,24 +155,20 @@ function ProjectCard({ project }) {
 
           <div className="flex items-center gap-2 text-[10.5px]">
             {project.isPrivate ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-amber-500/20 bg-amber-500/10 text-amber-400 font-medium">
+              <Badge variant="lightWarning">
                 <IconLock className="size-2.5" /> Private
-              </span>
+              </Badge>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 font-medium">
-                Public Repo
-              </span>
+              <Badge variant="lightSuccess">Public Repo</Badge>
             )}
 
             {project.isHosted ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 font-medium">
+              <Badge variant="lightSuccess">
                 <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />{" "}
                 Live Hosted
-              </span>
+              </Badge>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border bg-surface-high/60 text-muted-foreground">
-                Internal Tool
-              </span>
+              <Badge variant="light">Internal Tool</Badge>
             )}
           </div>
         </div>
@@ -300,7 +296,7 @@ export const Projects = () => {
         <div className="flex flex-col items-center gap-7">
           {/* Header */}
           <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="outline">PORTFOLIO</Badge>
+            <Badge variant="light">PORTFOLIO</Badge>
             <GradientHeading
               text="Featured Engineering Projects"
               className="text-3xl! sm:text-5xl!"

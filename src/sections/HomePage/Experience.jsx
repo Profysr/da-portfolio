@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
  */
 const ExperienceHeader = () => (
   <div className="flex flex-col items-center text-center gap-2.5">
-    <Badge variant="outline">CAREER</Badge>
+    <Badge variant="light">CAREER</Badge>
     <GradientHeading text="Work Experience" className="text-3xl! sm:text-5xl!" />
     <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
       Engineering leadership, forward deployed solutions, and clinical RPA systems.
@@ -71,13 +71,13 @@ const CompanyHeader = ({ exp }) => (
     </div>
 
     {exp.isCurrent && (
-      <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 text-[10px] sm:text-[11px] font-medium shrink-0">
+      <Badge variant="lightSuccess" className="shrink-0">
         <span className="relative flex size-1.5 sm:size-2">
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex size-1.5 sm:size-2 rounded-full bg-emerald-500" />
         </span>
         Present
-      </div>
+      </Badge>
     )}
   </div>
 );

@@ -36,10 +36,10 @@ const FAQAccordionItem = ({ question, answer, isOpen, onToggle }) => {
           {question}
         </span>
         <div
-          className={`p-1 rounded border transition-all duration-300 shrink-0 ${
+          className={`p-1 rounded border transition-all duration-300 shrink-0 bg-surface border-border text-muted-foreground group-hover:text-foreground ${
             isOpen
-              ? "rotate-180 bg-primary/20 border-primary/40 text-primary"
-              : "bg-surface border-border text-muted-foreground group-hover:text-foreground"
+              ? "rotate-180"
+              : ""
           }`}
         >
           <IconChevronDown className="w-3.5 h-3.5" />

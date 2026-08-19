@@ -4,6 +4,7 @@ import { personal, about, contributions } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
+import { Badge } from "@/components/ui/badge";
 import { AvatarStatus } from "@/components/AvatarStatus";
 import { LazyGlobe, LazyParticles } from "@/components/lazy";
 import {
@@ -13,6 +14,7 @@ import {
   Icon360View,
   IconClock,
   IconGitBranch,
+  IconCheck,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
 import { StatCard } from "@/components/StatCard";
@@ -84,13 +86,13 @@ export default function About() {
               <IconWorld className="h-3.5 w-3.5 text-primary" />
               <span>Worldwide</span>
             </div>
-            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+            <Badge variant="lightSuccess" className="gap-1.5">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
               Live
-            </span>
+            </Badge>
           </div>
         </BentoCard>
       ),

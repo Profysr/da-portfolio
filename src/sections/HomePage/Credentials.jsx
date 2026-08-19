@@ -91,10 +91,10 @@ function CertificateCard({ cert, index }) {
 
       {cert.credentialUrl && cert.credentialUrl !== "#" && (
         <div className="pt-2.5 border-t border-border flex items-center justify-between">
-          <span className="text-[11px] text-emerald-600 inline-flex items-center gap-1">
+          <Badge variant="lightSuccess">
             <IconCheck className="size-3" />
             <span>Verified</span>
-          </span>
+          </Badge>
           <a
             href={cert.credentialUrl}
             target="_blank"

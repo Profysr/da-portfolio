@@ -5,13 +5,14 @@ import {
   IconSparkles,
   IconCpu,
   IconRobot,
-  IconCheck,
   IconHierarchy,
+  IconCheck,
 } from "@tabler/icons-react";
 import { Marquee } from "@/components/ui/marquee";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { favoriteStack } from "@/data/idx";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 
 const FALLBACK_ICONS = {
@@ -98,10 +99,10 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
           </div>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-medium self-start sm:self-auto">
+        <Badge variant="lightSuccess">
           <IconCheck className="size-3" />
           <span>{favoriteStack.tag || "Production Tested"}</span>
-        </div>
+        </Badge>
       </div>
 
       {/* Grid of Daily Driver Badges with Logos */}
