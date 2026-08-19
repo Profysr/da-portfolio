@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
-import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+} from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
+import { ExpandableList } from "@/components/ui/expandable-list";
 
 /* ── Section Data ──────────────────────────────────────────────────── */
 const SIDE_PROJECTS = [
@@ -62,7 +65,7 @@ function ActivityRow({ title, description, link, icon: Icon }) {
       href={link}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="group flex items-center justify-between w-full px-5 py-4 rounded-md border border-border/40 bg-zinc-950/80 hover:bg-zinc-900/60 hover:border-border transition-all duration-200 cursor-pointer"
+      className="group flex items-center justify-between w-full px-5 py-4 rounded-md border-b border-border/20 hover:border hover:border-border transition-all duration-300 cursor-pointer"
     >
       <div className="flex items-center gap-3 pr-4">
         {Icon && (
@@ -72,24 +75,19 @@ function ActivityRow({ title, description, link, icon: Icon }) {
         )}
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-          <span className="text-sm sm:text-base font-medium text-foreground group-hover:text-white transition-colors">
+          <span className="text-sm font-medium text-foreground group-hover:text-white transition-colors whitespace-nowrap truncate">
             {title}
           </span>
 
           {description && (
-            <>
-              <span className="hidden sm:inline text-muted-foreground/30">
-                •
-              </span>
-              <span className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
-                {description}
-              </span>
-            </>
+            <span className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
+              {description}
+            </span>
           )}
         </div>
       </div>
 
-      <IconArrowRight className="size-4 shrink-0 text-muted-foreground/70 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" />
+      <IconArrowUpRight className="size-4 shrink-0 text-muted-foreground/70 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" />
     </a>
   );
 }
@@ -113,7 +111,7 @@ export function ActivityAndWritings() {
               </p>
             </div>
 
-            <div className="lg:col-span-7 border-t border-border/80">
+            <div className="lg:col-span-7 bg-surface">
               {SIDE_PROJECTS.map((item, idx) => (
                 <ActivityRow key={idx} {...item} />
               ))}
@@ -133,7 +131,7 @@ export function ActivityAndWritings() {
               </p>
             </div>
 
-            <div className="lg:col-span-7 border-t border-border/80">
+            <div className="lg:col-span-7 bg-surface">
               {COMMUNITY_WRITINGS.map((item, idx) => (
                 <ActivityRow key={idx} {...item} />
               ))}
