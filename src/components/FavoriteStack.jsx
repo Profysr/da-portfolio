@@ -43,9 +43,9 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
           {items.map((item) => {
             const FallbackIcon = FALLBACK_ICONS[item.name] || IconSparkles;
             return (
-              <div
+              <button
                 key={item.name}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 hover:bg-primary/10 border border-transparent hover:border-primary/30 transition-all duration-200 cursor-default shrink-0"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-transparent hover:border-primary/30 transition-all duration-200 cursor-default shrink-0"
               >
                 {item.img ? (
                   <img
@@ -59,7 +59,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
                 <span className="text-[11px] font-medium text-zinc-200 whitespace-nowrap">
                   {item.name}
                 </span>
-              </div>
+              </button>
             );
           })}
         </Marquee>

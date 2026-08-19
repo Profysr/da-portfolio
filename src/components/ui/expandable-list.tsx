@@ -62,7 +62,7 @@ export function ExpandableList<T>({
             type="button"
             onClick={() => setIsExpanded((prev) => !prev)}
             className={cn(
-              "group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] hover:border-primary/40 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all duration-300 shadow-sm backdrop-blur-md",
+              "group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/3 hover:bg-white/8 hover:border-primary/40 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-all duration-300 shadow-sm backdrop-blur-md",
               buttonClassName
             )}
           >
