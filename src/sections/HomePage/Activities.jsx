@@ -1,10 +1,19 @@
 "use client";
 
-import React from "react";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence, useInView } from "motion/react";
+import {
+  IconArrowUpRight,
+  IconCode,
+  IconPencil,
+  IconBrandGithub,
+  IconExternalLink,
+  IconSparkles,
+} from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
-import { ExpandableList } from "@/components/ui/expandable-list";
+import { GradientHeading } from "@/components/ui/Heading";
+import { Badge } from "@/components/ui/badge";
 
 /* ── Section Data ──────────────────────────────────────────────────── */
 const SIDE_PROJECTS = [
@@ -12,21 +21,29 @@ const SIDE_PROJECTS = [
     title: "Da Profiler",
     description: "Open-source Python REST API profiler & N+1 query workbench",
     link: "https://github.com",
+    isExternal: true,
+    tag: "Open Source",
   },
   {
     title: "JCN Engine",
     description: "Multi-tenant SaaS project management engine",
     link: "https://github.com",
+    isExternal: true,
+    tag: "SaaS",
   },
   {
     title: "Clinical RPA Core",
     description: "Desktop automation hooks for SystmOne & EMIS",
     link: "#",
+    isExternal: false,
+    tag: "Private",
   },
   {
     title: "Agentic CLI Coder",
     description: "Terminal refactoring agent powered by local LLMs",
     link: "https://github.com",
+    isExternal: true,
+    tag: "AI",
   },
 ];
 
@@ -35,141 +52,223 @@ const COMMUNITY_WRITINGS = [
     title: "Profiling Django APIs at Scale",
     description: "Detecting SQL N+1 query bottlenecks in production",
     link: "#",
+    readTime: "8 min",
   },
   {
     title: "Clinical Automation Patterns",
     description: "Architecting zero-latency desktop workflows in healthcare",
     link: "#",
+    readTime: "12 min",
   },
   {
     title: "Open Source Engineering",
     description: "Building developer tooling and multi-tenant SaaS systems",
     link: "#",
+    readTime: "6 min",
   },
   {
     title: "Agentic Workflows in CLI",
-    description:
-      "Integrating lightweight open-weights LLMs into terminal pipelines",
+    description: "Integrating lightweight open-weights LLMs into terminal pipelines",
     link: "#",
+    readTime: "10 min",
   },
   {
-    title: "Agentic Workflows in CLI",
-    description:
-      "Integrating lightweight open-weights LLMs into terminal pipelines",
+    title: "Scaling Postgres for Healthcare",
+    description: "Partitioning, indexing, and tuning for NHS-grade workloads",
     link: "#",
+    readTime: "9 min",
   },
 ];
 
-/* ── Redesigned Row Item ───────────────────────────────────────────── */
-function ActivityRow({ title, description, link, icon: Icon, idx }) {
-  const isExternal = link.startsWith("http");
+/* ── Animated Row ──────────────────────────────────────────────────── */
+function AnimatedRow({ item, index, type }) {
+  const isExternal = item.link?.startsWith("http");
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <a
-      href={link}
+    <motion.a
+      href={item.link}
       target={isExternal ? "_blank" : "_self"}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className="group relative flex items-center gap-2 w-full px-2.5 py-4 border-b border-border/20 last:border-b-0 hover:bg-muted/50 rounded-xl transition-all duration-200 cursor-pointer"
+      initial={{ opacity: 0, x: -16 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 16 }}
+      transition={{ duration: 0.3, delay: index * 0.06, ease: "easeOut" }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className="group relative flex items-center gap-3 w-full px-3 py-3.5 border-b border-border/30 last:border-b-0 hover:bg-white/[0.03] transition-colors duration-200 cursor-pointer"
     >
-      {/* Top-Left Circular Index Badge */}
-      {!Icon && typeof idx === "number" && (
-        <span className="flex items-center justify-center p-2 rounded-full bg-muted border border-border text-muted-foreground text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-200 shadow-sm">
-          {idx + 1}
-        </span>
-      )}
+      {/* Animated left accent bar */}
+      <motion.div
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full bg-primary"
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: hovered ? "60%" : 0, opacity: hovered ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+      />
 
-      {/* Main Content Area */}
-      <div className="flex items-center gap-3 pr-4 min-w-0">
-        {Icon && (
-          <span className="shrink-0 p-2 rounded-lg bg-background border border-border/40 text-foreground group-hover:border-border transition-colors">
-            <Icon className="size-4" />
+      {/* Index / Number */}
+      <motion.span
+        className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border bg-surface-high/60 text-[11px] font-mono text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all duration-200"
+        animate={{ scale: hovered ? 1.05 : 1 }}
+        transition={{ duration: 0.15 }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </motion.span>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-sm font-semibold text-foreground group-hover:text-white transition-colors truncate">
+            {item.title}
           </span>
-        )}
-
-        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 min-w-0">
-          <span className="text-sm font-medium text-foreground transition-colors truncate">
-            {title}
-          </span>
-
-          {description && (
-            <span className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
-              {description}
+          {/* Tag pill for projects */}
+          {item.tag && (
+            <span className="hidden sm:inline-flex shrink-0 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wider border border-border bg-surface-high text-muted-foreground">
+              {item.tag}
+            </span>
+          )}
+          {/* Read time for writings */}
+          {item.readTime && (
+            <span className="hidden sm:inline-flex shrink-0 text-[10px] font-mono text-muted-foreground/60">
+              {item.readTime} read
             </span>
           )}
         </div>
+        <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">
+          {item.description}
+        </p>
       </div>
 
-      {/* Chevron Button with Rotating Dashed Border */}
-      <div className="relative shrink-0 flex items-center justify-center w-8 h-8 rounded-full ml-auto">
-        {/* Animated Dashed Ring */}
-        <div className="absolute inset-0 rounded-full border border-dashed border-muted-foreground group-hover:border-primary group-hover:rotate-180 transition-all duration-500 ease-out" />
+      {/* Arrow */}
+      <motion.div
+        className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border/50 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary group-hover:bg-primary/5 transition-all duration-200"
+        animate={{ rotate: hovered ? 45 : 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <IconArrowUpRight className="size-3.5" />
+      </motion.div>
+    </motion.a>
+  );
+}
 
-        {/* Chevron Icon */}
-        <IconArrowUpRight className="size-4 text-muted-foreground group-hover:text-primary transition-all duration-200" />
+/* ── Panel (one block) ─────────────────────────────────────────────── */
+function Panel({ icon: Icon, badge, heading, description, items, type, showMoreLabel, showLessLabel, initialCount = 4 }) {
+  const [showAll, setShowAll] = useState(false);
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  const visible = showAll ? items : items.slice(0, initialCount);
+  const hiddenCount = items.length - initialCount;
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="flex flex-col gap-5"
+    >
+      {/* Header row */}
+      <div className="flex items-start gap-3">
+        <div className="shrink-0 flex size-9 items-center justify-center rounded-md border border-border bg-surface-high/80 text-primary">
+          <Icon className="size-4.5" />
+        </div>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Badge variant="light">{badge}</Badge>
+          </div>
+          <h2 className="text-base font-bold tracking-tight text-foreground leading-snug">
+            {heading}
+          </h2>
+          <p className="text-xs text-muted-foreground/70 max-w-sm leading-relaxed">
+            {description}
+          </p>
+        </div>
       </div>
-    </a>
+
+      {/* List panel */}
+      <div className="rounded-md border border-border bg-surface overflow-hidden">
+        {/* Subtle top shimmer line */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+        <AnimatePresence mode="popLayout">
+          {visible.map((item, idx) => (
+            <AnimatedRow
+              key={item.title + idx}
+              item={item}
+              index={idx}
+              type={type}
+            />
+          ))}
+        </AnimatePresence>
+
+        {/* Show more / less */}
+        {hiddenCount > 0 && (
+          <div className="border-t border-border/40 px-3 py-2.5">
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className="group flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+            >
+              <motion.span
+                animate={{ rotate: showAll ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="inline-flex"
+              >
+                <IconSparkles className="size-3.5" />
+              </motion.span>
+              {showAll
+                ? showLessLabel
+                : showMoreLabel(hiddenCount)}
+            </button>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
 /* ── Main Combined Section ─────────────────────────────────────────── */
 export function ActivityAndWritings() {
   return (
-    <Section id="activity-writings" className="py-6 sm:py-12">
+    <Section id="activity-writings" className="py-8 sm:py-14">
       <Layout>
-        <div className="space-y-12">
-          {/* Block 1: Side Projects & Open Source */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-5 space-y-3">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">
-                Side projects and things I'm building
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-md">
-                Some of the ideas I test when exploring new frameworks,
-                developer tooling, or automated clinical workflows. Each one is
-                an active experiment or open-source initiative.
-              </p>
-            </div>
-
-            <ExpandableList
-              items={SIDE_PROJECTS}
-              initialCount={4}
-              showMoreLabel={(hiddenCount) =>
-                `Show more projects (${hiddenCount} more)`
-              }
-              showLessLabel="Show fewer projects"
-              className="lg:col-span-7"
-              listClassName="bg-surface rounded border border-border py-2"
-              renderItem={(item, idx) => (
-                <ActivityRow key={item.id || idx} idx={idx} {...item} />
-              )}
+        <div className="flex flex-col gap-8 items-center">
+          {/* Section header */}
+          <div className="flex flex-col items-center text-center gap-2.5">
+            <Badge variant="light">BUILDING & WRITING</Badge>
+            <GradientHeading
+              text="Activity & Contributions"
+              className="text-3xl! sm:text-5xl!"
             />
+            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
+              Open experiments, developer tools, and essays on engineering patterns I've shipped or published.
+            </p>
           </div>
 
-          {/* Block 2: Writing & Community Contributions */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-5 space-y-3">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">
-                Writings & community contributions
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-md">
-                Sharing insights on API profiling, desktop workflow automation,
-                multi-tenant SaaS architecture, and open-source software
-                engineering.
-              </p>
-            </div>
-
-            <ExpandableList
-              items={COMMUNITY_WRITINGS}
+          {/* Two-column grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+            <Panel
+              icon={IconCode}
+              badge="OPEN SOURCE"
+              heading="Side projects & things I'm building"
+              description="Active experiments, developer tools, and clinical automation initiatives — some open, some proprietary."
+              items={SIDE_PROJECTS}
+              type="project"
               initialCount={4}
-              showMoreLabel={(hiddenCount) =>
-                `Show more writings (${hiddenCount} more)`
-              }
-              showLessLabel="Show fewer writings"
-              className="lg:col-span-7"
-              listClassName="bg-surface rounded border border-border py-2"
-              renderItem={(item, idx) => (
-                <ActivityRow key={item.id || idx} idx={idx} {...item} />
-              )}
+              showMoreLabel={(n) => `Show ${n} more projects`}
+              showLessLabel="Show fewer"
+            />
+
+            <Panel
+              icon={IconPencil}
+              badge="WRITINGS"
+              heading="Essays & community contributions"
+              description="Sharing what I learn: API profiling, healthcare automation, multi-tenant SaaS, and agentic workflows."
+              items={COMMUNITY_WRITINGS}
+              type="writing"
+              initialCount={4}
+              showMoreLabel={(n) => `Show ${n} more articles`}
+              showLessLabel="Show fewer"
             />
           </div>
         </div>
