@@ -2,22 +2,15 @@ export const SkillsAndTools = [
   {
     category: "Automations & AI",
     items: [
-      {
-        name: "Power Automate",
-        img: "/tools/microsoft-icon.svg",
-        subCategory: null,
-      },
+      { name: "Power Automate", img: "/tools/microsoft-icon.svg", subCategory: null },
       { name: "n8n", img: "/tools/n8n.svg", subCategory: null },
-      { name: "MCP Servers", img: "/tools/mcp.svg", subCategory: null },
-      {
-        name: "Tampermonkey",
-        img: "/tools/tampermonkey.svg",
-        subCategory: null,
-      },
+      { name: "MCP Servers", img: "/tools/mcp.svg", subCategory: null, hideName: true },
+      { name: "Tampermonkey", img: "/tools/tampermonkey.svg", subCategory: null, lightBg: true },
       {
         name: "PowerShell",
         img: "/tools/powershell.svg",
         subCategory: "Automation",
+        lightBg: true,
       },
     ],
   },
@@ -27,13 +20,14 @@ export const SkillsAndTools = [
       { name: "Python", img: "/tools/python.svg", subCategory: "Language" },
       { name: "React", img: "/tools/react.svg", subCategory: "Frontend" },
       { name: "Django", img: "/tools/django.svg", subCategory: null },
+      { name: "Django REST Framework", img: "/tools/django.svg", subCategory: null, hideName: true },
       {
         name: "TypeScript",
         img: "/tools/typescript.svg",
         subCategory: "Language",
       },
       { name: "Node.js", img: "/tools/nodejs.svg", subCategory: "Runtime" },
-      { name: "Express.js", img: "/tools/express.svg", subCategory: "Runtime" },
+      { name: "Express.js", img: "/tools/express.svg", subCategory: "Runtime", hideName: true },
     ],
   },
   {
@@ -44,13 +38,14 @@ export const SkillsAndTools = [
         name: "Kubernetes",
         img: "/tools/kubernetes.svg",
         subCategory: "DevOps",
+        hideName: true,
       },
       {
         name: "PostgreSQL",
         img: "/tools/postgres.svg",
         subCategory: null,
       },
-      { name: "Mongodb", img: "/tools/mongodb.svg", subCategory: null },
+      { name: "Mongodb", img: "/tools/mongodb.svg", subCategory: null, hideName: true },
       { name: "Git & GitHub", img: "/tools/git.svg", subCategory: "VCS" },
       { name: "NHS", img: "/tools/nhs.webp", subCategory: null },
       { name: "SystmOne", img: "/tools/SYSTMONE.webp", subCategory: null },
@@ -63,12 +58,12 @@ export const SkillsAndTools = [
     items: [
       {
         name: "System & Architecture Design",
-        img: "/tools/tauri.svg",
+        img: null,
         subCategory: null,
       },
       {
         name: "Data Structure & Algorithms",
-        img: "/tools/rust.svg",
+        img: null,
         subCategory: null,
       },
       { name: "Claude", img: "/tools/claude.svg", subCategory: null },
@@ -85,24 +80,51 @@ export const favoriteStack = {
   tag: "Modern Intelligent Stack",
   icon: null,
   items: [
-    { name: "Python", img: "/tools/python.svg", role: "Backend & Systems" },
-    { name: "React", img: "/tools/react.svg", role: "Frontend UI" },
-    { name: "Django", img: "/tools/django.svg", role: "Full-Stack" },
-    {
-      name: "Power Automate",
-      img: "/tools/microsoft-icon.svg",
-      role: "Agentic Tooling",
-    },
-    {
-      name: "Claude Code",
-      img: "/tools/claude-code.svg",
-      role: "Agentic Tooling",
-    },
-    { name: "Docker", img: "/tools/docker.svg", role: "Containerization" },
-    {
-      name: "Microservices",
-      img: "/tools/microservice.png",
-      role: "Architecture",
-    },
+    { name: "Python", role: "Backend & Systems" },
+    { name: "React", role: "Frontend UI" },
+    { name: "Django", role: "Full-Stack" },
+    { name: "Power Automate", role: "Agentic Tooling" },
+    { name: "Claude Code", role: "Agentic Tooling" },
+    { name: "Docker", role: "Containerization" },
+    { name: "Microservices", role: "Architecture" },
   ],
 };
+
+/**
+ * TECH_ICON_MAP — single source of truth for tool name → icon metadata.
+ * Built automatically from SkillsAndTools + favoriteStack.
+ * Add a new tool there and it appears everywhere, no second edit needed.
+ */
+export interface TechIconConfig {
+  img: string;
+  hideName?: boolean;
+  lightBg?: boolean;
+}
+
+export const TECH_ICON_MAP: Record<string, TechIconConfig> = (() => {
+  const map: Record<string, TechIconConfig> = {};
+  for (const group of SkillsAndTools) {
+    for (const item of group.items) {
+      if (!item.img) continue;
+      map[item.name] = {
+        img: item.img,
+        hideName: (item as any).hideName ?? undefined,
+        lightBg: (item as any).lightBg ?? undefined,
+      };
+    }
+  }
+  for (const item of favoriteStack.items) {
+    const cfg = resolveFavoriteItem(item.name);
+    if (!cfg?.img) continue;
+    if (!map[item.name]) {
+      map[item.name] = { img: cfg.img };
+    }
+  }
+  return map;
+})();
+
+export function resolveFavoriteItem(
+  name: string,
+): { img?: string; hideName?: boolean; lightBg?: boolean } | undefined {
+  return TECH_ICON_MAP[name];
+}
