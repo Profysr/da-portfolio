@@ -4,7 +4,6 @@ import { useRef, useCallback, useState, useEffect } from "react";
 import {
   Drawer,
   DrawerPortal,
-  DrawerOverlay,
   DrawerContent,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -70,18 +69,18 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
         {messages.map((msg) => (
           <div key={msg.id} className="w-full">
             {msg.role === "assistant" ? (
-              <div className="flex items-start gap-3 w-full max-w-[92%]">
+              <div className="flex items-start gap-3 w-full max-w-[95%]">
                 {/* <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-surface-high border border-border/80 text-primary shadow-xs mt-0.5">
                   <IconRobot className="size-4.5" />
                 </div> */}
 
                 <Message from="assistant" className="flex-1 min-w-0">
                   <div className="relative group">
-                    <MessageContent className="text-xs sm:text-sm leading-relaxed">
+                    <MessageContent className="text-xs sm:text-sm leading-relaxed text-justify">
                       <MessageResponse>{msg.content}</MessageResponse>
                     </MessageContent>
 
-                    <button
+                    {/* <button
                       onClick={() => onCopy(msg.content, msg.id)}
                       className="p-1.5 rounded opacity-0 group-hover:opacity-100 hover:opacity-100 bg-surface border border-border text-muted-foreground hover:text-white transition-all shadow-xs cursor-pointer"
                       title="Copy response"
@@ -91,7 +90,7 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
                       ) : (
                         <IconCopy className="size-3.5" />
                       )}
-                    </button>
+                    </button> */}
                   </div>
                 </Message>
               </div>
@@ -283,8 +282,8 @@ export function AssistantAi({ open, onOpenChange }) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerPortal>
-        <DrawerOverlay className="bg-black/75 backdrop-blur-md" />
-        <DrawerContent className="bg-surface border-t border-border flex flex-col h-[95dvh] max-w-3xl mx-auto rounded-t-3xl shadow-2xl overflow-hidden">
+        {/* <DrawerOverlay className="bg-black/75 backdrop-blur-md" /> */}
+        <DrawerContent className="bg-surface flex flex-col max-w-4xl mx-auto min-h-[95vh]">
           <ChatHeader />
           <ChatMessageList
             messages={messages}
