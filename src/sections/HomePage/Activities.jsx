@@ -6,8 +6,8 @@ import {
   IconArrowUpRight,
   IconCode,
   IconPencil,
-  IconBrandGithub,
-  IconExternalLink,
+  // IconBrandGithub,
+  // IconExternalLink,
   IconSparkles,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
@@ -36,7 +36,7 @@ function AnimatedRow({ item, index, type }) {
       transition={{ duration: 0.3, delay: index * 0.06, ease: "easeOut" }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className="group relative flex items-center gap-3 w-full px-3 py-3.5 border-b border-border/30 last:border-b-0 hover:bg-white/[0.03] transition-colors duration-200 cursor-pointer"
+      className="group relative flex items-center gap-3 w-full px-3 py-3.5 border-b border-border/30 last:border-b-0 hover:bg-white/3 transition-colors duration-200 cursor-pointer"
     >
       {/* Animated left accent bar */}
       <motion.div
@@ -129,7 +129,7 @@ function Panel({ icon: Icon, badge, heading, description, items, type, showMoreL
       {/* List panel */}
       <div className="rounded-md border border-border bg-surface overflow-hidden">
         {/* Subtle top shimmer line */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
         <AnimatePresence mode="popLayout">
           {visible.map((item, idx) => (

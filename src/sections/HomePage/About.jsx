@@ -6,7 +6,7 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
 import { AvatarStatus } from "@/components/AvatarStatus";
-import { LazyGlobe, LazyParticles } from "@/components/lazy";
+import { LazyParticles } from "@/components/lazy";
 import {
   IconMapPin,
   IconWorld,
@@ -14,7 +14,6 @@ import {
   Icon360View,
   IconClock,
   IconGitBranch,
-  IconCheck,
 } from "@tabler/icons-react";
 import { ContactCard } from "@/components/ContactCard";
 import { StatCard } from "@/components/StatCard";
@@ -77,9 +76,11 @@ export default function About() {
           className="h-full min-h-60"
         >
           <div className="relative flex-1 my-1 min-h-36 flex items-center justify-center overflow-hidden">
-            <Suspense fallback={<div className="flex-1 flex items-center justify-center text-xs text-muted-foreground/50">Loading globe...</div>}>
-              <LazyGlobe className="scale-90 sm:scale-95" />
-            </Suspense>
+            <img
+              src="/pakistan.svg"
+              alt="Pakistan map"
+              className="w-full h-auto max-h-52 object-contain"
+            />
           </div>
           <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -179,10 +180,10 @@ export default function About() {
       <Suspense fallback={null}>
         <LazyParticles
           className="absolute inset-0"
-          quantity={120}
-          ease={60}
-          color="#ffffff"
-          size={0.7}
+          // quantity={120}
+          // ease={60}
+          // color="#ffffff"
+          // size={0.7}
         />
       </Suspense>
 
