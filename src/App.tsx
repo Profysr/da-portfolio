@@ -6,7 +6,7 @@ import WritingDetail from "@/pages/WritingDetail";
 import ProjectDetail from "@/pages/ProjectDetail";
 import ProjectChangelog from "@/pages/ProjectChangelog";
 
-export function AppRouter() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>

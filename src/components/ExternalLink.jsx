@@ -1,31 +1,32 @@
 "use client";
 
-import Link from "react-router-dom";
-import { IconExternalLink } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
-export function ExternalLink({
-  href,
-  className,
-}) {
-  const isExternal = href && (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("#"));
+export function ExternalLink({ href, className, children, newTab = true }) {
+  const isExternal =
+    href &&
+    (href.startsWith("http://") ||
+      href.startsWith("https://") ||
+      href.startsWith("#"));
 
-  if (isExternal) {
+  const cls = cn(
+    "inline-flex items-center gap-1.5 transition-all cursor-pointer",
+    className,
+  );
+
+  if (isExternal && newTab) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
-      >
-        <IconExternalLink className="size-3.5" />
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {children}
       </a>
     );
   }
 
   // Internal link - use React Router Link
   return (
-    <Link to={href} className={className}>
-      <IconExternalLink className="size-3.5" />
+    <Link to={href} className={cls}>
+      {children}
     </Link>
   );
 }
