@@ -2,6 +2,10 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## 🚀 Integrations & Documentation
+
+- **GitHub API Integration**: Dynamic GitHub statistics (repo counts, stars, contribution heatmaps) are fetched securely via a Vercel Serverless Function (`/api/github`). For setup, architecture, and deployment instructions, see [GITHUB_Integration.md](file:///c:/Users/mprof/OneDrive/Desktop/da-portfolio/GITHUB_Integration.md).
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)

@@ -34,11 +34,46 @@ export function HeatmapGrid({
   weeks = 32,
   githubUsername = "Profysr",
   className = "",
+  realContributionCalendar = null,
+  overrideTotal = null,
 }) {
   const [revealed, setRevealed] = useState(false);
 
-  // Generate deterministic heatmap data with real dates
+  // Generate or parse heatmap data
   const { weeksData, totalContributions } = useMemo(() => {
+    // 1. If real GraphQL contribution calendar is passed from API
+    if (realContributionCalendar?.weeks && Array.isArray(realContributionCalendar.weeks)) {
+      const rawWeeks = realContributionCalendar.weeks.slice(-weeks);
+      const parsedWeeks = rawWeeks.map((w) =>
+        w.contributionDays.map((d) => {
+          let level = 0;
+          if (d.contributionLevel === "FIRST_QUARTILE") level = 1;
+          else if (d.contributionLevel === "SECOND_QUARTILE") level = 2;
+          else if (d.contributionLevel === "THIRD_QUARTILE") level = 3;
+          else if (d.contributionLevel === "FOURTH_QUARTILE") level = 4;
+          else if (d.contributionCount > 0) level = Math.min(4, Math.ceil(d.contributionCount / 3));
+
+          const dateObj = new Date(d.date);
+          return {
+            date: d.date,
+            formattedDate: dateObj.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }),
+            level,
+            count: d.contributionCount,
+            dayOfWeek: dateObj.getDay(),
+          };
+        })
+      );
+      return {
+        weeksData: parsedWeeks,
+        totalContributions: overrideTotal ?? realContributionCalendar.totalContributions ?? 0,
+      };
+    }
+
+    // 2. Deterministic fallback heatmap data
     const totalDays = weeks * 7;
     const rand = mulberry32(1337);
     const days = [];
@@ -83,8 +118,11 @@ export function HeatmapGrid({
       groupedWeeks.push(days.slice(w * 7, (w + 1) * 7));
     }
 
-    return { weeksData: groupedWeeks, totalContributions: total };
-  }, [weeks]);
+    return {
+      weeksData: groupedWeeks,
+      totalContributions: overrideTotal ?? total,
+    };
+  }, [weeks, realContributionCalendar, overrideTotal]);
 
   useEffect(() => {
     const timer = setTimeout(() => setRevealed(true), 150);

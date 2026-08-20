@@ -19,6 +19,7 @@ import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
 import { cn, downloadResume } from "@/lib/utils";
 import { Suspense, useState, useEffect } from "react";
+import { useGitHubStats } from "@/hooks/useGitHubStats";
 
 // __ Live GMT / Local Clock Component _________________________________
 export function LiveClock({ timeZone = "UTC", label = "GMT" }) {
@@ -55,6 +56,8 @@ export function LiveClock({ timeZone = "UTC", label = "GMT" }) {
  *  Unified About & Contributions Bento Grid
  * ───────────────────────────────────────────────────────────── */
 export default function About() {
+  const { stats } = useGitHubStats();
+
   const bentoItems = [
     // 1. About Me Bio Card
     {
@@ -145,8 +148,10 @@ export default function About() {
       content: (
         <StatCard
           title="Projects Built"
-          value={about.stats[1]?.value || "20+"}
-          subtext="Year to Date"
+          value={
+            stats?.publicRepos ? `${stats.publicRepos}+ Repos` : about.stats[1]?.value || "20+"
+          }
+          subtext={stats?.totalStars ? `${stats.totalStars} Stars` : "Public Repos"}
           icon={IconGitBranch}
           className="h-full"
         />
@@ -164,13 +169,15 @@ export default function About() {
           title="GitHub Rhythm & Velocity"
           subtitle="Real-time commits, open-source PRs, and build cadence"
           Icon={Icon360View}
-          badge={`@${contributions.githubUsername}`}
+          badge={`@${stats?.username || contributions.githubUsername}`}
           className="h-full justify-between"
         >
           <div className="flex-1 flex items-center justify-center my-auto py-2 overflow-x-auto">
             <HeatmapGrid
               weeks={contributions.heatmapWeeks || 30}
-              githubUsername={contributions.githubUsername || "Profysr"}
+              githubUsername={stats?.username || contributions.githubUsername || "Profysr"}
+              realContributionCalendar={stats?.contributionCalendar}
+              overrideTotal={stats?.totalContributions}
             />
           </div>
         </BentoCard>
