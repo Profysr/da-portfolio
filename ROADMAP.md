@@ -275,6 +275,131 @@
 
 ---
 
+## Phase 13 — Detail Pages: Data Layer 🟡 (NEXT)
+
+**Goal:** Prepare the data layer so detail pages have something to render. No UI changes yet.
+
+> **Context:** Activities.jsx currently uses static `SIDE_PROJECTS` and `COMMUNITY_WRITINGS` from `src/data/activities.ts`. We're splitting this into two reusable data sources: `projects.js` (expanded) and a renamed `writings.js` (was `blogs.js`). Each entry gains `slug` (URL) and `content` (markdown body). Side projects merge into `projects.js` with `isActivity: true`.
+
+### Tasks
+- [ ] 13.1 Add `slug`, `content` to all entries in `src/data/projects.js` (4 main projects + 4 side projects merged from `activities.ts`)
+- [ ] 13.2 Add `isActivity: true, featured: false` to side-projects so they don't appear in homepage Projects grid but appear in Activities
+- [ ] 13.3 Add optional `changelog: [...]` field to project entries where applicable (none of the 8 initial projects need it)
+- [ ] 13.4 Rename `src/data/blogs.js` → `src/data/writings.js`; add `slug`, `content` to each entry
+- [ ] 13.5 Update `src/data/idx.js` barrel: `export * from "./writings"` (was `./blogs`)
+- [ ] 13.6 Delete `src/data/activities.ts`
+- [ ] 13.7 Update import in `src/components/CommandPallete.jsx`: `blogs` → `writings`
+- [ ] 13.8 Update import in `src/lib/botApi.ts`: `blogs` → `writings`
+- [ ] 13.9 Build passes; all imports resolve
+
+### ❓ Questions (Phase 13) — Answered
+1. **Schema shape:** Each project entry has `slug`, `content` (markdown string), optional `changelog`. Each writing entry has `slug`, `content`.
+2. **Side-project location:** Merged into `projects.js` (not kept separate).
+3. **isActivity flag:** Drives whether entry appears in Activities section or homepage Projects grid.
+
+### Checkpoint
+Show one final project entry + one final writing entry for approval before Phase 14.
+
+---
+
+## Phase 14 — ReadingLayout + Slug Lookup Helper
+
+**Goal:** Build the minimal reading layout that wraps all detail pages. Verify in isolation before wiring real routes.
+
+### Tasks
+- [ ] 14.1 Create `src/lib/content.js` — `getProjectBySlug(slug)` and `getWritingBySlug(slug)` lookup helpers
+- [ ] 14.2 Create `src/components/layout/ReadingLayout.jsx` — minimal layout: back button (top-left), breadcrumbs (Writing/Title or Projects/Title), `<Outlet />` for page, full Footer at bottom
+- [ ] 14.3 Add temporary `<Route element={<ReadingLayout />}><Route path="/reading-demo" element={<div>Demo</div>} /></Route>` to `src/App.tsx` to verify layout in isolation
+- [ ] 14.4 Visual check: navigate to `/reading-demo`, confirm back button + breadcrumbs + Footer render correctly
+
+### ❓ Questions (Phase 14) — Answered
+1. **Footer inclusion:** Yes — full Footer component (Let's Talk + socials + resume download) at the bottom of every detail page.
+2. **Breadcrumbs:** Show "Writing / {title}" or "Projects / {title}" depending on route.
+
+### Checkpoint
+Screenshot the layout for approval before Phase 15.
+
+---
+
+## Phase 15 — WritingDetail Page
+
+**Goal:** First end-to-end detail page. Validates the routing pattern + markdown rendering before adding the more complex ProjectDetail.
+
+### Tasks
+- [ ] 15.1 Create `src/pages/WritingDetail.jsx` — uses `useParams()` → `getWritingBySlug()` → renders hero (title, formatted date, tags, readTime), `<Streamdown>` for content, back link
+- [ ] 15.2 404 fallback — if slug not found, render a "Not Found" message inside ReadingLayout with back button (not a redirect)
+- [ ] 15.3 Add `<Route path="/writing/:slug" element={<WritingDetail />} />` inside ReadingLayout in `src/App.tsx`
+- [ ] 15.4 Link Activities.jsx Block 2 rows to `/writing/:slug` (replace static `#` links)
+- [ ] 15.5 Visual check: click each writing row → detail page renders correctly → back button returns to home
+
+### ❓ Questions (Phase 15) — Answered
+1. **Streamdown:** Already installed with code/math/mermaid plugins configured (used in MessageResponse). Reuse directly.
+
+### Checkpoint
+Click through all writings, confirm markdown rendering looks right, approve Phase 16.
+
+---
+
+## Phase 16 — ProjectDetail Page
+
+**Goal:** Project detail page with tech chips, GitHub/Live buttons, optional "View Changelog" link.
+
+### Tasks
+- [ ] 16.1 Create `src/pages/ProjectDetail.jsx` — same pattern as WritingDetail plus:
+  - Tech chips (reuse `TechPill` component from earlier work)
+  - GitHub button (if `github` field set, not `"#"`)
+  - Live Demo button (if `live` field set, not `"#"`)
+  - "View Changelog" button (only if `project.changelog` field exists) → `/projects/:slug/changelog`
+- [ ] 16.2 404 fallback identical to WritingDetail
+- [ ] 16.3 Add `<Route path="/projects/:slug" element={<ProjectDetail />} />` inside ReadingLayout in `src/App.tsx`
+- [ ] 16.4 Add "Read Docs" button to `src/sections/HomePage/Projects.jsx` cards → links to `/projects/:slug`
+- [ ] 16.5 Link Activities.jsx Block 1 rows to `/projects/:slug`
+- [ ] 16.6 Visual check: click any project card (homepage Projects + Activities) → detail renders all metadata + markdown
+
+### Checkpoint
+Click through both Activities (Block 1) and homepage Projects, confirm both flow correctly, approve Phase 17.
+
+---
+
+## Phase 17 — ProjectChangelog Page
+
+**Goal:** Timeline-style changelog view adapted from `changelog-template/app/page.tsx`. Vertical timeline with sticky dates + version bubbles + markdown content per entry.
+
+### Tasks
+- [ ] 17.1 Create `src/pages/ProjectChangelog.jsx` — adapted timeline layout:
+  - Header: project title + back-to-project link
+  - Left column: sticky date + version bubble (e.g. "v0.3")
+  - Right column: tags (Badge components) + `<Streamdown>` content
+  - Vertical timeline line with primary-color dot per entry
+- [ ] 17.2 404 fallback if project doesn't exist OR has no `changelog` field
+- [ ] 17.3 Add `<Route path="/projects/:slug/changelog" element={<ProjectChangelog />} />` inside ReadingLayout in `src/App.tsx`
+- [ ] 17.4 Since none of the 8 initial projects have changelog data, optionally add a placeholder changelog to one project entry for visual verification (ask user)
+
+### ❓ Questions (Phase 17)
+1. **Sample changelog:** Should I add a placeholder changelog to one project (e.g. `proj-3` RPA Clinical Automation Suite) for visual testing, or skip until real data exists?
+
+### Checkpoint
+Screenshot a sample changelog render for approval.
+
+---
+
+## Phase 18 — Polish, 404s, Scroll Restoration
+
+**Goal:** Production-ready edge cases.
+
+### Tasks
+- [ ] 18.1 Custom "Not Found" component for slug-not-found (better UX than blank page)
+- [ ] 18.2 Add `<ScrollToTop>` component to `App.tsx` — scrolls to top on route change (React Router doesn't do this by default)
+- [ ] 18.3 Verify back button works in all 3 detail page types
+- [ ] 18.4 Mobile responsiveness at 375 px — all 3 detail pages readable
+- [ ] 18.5 Verify all routes load without console warnings
+- [ ] 18.6 Build passes clean
+
+### Checkpoint
+Run through all routes on mobile + desktop, approve.
+
+---
+
 ## Phase 12 — Content Fill, SEO & Deploy
 
 **Goal:** Real content, final polish, production build.
