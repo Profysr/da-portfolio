@@ -1,6 +1,13 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect } from "react";
+import {
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+} from "react";
 import {
   Drawer,
   DrawerPortal,
@@ -9,25 +16,53 @@ import {
 } from "@/components/ui/drawer";
 import { aiBotData } from "@/data/idx";
 import { sendMessage } from "@/lib/botApi";
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import {
-  Message,
-  MessageContent,
-  MessageResponse,
-} from "@/components/ai-elements/message";
-import {
-  // IconCopy,
-  // IconCheck,
-  IconArrowUp,
-  IconCornerDownLeft,
-} from "@tabler/icons-react";
-import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
+import { IconArrowUp, IconCornerDownLeft } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { ShimmerButton } from "./ui/shimmer-button";
+
+// __ Lazy-Loaded Heavy UI Components _________________________________
+const Conversation = lazy(() =>
+  import("@/components/ai-elements/conversation").then((m) => ({
+    default: m.Conversation,
+  })),
+);
+const ConversationContent = lazy(() =>
+  import("@/components/ai-elements/conversation").then((m) => ({
+    default: m.ConversationContent,
+  })),
+);
+const ConversationScrollButton = lazy(() =>
+  import("@/components/ai-elements/conversation").then((m) => ({
+    default: m.ConversationScrollButton,
+  })),
+);
+
+const Message = lazy(() =>
+  import("@/components/ai-elements/message").then((m) => ({
+    default: m.Message,
+  })),
+);
+const MessageContent = lazy(() =>
+  import("@/components/ai-elements/message").then((m) => ({
+    default: m.MessageContent,
+  })),
+);
+const MessageResponse = lazy(() =>
+  import("@/components/ai-elements/message").then((m) => ({
+    default: m.MessageResponse,
+  })),
+);
+
+const Suggestion = lazy(() =>
+  import("@/components/ai-elements/suggestion").then((m) => ({
+    default: m.Suggestion,
+  })),
+);
+const Suggestions = lazy(() =>
+  import("@/components/ai-elements/suggestion").then((m) => ({
+    default: m.Suggestions,
+  })),
+);
 
 const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 
@@ -37,16 +72,60 @@ const INITIAL_MESSAGE = {
   content: `👋 Hi! I'm Bilal's **AI Recruiter Assistant**. Ask me anything about his engineering experience, tech stack, key achievements, or availability!`,
 };
 
-// __ Components_________________________________
+// __ Skeleton Loaders _________________________________
+export function ChatHeaderSkeleton() {
+  return (
+    <div className="animate-pulse shrink-0">
+      <div className="w-full flex items-center justify-center py-1">
+        <div className="w-32 h-1.5 rounded-full bg-white/20" />
+      </div>
+      <div className="flex flex-col items-start px-6 py-2 border-b border-border bg-surface/80 gap-2">
+        <div className="h-5 w-32 bg-surface-high rounded" />
+        <div className="h-3 w-64 bg-surface-high/60 rounded" />
+      </div>
+    </div>
+  );
+}
+
+export function ChatMessageListSkeleton() {
+  return (
+    <div className="flex-1 p-6 space-y-4 animate-pulse overflow-hidden">
+      <div className="flex items-start gap-3 w-[75%]">
+        <div className="h-16 w-full bg-surface-high/80 rounded-lg" />
+      </div>
+      <div className="flex items-start justify-end gap-3 w-[60%] ml-auto">
+        <div className="h-10 w-full bg-primary/20 rounded-lg" />
+      </div>
+      <div className="flex items-start gap-3 w-[85%]">
+        <div className="h-24 w-full bg-surface-high/80 rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
+export function ChatInputAreaSkeleton() {
+  return (
+    <div className="shrink-0 px-4 py-2 bg-surface space-y-3 animate-pulse">
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="h-7 w-24 bg-surface-high/60 rounded-xl shrink-0" />
+        <div className="h-7 w-28 bg-surface-high/60 rounded-xl shrink-0" />
+        <div className="h-7 w-20 bg-surface-high/60 rounded-xl shrink-0" />
+      </div>
+      <div className="h-20 w-full bg-surface-high/80 rounded-md" />
+      <div className="flex justify-center">
+        <div className="h-3 w-36 bg-surface-high/40 rounded" />
+      </div>
+    </div>
+  );
+}
+
+// __ Sub-Components _________________________________
 export function ChatHeader() {
   return (
     <>
-      {/* Top Drag Handle Bar */}
       <div className="w-full flex items-center justify-center py-1 shrink-0">
         <div className="w-32 h-1.5 rounded-full bg-white/25" />
       </div>
-
-      {/* Header Container */}
       <div className="flex flex-col items-start px-6 py-2 shrink-0 border-b border-border bg-surface/80">
         <DrawerTitle className="text-base font-semibold text-foreground">
           <span className="font-bold bg-primary px-1 py-0.5 rounded text-zinc-900">
@@ -70,27 +149,11 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
           <div key={msg.id} className="w-full">
             {msg.role === "assistant" ? (
               <div className="flex items-start gap-3 w-full max-w-[95%]">
-                {/* <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-surface-high border border-border/80 text-primary shadow-xs mt-0.5">
-                  <IconRobot className="size-4.5" />
-                </div> */}
-
                 <Message from="assistant" className="flex-1 min-w-0">
                   <div className="relative group">
                     <MessageContent className="text-xs sm:text-sm leading-relaxed text-justify">
                       <MessageResponse>{msg.content}</MessageResponse>
                     </MessageContent>
-
-                    {/* <button
-                      onClick={() => onCopy(msg.content, msg.id)}
-                      className="p-1.5 rounded opacity-0 group-hover:opacity-100 hover:opacity-100 bg-surface border border-border text-muted-foreground hover:text-white transition-all shadow-xs cursor-pointer"
-                      title="Copy response"
-                    >
-                      {copiedId === msg.id ? (
-                        <IconCheck className="size-3.5 text-emerald-400" />
-                      ) : (
-                        <IconCopy className="size-3.5" />
-                      )}
-                    </button> */}
                   </div>
                 </Message>
               </div>
@@ -140,14 +203,12 @@ export function ChatInputArea({
 }) {
   return (
     <div className="shrink-0 px-4 py-2 bg-surface space-y-3">
-      {/* Quick Suggestions */}
       <Suggestions className="gap-2 pb-1 no-scrollbar overflow-x-auto">
         {quickPrompts.map((prompt) => (
           <Suggestion
             key={prompt.id}
             suggestion={prompt.label}
             onClick={(lbl) => onSend(lbl)}
-            // className="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-surface-high/60 hover:bg-surface-high hover:border-primary/50 text-xs font-medium text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer disabled:opacity-50"
             variant="ghost"
             size="sm"
           >
@@ -157,7 +218,6 @@ export function ChatInputArea({
         ))}
       </Suggestions>
 
-      {/* Simplified Textarea Container */}
       <div className="relative flex items-end gap-2 rounded border border-border bg-surface-high p-2 transition-all duration-200">
         <textarea
           ref={textareaRef}
@@ -185,7 +245,6 @@ export function ChatInputArea({
         </button>
       </div>
 
-      {/* Replaced Footer with Shortcut Hint */}
       <div className="flex justify-center pt-0.5">
         <span className="text-[11px] text-muted-foreground/60 font-mono flex items-center gap-1.5">
           <IconCornerDownLeft className="size-3 text-muted-foreground/50" />
@@ -200,7 +259,49 @@ export function ChatInputArea({
   );
 }
 
-// __ Main Component_________________________________
+// __ Internal Dynamic Layout Chunk _________________________________
+const LazyChatBody = lazy(async () => ({
+  default: function ChatBody({
+    messages,
+    isTyping,
+    copiedId,
+    copyToClipboard,
+    input,
+    setInput,
+    textareaRef,
+    handleKeyDown,
+    handleSendText,
+  }) {
+    return (
+      <>
+        <Suspense fallback={<ChatHeaderSkeleton />}>
+          <ChatHeader />
+        </Suspense>
+        <Suspense fallback={<ChatMessageListSkeleton />}>
+          <ChatMessageList
+            messages={messages}
+            isTyping={isTyping}
+            copiedId={copiedId}
+            onCopy={copyToClipboard}
+          />
+        </Suspense>
+        <Suspense fallback={<ChatInputAreaSkeleton />}>
+          <ChatInputArea
+            input={input}
+            setInput={setInput}
+            textareaRef={textareaRef}
+            onKeyDown={handleKeyDown}
+            onSend={handleSendText}
+            isTyping={isTyping}
+            quickPrompts={aiBotData.quickPrompts}
+          />
+        </Suspense>
+      </>
+    );
+  },
+}));
+
+// __ Main Component _________________________________
 export function AssistantAi({ open, onOpenChange }) {
   const [messages, setMessages] = useState([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
@@ -282,24 +383,30 @@ export function AssistantAi({ open, onOpenChange }) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerPortal>
-        {/* <DrawerOverlay className="bg-black/75 backdrop-blur-md" /> */}
         <DrawerContent className="bg-surface flex flex-col max-w-4xl mx-auto h-[95vh] overflow-hidden">
-          <ChatHeader />
-          <ChatMessageList
-            messages={messages}
-            isTyping={isTyping}
-            copiedId={copiedId}
-            onCopy={copyToClipboard}
-          />
-          <ChatInputArea
-            input={input}
-            setInput={setInput}
-            textareaRef={textareaRef}
-            onKeyDown={handleKeyDown}
-            onSend={handleSendText}
-            isTyping={isTyping}
-            quickPrompts={aiBotData.quickPrompts}
-          />
+          {open && (
+            <Suspense
+              fallback={
+                <div className="flex flex-col h-full">
+                  <ChatHeaderSkeleton />
+                  <ChatMessageListSkeleton />
+                  <ChatInputAreaSkeleton />
+                </div>
+              }
+            >
+              <LazyChatBody
+                messages={messages}
+                isTyping={isTyping}
+                copiedId={copiedId}
+                copyToClipboard={copyToClipboard}
+                input={input}
+                setInput={setInput}
+                textareaRef={textareaRef}
+                handleKeyDown={handleKeyDown}
+                handleSendText={handleSendText}
+              />
+            </Suspense>
+          )}
         </DrawerContent>
       </DrawerPortal>
     </Drawer>
