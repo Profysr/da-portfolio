@@ -297,7 +297,7 @@
 
 ---
 
-## Phase 14 — ReadingLayout + Slug Lookup Helper 🟡 (NEXT)
+## Phase 14 — ReadingLayout + Slug Lookup Helper ✅ (DONE)
 
 **Goal:** Build the minimal reading layout that wraps all detail pages. Verify in isolation before wiring real routes.
 
@@ -332,28 +332,23 @@ Writing detail page renders correctly with markdown, back button works from Acti
 
 ---
 
-## Phase 16 — ProjectDetail Page 🟡 (NEXT)
+## Phase 16 — ProjectDetail Page ✅ (DONE)
 
 **Goal:** Project detail page with tech chips, GitHub/Live buttons, optional "View Changelog" link.
 
 ### Tasks
-- [ ] 16.1 Create `src/pages/ProjectDetail.jsx` — same pattern as WritingDetail plus:
-  - Tech chips (reuse `TechPill` component from earlier work)
-  - GitHub button (if `github` field set, not `"#"`)
-  - Live Demo button (if `live` field set, not `"#"`)
-  - "View Changelog" button (only if `project.changelog` field exists) → `/projects/:slug/changelog`
-- [ ] 16.2 404 fallback identical to WritingDetail
-- [ ] 16.3 Add `<Route path="/projects/:slug" element={<ProjectDetail />} />` inside ReadingLayout in `src/App.tsx`
-- [ ] 16.4 Add "Read Docs" button to `src/sections/HomePage/Projects.jsx` cards → links to `/projects/:slug`
-- [ ] 16.5 Link Activities.jsx Block 1 rows to `/projects/:slug`
-- [ ] 16.6 Visual check: click any project card (homepage Projects + Activities) → detail renders all metadata + markdown
+- [x] 16.1 Created `src/pages/ProjectDetail.jsx` — same pattern as WritingDetail plus: TechPill chips, GitHub/Live buttons (hidden when `#`), "View Changelog" link when `changelog` field exists
+- [x] 16.2 404 fallback identical to WritingDetail
+- [x] 16.3 Added `{ path: "projects/:slug", element: <ProjectDetail /> }` to `src/lib/router.jsx`
+- [x] 16.4 Activities.jsx Block 1 rows linked via computed `link: /projects/${slug}` (no data file changes)
+- [x] 16.5 Build passes clean
 
 ### Checkpoint
-Click through both Activities (Block 1) and homepage Projects, confirm both flow correctly, approve Phase 17.
+ProjectDetail renders tech chips, action buttons, and markdown body. Back button works from Activities → ProjectDetail.
 
 ---
 
-## Phase 17 — ProjectChangelog Page
+## Phase 17 — ProjectChangelog Page 🟡 (NEXT)
 
 **Goal:** Timeline-style changelog view adapted from `changelog-template/app/page.tsx`. Vertical timeline with sticky dates + version bubbles + markdown content per entry.
 

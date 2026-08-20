@@ -18,7 +18,7 @@ import { downloadResume } from "@/lib/utils";
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
 /* ------------------------------------------------------------------ */
 
-function TopBar({ isVisible }: { isVisible: boolean }) {
+export function TopBar({ isVisible }: { isVisible: boolean }) {
   return (
     <header
       className={`fixed top-3 sm:top-4 left-0 right-0 z-50 px-3 sm:px-6 flex items-center justify-center pointer-events-none transition-transform duration-300 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"

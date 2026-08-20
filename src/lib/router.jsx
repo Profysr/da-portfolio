@@ -4,6 +4,7 @@ import { HomePage } from "@/pages/HomePage";
 import ReadingLayout from "@/components/layout/ReadingLayout";
 import ReadingDemo from "@/components/ReadingDemo";
 import WritingDetail from "@/pages/WritingDetail";
+import ProjectDetail from "@/pages/ProjectDetail";
 
 export const router = createBrowserRouter([
   {
@@ -14,17 +15,18 @@ export const router = createBrowserRouter([
   },
   {
     element: <ReadingLayout />,
-    handle: { breadcrumb: "Reading" },
     children: [
       {
         path: "reading-demo",
         element: <ReadingDemo />,
-        handle: { breadcrumb: "Demo" },
       },
       {
         path: "writing/:slug",
         element: <WritingDetail />,
-        handle: { breadcrumb: "Writing" },
+      },
+      {
+        path: "projects/:slug",
+        element: <ProjectDetail />,
       },
     ],
   },
