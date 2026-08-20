@@ -13,24 +13,30 @@ import {
   IconExternalLink,
   IconBrandGithub,
   IconCalendar,
+  IconCheck,
+  IconRocket,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
-function ExternalLink({ href, children, className }) {
+function ActionButton({ href, children, isInternal = false }) {
   if (!href || href === "#") return null;
+
+  const className = cn(
+    "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200",
+    "border border-border/80 bg-surface-high/60 backdrop-blur-sm text-foreground hover:border-primary/50 hover:bg-surface-high hover:text-white hover:shadow-lg hover:shadow-primary/5"
+  );
+
+  if (isInternal) {
+    return (
+      <Link to={href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer",
-        "border border-border bg-surface-high hover:border-primary/50 hover:text-white",
-        className
-      )}
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
       {children}
-      <IconExternalLink className="size-3.5" />
     </a>
   );
 }
@@ -60,21 +66,21 @@ export default function ProjectDetail() {
 
   if (error) {
     return (
-      <Section className="py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <GradientHeading as="h1" className="text-2xl mb-4">
-            Project not found
+      <Section className="py-24">
+        <div className="max-w-md mx-auto text-center border border-border/60 bg-surface-high/30 p-8 rounded-2xl backdrop-blur-sm">
+          <GradientHeading as="h1" className="text-2xl mb-2">
+            Project Not Found
           </GradientHeading>
           <p className="text-muted-foreground text-sm mb-6">
-            The project &ldquo;{slug}&rdquo; doesn&apos;t exist or has been removed.
+            The project &ldquo;{slug}&rdquo; couldn&apos;t be found or may have moved.
           </p>
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
           >
             <IconArrowLeft className="size-4" />
-            Go back
+            Return to Projects
           </button>
         </div>
       </Section>
@@ -83,136 +89,146 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <Section className="py-20">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-3/4 rounded bg-surface-high" />
-            <div className="h-4 w-1/2 rounded bg-surface-high" />
-            <div className="h-4 w-full rounded bg-surface-high" />
-            <div className="h-4 w-5/6 rounded bg-surface-high" />
-          </div>
+      <Section className="py-16">
+        <div className="max-w-5xl mx-auto space-y-6">
+          <div className="h-6 w-20 rounded-lg bg-surface-high/50 animate-pulse" />
+          <div className="h-12 w-3/4 rounded-xl bg-surface-high/50 animate-pulse" />
+          <div className="h-20 w-full rounded-2xl bg-surface-high/30 animate-pulse" />
         </div>
       </Section>
     );
   }
 
   return (
-    <Section className="py-8 md:py-12" noFade>
-      <div className="max-w-4xl mx-auto">
-        {/* Back button inside body */}
+    <Section className="py-8 md:py-16" noFade>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Navigation / Back Button */}
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer mb-8"
+          className="group inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mb-8 cursor-pointer"
         >
-          <IconArrowLeft className="size-4" />
-          Back
+          <IconArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
+          Back to Overview
         </button>
 
-        {/* Hero block */}
-        <header className="mb-10">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <Badge variant="light" className="text-[11px]">
+        {/* Hero Header */}
+        <header className="mb-12">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <Badge variant="light" className="text-xs px-2.5 py-0.5 rounded-md font-medium">
               {project.category}
             </Badge>
             {project.industry && (
-              <Badge variant="lightInfo" className="text-[11px]">
+              <Badge variant="lightInfo" className="text-xs px-2.5 py-0.5 rounded-md font-medium">
                 {project.industry}
               </Badge>
             )}
             {project.access && (
-              <Badge variant="lightWarning" className="text-[11px]">
+              <Badge variant="lightWarning" className="text-xs px-2.5 py-0.5 rounded-md font-medium">
                 {project.access}
               </Badge>
             )}
           </div>
-          <GradientHeading as="h1" className="text-2xl sm:text-3xl md:text-4xl mb-3">
+
+          <GradientHeading as="h1" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
             {project.title}
           </GradientHeading>
-          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-5">
+
+          <p className="text-muted-foreground text-base sm:text-lg max-w-3xl leading-relaxed mb-8">
             {project.description}
           </p>
 
-          {/* Action buttons */}
+          {/* External Action Links */}
           <div className="flex flex-wrap items-center gap-3">
-            <ExternalLink href={project.github}>
-              <IconBrandGithub className="size-4" />
-              GitHub
-            </ExternalLink>
-            <ExternalLink href={project.live}>
-              <IconExternalLink className="size-4" />
-              Live Demo
-            </ExternalLink>
+            {project.live && (
+              <ActionButton href={project.live}>
+                <IconRocket className="size-4 text-primary" />
+                Live Product
+                <IconExternalLink className="size-3.5 opacity-60" />
+              </ActionButton>
+            )}
+            {project.github && (
+              <ActionButton href={project.github}>
+                <IconBrandGithub className="size-4" />
+                Source Code
+              </ActionButton>
+            )}
             {project.changelog && (
-              <Link
-                to={`/projects/${slug}/changelog`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer border border-border bg-surface-high hover:border-primary/50 hover:text-white"
-              >
-                <IconCalendar className="size-3.5" />
-                View Changelog
-              </Link>
+              <ActionButton href={`/projects/${slug}/changelog`} isInternal>
+                <IconCalendar className="size-4 text-primary" />
+                Changelog History
+              </ActionButton>
             )}
           </div>
         </header>
 
-        {/* Divider */}
-        <div className="h-px bg-border mb-8" />
+        {/* Grid Layout: Main Article (Left) vs Metadata Sidebar (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          {/* Main Markdown Content Area */}
+          <main className="lg:col-span-8">
+            <article
+              className={cn(
+                "prose prose-invert prose-slate max-w-none",
+                // Editorial Typography Tuning
+                "[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:mt-10 [&_h1]:mb-4 [&_h1]:border-b [&_h1]:border-border/60 [&_h1]:pb-3",
+                "[&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-foreground",
+                "[&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-foreground/90",
+                "[&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-5 [&_p]:text-sm sm:[&_p]:text-base",
+                "[&_ul]:text-muted-foreground [&_ul]:mb-6 [&_ul]:space-y-2 [&_ul]:list-disc [&_ul]:pl-6",
+                "[&_ol]:text-muted-foreground [&_ol]:mb-6 [&_ol]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6",
+                "[&_li]:text-sm sm:[&_li]:text-base",
+                "[&_a]:text-primary [&_a]:font-medium [&_a]:no-underline hover:[&_a]:underline",
+                // Quotes / Q&A Callouts
+                "[&_blockquote]:border-l-2 [&_blockquote]:border-primary/80 [&_blockquote]:bg-surface-high/30 [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:rounded-r-xl [&_blockquote]:not-italic [&_blockquote]:my-6",
+                // Inline & Block Code
+                "[&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:bg-surface-high [&_code]:text-xs [&_code]:font-mono [&_code]:text-foreground/90",
+                "[&_pre]:bg-surface-high/80 [&_pre]:border [&_pre]:border-border/60 [&_pre]:rounded-xl [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6",
+                // Images
+                "[&_img]:rounded-xl [&_img]:border [&_img]:border-border/60 [&_img]:shadow-md [&_img]:my-8"
+              )}
+            >
+              <Streamdown>{project.content}</Streamdown>
+            </article>
+          </main>
 
-        {/* Tech stack */}
-        {project.tech?.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-sm font-semibold text-foreground mb-3">Tech Stack</h2>
-            <div className="flex flex-wrap gap-2">
-              {project.tech.map((t) => (
-                <TechPill key={t} name={t} size="sm" />
-              ))}
-            </div>
-          </div>
-        )}
+          {/* Sticky Sidebar */}
+          <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-8">
+            {/* Tech Stack Section */}
+            {project.tech?.length > 0 && (
+              <div className="p-6 rounded-2xl border border-border/60 bg-surface-high/20 backdrop-blur-sm">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
+                  Tech Stack & Tools
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((t) => (
+                    <TechPill key={t} name={t} size="sm" />
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {/* Strategies / highlights */}
-        {project.strategies?.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-sm font-semibold text-foreground mb-3">Key Strategies</h2>
-            <ul className="space-y-2">
-              {project.strategies.map((s) => (
-                <li
-                  key={s}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <span className="mt-1.5 size-1.5 rounded-full bg-primary shrink-0" />
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {/* Key Highlights / Strategies */}
+            {project.strategies?.length > 0 && (
+              <div className="p-6 rounded-2xl border border-border/60 bg-surface-high/20 backdrop-blur-sm">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
+                  Key Highlights
+                </h2>
+                <ul className="space-y-3">
+                  {project.strategies.map((s) => (
+                    <li key={s} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                      <div className="mt-0.5 p-0.5 rounded-full bg-primary/10 text-primary shrink-0">
+                        <IconCheck className="size-3.5" />
+                      </div>
+                      <span className="leading-snug">{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
 
-        {/* Divider */}
-        {project.strategies?.length > 0 && <div className="h-px bg-border mb-8" />}
-
-        {/* Markdown body */}
-        <article
-          className={cn(
-            "prose prose-invert prose-sm sm:prose-base max-w-none",
-            "[&_h1]:text-xl [&_h1]:font-semibold [&_h1]:mt-8 [&_h1]:mb-3",
-            "[&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-7 [&_h2]:mb-2.5",
-            "[&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2",
-            "[&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-4",
-            "[&_ul]:text-muted-foreground [&_ul]:mb-4 [&_ul]:pl-5",
-            "[&_ol]:text-muted-foreground [&_ol]:mb-4 [&_ol]:pl-5",
-            "[&_li]:mb-1.5",
-            "[&_a]:text-primary [&_a]:underline [&_a]:decoration-primary/40 hover:[&_a]:decoration-primary",
-            "[&_blockquote]:border-l-2 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
-            "[&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:bg-surface-high [&_code]:text-xs [&_code]:text-foreground",
-            "[&_pre]:bg-surface-high [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:mb-6",
-            "[&_pre_code]:bg-transparent [&_pre_code]:p-0",
-            "[&_img]:rounded-lg [&_img]:border [&_img]:border-border [&_img]:my-6",
-            "[&_hr]:border-border [&_hr]:my-8",
-          )}
-        >
-          <Streamdown>{project.content}</Streamdown>
-        </article>
+        </div>
       </div>
     </Section>
   );
