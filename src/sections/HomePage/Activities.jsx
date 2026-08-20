@@ -2,14 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import {
-  IconArrowUpRight,
-  IconCode,
-  IconPencil,
-  // IconBrandGithub,
-  // IconExternalLink,
-  IconSparkles,
-} from "@tabler/icons-react";
+import { ExternalLink } from "@/components/ExternalLink";
+import { IconArrowUpRight, IconCode, IconPencil } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
 import { GradientHeading } from "@/components/ui/Heading";
@@ -20,6 +14,7 @@ import { projects, writings } from "@/data/idx";
 const SIDE_PROJECTS = projects
   .filter((p) => p.isActivity)
   .map((p) => ({ ...p, link: `/projects/${p.slug}` }));
+
 const COMMUNITY_WRITINGS = writings.map((w) => ({
   ...w,
   link: `/writing/${w.slug}`,
@@ -27,38 +22,15 @@ const COMMUNITY_WRITINGS = writings.map((w) => ({
 
 /* ── Animated Row ──────────────────────────────────────────────────── */
 function AnimatedRow({ item, index }) {
-  const isExternal = item.link?.startsWith("http");
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <motion.a
-      href={item.link}
-      target={isExternal ? "_blank" : "_self"}
-      rel={isExternal ? "noopener noreferrer" : undefined}
-      initial={{ opacity: 0, x: -16 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 16 }}
-      transition={{ duration: 0.3, delay: index * 0.06, ease: "easeOut" }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      className="group relative flex items-center gap-3 w-full px-3 py-3.5 border-b border-border/30 last:border-b-0 hover:bg-white/3 transition-colors duration-200 cursor-pointer"
-    >
-      {/* Animated left accent bar */}
-      <motion.div
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full bg-primary"
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: hovered ? "60%" : 0, opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-      />
+    <div className="flex items-center gap-3 p-3 group relative cursor-pointer">
+      {/* Left accent bar */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-0 group-hover:h-2/3 rounded-full bg-primary transition-all duration-200" />
 
       {/* Index / Number */}
-      <motion.span
-        className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border bg-surface-high/60 text-[11px] font-mono text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all duration-200"
-        animate={{ scale: hovered ? 1.05 : 1 }}
-        transition={{ duration: 0.15 }}
-      >
+      <span className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border bg-surface-high/60 text-[11px] font-mono text-muted-foreground group-hover:border-primary/50 group-hover:text-primary transition-all duration-200">
         {String(index + 1).padStart(2, "0")}
-      </motion.span>
+      </span>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
@@ -85,19 +57,25 @@ function AnimatedRow({ item, index }) {
       </div>
 
       {/* Arrow */}
-      <motion.div
-        className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border/50 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary group-hover:bg-primary/5 transition-all duration-200"
-        animate={{ rotate: hovered ? 45 : 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      <div className="shrink-0 flex items-center justify-center size-7 rounded-md border border-border/50 text-muted-foreground group-hover:border-primary/50 group-hover:text-primary group-hover:bg-primary/5 transition-all duration-200">
         <IconArrowUpRight className="size-3.5" />
-      </motion.div>
-    </motion.a>
+      </div>
+    </div>
   );
 }
 
 /* ── Panel (one block) ─────────────────────────────────────────────── */
-function Panel({ icon: Icon, badge, heading, description, items, type, showMoreLabel, showLessLabel, initialCount = 4 }) {
+function Panel({
+  icon: Icon,
+  badge,
+  heading,
+  description,
+  items,
+  type,
+  showMoreLabel,
+  showLessLabel,
+  initialCount = 4,
+}) {
   const [showAll, setShowAll] = useState(false);
   const ref = React.useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
@@ -138,34 +116,30 @@ function Panel({ icon: Icon, badge, heading, description, items, type, showMoreL
 
         <AnimatePresence mode="popLayout">
           {visible.map((item, idx) => (
-            <AnimatedRow
+            <div
               key={item.title + idx}
-              item={item}
-              index={idx}
-              // type={type}
-            />
+              className="border-b border-border/30 last:border-b-0"
+            >
+              <ExternalLink href={item.link} className="block">
+                <AnimatedRow item={item} index={idx} />
+              </ExternalLink>
+            </div>
           ))}
         </AnimatePresence>
 
-        {/* Show more / less */}
-        {hiddenCount > 0 && (
-          <div className="border-t border-border/40 px-3 py-2.5">
-            <button
-              onClick={() => setShowAll((v) => !v)}
-              className="group flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
-            >
-              <motion.span
-                animate={{ rotate: showAll ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="inline-flex"
-              >
-                <IconSparkles className="size-3.5" />
-              </motion.span>
-              {showAll
-                ? showLessLabel
-                : showMoreLabel(hiddenCount)}
-            </button>
-          </div>
+        {/* Show More / Show Less Toggle Button */}
+        {items.length > initialCount && (
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="w-full py-2.5 px-3 text-xs font-medium text-muted-foreground hover:text-foreground bg-surface-high/30 hover:bg-surface-high/60 border-t border-border/30 transition-colors cursor-pointer text-center"
+          >
+            {showAll
+              ? showLessLabel
+              : showMoreLabel
+                ? showMoreLabel(hiddenCount)
+                : `Show ${hiddenCount} more`}
+          </button>
         )}
       </div>
     </motion.div>
@@ -181,11 +155,10 @@ export function ActivityAndWritings() {
           {/* Section header */}
           <div className="flex flex-col items-center text-center gap-2.5">
             <Badge variant="light">BUILDING & WRITING</Badge>
-            <GradientHeading
-              text="Activity & Contributions"
-            />
+            <GradientHeading text="Activity & Contributions" />
             <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              Open experiments, developer tools, and essays on engineering patterns I've shipped or published.
+              Open experiments, developer tools, and essays on engineering
+              patterns I've shipped or published.
             </p>
           </div>
 
