@@ -16,27 +16,8 @@ export const projects = [
     image: null,
     featured: true,
     isActivity: false,
-    content: `## The Idea
-
-Operations teams needed real-time visibility into e-commerce KPIs without paying enterprise prices for legacy BI tools. The existing dashboards were 6+ hours stale and buried under nested drill-downs.
-
-## Stack Decisions
-
-- **React + TypeScript** for type-safe component composition under rapid iteration
-- **D3.js** for custom visualisations — off-the-shelf charting libraries couldn't match the design language
-- **Python + Redis Streams** on the backend for sub-second aggregation
-- **WebSockets** for push-based updates instead of polling
-
-## Results
-
-- 40% faster decision-making across operations
-- Sub-200ms p95 latency from event ingestion to dashboard tile
-- Custom canvas optimisation brought render cost down 60% on 1k+ point series
-
-## What I'd Do Differently
-
-Started with too much custom D3 — would lean on Visx primitives for the 80% case and only drop down to D3 for the bespoke 20%.`,
-    changelog: undefined,
+    contentPath: "../projects/analytics-dashboard.md",
+    changelogPath: undefined,
   },
   {
     id: "proj-2",
@@ -55,23 +36,8 @@ Started with too much custom D3 — would lean on Visx primitives for the 80% ca
     featured: true,
     isActivity: false,
     terminalSnippet: "data-pipeline sync --config pipeline.yaml --parallel 8\n✓ Schema validated\n✓ 1.2M rows migrated in 4.2s",
-    content: `## The Idea
-
-Every team I worked with wrote the same ETL scaffolding over and over — config parser, schema validator, worker pool, retry logic, observability. The toolkit absorbs all of it.
-
-## Stack Decisions
-
-- **Python** for AST parsing of pipeline definitions (typed dataclasses → runtime validation)
-- **ClickHouse** as the default target — columnar storage makes analytical loads 10x faster than Postgres
-- **Docker** per-worker so multi-tenant pipelines don't trample each other's dependencies
-- **Zero-config philosophy**: if you can express it in YAML, you can ship it
-
-## Results
-
-- 1.2M rows migrated in 4.2s on a single-node setup
-- Multi-tenant isolation means one team's failed migration doesn't poison another's
-- Used in production by 3 internal teams before going open-source`,
-    changelog: undefined,
+    contentPath: "../projects/data-pipeline-toolkit.md",
+    changelogPath: undefined,
   },
   {
     id: "proj-3",
@@ -93,27 +59,8 @@ Every team I worked with wrote the same ETL scaffolding over and over — config
       label: "Clinical Queue Pipeline",
       nodes: ["Docman Mail", "OCR Engine", "EMIS API", "Audit Log"],
     },
-    content: `## The Idea
-
-Primary care clinics were drowning in inbound clinical correspondence — letters, test results, referrals — being manually triaged into SystmOne, EMIS, and Docman. Each item took 3-5 minutes of admin time. Across a 40-site network, that was 80+ hours/day of avoidable work.
-
-## Stack Decisions
-
-- **Power Automate + Python** hybrid — Power Automate for the visual workflow orchestration, Python for the OCR + NLP that needed real libraries
-- **AutoHotkey** for the desktop integration layer where no API existed
-- **Queue-based retries with exponential backoff** — clinical systems fail in cascades, and a stuck document can't disappear
-- **Audit log as a first-class artifact** — every action traceable for GDPR/HIPAA
-
-## Results
-
-- 40% reduction in manual triage time across the network
-- Zero data loss in 18 months of production
-- Audit log passed 3 separate clinical governance reviews
-
-## What's Hard
-
-Healthcare integrations are not about technology — they're about stakeholder management. The technical work was 30% of the project. The other 70% was sign-off from clinical safety, information governance, and Caldicott guardians.`,
-    changelog: undefined,
+    contentPath: "../projects/rpa-clinical-automation-suite.md",
+    changelogPath: undefined,
   },
   {
     id: "proj-4",
@@ -131,27 +78,8 @@ Healthcare integrations are not about technology — they're about stakeholder m
     image: null,
     featured: true,
     isActivity: false,
-    content: `## The Idea
-
-A creative agency wanted a portfolio that didn't feel like every other Webflow template. The brief: make it feel like a piece of software, not a slideshow.
-
-## Stack Decisions
-
-- **cobe** for the WebGL globe — tiny dependency footprint, fully procedural, no asset pipeline
-- **Motion** for orchestrated entrance animations tied to scroll position
-- **Tailwind CSS** for the design system primitives (custom palette tokens layered on top)
-- **Edge caching** on the static asset layer to keep first paint under 1s globally
-
-## Results
-
-- 92 Lighthouse score on mobile
-- Bounce rate dropped 35% vs. the previous portfolio
-- Globe interaction is the most-clicked element on the site
-
-## What I'd Do Differently
-
-The contribution heatmap is decorative noise on most visits. If rebuilding, I'd make it contextual — show only when the visitor is on the projects page, and tie it to real GitHub data.`,
-    changelog: undefined,
+    contentPath: "../projects/agency-portfolio-platform.md",
+    changelogPath: undefined,
   },
 
   // ── Side Projects (appear in Activities section) ──────────────────────
@@ -165,21 +93,8 @@ The contribution heatmap is decorative noise on most visits. If rebuilding, I'd 
     tag: "Open Source",
     featured: false,
     isActivity: true,
-    content: `## The Idea
-
-I've watched three different teams debug the same Django N+1 query bug in production. Every time, the workflow is the same: enable Django debug toolbar, capture the SQL, manually correlate request → query → ORM call. There should be a tool that does this in one shot.
-
-## What It Does
-
-- Captures every SQL query issued during a single request lifecycle
-- Groups queries by ORM call site so duplicate SELECTs collapse into a single "N+1 detected" entry
-- Surfaces the line of Python code that triggered each query
-- Exports a timeline view for sharing in PR reviews
-
-## Status
-
-Early prototype. Working on the grouping heuristics next.`,
-    changelog: undefined,
+    contentPath: "../projects/da-profiler.md",
+    changelogPath: undefined,
   },
   {
     id: "proj-6",
@@ -191,21 +106,8 @@ Early prototype. Working on the grouping heuristics next.`,
     tag: "SaaS",
     featured: false,
     isActivity: true,
-    content: `## The Idea
-
-Building blocks for SaaS founders who'd rather focus on their actual product than on tenant isolation, billing webhooks, and role-based access control. The boring infrastructure that every SaaS needs and nobody wants to write twice.
-
-## Architecture
-
-- **Tenant isolation** via Postgres row-level security
-- **Billing** via Stripe webhooks + idempotent event handlers
-- **RBAC** via a simple role → permission → resource hierarchy
-- **API** built on Django REST Framework with OpenAPI docs auto-generated
-
-## Status
-
-Internal use. Considering open-sourcing the RBAC and tenant-isolation primitives separately.`,
-    changelog: undefined,
+    contentPath: "../projects/jcn-engine.md",
+    changelogPath: undefined,
   },
   {
     id: "proj-7",
@@ -217,52 +119,8 @@ Internal use. Considering open-sourcing the RBAC and tenant-isolation primitives
     tag: "Private",
     featured: false,
     isActivity: true,
-    content: `## The Idea
-
-The production RPA suite (proj-3) has hundreds of automation primitives. Most of them are reusable across clinics — but the abstraction layer to compose them has been buried inside project-specific Power Automate flows. This is the extraction.
-
-## Components
-
-- **Action registry** — typed primitives for each EHR system (SystmOne, EMIS, Docman)
-- **Flow composer** — declarative JSON DSL that Power Automate can call into
-- **Audit bridge** — uniform logging regardless of which EHR the action targets
-
-## Status
-
-Extraction in progress. About 60% of actions ported.`,
-    changelog: [
-      {
-        version: "v0.3",
-        date: "2025-08-12",
-        tags: ["Added", "Refactor"],
-        content: `## Added
-
-- New action: \`docman.moveToFolder\` — bulk relocate documents matching a filter
-- New action: \`emis.lookupPatientByNHSNumber\` with caching
-
-## Changed
-
-- Refactored audit bridge to use a single structured logger instead of N formatters`,
-      },
-      {
-        version: "v0.2",
-        date: "2025-07-28",
-        tags: ["Fixed"],
-        content: `## Fixed
-
-- SystmOne session timeout no longer kills in-flight flows (was happening every ~7 min)
-- Retry policy now respects the per-action cooldown hint`,
-      },
-      {
-        version: "v0.1",
-        date: "2025-07-10",
-        tags: ["Added"],
-        content: `## Added
-
-- Initial extraction of action primitives from production
-- Action registry with 40 typed actions across 3 EHR systems`,
-      },
-    ],
+    contentPath: "../projects/clinical-rpa-core/content.md",
+    changelogPath: "../projects/clinical-rpa-core/changelog.md",
   },
   {
     id: "proj-8",
@@ -274,21 +132,8 @@ Extraction in progress. About 60% of actions ported.`,
     tag: "AI",
     featured: false,
     isActivity: true,
-    content: `## The Idea
-
-Most "AI coding assistants" are cloud-only and send your entire repo to someone else's GPU. For refactoring work on legacy codebases — where IP matters — that's a dealbreaker.
-
-## What It Does
-
-- Runs entirely on local LLMs (Ollama, LM Studio)
-- Reads a target file + a refactor instruction
-- Proposes a diff; you review and apply
-- Persists a memory of your style preferences across runs
-
-## Status
-
-Experimental. Works well for small-to-medium refactors; struggles with cross-file changes that need a coherent plan.`,
-    changelog: undefined,
+    contentPath: "../projects/agentic-cli-coder.md",
+    changelogPath: undefined,
   },
 ];
 
