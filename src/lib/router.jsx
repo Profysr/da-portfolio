@@ -17,10 +17,10 @@ export const router = createBrowserRouter([
   {
     element: <ReadingLayout />,
     children: [
-      {
-        path: "reading-demo",
-        element: <ReadingDemo />,
-      },
+      // {
+      //   path: "reading-demo",
+      //   element: <ReadingDemo />,
+      // },
       {
         path: "writing/:slug",
         element: <WritingDetail />,

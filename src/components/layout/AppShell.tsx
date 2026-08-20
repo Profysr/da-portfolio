@@ -13,7 +13,7 @@ import { nav, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
 import { AssistantAi } from "@/components/AssistantAi";
 import { downloadResume } from "@/lib/utils";
-import { ScrollToTop } from "@/components/ScrollToTop";
+// import { ScrollToTop } from "@/components/ScrollToTop";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
@@ -22,8 +22,9 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 export function TopBar({ isVisible }: { isVisible: boolean }) {
   return (
     <header
-      className={`fixed top-3 sm:top-4 left-0 right-0 z-50 px-3 sm:px-6 flex items-center justify-center pointer-events-none transition-transform duration-300 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
-        }`}
+      className={`fixed top-3 sm:top-4 left-0 right-0 z-50 px-3 sm:px-6 flex items-center justify-center pointer-events-none transition-transform duration-300 ${
+        isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+      }`}
     >
       <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background/30 backdrop-blur-xl border border-white/10 rounded-lg shadow-lg">
         <a
@@ -55,7 +56,6 @@ export function TopBar({ isVisible }: { isVisible: boolean }) {
     </header>
   );
 }
-
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -172,7 +172,8 @@ export function AppShell() {
       const documentHeight = document.documentElement.scrollHeight;
 
       // Automatically hide near the bottom so Dock never collides with Footer/CTAs
-      const isNearBottom = windowHeight + currentScrollY >= documentHeight - 380;
+      const isNearBottom =
+        windowHeight + currentScrollY >= documentHeight - 380;
 
       if (isNearBottom) {
         setIsNavVisible(false);
@@ -192,9 +193,7 @@ export function AppShell() {
   }, [lastScrollY]);
 
   return (
-    <>
-      <ScrollToTop />
-      <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
@@ -204,11 +203,13 @@ export function AppShell() {
         </Suspense>
       </main>
 
-      <BottomDock isVisible={isNavVisible} onAIClick={() => setIsAIOpen(true)} />
+      <BottomDock
+        isVisible={isNavVisible}
+        onAIClick={() => setIsAIOpen(true)}
+      />
       <AssistantAi open={isAIOpen} onOpenChange={setIsAIOpen} />
       <Footer />
     </div>
-    </>
   );
 }
 
