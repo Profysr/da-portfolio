@@ -6,5 +6,12 @@
     },
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "portfolio-next/lib",
+    "portfolio-next/data",
+    "components",
+    "portfolio-next/sections",
+    "portfolio-next/hooks"
+, "portfolio-next/pages"  ]
 }
