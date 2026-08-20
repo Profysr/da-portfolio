@@ -17,6 +17,7 @@ import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { Section } from "@/components/layout/Section";
 
 /* ============================================================
  *  Animated Name & Headline Sub-component
@@ -77,14 +78,14 @@ function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
 
   const getIconClass = (label) => {
     const isWiggling = wiggleIcon === label.toLowerCase();
-    return `text-zinc-300 hover:text-white transition-all duration-300 ${isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
-      }`;
+    return `text-zinc-300 hover:text-white transition-all duration-300 ${
+      isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
+    }`;
   };
 
   return (
     <BlurFade delay={0.1} direction="down" inView>
       <div className="z-20 flex flex-col sm:flex-row items-center justify-center gap-2">
-
         {/* Social Icons Bar */}
         <div className="flex items-center space-x-4 sm:space-x-5 pt-1">
           {socials.map(({ platform, icon: Icon, label, url, aria }) => (
@@ -146,19 +147,19 @@ export default function Hero() {
   };
 
   return (
-    <section
+    <Section
       id="hero"
-      className="relative w-full overflow-hidden pt-28 pb-16 sm:pt-36 md:pt-44 flex items-center justify-center"
+      // className="relative w-full overflow-hidden pt-28 pb-16 sm:pt-36 md:pt-44 flex items-center justify-center"
     >
       <Suspense fallback={null}>
-  <LazyLightRays
-        count={10}
-        color="rgba(160, 210, 255, 0.25)"
-        blur={50}
-        speed={10}
-        className="opacity-80"
-      />
-    </Suspense>
+        <LazyLightRays
+          count={10}
+          color="rgba(160, 210, 255, 0.25)"
+          blur={50}
+          speed={10}
+          className="opacity-80"
+        />
+      </Suspense>
 
       <TooltipProvider delayDuration={0}>
         <Layout className="relative z-10 flex flex-col items-center justify-center gap-8">
@@ -183,6 +184,6 @@ export default function Hero() {
       >
         <IconChevronDown size={22} stroke={1.5} />
       </div>
-    </section>
+    </Section>
   );
 }

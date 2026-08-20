@@ -275,34 +275,29 @@
 
 ---
 
-## Phase 13 — Detail Pages: Data Layer 🟡 (NEXT)
+## Phase 13 — Detail Pages: Data Layer ✅ (DONE)
 
 **Goal:** Prepare the data layer so detail pages have something to render. No UI changes yet.
 
 > **Context:** Activities.jsx currently uses static `SIDE_PROJECTS` and `COMMUNITY_WRITINGS` from `src/data/activities.ts`. We're splitting this into two reusable data sources: `projects.js` (expanded) and a renamed `writings.js` (was `blogs.js`). Each entry gains `slug` (URL) and `content` (markdown body). Side projects merge into `projects.js` with `isActivity: true`.
 
 ### Tasks
-- [ ] 13.1 Add `slug`, `content` to all entries in `src/data/projects.js` (4 main projects + 4 side projects merged from `activities.ts`)
-- [ ] 13.2 Add `isActivity: true, featured: false` to side-projects so they don't appear in homepage Projects grid but appear in Activities
-- [ ] 13.3 Add optional `changelog: [...]` field to project entries where applicable (none of the 8 initial projects need it)
-- [ ] 13.4 Rename `src/data/blogs.js` → `src/data/writings.js`; add `slug`, `content` to each entry
-- [ ] 13.5 Update `src/data/idx.js` barrel: `export * from "./writings"` (was `./blogs`)
-- [ ] 13.6 Delete `src/data/activities.ts`
-- [ ] 13.7 Update import in `src/components/CommandPallete.jsx`: `blogs` → `writings`
-- [ ] 13.8 Update import in `src/lib/botApi.ts`: `blogs` → `writings`
-- [ ] 13.9 Build passes; all imports resolve
-
-### ❓ Questions (Phase 13) — Answered
-1. **Schema shape:** Each project entry has `slug`, `content` (markdown string), optional `changelog`. Each writing entry has `slug`, `content`.
-2. **Side-project location:** Merged into `projects.js` (not kept separate).
-3. **isActivity flag:** Drives whether entry appears in Activities section or homepage Projects grid.
+- [x] 13.1 Added `slug`, `contentPath` to all entries in `src/data/projects.js` (4 main projects + 4 side projects merged from `activities.ts`)
+- [x] 13.2 Added `isActivity: true, featured: false` to side-projects so they don't appear in homepage Projects grid but appear in Activities
+- [x] 13.3 Added optional `changelogPath` field to `clinical-rpa-core` project entry
+- [x] 13.4 Renamed `src/data/blogs.js` → `src/data/writings.js`; added `slug`, `contentPath` to each entry
+- [x] 13.5 Updated `src/data/idx.js` barrel: `export * from "./writings"` (was `./blogs`)
+- [x] 13.6 Deleted `src/data/activities.ts`
+- [x] 13.7 Updated import in `src/components/CommandPallete.jsx`: `blogs` → `writings`
+- [x] 13.8 Updated import in `src/lib/botApi.ts`: `blogs` → `writings`
+- [x] 13.9 Build passes; all imports resolve
 
 ### Checkpoint
-Show one final project entry + one final writing entry for approval before Phase 14.
+8 projects + 3 writings with slug + contentPath verified before moving to Phase 14.
 
 ---
 
-## Phase 14 — ReadingLayout + Slug Lookup Helper
+## Phase 14 — ReadingLayout + Slug Lookup Helper 🟡 (NEXT)
 
 **Goal:** Build the minimal reading layout that wraps all detail pages. Verify in isolation before wiring real routes.
 
