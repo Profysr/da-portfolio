@@ -1,8 +1,27 @@
-import { RouterProvider } from "react-router-dom";
-import { router } from "@/lib/router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppShell } from "@/components/layout/AppShell";
+import { HomePage } from "@/pages/HomePage";
+import ReadingLayout from "@/components/layout/ReadingLayout";
+import WritingDetail from "@/pages/WritingDetail";
+import ProjectDetail from "@/pages/ProjectDetail";
+import ProjectChangelog from "@/pages/ProjectChangelog";
 
-function App() {
-  return <RouterProvider router={router} />;
+export function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
+        <Route element={<ReadingLayout />}>
+          <Route path="/writing/:slug" element={<WritingDetail />} />
+          <Route
+            path="/projects/:slug/changelog"
+            element={<ProjectChangelog />}
+          />
+          <Route path="/projects/:slug" element={<ProjectDetail />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App;
