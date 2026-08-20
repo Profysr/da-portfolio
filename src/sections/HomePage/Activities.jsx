@@ -17,8 +17,13 @@ import { Badge } from "@/components/ui/badge";
 
 import { projects, writings } from "@/data/idx";
 
-const SIDE_PROJECTS = projects.filter((p) => p.isActivity);
-const COMMUNITY_WRITINGS = writings;
+const SIDE_PROJECTS = projects
+  .filter((p) => p.isActivity)
+  .map((p) => ({ ...p, link: `/projects/${p.slug}` }));
+const COMMUNITY_WRITINGS = writings.map((w) => ({
+  ...w,
+  link: `/writing/${w.slug}`,
+}));
 
 /* ── Animated Row ──────────────────────────────────────────────────── */
 function AnimatedRow({ item, index }) {

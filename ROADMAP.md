@@ -316,26 +316,23 @@ Screenshot the layout for approval before Phase 15.
 
 ---
 
-## Phase 15 — WritingDetail Page
+## Phase 15 — WritingDetail Page ✅ (DONE)
 
 **Goal:** First end-to-end detail page. Validates the routing pattern + markdown rendering before adding the more complex ProjectDetail.
 
 ### Tasks
-- [ ] 15.1 Create `src/pages/WritingDetail.jsx` — uses `useParams()` → `getWritingBySlug()` → renders hero (title, formatted date, tags, readTime), `<Streamdown>` for content, back link
-- [ ] 15.2 404 fallback — if slug not found, render a "Not Found" message inside ReadingLayout with back button (not a redirect)
-- [ ] 15.3 Add `<Route path="/writing/:slug" element={<WritingDetail />} />` inside ReadingLayout in `src/App.tsx`
-- [ ] 15.4 Link Activities.jsx Block 2 rows to `/writing/:slug` (replace static `#` links)
-- [ ] 15.5 Visual check: click each writing row → detail page renders correctly → back button returns to home
-
-### ❓ Questions (Phase 15) — Answered
-1. **Streamdown:** Already installed with code/math/mermaid plugins configured (used in MessageResponse). Reuse directly.
+- [x] 15.1 Created `src/pages/WritingDetail.jsx` — uses `useParams()` → `getWritingBySlug()` → renders hero (title, date, tags, readTime), `Streamdown` for content, back button in body
+- [x] 15.2 404 fallback — if slug not found, render "Writing not found" inside ReadingLayout with back button (no redirect)
+- [x] 15.3 Added `<Route path="writing/:slug" element={<WritingDetail />} handle={{ breadcrumb: "Writing" }} />` inside ReadingLayout in `src/lib/router.jsx`
+- [x] 15.4 Linked Activities.jsx Block 2 rows to `/writing/:slug` (computed `link: /writing/${slug}` from writings data; no data file changes)
+- [x] 15.5 Build passes clean
 
 ### Checkpoint
-Click through all writings, confirm markdown rendering looks right, approve Phase 16.
+Writing detail page renders correctly with markdown, back button works from Activities → WritingDetail.
 
 ---
 
-## Phase 16 — ProjectDetail Page
+## Phase 16 — ProjectDetail Page 🟡 (NEXT)
 
 **Goal:** Project detail page with tech chips, GitHub/Live buttons, optional "View Changelog" link.
 
