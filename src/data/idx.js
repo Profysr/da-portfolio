@@ -3,7 +3,7 @@ export * from "./navigation";
 export * from "./skills";
 export * from "./experience";
 export * from "./projects";
-export * from "./blogs";
+export * from "./writings";
 export * from "./credentials";
 export * from "./content";
 export * from "./botContent";

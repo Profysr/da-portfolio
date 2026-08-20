@@ -15,7 +15,10 @@ import { Layout } from "@/components/layout/Layout";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 
-import { SIDE_PROJECTS, COMMUNITY_WRITINGS } from "@/data/activities";
+import { projects, writings } from "@/data/idx";
+
+const SIDE_PROJECTS = projects.filter((p) => p.isActivity);
+const COMMUNITY_WRITINGS = writings;
 
 /* ── Animated Row ──────────────────────────────────────────────────── */
 function AnimatedRow({ item, index, type }) {

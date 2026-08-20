@@ -1,4 +1,4 @@
-import { experiences, education, certificates, awards, projects, blogs, personal } from "@/data/idx";
+import { experiences, education, certificates, awards, projects, writings, personal } from "@/data/idx";
 
 export interface BotSource {
   label: string;
@@ -90,7 +90,7 @@ export async function sendMessage(
     return {
       content: [
         ...projects.map(
-          (p) => `• **${p.title}** — ${p.description.split(".")[0]}. (${p.tech.join(", ")})`,
+          (p) => `• **${p.title}** — ${p.description.split(".")[0]}${p.tech ? ` (${p.tech.join(", ")})` : ""}`,
         ),
         ``,
         `**40+ projects delivered.**`,
@@ -101,13 +101,13 @@ export async function sendMessage(
   if (/\b(blog|article|writing|post|read)\b/.test(q)) {
     return {
       content: [
-        "Here are Bilal's recent blog posts:",
+        "Here are Bilal's recent writings:",
         ``,
-        ...blogs.map(
+        ...writings.map(
           (b) => `• **"${b.title}"** — ${b.excerpt} *(Tags: ${b.tags.join(", ")})*`,
         ),
         ``,
-        "You can find these under the **Blog** section in the navigation.",
+        "You can find these under the **Writing** section in the navigation.",
       ].join("\n"),
     };
   }

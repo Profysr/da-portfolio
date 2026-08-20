@@ -8,7 +8,7 @@ import {
   IconCopy,
   IconFileText,
 } from "@tabler/icons-react";
-import { nav, socials, personal, blogs } from "@/data/idx.js";
+import { nav, socials, personal, writings } from "@/data/idx.js";
 
 /* ------------------------------------------------------------------ */
 /*  Event name — shared between CommandPaletteButton & CommandPalette */
@@ -198,8 +198,8 @@ export function CommandPalette() {
     },
   ];
 
-  const blogItems = blogs.slice(0, 8).map((post) => ({
-    id: `blog-${post.id}`,
+  const writingItems = writings.slice(0, 8).map((post) => ({
+    id: `writing-${post.id}`,
     label: post.title,
     sublabel: new Date(post.date).toLocaleDateString("en-US", {
       month: "short",
@@ -209,7 +209,7 @@ export function CommandPalette() {
     icon: <IconFileText className="h-4 w-4" />,
     action: () => {
       close();
-      window.open(post.url || `#${post.id}`, "_blank");
+      window.location.href = `/writing/${post.slug}`;
     },
     keywords: [post.excerpt, ...post.title.split(" ")],
   }));
@@ -219,7 +219,7 @@ export function CommandPalette() {
     ...(navigationItems.length ? [{ heading: "Navigation", items: navigationItems }] : []),
     ...(socialItems.length ? [{ heading: "Social", items: socialItems }] : []),
     ...(emailItems.length ? [{ heading: "Contact", items: emailItems }] : []),
-    ...(blogItems.length ? [{ heading: "Recent Writing", items: blogItems }] : []),
+    ...(writingItems.length ? [{ heading: "Recent Writing", items: writingItems }] : []),
   ];
 
   const flatItems = groupedItems.flatMap((g) => g.items);
