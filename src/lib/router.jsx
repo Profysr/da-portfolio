@@ -5,6 +5,7 @@ import ReadingLayout from "@/components/layout/ReadingLayout";
 import ReadingDemo from "@/components/ReadingDemo";
 import WritingDetail from "@/pages/WritingDetail";
 import ProjectDetail from "@/pages/ProjectDetail";
+import ProjectChangelog from "@/pages/ProjectChangelog";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "writing/:slug",
         element: <WritingDetail />,
+      },
+      {
+        path: "projects/:slug/changelog",
+        element: <ProjectChangelog />,
       },
       {
         path: "projects/:slug",

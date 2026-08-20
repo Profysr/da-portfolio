@@ -348,29 +348,29 @@ ProjectDetail renders tech chips, action buttons, and markdown body. Back button
 
 ---
 
-## Phase 17 — ProjectChangelog Page 🟡 (NEXT)
+## Phase 17 — ProjectChangelog Page ✅ (DONE)
 
 **Goal:** Timeline-style changelog view adapted from `changelog-template/app/page.tsx`. Vertical timeline with sticky dates + version bubbles + markdown content per entry.
 
 ### Tasks
-- [ ] 17.1 Create `src/pages/ProjectChangelog.jsx` — adapted timeline layout:
-  - Header: project title + back-to-project link
-  - Left column: sticky date + version bubble (e.g. "v0.3")
-  - Right column: tags (Badge components) + `<Streamdown>` content
+- [x] 17.1 `src/pages/ProjectChangelog.jsx` — timeline layout:
+  - Header: project title + back-to-project link (in body)
+  - Left column: sticky version bubble (e.g. "v0.3")
+  - Right column: date + `<Streamdown>` content per entry
   - Vertical timeline line with primary-color dot per entry
-- [ ] 17.2 404 fallback if project doesn't exist OR has no `changelog` field
-- [ ] 17.3 Add `<Route path="/projects/:slug/changelog" element={<ProjectChangelog />} />` inside ReadingLayout in `src/App.tsx`
-- [ ] 17.4 Since none of the 8 initial projects have changelog data, optionally add a placeholder changelog to one project entry for visual verification (ask user)
-
-### ❓ Questions (Phase 17)
-1. **Sample changelog:** Should I add a placeholder changelog to one project (e.g. `proj-3` RPA Clinical Automation Suite) for visual testing, or skip until real data exists?
+  - Markdown parsed via `parseChangelogEntries()` — splits on `## vX.Y — date` headings
+- [x] 17.2 404 fallback — if project doesn't exist OR has no `changelog` field, show "Not found" / "No changelog yet" with back button
+- [x] 17.3 Added `{ path: "projects/:slug/changelog", element: <ProjectChangelog /> }` to `src/lib/router.jsx` (before the `projects/:slug` catch-all)
+- [x] 17.4 Changelog data pre-existing in `clinical-rpa-core/changelog.md` (3 entries: v0.1, v0.2, v0.3 covering action registry, session timeout fix, docman + EMIS features)
+- [x] 17.5 "View Changelog" button in ProjectDetail links to `/projects/:slug/changelog` when `project.changelog` is truthy
+- [x] 17.6 Build passes clean
 
 ### Checkpoint
-Screenshot a sample changelog render for approval.
+Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 → v0.3) for Clinical RPA Core.
 
 ---
 
-## Phase 18 — Polish, 404s, Scroll Restoration
+## Phase 18 — Polish, 404s, Scroll Restoration 🟡 (NEXT)
 
 **Goal:** Production-ready edge cases.
 
