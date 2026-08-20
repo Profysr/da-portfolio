@@ -83,7 +83,7 @@ function BottomDock({
         scale: isVisible ? 1 : 0.95,
       }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
+      className="fixed bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
     >
       <div
         className={isVisible ? "pointer-events-auto" : "pointer-events-none"}
@@ -93,7 +93,7 @@ function BottomDock({
             iconSize={DOCK_ICON_SIZE}
             iconMagnification={DOCK_MAGNIFICATION}
             iconDistance={DOCK_DISTANCE}
-            className="border border-border bg-background/50 backdrop-blur-2xl shadow-2xl"
+            className="border border-border bg-background/50 backdrop-blur-2xl shadow-2xl rounded-lg"
           >
             {/* Nav links */}
             {nav.map((item) => {
@@ -192,15 +192,6 @@ export function AppShell() {
 
   return (
     <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
-      {/* Global Ambient Glows at Root */}
-      {/* <div
-        aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
-      /> */}
-      {/* <div
-        aria-hidden="true"
-        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-280 h-140 bg-primary/5 blur-[140px] rounded-full z-0"
-      /> */}
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}

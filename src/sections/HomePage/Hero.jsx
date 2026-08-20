@@ -149,7 +149,8 @@ export default function Hero() {
   return (
     <Section
       id="hero"
-      // className="relative w-full overflow-hidden pt-28 pb-16 sm:pt-36 md:pt-44 flex items-center justify-center"
+      className="relative"
+      className="relative w-full overflow-hidden h-screen flex items-center justify-center"
     >
       <Suspense fallback={null}>
         <LazyLightRays
@@ -162,7 +163,7 @@ export default function Hero() {
       </Suspense>
 
       <TooltipProvider delayDuration={0}>
-        <Layout className="relative z-10 flex flex-col items-center justify-center gap-8">
+        <Layout className="relative z-10 flex flex-col items-center justify-center gap-6 sm:gap-8">
           <AvatarStatus />
           <Headline />
           <HeroActions
@@ -170,20 +171,19 @@ export default function Hero() {
             handleIconClick={handleIconClick}
             scrollToProjects={scrollToProjects}
           />
+          <div
+            className="mt-2 md:mt-4 text-zinc-400 hover:text-zinc-200 transition-colors animate-bounce cursor-pointer "
+            onClick={() =>
+              document
+                .getElementById("about")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            aria-label="Scroll down"
+          >
+            <IconChevronDown size={22} stroke={1.5} />
+          </div>
         </Layout>
       </TooltipProvider>
-
-      <div
-        className="absolute bottom-2 left-1/2 -translate-x-1/2 text-zinc-400 hover:text-zinc-200 transition-colors animate-bounce cursor-pointer z-20"
-        onClick={() =>
-          document
-            .getElementById("about")
-            ?.scrollIntoView({ behavior: "smooth" })
-        }
-        aria-label="Scroll down"
-      >
-        <IconChevronDown size={22} stroke={1.5} />
-      </div>
     </Section>
   );
 }
