@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProjectBySlug } from "@/lib/content";
 import { Section } from "@/components/layout/Section";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { TechPill } from "@/components/TechPill";
+import { PageLoader } from "@/components/PageLoader";
+import { PageError } from "@/components/PageError";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Streamdown } from "streamdown";
 import {
   IconArrowLeft,
@@ -17,29 +20,6 @@ import {
   IconRocket,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-
-function ActionButton({ href, children, isInternal = false }) {
-  if (!href || href === "#") return null;
-
-  const className = cn(
-    "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200",
-    "border border-border/80 bg-surface-high/60 backdrop-blur-sm text-foreground hover:border-primary/50 hover:bg-surface-high hover:text-white hover:shadow-lg hover:shadow-primary/5"
-  );
-
-  if (isInternal) {
-    return (
-      <Link to={href} className={className}>
-        {children}
-      </Link>
-    );
-  }
-
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-      {children}
-    </a>
-  );
-}
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -66,43 +46,25 @@ export default function ProjectDetail() {
 
   if (error) {
     return (
-      <Section className="py-24">
-        <div className="max-w-md mx-auto text-center border border-border/60 bg-surface-high/30 p-8 rounded-2xl backdrop-blur-sm">
-          <GradientHeading as="h1" className="text-2xl mb-2">
-            Project Not Found
-          </GradientHeading>
-          <p className="text-muted-foreground text-sm mb-6">
-            The project &ldquo;{slug}&rdquo; couldn&apos;t be found or may have moved.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-          >
-            <IconArrowLeft className="size-4" />
-            Return to Projects
-          </button>
-        </div>
-      </Section>
+      <PageError
+        title="Project not found"
+        slug={slug}
+        action={{ label: "Return home", to: "/" }}
+      />
     );
   }
 
-  if (!project) {
-    return (
-      <Section className="py-16">
-        <div className="max-w-5xl mx-auto space-y-6">
-          <div className="h-6 w-20 rounded-lg bg-surface-high/50 animate-pulse" />
-          <div className="h-12 w-3/4 rounded-xl bg-surface-high/50 animate-pulse" />
-          <div className="h-20 w-full rounded-2xl bg-surface-high/30 animate-pulse" />
-        </div>
-      </Section>
-    );
-  }
+  if (!project) return <PageLoader />;
+
+  const actionBtnClass = cn(
+    "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200",
+    "border border-border/80 bg-surface-high/60 backdrop-blur-sm text-foreground hover:border-primary/50 hover:bg-surface-high hover:text-white hover:shadow-lg hover:shadow-primary/5"
+  );
 
   return (
     <Section className="py-8 md:py-16" noFade>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Navigation / Back Button */}
+        {/* Back button inside body */}
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -140,37 +102,39 @@ export default function ProjectDetail() {
 
           {/* External Action Links */}
           <div className="flex flex-wrap items-center gap-3">
-            {project.live && (
-              <ActionButton href={project.live}>
+            {project.live && project.live !== "#" && (
+              <ExternalLink href={project.live} className={actionBtnClass} newTab>
                 <IconRocket className="size-4 text-primary" />
                 Live Product
                 <IconExternalLink className="size-3.5 opacity-60" />
-              </ActionButton>
+              </ExternalLink>
             )}
-            {project.github && (
-              <ActionButton href={project.github}>
+            {project.github && project.github !== "#" && (
+              <ExternalLink href={project.github} className={actionBtnClass} newTab>
                 <IconBrandGithub className="size-4" />
                 Source Code
-              </ActionButton>
+              </ExternalLink>
             )}
             {project.changelog && (
-              <ActionButton href={`/projects/${slug}/changelog`} isInternal>
+              <ExternalLink
+                href={`/projects/${slug}/changelog`}
+                className={actionBtnClass}
+                newTab={false}
+              >
                 <IconCalendar className="size-4 text-primary" />
                 Changelog History
-              </ActionButton>
+              </ExternalLink>
             )}
           </div>
         </header>
 
         {/* Grid Layout: Main Article (Left) vs Metadata Sidebar (Right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
           {/* Main Markdown Content Area */}
           <main className="lg:col-span-8">
             <article
               className={cn(
                 "prose prose-invert prose-slate max-w-none",
-                // Editorial Typography Tuning
                 "[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:mt-10 [&_h1]:mb-4 [&_h1]:border-b [&_h1]:border-border/60 [&_h1]:pb-3",
                 "[&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-foreground",
                 "[&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-foreground/90",
@@ -179,12 +143,9 @@ export default function ProjectDetail() {
                 "[&_ol]:text-muted-foreground [&_ol]:mb-6 [&_ol]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6",
                 "[&_li]:text-sm sm:[&_li]:text-base",
                 "[&_a]:text-primary [&_a]:font-medium [&_a]:no-underline hover:[&_a]:underline",
-                // Quotes / Q&A Callouts
                 "[&_blockquote]:border-l-2 [&_blockquote]:border-primary/80 [&_blockquote]:bg-surface-high/30 [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:rounded-r-xl [&_blockquote]:not-italic [&_blockquote]:my-6",
-                // Inline & Block Code
-                "[&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:bg-surface-high [&_code]:text-xs [&_code]:font-mono [&_code]:text-foreground/90",
+                "[&_code]:px-1.5 [&_code]:py-0.5 [&&_code]:rounded-md [&_code]:bg-surface-high [&_code]:text-xs [&_code]:font-mono [&_code]:text-foreground/90",
                 "[&_pre]:bg-surface-high/80 [&_pre]:border [&_pre]:border-border/60 [&_pre]:rounded-xl [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6",
-                // Images
                 "[&_img]:rounded-xl [&_img]:border [&_img]:border-border/60 [&_img]:shadow-md [&_img]:my-8"
               )}
             >
@@ -194,7 +155,6 @@ export default function ProjectDetail() {
 
           {/* Sticky Sidebar */}
           <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-8">
-            {/* Tech Stack Section */}
             {project.tech?.length > 0 && (
               <div className="p-6 rounded-2xl border border-border/60 bg-surface-high/20 backdrop-blur-sm">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
@@ -208,7 +168,6 @@ export default function ProjectDetail() {
               </div>
             )}
 
-            {/* Key Highlights / Strategies */}
             {project.strategies?.length > 0 && (
               <div className="p-6 rounded-2xl border border-border/60 bg-surface-high/20 backdrop-blur-sm">
                 <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
@@ -227,7 +186,6 @@ export default function ProjectDetail() {
               </div>
             )}
           </aside>
-
         </div>
       </div>
     </Section>

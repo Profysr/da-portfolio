@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { getWritingBySlug } from "@/lib/content";
 import { Section } from "@/components/layout/Section";
 import { GradientHeading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
+import { PageLoader } from "@/components/PageLoader";
+import { PageError } from "@/components/PageError";
 import { Streamdown } from "streamdown";
 import {
   IconArrowLeft,
@@ -39,41 +41,15 @@ export default function WritingDetail() {
 
   if (error) {
     return (
-      <Section className="py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <GradientHeading as="h1" className="text-2xl mb-4">
-            Writing not found
-          </GradientHeading>
-          <p className="text-muted-foreground text-sm mb-6">
-            The post &ldquo;{slug}&rdquo; doesn&apos;t exist or has been removed.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline cursor-pointer"
-          >
-            <IconArrowLeft className="size-4" />
-            Go back
-          </button>
-        </div>
-      </Section>
+      <PageError
+        title="Writing not found"
+        slug={slug}
+        action={{ label: "Go back", to: "/" }}
+      />
     );
   }
 
-  if (!writing) {
-    return (
-      <Section className="py-20">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-3/4 rounded bg-surface-high" />
-            <div className="h-4 w-1/2 rounded bg-surface-high" />
-            <div className="h-4 w-full rounded bg-surface-high" />
-            <div className="h-4 w-5/6 rounded bg-surface-high" />
-          </div>
-        </div>
-      </Section>
-    );
-  }
+  if (!writing) return <PageLoader />;
 
   return (
     <Section className="py-8 md:py-12" noFade>
@@ -136,7 +112,7 @@ export default function WritingDetail() {
             "[&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:bg-surface-high [&_code]:text-xs [&_code]:text-foreground",
             "[&_pre]:bg-surface-high [&_pre]:border [&_pre]:border-border [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:mb-6",
             "[&_pre_code]:bg-transparent [&_pre_code]:p-0",
-            "[&_img]:rounded-lg [&_img]:border [&_img]:border-border [&_img]:my-6",
+            "[&_img]:rounded-lg [&&_img]:border [&_img]:border-border [&_img]:my-6",
             "[&_hr]:border-border [&_hr]:my-8",
           )}
         >

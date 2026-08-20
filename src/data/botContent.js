@@ -29,8 +29,7 @@ export const aiBotData = {
 };
 
 // Bot training corpus — plain markdown strings derived directly from idx data.
-// This is what the LLM backend will use as context to answer questions.
-// Extend this array whenever you add new entries to idx (new project, blog, role, etc.).
+// This is what the LLM backend will use as context to answer questions. Extend this array whenever you add new entries to idx (new project, blog, role, etc.).
 export const botKnowledge = [
   // ── Personal ──────────────────────────────────────────────────────────
   `Bilal Ahmad is a Forward Deployed & Software Engineer based in Islamabad, Pakistan (GMT+5). Email: hello@da-portfolio.dev.`,
