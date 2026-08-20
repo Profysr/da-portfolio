@@ -5,8 +5,8 @@ import {
   IconMail,
   IconClock,
   IconFolderCode,
-  IconActivity,
-  IconRobot,
+  // IconActivity,
+  // IconRobot,
 } from "@tabler/icons-react";
 
 export const socials = [
@@ -83,26 +83,6 @@ export const about = {
       isCompact: true,
       spanClass:
         "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-1 md:col-start-11 md:row-start-1",
-    },
-    {
-      id: "hours",
-      title: "Hours Logged",
-      value: "4,280+",
-      subtext: "Deep Focus",
-      icon: IconActivity,
-      isCompact: true,
-      spanClass:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-2",
-    },
-    {
-      id: "automations",
-      title: "Automations",
-      value: "150+",
-      subtext: "Deployed",
-      icon: IconRobot,
-      isCompact: true,
-      spanClass:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-3",
     },
   ],
 };

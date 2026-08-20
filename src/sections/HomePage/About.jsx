@@ -4,7 +4,6 @@ import { personal, about, contributions } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
-import { Badge } from "@/components/ui/badge";
 import { AvatarStatus } from "@/components/AvatarStatus";
 import { LazyParticles } from "@/components/lazy";
 import {
@@ -19,7 +18,38 @@ import { ContactCard } from "@/components/ContactCard";
 import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
 import { cn, downloadResume } from "@/lib/utils";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
+
+// __ Live GMT / Local Clock Component _________________________________
+export function LiveClock({ timeZone = "UTC", label = "GMT" }) {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      // Formats to HH:MM:SS AM/PM based on desired timezone
+      const formatted = now.toLocaleTimeString("en-US", {
+        timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+      setTime(formatted);
+    };
+
+    updateTime(); // Initial run on mount
+    const timer = setInterval(updateTime, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeZone]);
+
+  return (
+    <span className="font-mono text-muted-foreground font-medium">
+      {time ? `${time} ${label}` : "Loading..."}
+    </span>
+  );
+}
 
 /* ─────────────────────────────────────────────────────────────
  *  Unified About & Contributions Bento Grid
@@ -82,24 +112,15 @@ export default function About() {
               className="w-full h-auto max-h-52 object-contain"
             />
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <IconWorld className="h-3.5 w-3.5 text-primary" />
-              <span>Worldwide</span>
-            </div>
-            <Badge variant="lightSuccess" className="gap-1.5">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              Live
-            </Badge>
+          <div className="flex items-center justify-end gap-1 pt-2 border-t border-white/10 text-xs">
+            <IconClock className="h-3.5 w-3.5 text-primary" />
+            <LiveClock timeZone="UTC" label="GMT" />
           </div>
         </BentoCard>
       ),
     },
 
-{
+    {
       id: "stat-industry",
       className:
         "col-span-6 md:col-span-2 md:row-span-3 md:col-start-9 md:row-start-1",
@@ -117,14 +138,14 @@ export default function About() {
 
     // 6. Stat Card 2: Hours / Commits (Moved UP to top right)
     {
-      id: "stat-commits",
+      id: "stat-projects",
       className:
         "col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-1",
       delay: 0.16,
       content: (
         <StatCard
-          title="Commits"
-          value={contributions.stats[2]?.value ? `${contributions.stats[2].value}+` : "2,500+"}
+          title="Projects Built"
+          value={about.stats[1]?.value || "20+"}
           subtext="Year to Date"
           icon={IconGitBranch}
           className="h-full"
@@ -155,9 +176,9 @@ export default function About() {
         </BentoCard>
       ),
     },
-        
+
     // 3. Connect & Collaborate Card
-{
+    {
       id: "connect-card",
       className:
         "col-span-12 md:col-span-4 md:row-span-4 md:col-start-9 md:row-start-4",

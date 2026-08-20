@@ -21,7 +21,7 @@ const SIDE_PROJECTS = projects.filter((p) => p.isActivity);
 const COMMUNITY_WRITINGS = writings;
 
 /* ── Animated Row ──────────────────────────────────────────────────── */
-function AnimatedRow({ item, index, type }) {
+function AnimatedRow({ item, index }) {
   const isExternal = item.link?.startsWith("http");
   const [hovered, setHovered] = useState(false);
 
@@ -137,7 +137,7 @@ function Panel({ icon: Icon, badge, heading, description, items, type, showMoreL
               key={item.title + idx}
               item={item}
               index={idx}
-              type={type}
+              // type={type}
             />
           ))}
         </AnimatePresence>
