@@ -20,8 +20,8 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import {
-  IconCopy,
-  IconCheck,
+  // IconCopy,
+  // IconCheck,
   IconArrowUp,
   IconCornerDownLeft,
 } from "@tabler/icons-react";
