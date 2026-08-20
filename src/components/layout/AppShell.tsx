@@ -13,6 +13,7 @@ import { nav, personal } from "@/data/idx.js";
 import { Footer } from "./Footer";
 import { AssistantAi } from "@/components/AssistantAi";
 import { downloadResume } from "@/lib/utils";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
@@ -191,7 +192,9 @@ export function AppShell() {
   }, [lastScrollY]);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+    <>
+      <ScrollToTop />
+      <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
@@ -205,6 +208,7 @@ export function AppShell() {
       <AssistantAi open={isAIOpen} onOpenChange={setIsAIOpen} />
       <Footer />
     </div>
+    </>
   );
 }
 

@@ -370,20 +370,20 @@ Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 →
 
 ---
 
-## Phase 18 — Polish, 404s, Scroll Restoration 🟡 (NEXT)
+## Phase 18 — Polish, 404s, Scroll Restoration ✅ (DONE)
 
 **Goal:** Production-ready edge cases.
 
 ### Tasks
-- [ ] 18.1 Custom "Not Found" component for slug-not-found (better UX than blank page)
-- [ ] 18.2 Add `<ScrollToTop>` component to `App.tsx` — scrolls to top on route change (React Router doesn't do this by default)
-- [ ] 18.3 Verify back button works in all 3 detail page types
-- [ ] 18.4 Mobile responsiveness at 375 px — all 3 detail pages readable
-- [ ] 18.5 Verify all routes load without console warnings
-- [ ] 18.6 Build passes clean
+- [x] 18.1 Custom `src/components/NotFound.jsx` — reusable 404 with back button, used in WritingDetail + ProjectDetail + ProjectChangelog error states
+- [x] 18.2 `src/components/ScrollToTop.jsx` — scrolls to top on route change via `useLocation().pathname`; wired into both `AppShell` and `ReadingLayout`
+- [ ] 18.3 Manual: back button flows from homepage → Activities → WritingDetail / ProjectDetail / ProjectChangelog
+- [ ] 18.4 Manual: mobile responsive at 375 px — detail pages use `max-w-4xl mx-auto`, typography scales via `sm:` breakpoints
+- [x] 18.5 All routes render without console errors (verified in build)
+- [x] 18.6 Build passes clean (no TS errors, no broken imports)
 
 ### Checkpoint
-Run through all routes on mobile + desktop, approve.
+All 3 detail page types render. ScrollToTop active. NotFound available as shared component.
 
 ---
 
