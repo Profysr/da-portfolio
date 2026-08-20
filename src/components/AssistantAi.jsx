@@ -141,7 +141,7 @@ export function ChatHeader() {
   );
 }
 
-export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
+export function ChatMessageList({ messages, isTyping }) {
   return (
     <Conversation>
       <ConversationContent className="gap-4">
@@ -192,15 +192,37 @@ export function ChatMessageList({ messages, isTyping, copiedId, onCopy }) {
   );
 }
 
-export function ChatInputArea({
-  input,
-  setInput,
-  textareaRef,
-  onKeyDown,
-  onSend,
-  isTyping,
-  quickPrompts,
-}) {
+export function ChatInputArea({ onSend, isTyping, quickPrompts }) {
+  const [input, setInput] = useState("");
+  const textareaRef = useRef(null);
+
+  // Auto-resize textarea height as content changes
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  }, [input]);
+
+  const handleSend = (textToSend) => {
+    const message = textToSend || input;
+    if (!message.trim() || isTyping) return;
+
+    onSend(message.trim());
+    setInput("");
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
   return (
     <div className="shrink-0 px-4 py-2 bg-surface space-y-3">
       <Suggestions className="gap-2 pb-1 no-scrollbar overflow-x-auto">
@@ -208,7 +230,7 @@ export function ChatInputArea({
           <Suggestion
             key={prompt.id}
             suggestion={prompt.label}
-            onClick={(lbl) => onSend(lbl)}
+            onClick={(lbl) => handleSend(lbl)}
             variant="ghost"
             size="sm"
           >
@@ -223,7 +245,7 @@ export function ChatInputArea({
           ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           disabled={isTyping}
           rows={2}
           placeholder="Ask about Bilal's architecture, healthcare RPA, stack, or availability..."
@@ -232,7 +254,7 @@ export function ChatInputArea({
 
         <button
           type="button"
-          onClick={() => onSend(input)}
+          onClick={() => handleSend()}
           disabled={!input.trim() || isTyping}
           className={cn(
             "flex size-8 shrink-0 items-center justify-center rounded-xl transition-all duration-200 cursor-pointer",
@@ -264,8 +286,8 @@ const LazyChatBody = lazy(async () => ({
   default: function ChatBody({
     messages,
     isTyping,
-    copiedId,
-    copyToClipboard,
+    // copiedId,
+    // copyToClipboard,
     input,
     setInput,
     textareaRef,
@@ -281,8 +303,8 @@ const LazyChatBody = lazy(async () => ({
           <ChatMessageList
             messages={messages}
             isTyping={isTyping}
-            copiedId={copiedId}
-            onCopy={copyToClipboard}
+            // copiedId={copiedId}
+            // onCopy={copyToClipboard}
           />
         </Suspense>
         <Suspense fallback={<ChatInputAreaSkeleton />}>
@@ -306,7 +328,7 @@ export function AssistantAi({ open, onOpenChange }) {
   const [messages, setMessages] = useState([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [copiedId, setCopiedId] = useState(null);
+  // const [copiedId, setCopiedId] = useState(null);
 
   const textareaRef = useRef(null);
   const messagesRef = useRef(messages);
@@ -322,11 +344,11 @@ export function AssistantAi({ open, onOpenChange }) {
     }
   }, [input]);
 
-  const copyToClipboard = useCallback((text, id) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  }, []);
+  // const copyToClipboard = useCallback((text, id) => {
+  //   navigator.clipboard.writeText(text);
+  //   setCopiedId(id);
+  //   setTimeout(() => setCopiedId(null), 2000);
+  // }, []);
 
   const handleSendText = useCallback(
     async (textToSend) => {
@@ -397,8 +419,8 @@ export function AssistantAi({ open, onOpenChange }) {
               <LazyChatBody
                 messages={messages}
                 isTyping={isTyping}
-                copiedId={copiedId}
-                copyToClipboard={copyToClipboard}
+                // copiedId={copiedId}
+                // copyToClipboard={copyToClipboard}
                 input={input}
                 setInput={setInput}
                 textareaRef={textareaRef}
