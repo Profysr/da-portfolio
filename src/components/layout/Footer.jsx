@@ -16,19 +16,21 @@ import {
 import { nav, socials, personal, footer } from "@/data/idx";
 import { GradientHeading } from "../ui/Heading";
 import { downloadResume } from "@/lib/utils";
+import { ExternalLink } from "@/components/ExternalLink";
 
 /* ─────────────────────────────────────────────────────────────
  *  1. Footer CTA Action Buttons
  * ───────────────────────────────────────────────────────────── */
 const FooterCTA = () => (
   <div className="flex flex-wrap items-center justify-center gap-3.5 pt-3">
-    <a
+    <ExternalLink
       href={personal.email ? `mailto:${personal.email}` : "#"}
+      newTab={false}
       className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-all duration-300 active:scale-95 shadow-[0_0_20px_rgba(208,188,255,0.25)]"
     >
       <span>{footer?.ctaLabel || "Let's Talk"}</span>
       <IconArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-    </a>
+    </ExternalLink>
     {(personal.resumeUrl || footer?.resumePath) && (
       <button
         type="button"
@@ -50,13 +52,14 @@ const FooterNavStrip = () => (
     {/* Left: Quick Nav Links */}
     <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
       {nav.map((item) => (
-        <a
+        <ExternalLink
           key={item.id}
           href={`#${item.id}`}
+          newTab={false}
           className="px-2.5 py-1 rounded text-muted-foreground hover:text-white hover:bg-white/[0.06] transition-all font-medium text-xs"
         >
           {item.label}
-        </a>
+        </ExternalLink>
       ))}
     </div>
 
@@ -65,16 +68,14 @@ const FooterNavStrip = () => (
       {socials.map(({ platform, icon: Icon, label, url }) => (
         <Tooltip key={platform}>
           <TooltipTrigger asChild>
-            <a
+            <ExternalLink
               key={platform}
               href={url}
-              target={url.startsWith("http") ? "_blank" : undefined}
-              rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
               className="p-1.5 rounded-md text-muted-foreground hover:text-white hover:bg-white/[0.08] hover:scale-110 active:scale-95 transition-all duration-200"
             >
               <Icon size={16} stroke={1.8} />
-            </a>
+            </ExternalLink>
           </TooltipTrigger>
           <TooltipContent side="top" className="text-xs">
             {label}

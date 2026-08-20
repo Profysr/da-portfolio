@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { GradientHeading } from "@/components/ui/Heading";
 import { IconArrowLeft } from "@tabler/icons-react";
 
-export function NotFound({ title = "Page not found", message, backLabel = "Go back" }) {
+export function NotFound({ title = "Page not found", message = "", backLabel = "Go back" }) {
   const navigate = useNavigate();
   return (
     <Section className="py-20">

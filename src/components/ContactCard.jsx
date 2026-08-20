@@ -1,6 +1,7 @@
 import { useRef, Suspense } from "react";
 import { LazyAnimatedBeam } from "@/components/lazy";
 import { personal, socials } from "@/data/idx";
+import { ExternalLink } from "@/components/ExternalLink";
 import {
   Tooltip,
   TooltipContent,
@@ -43,20 +44,20 @@ export function ContactCard() {
           {leftSocials.map((soc, idx) => {
             const IconComp = soc.icon;
             const targetRef = idx === 0 ? node1Ref : node2Ref;
+            const className =
+              "flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-muted-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:border-primary/50 hover:bg-white/10 hover:text-white";
 
             return (
               <Tooltip key={soc.platform}>
                 <TooltipTrigger asChild>
-                  <a
+                  <ExternalLink
                     ref={targetRef}
                     href={soc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label={soc.label}
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-muted-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:border-primary/50 hover:bg-white/10 hover:text-white"
+                    className={className}
                   >
                     <IconComp className="h-6 w-6" />
-                  </a>
+                  </ExternalLink>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{soc.label}</p>
@@ -89,20 +90,21 @@ export function ContactCard() {
             const IconComp = soc.icon;
             const targetRef = idx === 0 ? node3Ref : node4Ref;
             const isEmail = soc.platform === "email";
+            const className =
+              "flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-muted-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:border-primary/50 hover:bg-white/10 hover:text-white";
 
             return (
               <Tooltip key={soc.platform}>
                 <TooltipTrigger asChild>
-                  <a
+                  <ExternalLink
                     ref={targetRef}
                     href={soc.url}
-                    target={isEmail ? "_self" : "_blank"}
-                    rel="noopener noreferrer"
+                    newTab={!isEmail}
                     aria-label={soc.label}
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-muted-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:border-primary/50 hover:bg-white/10 hover:text-white"
+                    className={className}
                   >
                     <IconComp className="h-6 w-6" />
-                  </a>
+                  </ExternalLink>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{soc.label}</p>

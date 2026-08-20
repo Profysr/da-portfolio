@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { projects } from "@/data/idx";
 import { TagFilter } from "@/components/TagFilter";
 import { TechPill } from "@/components/TechPill";
+import { ExternalLink } from "@/components/ExternalLink";
 import { LazyParticles } from "@/components/lazy";
 import { Suspense } from "react";
 import { ExpandableList } from "@/components/ui/expandable-list";
@@ -145,15 +146,13 @@ function ProjectCardFooter({
         <>
           <div className="flex items-center gap-2">
             {hasGithub ? (
-              <a
+              <ExternalLink
                 href={github}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-surface-high/60 hover:bg-surface-high border border-border px-3 py-1.5 rounded transition-colors"
               >
                 <IconBrandGithub className="size-3.5" />
                 <span>Source</span>
-              </a>
+              </ExternalLink>
             ) : isPrivate ? (
               <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground/60 italic">
                 <IconLock className="size-3 text-muted-foreground/50" /> Private Repository
@@ -162,15 +161,13 @@ function ProjectCardFooter({
           </div>
 
           {hasLive && (
-            <a
+            <ExternalLink
               href={live}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-foreground bg-primary hover:opacity-90 px-3.5 py-1.5 rounded transition-opacity ml-auto"
             >
               <span>Live Demo</span>
               <IconExternalLink className="size-3.5" />
-            </a>
+            </ExternalLink>
           )}
         </>
       ) : (

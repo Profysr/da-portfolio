@@ -1,13 +1,6 @@
 import { getTechIcon } from "@/data/skills";
 import { cn } from "@/lib/utils";
 
-interface TechPillProps {
-  name: string;
-  subCategory?: string | null;
-  className?: string;
-  size?: "sm" | "md";
-}
-
 const SIZE_CLASSES = {
   sm: "gap-1 px-1.5 py-0.5 text-[9.5px] sm:text-[10px]",
   md: "gap-1.5 px-2.5 py-1 text-xs",
@@ -23,7 +16,7 @@ export function TechPill({
   subCategory = null,
   className,
   size = "md",
-}: TechPillProps) {
+}) {
   const config = getTechIcon(name);
   const showImage = Boolean(config?.img);
   // Show name if: no image, OR image exists but hideName is not set
@@ -45,7 +38,7 @@ export function TechPill({
       {showImage && (
         <span className={cn("shrink-0 flex items-center justify-center", IMG_SIZE_CLASSES[size], iconWrapClass)}>
           <img
-            src={config!.img}
+            src={config?.img}
             alt={name}
             className="object-contain size-full"
           />

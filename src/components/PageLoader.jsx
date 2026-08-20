@@ -81,7 +81,7 @@ export function PageLoader({ variant = "default", className }) {
  * Animated spinner for inline loading states.
  * Three rotating dots that pulse in sequence.
  */
-export function Spinner({ className }) {
+export function Spinner({ className = "" }) {
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
       {[0, 1, 2].map((i) => (
