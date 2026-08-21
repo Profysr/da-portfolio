@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -12,6 +13,7 @@
     "portfolio-next/data",
     "components",
     "portfolio-next/sections",
-    "portfolio-next/hooks"
-, "portfolio-next/pages"  ]
+    "portfolio-next/hooks",
+    "portfolio-next/pages"
+  ]
 }

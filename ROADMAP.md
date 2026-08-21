@@ -494,6 +494,149 @@ All 3 detail page types render. ScrollToTop active. NotFound available as shared
 
 ---
 
+## Phase 20 — Headless MDX Content System (NEW)
+
+**Goal:** Replace `fumadocs-ui` with a fully custom, headless MDX pipeline using `fumadocs-core` + `fumadocs-mdx` (build/source layer only) + `rehype-pretty-code` + `shiki` for syntax highlighting. Migrate content from `data/*.js` → `content/*.mdx` with frontmatter. Build-time TOC extraction, SSG for all detail pages, AI-ready content index.
+
+**Context:** Fumadocs packages removed (Phase 0 cleanup done). `content/` folder exists with writings/projects/changelogs MDX. Current detail pages use `data/` JS files + `react-router-dom`. Phase 19 migrates routing; this phase migrates the content layer.
+
+### Phase 20A — Config & Build Setup
+- [ ] 20A.1 Create `source.config.ts` at root — `defineConfig` + `defineDocs` for 3 collections:
+  - `writings` → `content/writings` (schema: title, description, date, tags[], readTime?, thumbnail?)
+  - `projects` → `content/projects` (schema: title, description, date, category, industry?, access?, tech[], strategies[], changelog?, github?, live?, thumbnail?)
+  - `changelogs` → merged into projects MDX under `## Changelog` heading (see 20C)
+- [ ] 20A.2 Update `next.config.ts` — ensure `createMDX()` wrapper applied
+- [ ] 20A.3 Update `package.json` scripts:
+  ```json
+  "dev": "fumadocs-mdx && next dev",
+  "build": "fumadocs-mdx && next build",
+  "postinstall": "fumadocs-mdx"
+  ```
+- [ ] 20A.4 Install deps: `fumadocs-core`, `fumadocs-mdx`, `shiki`, `rehype-pretty-code`, `@tailwindcss/typography`
+
+### Phase 20B — MDX Pipeline & Components
+- [ ] 20B.1 Create `lib/mdx-plugins.ts` — rehype plugins:
+  - `rehype-pretty-code` config (theme: `github-light`/`github-dark`, keepBackground, onVisitLine, onVisitHighlightedLine)
+  - **Custom plugin: `extractHeadings`** — walks AST, builds TOC array (`{ level, text, slug }`), attaches to file data via `data.toc`
+  - **Custom plugin: `wrapChangelog`** — detects `## Changelog` heading, wraps subsequent `### vX.Y.Z` sections in `<details>` for collapsible rendering
+- [ ] 20B.2 Create `components/mdx-components.tsx` — all HTML elements + custom components:
+  - Base: h1-h6 (with `CopyHeader`), p, ul, ol, li, blockquote, code, pre, a, hr, strong, em, table, th, td
+  - Custom: `Badge`, `TechPill`, `ExtendedLink`, `ExternalLink`, `GitHubLink`, `LiveLink` (reuse existing from `components/`)
+  - `CodeBlock` wrapper for `pre`/`code` with copy button, filename, line numbers
+- [ ] 20B.3 Create `components/CodeBlock.tsx` — client component, uses `shiki` tokens from `rehype-pretty-code` output
+
+### Phase 20C — Content Migration & Structure
+- [ ] 20C.1 **Writings**: Verify existing `content/writings/*.mdx` have correct frontmatter (title, description, date, tags, readTime). Add `thumbnail` if needed.
+- [ ] 20C.2 **Projects**: Migrate each project to single MDX file with structure:
+  ```mdx
+  ---
+  title: "Project Title"
+  description: "..."
+  date: "2025-01-15"
+  category: "Web"
+  industry: "Healthcare"
+  access: "Private"
+  tech: ["React", "TypeScript", "Tailwind"]
+  strategies: ["Strategy 1", "Strategy 2"]
+  github: "https://github.com/..."
+  live: "https://..."
+  thumbnail: "/tools/..."
+  ---
+  
+  # Project Title
+  
+  Project description...
+  
+  ## Changelog
+  
+  ### v1.2.0 - 2025-01-15
+  - Feature X
+  
+  ### v1.1.0 - 2024-11-01
+  - Fix Y
+  ```
+- [ ] 20C.3 **Changelogs**: Delete `content/changelogs/` — merged into project MDX per above convention
+- [ ] 20C.4 Run `fumadocs-mdx` → generates `@/.source` virtual module with full TS types
+
+### Phase 20D — Typed Sources & Data Layer
+- [ ] 20D.1 Create `lib/source.ts` — exports typed loaders:
+  ```ts
+  import { loader } from "fumadocs-core/source";
+  import { createMDXSource } from "fumadocs-mdx";
+  import { docs: writings, meta: writingsMeta } from "@/.source";
+  // ... projects
+  
+  export const writingsSource = loader({ baseUrl: "/writings", source: createMDXSource(writings, writingsMeta) });
+  export const projectsSource = loader({ baseUrl: "/projects", source: createMDXSource(projects, projectsMeta) });
+  ```
+- [ ] 20D.2 Update `lib/content.js` (from Phase 19A) to use new sources instead of `data/` files
+- [ ] 20D.3 Delete `data/writings.js`, `data/projects.js`, `data/content.js` (replaced by MDX)
+
+### Phase 20E — Detail Pages (App Router + SSG)
+- [ ] 20E.1 `app/writing/[slug]/page.tsx` — Server Component:
+  - `generateStaticParams` → `writingsSource.generateParams()`
+  - `generateMetadata` → uses frontmatter + TOC for OG
+  - Fetches page + TOC, passes to Client Component
+- [ ] 20E.2 `app/writing/[slug]/WritingContent.tsx` — Client Component:
+  - Renders `<MDX components={mdxComponents} />` inside prose wrapper
+  - `TableOfContents` (desktop) + `MobileTableOfContents` (drawer)
+- [ ] 20E.3 `app/projects/[slug]/page.tsx` — Server Component:
+  - `generateStaticParams` → `projectsSource.generateParams()`
+  - Fetches project + TOC (changelog entries marked by plugin)
+- [ ] 20E.4 `app/projects/[slug]/ProjectContent.tsx` — Client Component:
+  - Hero: title, badges, description, action buttons (GitHub/Live)
+  - Sidebar: TechPill chips, strategies, **TOC with changelog dropdown**
+  - Main: MDX content with collapsible changelog sections
+- [ ] 20E.5 `app/projects/[slug]/changelog/page.tsx` — Optional standalone changelog page (or remove if inline)
+
+### Phase 20F — TOC Components
+- [ ] 20F.1 `components/TableOfContents.tsx` — receives `toc` prop (array from page data):
+  - Nested `<ul>` by heading level
+  - **Changelog grouping**: items with `data.changelog: true` render under collapsible `<details><summary>Changelog</summary>...</details>`
+  - Scroll-spy highlighting (IntersectionObserver)
+- [ ] 20F.2 `components/MobileTableOfContents.tsx` — Sheet/drawer variant, same data
+
+### Phase 20G — Listings & Homepage Integration
+- [ ] 20G.1 Update `app/(home)/page.tsx` sections:
+  - Writings block → `writingsSource.getPages()` sorted by date
+  - Projects block → `projectsSource.getPages()` filtered by category
+  - Activities block → merge both sources
+- [ ] 20G.2 Create `components/ReadMoreSection.tsx` — tag-based relevance (like blog-template)
+
+### Phase 20H — Styling & Tailwind Typography
+- [ ] 20H.1 Update `globals.css` — add `@plugin "@tailwindcss/typography";` + customize prose tokens
+- [ ] 20H.2 Configure `tailwind.config.ts` for typography plugin (prose-headings, prose-code, etc.)
+
+### Phase 20I — AI-Ready Content Index
+- [ ] 20I.1 Create `scripts/build-content-index.ts` — runs after `fumadocs-mdx`:
+  - Reads `@/.source` or all MDX files
+  - Outputs `public/content-index.json`:
+    ```json
+    [
+      { "type": "writing", "slug": "...", "title": "...", "description": "...", "tags": [], "content": "...", "headings": [...] },
+      { "type": "project", "slug": "...", "title": "...", "description": "...", "tech": [], "content": "...", "headings": [...] }
+    ]
+    ```
+- [ ] 20I.2 Add to `package.json`: `"postbuild": "tsx scripts/build-content-index.ts"`
+
+### Phase 20J — Cleanup & Verification
+- [ ] 20J.1 Verify all detail pages render correctly (SSG, metadata, TOC, changelog dropdown)
+- [ ] 20J.2 Verify syntax highlighting works in light/dark
+- [ ] 20J.3 Verify `npm run build` passes (no TS errors, all static params generated)
+- [ ] 20J.4 Delete unused `data/` files, old router pages, `react-router-dom`
+- [ ] 20J.5 Update `ROADMAP.md` — mark Phase 20 complete
+
+---
+
+### ❓ Questions (Phase 20)
+1. **Code theme**: `github-light` / `github-dark` for shiki, or custom JSON theme?
+2. **TOC depth**: Include h4-h6 in TOC, or only h2-h3?
+3. **Changelog heading level**: Confirm `## Changelog` (h2) with `### vX.Y.Z` (h3) convention works for all projects
+4. **Content index**: JSON only (client search) is fine for now; embeddings later?
+5. **Date source**: Use frontmatter `date` only (not git `lastModified`)?
+
+---
+
 ## Quick-Reference: File Structure (actual, as of last update)
 
 ```
