@@ -23,9 +23,9 @@ function TopBar({ isVisible }) {
             <Image
               src={personal.logo}
               alt="Bilal Ahmad"
-              width={120}
-              height={28}
-              className="h-6 sm:h-7 w-auto object-contain"
+              width={80}
+              height={24}
+              loading="lazy"
             />
           ) : (
             <span>DA</span>
