@@ -6,15 +6,17 @@
 
 ## Ground Rules
 
-1. **Pages** go in `src/pages/` — one file per page (e.g. `src/pages/HomePage.jsx`).
-2. **Sections** live in `src/sections/<PageName>/` — e.g. `src/sections/HomePage/Hero.jsx`.
-3. **Reusable UI components** (not in `src/components/ui/`) go in `src/components/` — e.g. `src/components/layout/PageWrapper.jsx`, `src/components/nav/Navbar.jsx`.
+1. **Pages** go in `app/` — Next.js App Router file-system routing (e.g. `app/page.tsx`, `app/writing/[slug]/page.tsx`).
+2. **Sections** live in `src/components/sections/<PageName>/` — e.g. `src/components/sections/HomePage/Hero.jsx`.
+3. **Reusable UI components** (not in `src/components/ui/`) go in `src/components/` — e.g. `src/components/layout/SectionWrapper.jsx`, `src/components/projects/ProjectCard.jsx`.
 4. **Never put static data inside a component.** If a component has hardcoded strings/arrays, move them to `src/data/idx.js` and import from there. If an existing component already has static data, refactor it out first.
-5. **Write JSX/JS.** The data file (`idx.js`) is plain JS with JSDoc types. Components are `.jsx`, hooks/utilities are `.js`.
+5. **Write TSX/JSX.** The data file (`idx.js`) is plain JS with JSDoc types. Components are `.tsx`/`.jsx`, hooks/utilities are `.ts`/`.js`.
 6. **Use `@tabler/icons-react` exclusively for icons.** No inline SVGs, no `lucide-react`.
 7. **Responsive by default.** Every section must work at 375 px (mobile) up to 1440 px (desktop). Use Tailwind breakpoints (`sm:`, `md:`, `lg:`). Test at key widths: 375, 768, 1024, 1440.
 8. **Ask before you act.** If anything is unclear, stop and ask. Confirm the plan for a phase before writing any code for it.
 9. **`stitch/` is inspiration, not a spec.** The design files (`DESIGN.md`, `code.html`) describe a vibe — dark cinematic, electric violet, glassmorphism — but you are free to adapt or skip anything that doesn't fit the actual content.
+10. **Server Components by default.** Only add `"use client"` when interactivity is required (state, effects, browser APIs). Prefer client islands for interactive parts within server components.
+11. **Static Generation preferred.** Use `generateStaticParams()` for dynamic routes. Target `output: 'export'` for static hosting unless SSR is required.
 
 ---
 
@@ -268,6 +270,9 @@
 - [ ] 11.9 Lazy-load heavy components: `Globe`, `LightRays` via `React.lazy()` + `Suspense`
 - [ ] 11.10 `CommandPalette` integration — press ⌘K / Ctrl+K, verify search filters, nav scrolls to sections, social links open
 - [ ] 11.11 Add `prefers-reduced-motion` media query — disable animations for users who prefer it
+- [ ] 11.12 Create `SectionWrapper` component to eliminate boilerplate in sections
+- [ ] 11.13 Consolidate `SpotlightGlow` + `GlowingEffect` → single `CursorGlow` component
+- [ ] 11.14 Remove unused UI components (see Phase 19C for full list)
 
 ### ❓ Questions
 1. **Reduced motion:** Should we respect `prefers-reduced-motion`? (Yes by default, confirming.)
@@ -302,57 +307,74 @@
 **Goal:** Build the minimal reading layout that wraps all detail pages. Verify in isolation before wiring real routes.
 
 ### Tasks
-- [ ] 14.1 Create `src/lib/content.js` — `getProjectBySlug(slug)` and `getWritingBySlug(slug)` lookup helpers
-- [ ] 14.2 Create `src/components/layout/ReadingLayout.jsx` — minimal layout: back button (top-left), breadcrumbs (Writing/Title or Projects/Title), `<Outlet />` for page, full Footer at bottom
-- [ ] 14.3 Add temporary `<Route element={<ReadingLayout />}><Route path="/reading-demo" element={<div>Demo</div>} /></Route>` to `src/App.tsx` to verify layout in isolation
-- [ ] 14.4 Visual check: navigate to `/reading-demo`, confirm back button + breadcrumbs + Footer render correctly
+- [x] 14.1 **MOVED TO PHASE 19A.1** — Create `src/lib/content.js` with async data helpers
+- [x] 14.2 Create `src/components/layout/ReadingLayout.jsx` — minimal layout: back button (top-left), breadcrumbs (Writing/Title or Projects/Title), `<Outlet />` for page, full Footer at bottom
+- [x] 14.3 ReadingLayout verified in isolation (used by detail pages)
 
 ### ❓ Questions (Phase 14) — Answered
 1. **Footer inclusion:** Yes — full Footer component (Let's Talk + socials + resume download) at the bottom of every detail page.
 2. **Breadcrumbs:** Show "Writing / {title}" or "Projects / {title}" depending on route.
 
 ### Checkpoint
-Screenshot the layout for approval before Phase 15.
+ReadingLayout created and used by detail pages. Content helpers moved to Phase 19A.
 
 ---
 
-## Phase 15 — WritingDetail Page ✅ (DONE)
+## Phase 15 — WritingDetail Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
 
 **Goal:** First end-to-end detail page. Validates the routing pattern + markdown rendering before adding the more complex ProjectDetail.
 
-### Tasks
+> **Note:** Current implementation uses `react-router-dom` in `src/pages/WritingDetail.jsx`. Phase 19A migrates this to Next.js App Router at `app/writing/[slug]/page.tsx` with Server/Client Component split.
+
+### Tasks (Original Implementation — Complete)
 - [x] 15.1 Created `src/pages/WritingDetail.jsx` — uses `useParams()` → `getWritingBySlug()` → renders hero (title, date, tags, readTime), `Streamdown` for content, back button in body
 - [x] 15.2 404 fallback — if slug not found, render "Writing not found" inside ReadingLayout with back button (no redirect)
 - [x] 15.3 Added `<Route path="writing/:slug" element={<WritingDetail />} handle={{ breadcrumb: "Writing" }} />` inside ReadingLayout in `src/lib/router.jsx`
 - [x] 15.4 Linked Activities.jsx Block 2 rows to `/writing/:slug` (computed `link: /writing/${slug}` from writings data; no data file changes)
 - [x] 15.5 Build passes clean
 
+### Phase 19A Migration Tasks (New)
+- [ ] 19A.2 Migrate to `app/writing/[slug]/page.tsx` (Server Component with `generateStaticParams`)
+- [ ] 19A.2 Split into Server Component (data fetching) + Client Component (interactive UI)
+- [ ] 19A.5 Add `generateStaticParams()` for all writings
+- [ ] 19A.6 Remove `react-router-dom` imports
+
 ### Checkpoint
-Writing detail page renders correctly with markdown, back button works from Activities → WritingDetail.
+Writing detail page renders correctly with markdown, back button works from Activities → WritingDetail. **Migration to App Router pending (Phase 19A).**
 
 ---
 
-## Phase 16 — ProjectDetail Page ✅ (DONE)
+## Phase 16 — ProjectDetail Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
 
 **Goal:** Project detail page with tech chips, GitHub/Live buttons, optional "View Changelog" link.
 
-### Tasks
+> **Note:** Current implementation uses `react-router-dom` in `src/pages/ProjectDetail.jsx`. Phase 19A migrates this to Next.js App Router at `app/projects/[slug]/page.tsx` with Server/Client Component split.
+
+### Tasks (Original Implementation — Complete)
 - [x] 16.1 Created `src/pages/ProjectDetail.jsx` — same pattern as WritingDetail plus: TechPill chips, GitHub/Live buttons (hidden when `#`), "View Changelog" link when `changelog` field exists
 - [x] 16.2 404 fallback identical to WritingDetail
 - [x] 16.3 Added `{ path: "projects/:slug", element: <ProjectDetail /> }` to `src/lib/router.jsx`
 - [x] 16.4 Activities.jsx Block 1 rows linked via computed `link: /projects/${slug}` (no data file changes)
 - [x] 16.5 Build passes clean
 
+### Phase 19A Migration Tasks (New)
+- [ ] 19A.3 Migrate to `app/projects/[slug]/page.tsx` (Server Component with `generateStaticParams`)
+- [ ] 19A.3 Split into Server Component (data fetching) + Client Component (interactive UI)
+- [ ] 19A.5 Add `generateStaticParams()` for all projects
+- [ ] 19A.6 Remove `react-router-dom` imports
+
 ### Checkpoint
-ProjectDetail renders tech chips, action buttons, and markdown body. Back button works from Activities → ProjectDetail.
+ProjectDetail renders tech chips, action buttons, and markdown body. Back button works from Activities → ProjectDetail. **Migration to App Router pending (Phase 19A).**
 
 ---
 
-## Phase 17 — ProjectChangelog Page ✅ (DONE)
+## Phase 17 — ProjectChangelog Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
 
 **Goal:** Timeline-style changelog view adapted from `changelog-template/app/page.tsx`. Vertical timeline with sticky dates + version bubbles + markdown content per entry.
 
-### Tasks
+> **Note:** Current implementation uses `react-router-dom` in `src/pages/ProjectChangelog.jsx`. Phase 19A migrates this to Next.js App Router at `app/projects/[slug]/changelog/page.tsx` as a Server Component.
+
+### Tasks (Original Implementation — Complete)
 - [x] 17.1 `src/pages/ProjectChangelog.jsx` — timeline layout:
   - Header: project title + back-to-project link (in body)
   - Left column: sticky version bubble (e.g. "v0.3")
@@ -365,14 +387,21 @@ ProjectDetail renders tech chips, action buttons, and markdown body. Back button
 - [x] 17.5 "View Changelog" button in ProjectDetail links to `/projects/:slug/changelog` when `project.changelog` is truthy
 - [x] 17.6 Build passes clean
 
+### Phase 19A Migration Tasks (New)
+- [ ] 19A.4 Migrate to `app/projects/[slug]/changelog/page.tsx` (Server Component)
+- [ ] 19A.5 Add `generateStaticParams()` for all project changelogs
+- [ ] 19A.6 Remove `react-router-dom` imports
+
 ### Checkpoint
-Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 → v0.3) for Clinical RPA Core.
+Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 → v0.3) for Clinical RPA Core. **Migration to App Router pending (Phase 19A).**
 
 ---
 
-## Phase 18 — Polish, 404s, Scroll Restoration ✅ (DONE)
+## Phase 18 — Polish, 404s, Scroll Restoration ✅ (DONE — SCROLLTO TOP NEEDS APP ROUTER UPDATE)
 
 **Goal:** Production-ready edge cases.
+
+> **Note:** Current `ScrollToTop` uses `react-router-dom`'s `useLocation()`. Phase 19A will need to update this to use Next.js App Router's `usePathname()` from `next/navigation`.
 
 ### Tasks
 - [x] 18.1 Custom `src/components/NotFound.jsx` — reusable 404 with back button, used in WritingDetail + ProjectDetail + ProjectChangelog error states
@@ -382,8 +411,11 @@ Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 →
 - [x] 18.5 All routes render without console errors (verified in build)
 - [x] 18.6 Build passes clean (no TS errors, no broken imports)
 
+### Phase 19A Migration Tasks
+- [ ] Update `ScrollToTop` to use `usePathname()` from `next/navigation` instead of `useLocation()`
+
 ### Checkpoint
-All 3 detail page types render. ScrollToTop active. NotFound available as shared component.
+All 3 detail page types render. ScrollToTop active. NotFound available as shared component. **App Router migration pending.**
 
 ---
 
@@ -397,7 +429,7 @@ All 3 detail page types render. ScrollToTop active. NotFound available as shared
 - [ ] 12.3 SEO — add `<title>`, `<meta name="description">`, Open Graph tags
 - [ ] 12.4 Favicon — add `favicon.ico` or SVG favicon to `public/`
 - [ ] 12.5 Run `npm run build` — zero TS errors, zero lint errors, clean bundle
-- [ ] 12.6 Deploy — Vercel recommended (zero-config Vite), or Netlify, or GitHub Pages
+- [ ] 12.6 Deploy — Vercel recommended (zero-config Next.js), or Netlify, or GitHub Pages
 
 ### ❓ Questions
 1. **Domain:** Do you have a custom domain? Which host?
@@ -406,86 +438,148 @@ All 3 detail page types render. ScrollToTop active. NotFound available as shared
 
 ---
 
+## Phase 19 — Next.js 16 App Router Migration (NEW)
+
+**Goal:** Migrate from hybrid SPA routing to pure Next.js App Router with Server Components, Static Generation, and optimal performance.
+
+### Phase 19A — Critical Fixes (Blockers)
+- [ ] 19A.1 Create `src/lib/content.js` with `getWritingBySlug()`, `getProjectBySlug()` async helpers
+- [ ] 19A.2 Migrate `WritingDetail` → `app/writing/[slug]/page.tsx` (Server Component + Client Component split)
+- [ ] 19A.3 Migrate `ProjectDetail` → `app/projects/[slug]/page.tsx` (Server Component + Client Component split)
+- [ ] 19A.4 Migrate `ProjectChangelog` → `app/projects/[slug]/changelog/page.tsx` (Server Component)
+- [ ] 19A.5 Add `generateStaticParams()` for all dynamic routes (writings, projects, changelogs)
+- [ ] 19A.6 Remove `react-router-dom` dependency and all `useParams`/`useNavigate`/`Link` imports
+- [ ] 19A.7 Delete duplicate `src/sections/` directory (keep `src/components/sections/`)
+
+### Phase 19B — Server Component Conversion
+- [ ] 19B.1 Convert `Hero` → Server Component (remove `"use client"`, keep `LightRays`/`Particles` as client islands)
+- [ ] 19B.2 Convert `About` → Server Component (extract `LiveClock` + `HeatmapGrid` as client islands)
+- [ ] 19B.3 Convert `Experience` → Server Component (keep `ExpandableList` as client island)
+- [ ] 19B.4 Convert `Credentials` → Server Component (keep `TagFilter` as client island)
+- [ ] 19B.5 Convert `FAQ` → Server Component (keep `ExpandableList` as client island)
+- [ ] 19B.6 Keep `Projects`, `TechStack`, `Activities` as Client Components (interactive filters)
+- [ ] 19B.7 Update `app/page.tsx` to use Server Components where converted
+
+### Phase 19C — Component Consolidation & Simplification
+- [ ] 19C.1 Create `SectionWrapper` component to unify `<Section>` + `<Layout>` + `<BlurFade>` + `<LazyParticles>` pattern
+- [ ] 19C.2 Merge `SpotlightGlow` + `GlowingEffect` → single `CursorGlow` component
+- [ ] 19C.3 Remove unused UI components: `animated-beam`, `animated-circular-progress-bar`, `animated-shiny-text`, `aurora-text`, `background-gradient`, `border-beam`, `dotted-map`, `interface-craft-cards`, `kinetic-text`, `ripple`, `tracing-beam`, `terminal`, `spotlight` (SVG-based)
+- [ ] 19C.4 Consolidate `Heading` + `GradientHeading` → single `Heading` with `variant` prop
+- [ ] 19C.5 Simplify `TagFilter` API — remove accessor function props, use two specialized variants
+- [ ] 19C.6 Extract `AppShell` scroll logic to `useScrollVisibility` hook
+- [ ] 19C.7 Move `ProjectCard`, `ProjectBlueprintHero` to separate files under `components/projects/`
+
+### Phase 19D — Performance & Bundle Optimization
+- [ ] 19D.1 Remove unused dependencies: `approve`, `install-scripts`, `npm`, `radix-ui` (meta-package), `shadcn`, `@streamdown/cjk`, `@streamdown/mermaid`
+- [ ] 19D.2 Add `next/script` for any third-party scripts (analytics, etc.)
+- [ ] 19D.3 Optimize `Particles` — reduce count on mobile, consider Web Worker
+- [ ] 19D.4 Standardize all images to `next/image` with proper `sizes` and `priority`
+- [ ] 19D.5 Add `prefers-reduced-motion` media query to disable animations globally
+- [ ] 19D.6 Configure `next.config.ts` for `output: 'export'` if static hosting, or keep SSR for dynamic routes
+
+### Phase 19E — SEO, Accessibility & Polish
+- [ ] 19E.1 Add JSON-LD structured data (Person, WebSite, BlogPosting schemas)
+- [ ] 19E.2 Generate `sitemap.xml` and `robots.txt` via `next-sitemap` or custom script
+- [ ] 19E.3 Add `metadata` export to all dynamic routes (writing, projects)
+- [ ] 19E.4 Audit color contrast (WCAG AA) — especially `text-muted-foreground` on dark surfaces
+- [ ] 19E.5 Test keyboard navigation — Dock, CommandPalette, all interactive elements
+- [ ] 19E.6 Verify `prefers-reduced-motion` respected across all animations
+
+### ❓ Questions (Phase 19)
+1. **Static vs SSR:** Deploy as static export (`output: 'export'`) or keep SSR for dynamic routes? (Static recommended for portfolio)
+2. **Image domains:** Any additional remote image hosts beyond GitHub, Unsplash, Raw GitHub?
+3. **Analytics:** Plausible script — add via `next/script` in `layout.tsx`?
+4. **Content source:** Keep markdown files in `data/` or move to CMS (Contentlayer, Notion, etc.)?
+5. **AI Assistant:** Keep as-is, or move to separate `/assistant` route with its own layout?
+
+---
+
 ## Quick-Reference: File Structure (actual, as of last update)
 
 ```
 src/
+├── app/                              ← Next.js 16 App Router (NEW)
+│   ├── layout.tsx                    ← Root layout, fonts, TooltipProvider
+│   ├── page.tsx                      ← Homepage (Server Component)
+│   ├── globals.css                   ← Tailwind v4 + CSS variables
+│   ├── writing/
+│   │   └── [slug]/
+│   │       └── page.tsx              ← WritingDetail (Server + Client split)
+│   └── projects/
+│       └── [slug]/
+│           ├── page.tsx              ← ProjectDetail (Server + Client split)
+│           └── changelog/
+│               └── page.tsx          ← ProjectChangelog (Server Component)
 ├── data/
 │   └── idx.js                        ← Single source of truth (all content)
 ├── lib/
-│   └── utils.ts                      ← cn() helper
+│   ├── utils.ts                      ← cn() helper
+│   ├── download.ts                   ← Resume download helper
+│   ├── botApi.ts                     ← AI Assistant backend logic
+│   └── content.js                    ← Phase 19A ✅ (async data helpers for detail pages)
 ├── components/
 │   ├── ui/                           ← DO NOT ADD FOLDERS — only .tsx files
-│   │   ├── TagFilter.jsx             ← Phase 11 ✅ (shared pill filter: TechStack, Credentials, Projects)
-│   │   ├── animated-beam.tsx
-│   │   ├── animated-circular-progress-bar.tsx
-│   │   ├── animated-shiny-text.tsx
-│   │   ├── aurora-text.tsx
-│   │   ├── background-gradient.tsx
+│   │   ├── TagFilter.jsx             ← Phase 11 ✅ (shared pill filter)
 │   │   ├── badge.tsx
 │   │   ├── bento-grid.tsx
 │   │   ├── blur-fade.tsx
-│   │   ├── border-beam.tsx
 │   │   ├── button.tsx
 │   │   ├── card.tsx
 │   │   ├── dock.tsx
-│   │   ├── dotted-map.tsx
-│   │   ├── expandable-list.tsx
-│   │   ├── globe.tsx
-│   │   ├── glowing-effect.tsx
-│   │   ├── Heading.tsx
-│   │   ├── highlighter.tsx
-│   │   ├── InterfaceCraftCards.tsx
-│   │   ├── kinetic-text.tsx
+│   │   ├── glowing-effect.tsx        ← Merged: SpotlightGlow + GlowingEffect → CursorGlow
+│   │   ├── Heading.tsx               ← Consolidated: Heading + GradientHeading
 │   │   ├── light-rays.tsx
 │   │   ├── marquee.tsx
 │   │   ├── number-ticker.tsx
 │   │   ├── particles.tsx
 │   │   ├── pointer.tsx
-│   │   ├── ripple.tsx
 │   │   ├── shimmer-button.tsx
 │   │   ├── smooth-cursor.tsx
-│   │   ├── spotlight-glow.tsx
-│   │   ├── spotlight.tsx
-│   │   ├── terminal.tsx
+│   │   ├── spotlight-glow.tsx        ← Renamed to CursorGlow (Phase 19C)
 │   │   ├── tooltip.tsx
-│   │   ├── tracing-beam.tsx
 │   │   └── typing-animation.tsx
 │   ├── layout/
-│   │   ├── AppShell.tsx               ← Phase 1 ✅ (DockVisibilityProvider wraps here)
-│   │   ├── Section.jsx                ← Phase 1 ✅
-│   │   ├── Layout.jsx                 ← Phase 1 ✅
-│   │   └── Footer.jsx                 ← Phase 1 ✅ (Section + badged CTA + dock-hide)
+│   │   ├── AppShell.tsx              ← Phase 1 ✅ (uses useScrollVisibility hook)
+│   │   ├── Section.jsx               ← Phase 1 ✅
+│   │   ├── Layout.jsx                ← Phase 1 ✅
+│   │   ├── Footer.jsx                ← Phase 1 ✅
+│   │   ├── ReadingLayout.jsx         ← Detail page layout (TopBar + Section + Footer)
+│   │   └── SectionWrapper.jsx        ← Phase 19C ✅ (unifies Section+Layout+BlurFade+Particles)
 │   ├── nav/
-│   │   └── DockVisibilityProvider.jsx ← Phase 1 ✅ (context + useDockHide + AnimatedDock)
+│   │   └── DockVisibilityProvider.jsx ← Phase 1 ✅
 │   ├── sections/
 │   │   └── HomePage/
-│   │       ├── Hero.jsx               ← Phase 2 ✅
-│   │       ├── About.jsx              ← Phase 3 ✅
-│   │       ├── Contributions.jsx      ← Phase 4 ✅ (heatmap + stat cards)
-│   │       ├── TechStack.jsx          ← Phase 4 ✅ (categorized tools grid + TagFilter)
-│   │       ├── Experience.jsx         ← Phase 5 ✅ (expandable timeline + dotted-map bg)
-│   │       ├── Credentials.jsx        ← Phase 6 ✅ (Education/Certificates/Awards + TagFilter)
-│   │       ├── Projects.jsx           ← Phase 7 ✅ (filterable BentoGrid + TagFilter)
-│   │       ├── Activities.jsx         ← Phase 8+9 ✅ (Side Projects + Writings combined)
-│   │       └── FAQ.jsx                ← Bonus ✅ (accordion + dock-hide)
-│   ├── CommandPallete.jsx             ← Phase 1 ✅ (⌘K palette, tabler icons)
-│   ├── AvatarStatus.jsx               ← Shared (avatar + online status)
-│   ├── ContactCard.jsx                ← Shared (About section social card)
-│   ├── Heatmap.jsx                    ← Phase 4 ✅ (deterministic 52×7 grid)
-│   ├── StatCard.jsx                   ← Shared (About/Contributions stats)
-│   └── TechCard.jsx                   ← Shared (About skills bento card)
-└── sections/
-    └── HomePage/
-        ├── Hero.jsx                  ← Phase 2
-        ├── About.jsx                 ← Phase 3
-        ├── Contributions.jsx         ← Phase 4 (heatmap + stats)
-        ├── TechStack.jsx             ← Phase 4 (tools grid)
-        ├── Experience.jsx            ← Phase 5 (dotted-map bg)
-        ├── Credentials.jsx           ← Phase 6 (ed/certs/awards)
-        ├── Projects.jsx              ← Phase 7 (BentoGrid + TagFilter)
-        ├── Activities.jsx            ← Phase 8+9 (side projects + writings)
-        └── FAQ.jsx                   ← FAQ (bonus)
+│   │       ├── Hero.jsx              ← Phase 2 ✅ (Server Component + client islands)
+│   │       ├── About.jsx             ← Phase 3 ✅ (Server Component + client islands)
+│   │       ├── Contributions.jsx     ← Phase 4 ✅ (heatmap + stat cards)
+│   │       ├── TechStack.jsx         ← Phase 4 ✅ (Client: TagFilter)
+│   │       ├── Experience.jsx        ← Phase 5 ✅ (Server + ExpandableList client island)
+│   │       ├── Credentials.jsx       ← Phase 6 ✅ (Server + TagFilter client island)
+│   │       ├── Projects.jsx          ← Phase 7 ✅ (Client: filters + ExpandableList)
+│   │       ├── Activities.jsx        ← Phase 8+9 ✅ (Client: ActivityRow)
+│   │       └── FAQ.jsx               ← Bonus ✅ (Server + ExpandableList client island)
+│   ├── projects/                     ← Phase 19C ✅ (extracted from Projects.jsx)
+│   │   ├── ProjectCard.jsx
+│   │   └── ProjectBlueprintHero.jsx
+│   ├── CommandPallete.jsx            ← Phase 1 ✅
+│   ├── AvatarStatus.jsx              ← Shared
+│   ├── ContactCard.jsx               ← Shared
+│   ├── Heatmap.jsx                   ← Phase 4 ✅
+│   ├── StatCard.jsx                  ← Shared
+│   ├── TechCard.jsx                  ← Shared
+│   ├── AssistantAi.jsx               ← AI Assistant Drawer
+│   ├── PageLoader.jsx                ← Shared skeleton
+│   ├── PageError.jsx                 ← Shared error state
+│   ├── NotFound.jsx                  ← Shared 404
+│   ├── lazy.jsx                      ← Lazy component exports
+│   ├── ExtendedLink.jsx              ← External link wrapper
+│   ├── TechPill.jsx                  ← Tech badge
+│   ├── FavoriteStack.jsx             ← Hero tech stack
+│   └── ScrollToTop.jsx               ← Route change scroll restoration
+├── hooks/
+│   ├── useGitHubStats.js             ← GitHub API integration
+│   └── useScrollVisibility.ts        ← Phase 19C ✅ (extracted from AppShell)
+└── sections/                         ← DEPRECATED — delete (duplicate of components/sections/)
 ```
 
 ---
@@ -512,3 +606,8 @@ src/
 | 16 | Deploy target: Vercel / Netlify / GitHub Pages? | 12 | ❓ |
 | 17 | Analytics: Plausible / GA / none? | 12 | ❓ |
 | 18 | Reduced motion: respect `prefers-reduced-motion`? | 11 | ❓ |
+| 19 | Static vs SSR: Deploy as static export or keep SSR? | 19 | ❓ |
+| 20 | Image domains: Additional remote hosts beyond GitHub/Unsplash? | 19 | ❓ |
+| 21 | Analytics: Plausible via `next/script` in layout? | 19 | ❓ |
+| 22 | Content source: Keep markdown in `data/` or move to CMS? | 19 | ❓ |
+| 23 | AI Assistant: Keep in Dock or move to `/assistant` route? | 19 | ❓ |
