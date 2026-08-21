@@ -16,8 +16,6 @@ export const projects = [
     image: null,
     featured: true,
     isActivity: false,
-    contentPath: "../projects/analytics-dashboard.md",
-    changelogPath: undefined,
   },
   {
     id: "proj-2",
@@ -36,8 +34,6 @@ export const projects = [
     featured: true,
     isActivity: false,
     terminalSnippet: "data-pipeline sync --config pipeline.yaml --parallel 8\n✓ Schema validated\n✓ 1.2M rows migrated in 4.2s",
-    contentPath: "../projects/data-pipeline-toolkit.md",
-    changelogPath: undefined,
   },
   {
     id: "proj-3",
@@ -59,8 +55,6 @@ export const projects = [
       label: "Clinical Queue Pipeline",
       nodes: ["Docman Mail", "OCR Engine", "EMIS API", "Audit Log"],
     },
-    contentPath: "../projects/rpa-clinical-automation-suite.md",
-    changelogPath: undefined,
   },
   {
     id: "proj-4",
@@ -78,8 +72,6 @@ export const projects = [
     image: null,
     featured: true,
     isActivity: false,
-    contentPath: "../projects/agency-portfolio-platform.md",
-    changelogPath: undefined,
   },
 
   // ── Side Projects (appear in Activities section) ──────────────────────
@@ -93,8 +85,6 @@ export const projects = [
     tag: "Open Source",
     featured: false,
     isActivity: true,
-    contentPath: "../projects/da-profiler.md",
-    changelogPath: undefined,
   },
   {
     id: "proj-6",
@@ -106,8 +96,6 @@ export const projects = [
     tag: "SaaS",
     featured: false,
     isActivity: true,
-    contentPath: "../projects/jcn-engine.md",
-    changelogPath: undefined,
   },
   {
     id: "proj-7",
@@ -119,8 +107,6 @@ export const projects = [
     tag: "Private",
     featured: false,
     isActivity: true,
-    contentPath: "../projects/clinical-rpa-core/content.md",
-    changelogPath: "../projects/clinical-rpa-core/changelog.md",
   },
   {
     id: "proj-8",
@@ -132,12 +118,13 @@ export const projects = [
     tag: "AI",
     featured: false,
     isActivity: true,
-    contentPath: "../projects/agentic-cli-coder.md",
-    changelogPath: undefined,
   },
 ];
 
-export const contributions = {
+/**
+ * Deprecated Constants. Not using anymore
+ */
+const contributions = {
   heading: "Github",
   subheading:
     "A live snapshot of build velocity, open-source contributions, and development consistency.",
@@ -171,7 +158,7 @@ export const contributions = {
   ],
 };
 
-export const kanban = [
+const kanban = [
   {
     id: "kc-1",
     title: "Publish 2 blog posts / month",

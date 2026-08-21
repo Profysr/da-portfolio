@@ -8,7 +8,6 @@ export const writings = [
     date: "2025-07-14",
     tags: ["Analytics", "Visualization"],
     readTime: "8 min",
-    contentPath: "../writings/why-dashboards-lie.md",
   },
   {
     id: "blog-2",
@@ -19,7 +18,6 @@ export const writings = [
     date: "2025-06-03",
     tags: ["Python", "ETL"],
     readTime: "12 min",
-    contentPath: "../writings/repeatable-etl-pattern.md",
   },
   {
     id: "blog-3",
@@ -30,6 +28,5 @@ export const writings = [
     date: "2025-04-22",
     tags: ["Career", "Open Source"],
     readTime: "6 min",
-    contentPath: "../writings/git-contributions-as-portfolio.md",
   },
 ];
