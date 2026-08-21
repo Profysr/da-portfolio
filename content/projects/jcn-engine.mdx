@@ -1,6 +1,7 @@
 ---
 title: "JCN Engine"
 description: "Multi-tenant SaaS project management engine"
+date: "2024-02-01"
 category: "SaaS"
 industry: "Productivity"
 access: "Private"
@@ -8,7 +9,7 @@ strategies: ["Row-Level Security", "Event Sourcing", "Plugin Architecture"]
 tech: ["Python", "Django", "PostgreSQL", "Redis", "Celery"]
 github: "https://github.com"
 live: "https://github.com"
-featured: false
+thumbnail: "/tools/postgres.svg"
 ---
 
 ## The Challenge
@@ -31,3 +32,25 @@ Build a project management backend that supports:
 - 50k+ projects
 - 200k+ tasks
 - `<50ms` p99 API latency
+
+## Changelog
+
+### v2.1.0 - 2024-11-20
+- Added plugin marketplace with versioning
+- WebSocket connection pooling optimization
+- Time-travel query API for audit logs
+
+### v2.0.0 - 2024-07-15
+- Event sourcing migration complete
+- Row-level security for all tenant models
+- Plugin sandbox execution environment
+
+### v1.5.0 - 2024-04-01
+- Real-time collaboration via WebSockets
+- Custom workflow builder UI
+- Celery task queue optimization
+
+### v1.0.0 - 2024-02-01
+- Initial multi-tenant architecture
+- PostgreSQL RLS policies
+- Basic project/task CRUD

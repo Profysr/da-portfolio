@@ -1,6 +1,7 @@
 ---
 title: "Analytics Dashboard"
 description: "Real-time KPI dashboard with custom visualisations and alerting built for high-throughput e-commerce operations."
+date: "2024-06-15"
 category: "Web"
 industry: "E-Commerce Fintech"
 access: "Hosted"
@@ -8,7 +9,7 @@ strategies: ["WebSockets Streaming", "Canvas Optimization", "Bento Grid UX"]
 tech: ["React", "TypeScript", "D3.js", "Python", "Redis"]
 github: "https://github.com/example/analytics"
 live: "https://example.com/analytics"
-featured: true
+thumbnail: "/tools/nextjs.svg"
 ---
 
 ## The Idea
@@ -31,3 +32,20 @@ Operations teams needed real-time visibility into e-commerce KPIs without paying
 ## What I'd Do Differently
 
 Started with too much custom D3 — would lean on Visx primitives for the 80% case and only drop down to D3 for the bespoke 20%.
+
+## Changelog
+
+### v1.2.0 - 2024-11-15
+- Added WebSocket reconnection logic with exponential backoff
+- Improved canvas rendering performance for 5k+ data points
+- Fixed memory leak in D3 transition cleanup
+
+### v1.1.0 - 2024-09-01
+- Added alerting thresholds with Slack/Email webhooks
+- Implemented dark mode for all chart types
+- Optimized Redis stream consumer groups
+
+### v1.0.0 - 2024-06-15
+- Initial release with real-time KPI streaming
+- Custom D3 visualizations for revenue, orders, and conversion metrics
+- WebSocket-based push updates

@@ -1,6 +1,7 @@
 ---
 title: "Clinical RPA Core"
 description: "Desktop automation hooks for SystmOne & EMIS"
+date: "2024-03-10"
 category: "Automation"
 industry: "Healthcare / NHS"
 access: "Private"
@@ -8,7 +9,7 @@ strategies: ["Action Registry Pattern", "Structured Audit Logging", "Queue-Based
 tech: ["Power Automate", "Python", "AutoHotkey", "JavaScript"]
 github: "#"
 live: "#"
-featured: false
+thumbnail: "/tools/nhs.webp"
 ---
 
 ## The Idea
@@ -24,3 +25,20 @@ The production RPA suite (`rpa-clinical-automation-suite`) has hundreds of autom
 ## Status
 
 Extraction in progress. About 60% of actions ported.
+
+## Changelog
+
+### v0.3.0 - 2024-12-10
+- Added Docman integration module
+- EMIS Health session timeout fixes
+- Structured audit logging with correlation IDs
+
+### v0.2.0 - 2024-08-15
+- Action registry pattern implementation
+- Queue-based retry mechanism with exponential backoff
+- SystmOne patient search automation
+
+### v0.1.0 - 2024-03-10
+- Initial core extraction from production RPA suite
+- Base action primitives for SystmOne
+- Power Automate flow composer DSL

@@ -1,6 +1,7 @@
 ---
 title: "Data Pipeline Toolkit"
 description: "CLI tool that orchestrates ETL jobs with minimal configuration and multi-tenant schema isolation."
+date: "2024-05-20"
 category: "Open Source"
 industry: "Developer Tools"
 access: "Open Source"
@@ -8,7 +9,7 @@ strategies: ["AST Parsing", "Zero-Config CLI", "Async Worker Pools"]
 tech: ["Python", "Docker", "SQL", "ClickHouse"]
 github: "https://github.com/example/pipeline-cli"
 live: "#"
-featured: true
+thumbnail: "/tools/docker.svg"
 ---
 
 ## The Problem
@@ -49,3 +50,21 @@ data-pipeline sync --config pipeline.yaml --parallel 8
 ## Status
 
 Open source. Used by 3 teams in production.
+
+## Changelog
+
+### v1.1.0 - 2024-11-10
+- Added ClickHouse native insert support
+- Multi-tenant schema isolation via row-level security
+- Config validation with JSON Schema
+
+### v1.0.0 - 2024-08-01
+- Initial open source release
+- AST-based YAML config parser
+- Async worker pools with Redis
+- Zero-config conventions
+
+### v0.9.0 - 2024-05-20
+- Beta release with core ETL orchestration
+- Docker-based execution environment
+- Basic retry and scheduling

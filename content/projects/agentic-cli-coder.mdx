@@ -1,6 +1,7 @@
 ---
 title: "Agentic CLI Coder"
 description: "Terminal refactoring agent powered by local LLMs"
+date: "2024-10-01"
 category: "AI"
 industry: "Developer Tools"
 access: "Open Source"
@@ -8,7 +9,7 @@ strategies: ["Local LLM Inference (Ollama)", "AST-based Code Modification", "Hum
 tech: ["Python", "Typer", "Rich", "Ollama", "Tree-sitter"]
 github: "https://github.com"
 live: "https://github.com"
-featured: false
+thumbnail: "/tools/claude-code.svg"
 ---
 
 ## The Vision
@@ -30,3 +31,25 @@ Refactoring is repetitive. An agent that:
 - Zero latency for small diffs
 - No code leaves your machine
 - Free (run on your GPU)
+
+## Changelog
+
+### v0.4.0 - 2024-12-20
+- Added support for TypeScript/JavaScript via Tree-sitter
+- Improved diff rendering with syntax highlighting
+- Added config file support (.agenticrc)
+
+### v0.3.0 - 2024-11-05
+- Human-in-the-loop approval flow
+- Ollama model auto-detection
+- Batch refactoring across multiple files
+
+### v0.2.0 - 2024-10-15
+- Extract method refactoring
+- Rename symbol across project
+- Add type hints to Python functions
+
+### v0.1.0 - 2024-10-01
+- Initial CLI scaffold with Typer + Rich
+- Tree-sitter AST parsing for Python
+- Local LLM integration via Ollama

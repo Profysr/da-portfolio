@@ -1,6 +1,7 @@
 ---
 title: "Da Profiler"
 description: "Open-source Python REST API profiler & N+1 query workbench"
+date: "2024-04-15"
 category: "Open Source"
 industry: "Developer Tools"
 access: "Open Source"
@@ -8,7 +9,7 @@ strategies: ["AST-based Query Analysis", "Flame Graph Visualization", "Middlewar
 tech: ["Python", "FastAPI", "SQLAlchemy", "React"]
 github: "https://github.com"
 live: "https://github.com"
-featured: false
+thumbnail: "/tools/python.svg"
 ---
 
 ## The Problem
@@ -33,3 +34,25 @@ app.add_middleware(ProfilerMiddleware, sample_rate=0.1)
 ```
 
 Visit `/profiler` to see live query analysis.
+
+## Changelog
+
+### v0.5.0 - 2024-12-01
+- Added Django ORM support
+- Flame graph export as SVG/PNG
+- Query deduplication algorithm
+
+### v0.4.0 - 2024-09-15
+- React dashboard with real-time updates
+- N+1 detection with severity scoring
+- FastAPI middleware integration
+
+### v0.3.0 - 2024-06-20
+- SQLAlchemy event hook interception
+- AST-based query pattern analysis
+- Basic CLI profiler
+
+### v0.2.0 - 2024-04-15
+- Initial proof of concept
+- Query capture middleware
+- N+1 detection prototype
