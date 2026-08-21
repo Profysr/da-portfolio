@@ -1,0 +1,37 @@
+---
+title: "RPA Clinical Automation Suite"
+description: "End-to-end clinical software automation integrated with SystmOne, EMIS, and Docman systems."
+category: "Automation"
+industry: "Healthcare / NHS"
+access: "Private"
+strategies: ["Desktop OCR Extraction", "Queue-Based Retries", "HIPAA/GDPR Compliance"]
+tech: ["Power Automate", "Python", "AutoHotkey", "JavaScript"]
+github: "#"
+live: "#"
+featured: true
+---
+
+## The Challenge
+
+NHS clinics run on legacy EHR systems (SystmOne, EMIS, Docman) with no public APIs. Automating workflows requires desktop-level interaction, OCR, and deep system knowledge.
+
+## Solution
+
+A modular automation suite deployed across 12+ clinics:
+
+- **Action Registry** — 40+ typed primitives per EHR system (patient lookup, document filing, appointment booking)
+- **Flow Composer** — Declarative JSON DSL that Power Automate executes
+- **Audit Bridge** — Uniform logging regardless of which EHR the action targets
+- **Queue Engine** — Retry policies with exponential backoff, dead-letter handling, per-action cooldowns
+
+## Compliance
+
+- HIPAA/GDPR compliant data handling
+- Zero persistent storage of PHI
+- Full audit trail for every automated action
+
+## Results
+
+- 40% reduction in manual operational overhead
+- Sub-5-minute end-to-end processing for document workflows
+- Zero data breaches in 18 months of production

@@ -1,0 +1,33 @@
+---
+title: "JCN Engine"
+description: "Multi-tenant SaaS project management engine"
+category: "SaaS"
+industry: "Productivity"
+access: "Private"
+strategies: ["Row-Level Security", "Event Sourcing", "Plugin Architecture"]
+tech: ["Python", "Django", "PostgreSQL", "Redis", "Celery"]
+github: "https://github.com"
+live: "https://github.com"
+featured: false
+---
+
+## The Challenge
+
+Build a project management backend that supports:
+- 100+ tenants with strict data isolation
+- Custom workflows per tenant (plugins)
+- Real-time collaboration (websockets)
+- Audit trail for every change
+
+## Architecture
+
+- **Row-Level Security (RLS)** — PostgreSQL policies enforce tenant isolation at DB level
+- **Event Sourcing** — Every state change stored as immutable event, enables time-travel queries
+- **Plugin System** — Tenants register custom workflows via JSON schema, executed in sandboxed workers
+- **WebSocket Gateway** — Redis-backed pub/sub for real-time updates across workers
+
+## Scale
+
+- 50k+ projects
+- 200k+ tasks
+- `<50ms` p99 API latency

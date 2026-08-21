@@ -1,0 +1,51 @@
+---
+title: "Data Pipeline Toolkit"
+description: "CLI tool that orchestrates ETL jobs with minimal configuration and multi-tenant schema isolation."
+category: "Open Source"
+industry: "Developer Tools"
+access: "Open Source"
+strategies: ["AST Parsing", "Zero-Config CLI", "Async Worker Pools"]
+tech: ["Python", "Docker", "SQL", "ClickHouse"]
+github: "https://github.com/example/pipeline-cli"
+live: "#"
+featured: true
+---
+
+## The Problem
+
+Data engineers waste weeks building the same plumbing: config management, schema validation, retry logic, scheduling. Every team reinvents it.
+
+## Solution
+
+A CLI that takes a `pipeline.yaml` and handles the rest:
+
+```yaml
+# pipeline.yaml
+source:
+  type: postgres
+  table: raw_events
+transforms:
+  - clean_events
+  - enrich_with_users
+  - aggregate_hourly
+destination:
+  type: clickhouse
+  table: analytics.events
+```
+
+Run with:
+
+```bash
+data-pipeline sync --config pipeline.yaml --parallel 8
+```
+
+## Architecture
+
+- **AST-based config parser** — validates YAML at parse time, catches errors before execution
+- **Zero-config defaults** — sensible conventions for naming, partitioning, monitoring
+- **Async worker pools** — horizontal scaling via Redis-backed task queue
+- **Multi-tenant schema isolation** — each tenant gets isolated tables/views automatically
+
+## Status
+
+Open source. Used by 3 teams in production.

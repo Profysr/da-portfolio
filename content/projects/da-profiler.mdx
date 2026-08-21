@@ -1,0 +1,35 @@
+---
+title: "Da Profiler"
+description: "Open-source Python REST API profiler & N+1 query workbench"
+category: "Open Source"
+industry: "Developer Tools"
+access: "Open Source"
+strategies: ["AST-based Query Analysis", "Flame Graph Visualization", "Middleware Integration"]
+tech: ["Python", "FastAPI", "SQLAlchemy", "React"]
+github: "https://github.com"
+live: "https://github.com"
+featured: false
+---
+
+## The Problem
+
+N+1 queries kill API performance. Existing profilers are either too heavy (PySpy) or too shallow (Django Debug Toolbar).
+
+## Solution
+
+A lightweight middleware that:
+
+1. **Intercepts** every ORM query via SQLAlchemy event hooks
+2. **Analyzes** query patterns using AST parsing — detects N+1, missing indexes, cartesian products
+3. **Visualizes** results as interactive flame graphs in a React dashboard
+4. **Integrates** with FastAPI/Starlette/Django via one-line middleware
+
+## Usage
+
+```python
+from da_profiler import ProfilerMiddleware
+
+app.add_middleware(ProfilerMiddleware, sample_rate=0.1)
+```
+
+Visit `/profiler` to see live query analysis.

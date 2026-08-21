@@ -1,0 +1,65 @@
+---
+title: "Setting Up a Repeatable ETL Pattern with Python"
+description: "A pragmatic approach to building data pipelines that are easy to test and maintain."
+date: "2025-06-03"
+tags: ["Python", "ETL"]
+readTime: "12 min"
+---
+
+## The Problem
+
+Most ETL pipelines start as quick scripts. Then they grow: more sources, more transforms, more edge cases. Six months later, you have a 2,000-line `main.py` that nobody dares touch.
+
+## The Pattern
+
+### 1. Extract — Pure Functions
+
+```python
+def extract_orders(source: str, since: datetime) -> pd.DataFrame:
+    """Fetch raw orders. No transformation, just retrieval."""
+    return pd.read_sql(query, conn, params={"since": since})
+```
+
+### 2. Transform — Composable Steps
+
+```python
+def clean_orders(df: pd.DataFrame) -> pd.DataFrame:
+    return df.dropna(subset=["order_id"]).astype({"amount": "float"})
+
+def enrich_orders(df: pd.DataFrame, customers: pd.DataFrame) -> pd.DataFrame:
+    return df.merge(customers, on="customer_id", how="left")
+
+def aggregate_daily(df: pd.DataFrame) -> pd.DataFrame:
+    return df.groupby("date").agg(orders=("order_id", "count"), revenue=("amount", "sum")).reset_index()
+```
+
+### 3. Load — Idempotent
+
+```python
+def upsert_daily_metrics(conn, df: pd.DataFrame):
+    df.to_sql("daily_metrics", conn, if_exists="append", index=False, method="multi")
+```
+
+### 4. Orchestrate — Explicit Dependencies
+
+```python
+@task
+def run_pipeline(since: datetime):
+    raw = extract_orders("postgres", since)
+    clean = clean_orders(raw)
+    customers = extract_customers("postgres")
+    enriched = enrich_orders(clean, customers)
+    daily = aggregate_daily(enriched)
+    upsert_daily_metrics(conn, daily)
+```
+
+## Why This Works
+
+- **Testable:** Each function is pure. Mock the input, assert the output.
+- **Re-runnable:** Idempotent loads mean you can re-run safely.
+- **Observable:** Add logging at each step boundary.
+- **Swappable:** Change `extract_orders` from Postgres → S3 without touching transforms.
+
+## The 80/20
+
+Don't build a framework. Build *this pattern* for each pipeline. Copy-paste the structure, swap the internals.

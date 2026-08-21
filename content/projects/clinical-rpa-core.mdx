@@ -1,0 +1,26 @@
+---
+title: "Clinical RPA Core"
+description: "Desktop automation hooks for SystmOne & EMIS"
+category: "Automation"
+industry: "Healthcare / NHS"
+access: "Private"
+strategies: ["Action Registry Pattern", "Structured Audit Logging", "Queue-Based Retries"]
+tech: ["Power Automate", "Python", "AutoHotkey", "JavaScript"]
+github: "#"
+live: "#"
+featured: false
+---
+
+## The Idea
+
+The production RPA suite (`rpa-clinical-automation-suite`) has hundreds of automation primitives. Most of them are reusable across clinics — but the abstraction layer to compose them has been buried inside project-specific Power Automate flows. This is the extraction.
+
+## Components
+
+- **Action Registry** — Typed primitives for each EHR system (SystmOne, EMIS, Docman)
+- **Flow Composer** — Declarative JSON DSL that Power Automate can call into
+- **Audit Bridge** — Uniform logging regardless of which EHR the action targets
+
+## Status
+
+Extraction in progress. About 60% of actions ported.

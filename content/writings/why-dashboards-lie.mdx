@@ -1,0 +1,37 @@
+---
+title: "Why Your Dashboard Lies to You"
+description: "How common chart choices can mislead stakeholders — and how to fix them."
+date: "2025-07-14"
+tags: ["Analytics", "Visualization"]
+readTime: "8 min"
+---
+
+## The Setup
+
+Most dashboards follow a similar pattern: extract data, aggregate, render. The pipeline is fine. The choices inside that pipeline are where the lying happens.
+
+## The Three Classic Lies
+
+### 1. Truncated Y-Axes
+
+A bar chart that starts at 50 instead of 0 makes a 10% change look like a 50% change. Stakeholders panic, decisions get made, reality never matches up.
+
+**Fix:** Default to zero-baseline for bar charts. If you genuinely need a non-zero baseline, mark it explicitly on the chart and explain why.
+
+### 2. Cherry-Picked Time Windows
+
+"This metric is up 40%!" — over what window? If the window starts at a known trough, any number is impressive.
+
+**Fix:** Show the full year by default. Allow the user to zoom into windows, but never let the default view be misleading.
+
+### 3. Stacked Areas That Don't Add Up
+
+Stacked area charts look pretty. They're also a nightmare when the components don't share a meaningful scale (revenue + headcount, for instance). The visual encoding implies relationships that the data doesn't support.
+
+**Fix:** Use small multiples instead. One chart per metric, arranged in a grid. Loses the "wow" factor, gains actual understanding.
+
+## What I Learned
+
+The biggest mistake is choosing chart types by aesthetics, not by what the data is trying to say. Every chart type encodes assumptions. Your job is to make sure those assumptions are honest ones.
+
+The 80/20 here: most misleading dashboards are misleading because of one of the three issues above. Audit your own.

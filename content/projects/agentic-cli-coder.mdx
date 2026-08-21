@@ -1,0 +1,32 @@
+---
+title: "Agentic CLI Coder"
+description: "Terminal refactoring agent powered by local LLMs"
+category: "AI"
+industry: "Developer Tools"
+access: "Open Source"
+strategies: ["Local LLM Inference (Ollama)", "AST-based Code Modification", "Human-in-the-loop Approval"]
+tech: ["Python", "Typer", "Rich", "Ollama", "Tree-sitter"]
+github: "https://github.com"
+live: "https://github.com"
+featured: false
+---
+
+## The Vision
+
+Refactoring is repetitive. An agent that:
+1. Reads your codebase (Tree-sitter AST)
+2. Proposes changes (local LLM via Ollama)
+3. Shows diffs in terminal (Rich)
+4. Applies only after your approval
+
+## Current Capabilities
+
+- `agentic refactor --pattern "extract_method" --target src/utils.py`
+- `agentic rename --from old_name --to new_name --scope project`
+- `agentic add_types --file src/models.py`
+
+## Why Local LLMs?
+
+- Zero latency for small diffs
+- No code leaves your machine
+- Free (run on your GPU)

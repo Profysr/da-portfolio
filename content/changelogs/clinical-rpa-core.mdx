@@ -1,0 +1,39 @@
+---
+project: "clinical-rpa-core"
+projectTitle: "Clinical RPA Core"
+---
+
+## v0.3 — 2025-08-12
+
+**Tags:** Added, Refactor
+
+### Added
+
+- New action: `docman.moveToFolder` — bulk relocate documents matching a filter
+- New action: `emis.lookupPatientByNHSNumber` with caching
+
+### Changed
+
+- Refactored audit bridge to use a single structured logger instead of N formatters
+
+---
+
+## v0.2 — 2025-07-28
+
+**Tags:** Fixed
+
+### Fixed
+
+- SystmOne session timeout no longer kills in-flight flows (was happening every ~7 min)
+- Retry policy now respects the per-action cooldown hint
+
+---
+
+## v0.1 — 2025-07-10
+
+**Tags:** Added
+
+### Added
+
+- Initial extraction of action primitives from production
+- Action registry with 40 typed actions across 3 EHR systems
