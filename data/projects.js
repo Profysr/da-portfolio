@@ -121,10 +121,7 @@ export const projects = [
   },
 ];
 
-/**
- * Deprecated Constants. Not using anymore
- */
-const contributions = {
+export const contributions = {
   heading: "Github",
   subheading:
     "A live snapshot of build velocity, open-source contributions, and development consistency.",
@@ -157,48 +154,3 @@ const contributions = {
     },
   ],
 };
-
-const kanban = [
-  {
-    id: "kc-1",
-    title: "Publish 2 blog posts / month",
-    description: "Share learnings on data patterns and tooling.",
-    status: "in-progress",
-    category: "current",
-  },
-  {
-    id: "kc-2",
-    title: "Ship v2 of Analytics Dashboard",
-    description: "Refactor core query engine and add AI-assisted insights.",
-    status: "todo",
-    category: "current",
-  },
-  {
-    id: "kc-3",
-    title: "Mentor 3 open-source contributors",
-    description: "Review PRs and co-author onboarding docs.",
-    status: "in-progress",
-    category: "current",
-  },
-  {
-    id: "kv-1",
-    title: "Launch agency website portfolio",
-    description: "This very site — secondary brand showcase.",
-    status: "done",
-    category: "vision",
-  },
-  {
-    id: "kv-2",
-    title: "Open-source data toolkit (100 ⭐)",
-    description: "Build community around an ETL + analytics starter kit.",
-    status: "todo",
-    category: "vision",
-  },
-  {
-    id: "kv-3",
-    title: "Speaker at 2 data conferences",
-    description: "Share real-world analytics workflows and lessons learned.",
-    status: "todo",
-    category: "vision",
-  },
-];

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { createMDX } from "fumadocs-mdx/next";
 
 const nextConfig: NextConfig = {
   images: {
@@ -10,14 +11,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
+      }
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  configPath: "source.config.ts",
+});
+
+export default withMDX(nextConfig);
