@@ -1,6 +1,8 @@
 import { defineCollections } from "fumadocs-mdx/config";
 import { z } from "zod";
 
+// Create a source.config.ts file in your root directory to tell Fumadocs where your MDX files live
+
 export const writings = defineCollections({
   type: "doc",
   dir: "content/writings",

@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "components/layout/HomeLayout.jsx"  ],
+, "components/layout/HomeLayout.jsx", "components/mdx-components.jsx"  ],
   "exclude": ["node_modules"]
 }

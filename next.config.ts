@@ -17,8 +17,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withMDX = createMDX({
-  configPath: "source.config.ts",
-});
-
+const withMDX = createMDX();
 export default withMDX(nextConfig);
