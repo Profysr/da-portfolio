@@ -2,8 +2,7 @@
 
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { SpotlightGlow } from "@/components/ui/spotlight-glow";
+import { CursorGlow } from "@/components/ui/cursor-glow";
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
@@ -22,6 +21,7 @@ interface BentoCardProps extends Omit<ComponentPropsWithoutRef<"div">, "title"> 
   className?: string;
   children?: ReactNode;
   disableGlow?: boolean;
+  glowVariant?: "spotlight" | "border";
 }
 
 const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
@@ -50,6 +50,7 @@ const BentoCard = ({
   className,
   children,
   disableGlow = false,
+  glowVariant = "spotlight",
   ...props
 }: BentoCardProps) => {
   return (
@@ -80,16 +81,16 @@ const BentoCard = ({
 
       {/* Proximity & Cursor Glow Effects */}
       {!disableGlow && (
-        <>
-          <GlowingEffect
-            spread={30}
-            proximity={45}
-            glow={true}
-            disabled={false}
-            borderWidth={1}
-          />
-          <SpotlightGlow size={280} color="rgba(208, 188, 255, 0.10)" />
-        </>
+        <CursorGlow
+          variant={glowVariant}
+          size={280}
+          color="rgba(212, 168, 0, 0.15)"
+          borderBlur={0}
+          spread={30}
+          proximity={45}
+          borderWidth={1}
+          disabled={false}
+        />
       )}
 
       {/* Card Content & Header Slots */}
