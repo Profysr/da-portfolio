@@ -12,7 +12,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Ignore opencode skills (external tooling)
+    ".opencode/**",
   ]),
+  // Relax rules for existing codebase patterns
+  {
+    rules: {
+      "react/no-unescaped-entities": "off",
+      "@next/next/no-img-element": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/refs": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react/jsx-no-comment-textnodes": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

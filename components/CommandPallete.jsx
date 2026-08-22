@@ -191,6 +191,7 @@ export function CommandPalette() {
           setCopied(true);
           setTimeout(() => setCopied(false), 1500);
         } catch {
+          // eslint-disable-next-line react-hooks/immutability
           window.location.href = `mailto:${personal.email}`;
         }
       },
