@@ -1,8 +1,8 @@
 export const FrequentQuestions = {
   badge: "FAQ",
-  heading: "Frequently Asked Questions",
+  heading: "Everything you need to know",
   subheading:
-    "Everything you need to know about how I approach problems, products, and engineering.",
+    "Find answers about how I approach problems, products, and engineering.",
   items: [
     {
       id: "faq-1",
