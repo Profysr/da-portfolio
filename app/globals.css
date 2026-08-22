@@ -38,7 +38,7 @@
   --radius: 0.625rem;
 
   /* Typography */
-  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Poppins", system-ui, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
 
   /* shadcn component aliases */
