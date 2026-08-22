@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Ignore opencode skills (external tooling)
     ".opencode/**",
+    // Ignore fumadocs generated source
+    ".source/**",
   ]),
   // Relax rules for existing codebase patterns
   {
