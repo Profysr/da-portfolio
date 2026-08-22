@@ -11,12 +11,11 @@ import {
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
-import { GradientHeading } from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-// import { Spotlight } from "@/components/ui/spotlight";
+import { CursorGlow } from "@/components/ui/cursor-glow";
 import { TechPill } from "@/components/TechPill";
 import { TagFilter } from "@/components/TagFilter";
 
@@ -43,17 +42,13 @@ function TechStack() {
       noFade
       className="py-10 md:py-16 overflow-hidden relative"
     >
-      {/* Ambient Spotlight behind section */}
-      {/* <Spotlight
-        className="-top-40 left-1/4 opacity-30"
-        fill="#FFDA27"
-      /> */}
       <Layout>
         <div className="flex flex-col items-center gap-7">
           {/* Section Header */}
           <div className="flex flex-col items-center text-center gap-2.5">
             <Badge variant="light">ARSENAL & TOOLS</Badge>
-            <GradientHeading
+            <Heading
+              variant="gradient"
               text="Technologies & Stack"
               className="text-3xl! sm:text-5xl!"
             />
@@ -89,11 +84,12 @@ function TechStack() {
                     className="relative rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all group"
                   >
                     {/* Pointer-following glow border */}
-                    <GlowingEffect
+                    <CursorGlow
+                      variant="border"
                       disabled={false}
                       proximity={80}
                       spread={30}
-                      blur={0}
+                      borderBlur={0}
                       borderWidth={1}
                     />
                     <div>
@@ -113,16 +109,16 @@ function TechStack() {
                       </div>
 
                       {/* Tech Chips */}
-<div className="flex flex-wrap gap-1.5">
-                          {group.items.map((item) => (
-                            <TechPill
-                              key={item.name}
-                              name={item.name}
-                              subCategory={item.subCategory ?? undefined}
-                              size="md"
-                            />
-                          ))}
-                        </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {group.items.map((item) => (
+                          <TechPill
+                            key={item.name}
+                            name={item.name}
+                            subCategory={item.subCategory ?? undefined}
+                            size="md"
+                          />
+                        ))}
+                      </div>
                     </div>
                   </motion.div>
                 );

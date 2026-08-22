@@ -11,7 +11,7 @@ import {
   IconCheck,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { GradientHeading } from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { education, certificates, awards } from "@/data/idx";
 import { ScrollRail } from "@/components/ui/ScrollRail";
@@ -284,7 +284,8 @@ function Credentials() {
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Badge variant="outline">CREDENTIALS & BACKGROUND</Badge>
-          <GradientHeading
+          <Heading
+            variant="gradient"
             text="Education & Certifications"
             className="text-3xl! sm:text-5xl!"
           />

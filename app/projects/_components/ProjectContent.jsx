@@ -2,7 +2,7 @@
 
 import { useMDXComponents } from "@/components/mdx-components";
 import { Section } from "@/components/layout/Section";
-import { GradientHeading } from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { TechPill } from "@/components/TechPill";
 import { ExtendedLink } from "@/components/ExtendedLink";
@@ -49,9 +49,13 @@ export function ProjectContent({ meta, children, changelog }) {
             </Badge>
           </div>
 
-          <GradientHeading as="h1" className="text-2xl sm:text-3xl md:text-4xl mb-3">
+          <Heading
+            variant="gradient"
+            as="h1"
+            className="text-2xl sm:text-3xl md:text-4xl mb-3"
+          >
             {meta.title}
-          </GradientHeading>
+          </Heading>
 
           {meta.description && (
             <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-5">

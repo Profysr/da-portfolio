@@ -9,7 +9,7 @@ import {
   IconBriefcase,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { GradientHeading } from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { ExpandableList } from "@/components/ui/expandable-list";
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 const ExperienceHeader = () => (
   <div className="flex flex-col items-center text-center gap-2.5">
     <Badge variant="light">CAREER</Badge>
-    <GradientHeading text="Work Experience" className="text-3xl! sm:text-5xl!" />
+    <Heading variant="gradient" text="Work Experience" className="text-3xl! sm:text-5xl!" />
     <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
       Engineering leadership, forward deployed solutions, and clinical RPA systems.
     </p>
