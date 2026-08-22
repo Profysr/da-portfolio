@@ -3,17 +3,16 @@
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     },
     "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*",
-    "portfolio-next/lib",
-    "portfolio-next/data",
     "components",
-    "portfolio-next/sections",
-    "portfolio-next/hooks",
-    "portfolio-next/pages"
+    "app",
+    "data",
+    "lib",
+    "hooks",
+    "content"
   ]
 }

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
-import { GradientHeading } from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { IconArrowLeft, IconMoodEmpty } from "@tabler/icons-react";
 
 /**
@@ -28,9 +28,9 @@ export function PageError({ title, message, slug, action }) {
         <div className="inline-flex items-center justify-center size-14 rounded-full border border-border bg-surface-high/60 mb-5">
           <IconMoodEmpty className="size-6 text-muted-foreground" />
         </div>
-        <GradientHeading as="h1" className="text-2xl mb-3">
+        <Heading variant="gradient" as="h1" className="text-2xl mb-3">
           {title}
-        </GradientHeading>
+        </Heading>
         <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
           {message || defaultMessage}
         </p>

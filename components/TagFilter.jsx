@@ -4,10 +4,11 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * TagFilter - Universal pill/tag filter component for categories, tabs, and counts.
+ * TagFilter - Simplified universal pill/tag filter component.
  *
- * Supports both simple string arrays: ["All", "Web", "Automation"]
- * and object arrays: [{ id: "web", label: "Web", count: 12 }]
+ * Supports:
+ * - Simple string arrays: ["All", "Web", "Automation"]
+ * - Object arrays with { id, label, count? }: [{ id: "web", label: "Web", count: 12 }]
  */
 export function TagFilter({
   items = [],
@@ -15,10 +16,16 @@ export function TagFilter({
   onChange,
   className,
   buttonClassName,
-  getItemValue = (item) => (typeof item === "object" ? item.id ?? item.label : item),
-  getItemLabel = (item) => (typeof item === "object" ? item.label : item),
-  getItemCount = (item) => (typeof item === "object" ? item.count : undefined),
 }) {
+  const getValue = (item) =>
+    typeof item === "object" && item !== null ? (item.id ?? item.label) : item;
+
+  const getLabel = (item) =>
+    typeof item === "object" && item !== null ? item.label : item;
+
+  const getCount = (item) =>
+    typeof item === "object" && item !== null ? item.count : undefined;
+
   return (
     <div
       className={cn(
@@ -27,9 +34,9 @@ export function TagFilter({
       )}
     >
       {items.map((item) => {
-        const val = getItemValue(item);
-        const label = getItemLabel(item);
-        const count = getItemCount(item);
+        const val = getValue(item);
+        const label = getLabel(item);
+        const count = getCount(item);
         const isActive = activeValue === val;
 
         return (

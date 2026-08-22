@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { nav, socials, personal, footer } from "@/data/idx";
-import { GradientHeading } from "../ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/lib/download";
 
 import { ExtendedLink } from "@/components/ExtendedLink";
@@ -126,7 +126,8 @@ export const Footer = () => {
                   <span>{footer?.badge || "Get in Touch"}</span>
                 </div>
 
-                <GradientHeading
+                <Heading
+                  variant="gradient"
                   text={
                     footer?.heading ||
                     "Ready to build something impactful together?"
