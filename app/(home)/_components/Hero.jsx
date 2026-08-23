@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, Suspense } from "react";
+import { motion } from "motion/react";
 import { LazyLightRays } from "@/components/lazy";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
@@ -16,11 +17,12 @@ import { AvatarStatus } from "@/components/AvatarStatus";
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { FavoriteStack } from "@/components/FavoriteStack";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { MagneticLink } from "@/components/ui/MagneticButton";
+import { ScrollReveal, StaggeredReveal } from "@/components/ui/ScrollReveal";
 import { Section } from "@/components/layout/Section";
 
 /* ============================================================
- *  Animated Name & Headline Sub-component
+ *  Animated Name & Headline Sub-component (Watermark + Typewriter)
  * ============================================================ */
 export function Headline() {
   const roles = [
@@ -30,7 +32,7 @@ export function Headline() {
   ];
 
   return (
-    <Heading title="Developer">
+    <Heading title="Developer" variant="watermark">
       <BlurFade
         delay={0.05}
         inView
@@ -51,12 +53,21 @@ export function Headline() {
             deleteSpeed={40}
             pauseDelay={1800}
             startOnView={false}
-            className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-linear-to-b from-foreground via-foreground/90 to-foreground/50 bg-clip-text text-transparent text-center"
+            className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground text-center"
           />
         </div>
 
-        {/* Favorite Stack with Interactive Tool Icons */}
-        <FavoriteStack variant="compact" className="mt-1" />
+        {/* Favorite Stack with Animated Reveal */}
+        <StaggeredReveal
+          variant="slide-up"
+          staggerDelay={0.08}
+          delay={0.3}
+          duration={0.6}
+          once={false}
+          className="mt-2"
+        >
+          <FavoriteStack variant="compact" />
+        </StaggeredReveal>
       </BlurFade>
     </Heading>
   );
@@ -65,7 +76,7 @@ export function Headline() {
 /* ============================================================
  *  Call-To-Action & Social Links Sub-component
  * ============================================================ */
-function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
+function HeroActions() {
   const ctaRef = useRef(null);
 
   const handleCtaMove = (e) => {
@@ -76,65 +87,14 @@ function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
-  const getIconClass = (label) => {
-    const isWiggling = wiggleIcon === label.toLowerCase();
-    return `text-zinc-300 hover:text-white transition-all duration-300 ${
-      isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
+  const getIconClass = (isWiggling) => {
+    return `transition-all duration-300 ${
+      isWiggling
+        ? "animate-wiggle scale-125"
+        : "hover:scale-110"
     }`;
   };
 
-  return (
-    <BlurFade delay={0.1} direction="down" inView>
-      <div className="z-20 flex flex-col sm:flex-row items-center justify-center gap-2">
-        {/* Social Icons Bar */}
-        <div className="flex items-center space-x-4 sm:space-x-5 pt-1">
-          {socials.map(({ platform, icon: Icon, label, url, aria }) => (
-            <Tooltip key={platform}>
-              <TooltipTrigger asChild>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={aria || label}
-                  onClick={() => handleIconClick(label.toLowerCase())}
-                  className="p-2 rounded-md hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
-                >
-                  <Icon
-                    size={20}
-                    stroke={1.7}
-                    className={getIconClass(label)}
-                  />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                {label}
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </div>
-
-        <span className="hidden sm:block h-6 w-px bg-zinc-700/80" aria-hidden />
-
-        <div className="flex items-center justify-center">
-          <ShimmerButton
-            ref={ctaRef}
-            onMouseMove={handleCtaMove}
-            onClick={scrollToProjects}
-            className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold shadow-lg"
-          >
-            <span>View my work</span>
-            <IconArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </ShimmerButton>
-        </div>
-      </div>
-    </BlurFade>
-  );
-}
-
-/* ============================================================
- *  Main Hero Section Export
- * ============================================================ */
-export default function Hero() {
   const [wiggleIcon, setWiggleIcon] = useState(null);
 
   const handleIconClick = (name) => {
@@ -142,14 +102,70 @@ export default function Hero() {
     setTimeout(() => setWiggleIcon(null), 600);
   };
 
-  const scrollToProjects = () => {
-    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-  };
+  return (
+    <div className="z-20 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-3xl">
+      <ScrollReveal variant="slide-up" delay={0.4} duration={0.6} once={false}>
+        <div className="flex items-center space-x-4 sm:space-x-5 pt-1">
+          {socials.map(({ platform, icon: Icon, label, url, aria, color }) => {
+            return (
+              <Tooltip key={platform}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={aria || label}
+                    onClick={() => handleIconClick(label.toLowerCase())}
+                    className="p-2 rounded-md hover:bg-white/10 transition-colors"
+                    style={{ color }}
+                  >
+                    <Icon
+                      size={20}
+                      weight="bold"
+                      className={getIconClass(wiggleIcon === label.toLowerCase())}
+                    />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  {label}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </div>
+      </ScrollReveal>
 
+      <span className="hidden sm:block h-6 w-0.5 bg-border" aria-hidden />
+
+      <ScrollReveal variant="slide-up" delay={0.5} duration={0.6} once={false}>
+        <div className="flex items-center justify-center">
+          <MagneticLink
+            ref={ctaRef}
+            onMouseMove={handleCtaMove}
+            href="#projects"
+            size="lg"
+            variant="premium"
+            className="flex items-center justify-center"
+            icon={<IconArrowRight />}
+            iconPosition="right"
+            magneticStrength={0.2}
+          >
+            <span>View my work</span>
+          </MagneticLink>
+        </div>
+      </ScrollReveal>
+    </div>
+  );
+}
+
+/* ============================================================
+ *  Main Hero Section Export
+ * ============================================================ */
+export default function Hero() {
   return (
     <Section
       id="hero"
-      className="relative w-full overflow-hidden h-screen flex items-center justify-center"
+      className="relative w-full overflow-hidden min-h-screen flex items-center justify-center pt-24"
     >
       <Suspense fallback={null}>
         <LazyLightRays
@@ -162,25 +178,35 @@ export default function Hero() {
       </Suspense>
 
       <TooltipProvider delayDuration={0}>
-        <Layout className="relative z-10 flex flex-col items-center justify-center gap-6 sm:gap-8">
-          <AvatarStatus />
-          <Headline />
-          <HeroActions
-            wiggleIcon={wiggleIcon}
-            handleIconClick={handleIconClick}
-            scrollToProjects={scrollToProjects}
-          />
-          <div
-            className="mt-2 md:mt-4 text-zinc-400 hover:text-zinc-200 transition-colors animate-bounce cursor-pointer "
-            onClick={() =>
-              document
-                .getElementById("about")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            aria-label="Scroll down"
+        <Layout className="relative z-10 flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6">
+          <ScrollReveal variant="fade" delay={0} duration={0.6} once={false}>
+            <AvatarStatus />
+          </ScrollReveal>
+
+          <ScrollReveal
+            variant="slide-up"
+            delay={0.1}
+            duration={0.6}
+            once={false}
           >
-            <IconChevronDown size={22} stroke={1.5} />
-          </div>
+            <Headline />
+          </ScrollReveal>
+
+          <HeroActions />
+
+          <ScrollReveal variant="fade" delay={0.7} duration={0.6} once={false}>
+            <motion.div
+              className="mt-2 md:mt-4 text-muted-foreground hover:text-foreground transition-colors animate-bounce cursor-pointer"
+              onClick={() =>
+                document
+                  .getElementById("about")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              aria-label="Scroll down"
+            >
+              <IconChevronDown size={22} stroke={1.5} />
+            </motion.div>
+          </ScrollReveal>
         </Layout>
       </TooltipProvider>
     </Section>

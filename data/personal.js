@@ -1,12 +1,10 @@
 import {
+  IconClock,
+  IconFolderCode,
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
   IconMail,
-  IconClock,
-  IconFolderCode,
-  // IconActivity,
-  // IconRobot,
 } from "@tabler/icons-react";
 
 export const socials = [
@@ -17,6 +15,8 @@ export const socials = [
     label: "GitHub",
     handle: "@Profysr",
     aria: "github",
+    color: "#FFFFFF",
+    hoverColor: "#FFFFFF",
   },
   {
     platform: "linkedin",
@@ -25,6 +25,8 @@ export const socials = [
     label: "LinkedIn",
     handle: "Bilal Ahmad",
     aria: "linkedin",
+    color: "#0A66C2",
+    hoverColor: "#004182",
   },
   {
     platform: "x",
@@ -33,6 +35,8 @@ export const socials = [
     label: "X (Twitter)",
     handle: "@bilalahmad_dev",
     aria: "x",
+    color: "#FFFFFF",
+    hoverColor: "#FFFFFF",
   },
   {
     platform: "email",
@@ -41,6 +45,8 @@ export const socials = [
     label: "Email",
     handle: "hello@da-portfolio.dev",
     aria: "email",
+    color: "#EA4335",
+    hoverColor: "#D93025",
   },
 ];
 

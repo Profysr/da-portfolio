@@ -1,5 +1,5 @@
 import HomeLayout from "@/components/layout/HomeLayout";
-import Hero from "@/app/(home)/_components/Hero";
+import Hero from "@/app/(home)/_components/Hero"
 import About from "@/app/(home)/_components/About";
 import TechStack from "@/app/(home)/_components/TechStack";
 import Experience from "@/app/(home)/_components/Experience";

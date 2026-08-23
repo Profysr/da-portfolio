@@ -3,44 +3,42 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── DESIGN PALETTE: Light Editorial Luxury ───────────────────────────── */
-:root {
-  /* Canvas & Surfaces */
-  --canvas: #FDFBF7;
-  --canvas-muted: #F7F6F3;
-  --surface: #FFFFFF;
-  --surface-hover: #F9F9F8;
+@theme {
+  /* Colors - Light Editorial Luxury */
+  --color-canvas: #FDFBF7;
+  --color-canvas-muted: #F7F6F3;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F9F9F8;
+  --color-border: #EAEAEA;
+  --color-border-strong: #E2E2E2;
+  --color-foreground: #1A1A1A;
+  --color-foreground-muted: #787774;
+  --color-foreground-subtle: #A8A8A4;
+  --color-accent: #3B3B3B;
+  --color-accent-hover: #1A1A1A;
+  --color-pastel-red-bg: #FDEBEC;
+  --color-pastel-red-text: #9F2F2D;
+  --color-pastel-blue-bg: #E1F3FE;
+  --color-pastel-blue-text: #1F6C9F;
+  --color-pastel-green-bg: #EDF3EC;
+  --color-pastel-green-text: #346538;
+  --color-pastel-yellow-bg: #FBF3DB;
+  --color-pastel-yellow-text: #956400;
 
-  /* Borders */
-  --border: #EAEAEA;
-  --border-strong: #E2E2E2;
+  /* Dark mode colors */
+  --color-canvas-dark: #141414;
+  --color-canvas-muted-dark: #1c1b1b;
+  --color-surface-dark: #201f1f;
+  --color-surface-hover-dark: #2a2a2a;
+  --color-border-dark: #494454;
+  --color-border-strong-dark: #5a5564;
+  --color-foreground-dark: #f5f5f5;
+  --color-foreground-muted-dark: #a1a1aa;
+  --color-foreground-subtle-dark: #6b6375;
+  --color-accent-dark: #d0bcff;
+  --color-accent-hover-dark: #e0cbff;
 
   /* Typography */
-  --foreground: #1A1A1A;
-  --foreground-muted: #787774;
-  --foreground-subtle: #A8A8A4;
-
-  /* Accent - Single, desaturated */
-  --accent: #3B3B3B;
-  --accent-hover: #1A1A1A;
-
-  /* Spot Pastels (desaturated) */
-  --pastel-red-bg: #FDEBEC;
-  --pastel-red-text: #9F2F2D;
-  --pastel-blue-bg: #E1F3FE;
-  --pastel-blue-text: #1F6C9F;
-  --pastel-green-bg: #EDF3EC;
-  --pastel-green-text: #346538;
-  --pastel-yellow-bg: #FBF3DB;
-  --pastel-yellow-text: #956400;
-
-  /* Shadows - Tinted, ultra-diffuse */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-lg: 0 12px 24px rgba(0,0,0,0.05);
-  --shadow-inner: inset 0 1px 1px rgba(255,255,255,0.15);
-
-  /* Typography - Poppins for now */
   --font-display: "Poppins", "Geist", sans-serif;
   --font-body: "Poppins", "SF Pro Display", system-ui, sans-serif;
   --font-mono: "Geist Mono", "SF Mono", monospace;
@@ -63,22 +61,90 @@
   --radius-xl: 16px;
   --radius-2xl: 24px;
   --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 24px rgba(0,0,0,0.05);
+  --shadow-inner: inset 0 1px 1px rgba(255,255,255,0.15);
+}
+
+/* ── DESIGN PALETTE: Light Editorial Luxury ───────────────────────────── */
+:root {
+  /* Canvas & Surfaces */
+  --canvas: var(--color-canvas);
+  --canvas-muted: var(--color-canvas-muted);
+  --surface: var(--color-surface);
+  --surface-hover: var(--color-surface-hover);
+
+  /* Borders */
+  --border: var(--color-border);
+  --border-strong: var(--color-border-strong);
+
+  /* Typography */
+  --foreground: var(--color-foreground);
+  --foreground-muted: var(--color-foreground-muted);
+  --foreground-subtle: var(--color-foreground-subtle);
+
+  /* Accent - Single, desaturated */
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+
+  /* Spot Pastels (desaturated) */
+  --pastel-red-bg: var(--color-pastel-red-bg);
+  --pastel-red-text: var(--color-pastel-red-text);
+  --pastel-blue-bg: var(--color-pastel-blue-bg);
+  --pastel-blue-text: var(--color-pastel-blue-text);
+  --pastel-green-bg: var(--color-pastel-green-bg);
+  --pastel-green-text: var(--color-pastel-green-text);
+  --pastel-yellow-bg: var(--color-pastel-yellow-bg);
+  --pastel-yellow-text: var(--color-pastel-yellow-text);
+
+  /* Shadows - Tinted, ultra-diffuse */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-inner: var(--shadow-inner);
+
+  /* Typography - Poppins for now */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /* Spacing Scale */
+  --space-xs: var(--space-xs);
+  --space-sm: var(--space-sm);
+  --space-md: var(--space-md);
+  --space-lg: var(--space-lg);
+  --space-xl: var(--space-xl);
+  --space-2xl: var(--space-2xl);
+  --space-3xl: var(--space-3xl);
+  --space-4xl: var(--space-4xl);
+
+  /* Radii */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
 }
 
 /* Dark mode overrides - keep dark mode available but not default */
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #141414;
-    --canvas-muted: #1c1b1b;
-    --surface: #201f1f;
-    --surface-hover: #2a2a2a;
-    --border: #494454;
-    --border-strong: #5a5564;
-    --foreground: #f5f5f5;
-    --foreground-muted: #a1a1aa;
-    --foreground-subtle: #6b6375;
-    --accent: #d0bcff;
-    --accent-hover: #e0cbff;
+    --canvas: var(--color-canvas-dark);
+    --canvas-muted: var(--color-canvas-muted-dark);
+    --surface: var(--color-surface-dark);
+    --surface-hover: var(--color-surface-hover-dark);
+    --border: var(--color-border-dark);
+    --border-strong: var(--color-border-strong-dark);
+    --foreground: var(--color-foreground-dark);
+    --foreground-muted: var(--color-foreground-muted-dark);
+    --foreground-subtle: var(--color-foreground-subtle-dark);
+    --accent: var(--color-accent-dark);
+    --accent-hover: var(--color-accent-hover-dark);
   }
 }
 
@@ -242,6 +308,16 @@ pre code {
   100% { background-position: 200% 0; }
 }
 
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-vertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
 }
@@ -254,6 +330,16 @@ pre code {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+  will-change: transform;
 }
 
 /* ── Utility classes ───────────────────────────────────────────────────── */
