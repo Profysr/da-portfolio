@@ -1,6 +1,5 @@
+import { websiteDomain } from "@/data/personal";
 import { MetadataRoute } from "next";
-
-const BASE_URL = "https://da-portfolio.dev";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/_next/", "/private/"],
     },
-    sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    sitemap: `${websiteDomain}/sitemap.xml`,
+    host: websiteDomain,
   };
 }

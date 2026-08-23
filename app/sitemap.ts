@@ -1,7 +1,6 @@
+import { websiteDomain } from "@/data/personal";
 import { projectSource } from "@/lib/source";
 import { writingSource } from "@/lib/source";
-
-const BASE_URL = "https://da-portfolio.dev";
 
 export default async function sitemap() {
   const projects = projectSource.getPages();
@@ -10,7 +9,7 @@ export default async function sitemap() {
   const projectUrls = projects.map((page) => {
     const pageData = page.data as { date?: string };
     return {
-      url: `${BASE_URL}/projects/${page.url}`,
+      url: `${websiteDomain}/projects/${page.url}`,
       lastModified: pageData.date ? new Date(pageData.date) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
@@ -20,7 +19,7 @@ export default async function sitemap() {
   const writingUrls = writings.map((page) => {
     const pageData = page.data as { date?: string };
     return {
-      url: `${BASE_URL}/writing/${page.url}`,
+      url: `${websiteDomain}/writing/${page.url}`,
       lastModified: pageData.date ? new Date(pageData.date) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
@@ -29,7 +28,7 @@ export default async function sitemap() {
 
   const staticUrls = [
     {
-      url: BASE_URL,
+      url: websiteDomain,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 1.0,

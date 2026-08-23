@@ -1,6 +1,9 @@
 import { projectSource } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { ProjectContent } from "../_components/ProjectContent";
+import { generateProjectSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
+import Script from "next/script";
+import { websiteDomain } from "@/data/personal";
 
 export async function generateStaticParams() {
   return projectSource.generateParams();
@@ -23,6 +26,12 @@ export async function generateMetadata({ params }) {
       type: "article",
       publishedTime: page.data.date,
       tags: page.data.category ? [page.data.category] : [],
+      images: page.data.thumbnail ? [page.data.thumbnail] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.data.title,
+      description: page.data.description,
       images: page.data.thumbnail ? [page.data.thumbnail] : [],
     },
   };
@@ -79,9 +88,39 @@ export default async function ProjectPage({ params }) {
   const rawContent = page.data._meta?.source || "";
   const changelog = parseChangelog(rawContent);
 
+  // Generate structured data
+  const projectSchema = generateProjectSchema({
+    title: page.data.title,
+    description: page.data.description,
+    category: page.data.category,
+    industry: page.data.industry,
+    tech: page.data.tech,
+    strategies: page.data.strategies,
+    github: page.data.github,
+    live: page.data.live,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: websiteDomain },
+    { name: "Projects", url: `${websiteDomain}/#projects` },
+    { name: page.data.title, url: `${websiteDomain}/projects/${slug}` },
+  ]);
+
   return (
-    <ProjectContent meta={meta} changelog={changelog}>
-      <MDXContent />
-    </ProjectContent>
+    <>
+      <Script
+        id="json-ld-project"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <Script
+        id="json-ld-breadcrumb"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <ProjectContent meta={meta} changelog={changelog}>
+        <MDXContent />
+      </ProjectContent>
+    </>
   );
 }

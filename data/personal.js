@@ -86,3 +86,5 @@ export const about = {
     },
   ],
 };
+
+export const websiteDomain = "https://da-portfolio.dev";
