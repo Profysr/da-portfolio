@@ -13,7 +13,7 @@ function TopBar({ isVisible }) {
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
       }`}
     >
-      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background/30 backdrop-blur-xl border border-white/10 rounded-lg shadow-lg">
+      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background backdrop-blur-xl border border-border rounded-lg shadow-lg">
         <a
           href="#hero"
           aria-label="Home"

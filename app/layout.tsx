@@ -17,8 +17,8 @@ const poppins = Poppins({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  themeColor: "#FDFBF7",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
 };
@@ -101,7 +101,7 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased dark`} data-scroll-behavior="smooth">
+    <html lang="en" className={`${poppins.variable} h-full antialiased`} data-scroll-behavior="smooth">
       <head>
         <script
           id="json-ld-person"
