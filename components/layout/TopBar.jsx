@@ -26,7 +26,7 @@ function TopBar({ isVisible }) {
               width={80}
               height={24}
               loading="eager"
-              style={{ width: "auto", height: "auto" }}
+              className="h-auto object-contain"
             />
           ) : (
             <span>DA</span>
