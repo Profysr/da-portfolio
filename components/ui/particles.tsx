@@ -45,6 +45,12 @@ interface ParticlesProps extends ComponentPropsWithoutRef<"div"> {
   color?: string
   vx?: number
   vy?: number
+  /** Disable particles on mobile for performance */
+  disableOnMobile?: boolean
+  /** Mobile breakpoint in pixels */
+  mobileBreakpoint?: number
+  /** Particle count on mobile */
+  mobileQuantity?: number
 }
 
 function hexToRgb(hex: string): number[] {
@@ -87,6 +93,9 @@ export const Particles: React.FC<ParticlesProps> = ({
   color = "#ffffff",
   vx = 0,
   vy = 0,
+  disableOnMobile = true,
+  mobileBreakpoint = 768,
+  mobileQuantity = 30,
   ...props
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -102,13 +111,57 @@ export const Particles: React.FC<ParticlesProps> = ({
   const initCanvasRef = useRef<() => void>(() => {})
   const onMouseMoveRef = useRef<() => void>(() => {})
   const animateRef = useRef<() => void>(() => {})
+  
+  // IntersectionObserver for performance - only animate when visible
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < mobileBreakpoint
+      setIsMobile(mobile)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [mobileBreakpoint])
+
+  // IntersectionObserver to pause animation when not visible
+  useEffect(() => {
+    if (!canvasContainerRef.current) return
+
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      {
+        rootMargin: "100px", // Start animating 100px before entering viewport
+        threshold: 0.01,
+      }
+    )
+
+    observerRef.current.observe(canvasContainerRef.current)
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [])
+
+  // Dynamic quantity based on device
+  const effectiveQuantity = isMobile && disableOnMobile ? mobileQuantity : quantity
 
   useEffect(() => {
     if (canvasRef.current) {
       context.current = canvasRef.current.getContext("2d")
     }
     initCanvasRef.current()
-    animateRef.current()
+    if (isVisible) {
+      animateRef.current()
+    }
 
     const handleResize = () => {
       if (resizeTimeout.current) {
@@ -130,7 +183,7 @@ export const Particles: React.FC<ParticlesProps> = ({
       }
       window.removeEventListener("resize", handleResize)
     }
-  }, [color])
+  }, [color, isVisible, effectiveQuantity])
 
   useEffect(() => {
     onMouseMoveRef.current()
@@ -172,7 +225,7 @@ export const Particles: React.FC<ParticlesProps> = ({
 
       // Clear existing particles and create new ones with exact quantity
       circles.current = []
-      for (let i = 0; i < quantity; i++) {
+      for (let i = 0; i < effectiveQuantity; i++) {
         const circle = circleParams()
         drawCircle(circle)
       }
@@ -235,7 +288,7 @@ export const Particles: React.FC<ParticlesProps> = ({
 
   const drawParticles = () => {
     clearContext()
-    const particleCount = quantity
+    const particleCount = effectiveQuantity
     for (let i = 0; i < particleCount; i++) {
       const circle = circleParams()
       drawCircle(circle)
@@ -255,6 +308,11 @@ export const Particles: React.FC<ParticlesProps> = ({
   }
 
   const animate = () => {
+    if (!isVisible) {
+      rafID.current = window.requestAnimationFrame(animateRef.current)
+      return
+    }
+
     clearContext()
     circles.current.forEach((circle: Circle, i: number) => {
       // Handle the alpha value

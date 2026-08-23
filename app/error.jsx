@@ -46,23 +46,16 @@ export default function Error({ error, reset }) {
     <Section className="py-12">
       <div className="max-w-lg mx-auto text-center px-4 flex flex-col justify-center gap-4">
         {/* Illustration Container with subtle glow */}
-        <div className="relative mx-auto w-fit">
-          {/* <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full -z-10" /> */}
-          <Image
-            src="/500 Internal Server Error.svg"
-            alt="Server Error Illustration"
-            width={300}
-            height={220}
-            priority
-            className="mx-auto h-auto object-contain brightness-110"
-          />
-        </div>
+        <Image
+          src="/500 Internal Server Error.svg"
+          alt="Server Error Illustration"
+          width={320}
+          height={220}
+          priority
+          className="brightness-110 mx-auto"
+        />
 
-        <Heading
-          variant="gradient"
-          as="h1"
-          className="text-3xl font-bold"
-        >
+        <Heading variant="gradient" as="h1" className="text-3xl font-bold">
           Something went Wrong
         </Heading>
 
