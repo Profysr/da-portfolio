@@ -91,7 +91,7 @@ export function GSAPTimelineRail({ items, className }: GSAPTimelineRailProps) {
       });
     }, container); // Pass non-null local variable 'container'
 
-    return () => ctx.revert();
+    return () => ctx.revert();  
   }, [items]);
 
   return (
