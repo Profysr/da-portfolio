@@ -101,9 +101,11 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 ## components/watermelon/ — PLANNED INTEGRATION (user directive: USE these)
 
+> ⚠️ **Rule #14 — REFACTOR GATE:** every component below MUST be refactored before wiring in: standardize CSS classes to `@theme` tokens · comment out demo/sample content · then integrate. Never import raw.
+
 | Component | What it does | Proposed fit | Phase |
 |-----------|-------------|--------------|-------|
-| Tabs.tsx | Animated tab switcher | TechStack category switcher OR Writings filter | P14/P17 — user picks |
+| Tabs.tsx | Animated tab switcher | ✅ CONFIRMED: TechStack category switcher (P14); Writings filter reuse optional later | P14 — ⚠️ refactor first per Rule #14 (token-standardize classes, comment out demos) |
 | JournalNavigation.tsx | Journal-style prev/next nav | Writings section navigation | P17 |
 | ComposeEmail.tsx | Email compose widget | Contact composer in footer area | P21 |
 | ViewOnMap.tsx | Location map block | Location near contact/footer | P21 |
@@ -111,10 +113,12 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 ## components/21st/ — KEPT WITH PURPOSE (user directive)
 
+> ⚠️ **Rule #14 — REFACTOR GATE:** same as watermelon — token-standardize classes, comment out demos, then integrate.
+
 | Component | Purpose |
 |-----------|---------|
 | PricingCard.tsx | **Style DNA source** for new minimal ProjectCard (P16) — extract aesthetic, build `ProjectCard.jsx` |
-| Timeline.tsx | Story/timeline renderer — Experience P15 candidate vs sticky-stack (user decides) |
+| Timeline.tsx | Story/timeline renderer — Experience P15 **A/B vs sticky-stack: both built, winner kept** (refactor first per Rule #14) |
 
 ## components/layouts/
 
@@ -138,7 +142,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 | Cluster | Members | Resolution |
 |---------|---------|-----------|
-| Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | Pick ONE system (P11 user decision) |
+| Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | A/B BOTH live in BottomDock slot (P11) → keep winner; loser UNUSED (file kept) |
 | Scroll rails | GSAPScrollRail · tracing-beam · 21st/Timeline · GSAPHorizontalScroll | Each gets distinct job or marked UNUSED after P15/P17 |
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |

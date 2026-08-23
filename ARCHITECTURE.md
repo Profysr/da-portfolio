@@ -50,11 +50,24 @@ GLOBAL CHROME (all pages): TopBar (FluidIslandNav + theme toggle) · BottomDock 
 
 **Design Read:** engineer portfolio for recruiters/technical leads · editorial-luxury language · Tailwind v4 token-driven · Motion-first, GSAP reserved for pinning/horizontal pan.
 
-**Dials:** `DESIGN_VARIANCE: 7` · `MOTION_INTENSITY: 6` · `VISUAL_DENSITY: 3`
+**Dials (taste-adjusted):** `DESIGN_VARIANCE: 7` · `MOTION_INTENSITY: 7` · `VISUAL_DENSITY: 5`
+
+### 👤 USER TASTE PROFILE (binding for all token + component decisions)
+
+| Preference | Token/Design consequence |
+|-----------|--------------------------|
+| **Lower roundness** | Base radius 6px (not 10px); scale caps at 14px — no pill/2rem squircles; DoubleBezel adapted with tight concentric offsets |
+| **Lesser spacing** | Section rhythm py-16/py-20 (not py-24+); component gaps tightened one step; overlap `-mt-12` standard |
+| **More connected sections** | Continuity system intensified: deeper negative-margin overlaps, shared background canvas, handoff choreography between every adjacent pair |
+| **Reverse animated components** | Every entrance paired with counter-motion (exit-reverse); parallax layers counter-move; stack cards scale DOWN on arrival |
+| **Multi-color backgrounds** | Multi-hue tint system (existing pastel family: red/blue/green/yellow pairs) for card categories & TechStack shade rail — same saturation/lightness band, different hues |
+| **Tracing-spotlight card hover** | Card-local mouse-tracked radial highlight (CSS vars updated on card mousemove) — NOT a custom cursor; decorative overlay only, disabled under reduced-motion/touch. Revives spotlight pattern at card scope |
+| **Smooth scrolling animations** | Native `scroll-behavior: smooth` + IO/Motion reveals + GSAP scrub pinning; NO scroll-hijack libs |
 
 **Archetypes selected** (`high-end-visual-design` skill):
 - Vibe: **Editorial Luxury** — warm cream `#FDFBF7`, gold accent `#EBC429`, film-grain overlay at 0.03 opacity
 - Layout families rotate per section (no repetition): Cascade → Split → Horizontal Pan → Stack → Bento → List → Spine → Accordion
+- ⚠️ Skill's "py-24 macro-whitespace" and "rounded-[2rem] squircle" defaults are OVERRIDDEN by taste profile (tighter spacing, lower roundness win)
 
 ### Global Continuity System (replaces divider spacing)
 

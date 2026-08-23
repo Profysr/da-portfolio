@@ -22,6 +22,7 @@
 | 11 | **No drive-by edits** — out-of-scope findings → "next-phase candidates" log only |
 | 12 | **UX MCP verification** on UI changes (`ux_analyze_accessibility`, `ux_check_contrast`) — results pasted in review request |
 | 13 | **NO COMPONENT DELETIONS** — mark `UNUSED`, remove imports, keep files on disk |
+| 14 | ⚠️ **WATERMELON / 21st REFACTOR GATE** — every component in `components/watermelon/` and `components/21st/` MUST be refactored BEFORE integration: (a) standardize CSS classes to our token system (`@theme` variables), (b) comment out demo/sample content, (c) only then wire into app sections. Never import them raw |
 
 ---
 
@@ -118,10 +119,10 @@ FAIL  cannot fix in-phase → revert + report
 - Absorbs StaggeredList role
 
 ## Phase 11 — Magnetic & GSAP Hook
-**Files (3):** `components/animations/Magnetic.jsx` · `useGSAP.js` · dock decision edit
+**Files (3):** `components/animations/Magnetic.jsx` · `useGSAP.js` · dock variant wiring
 - Consolidate MagneticButton/MagneticDock patterns into one primitive
 - useGSAP: gsap.context lifecycle, ctx.revert cleanup, `start:"top top"` canonical skeleton
-- **Decision:** single dock system (MagneticDock vs dock.tsx) — user picks
+- **Dock A/B (user directive):** run BOTH `MagneticDock` and simple `dock.tsx` live in the BottomDock slot → compare UX/visuals/perf → keep whichever suits more; loser marked UNUSED (file kept). Verdict recorded at P11 review or deferred to a later polish phase if needed
 
 ## Phase 12 — HERO REBUILD ⭐
 **Files (2):** `app/(home)/_components/Hero.jsx` · `components/HeroPills.jsx` (new floating layer)
@@ -142,16 +143,18 @@ FAIL  cannot fix in-phase → revert + report
 - Handoff pairing with Hero exit
 
 ## Phase 14 — TechStack Horizontal Scroller ⭐
-**Files (3):** `TechStack.jsx` · shade-token classes in globals.css · Tabs integration decision
+**Files (3):** `TechStack.jsx` · shade-token classes in globals.css · watermelon `Tabs.tsx` refactor
 - GSAP horizontal pan using existing `GSAPHorizontalScroll.tsx` engine
 - **Solid different-shade background per card** (token tint steps forming color rhythm)
-- Category grouping option via watermelon `Tabs.tsx` (user decides fit)
+- ✅ CONFIRMED: watermelon `Tabs.tsx` drives TechStack category switching
+- ⚠️ Rule #14 applies: Tabs.tsx refactored FIRST — standardize classes to `@theme` tokens, comment out demo content, then integrate
 
-## Phase 15 — Experience Scroll Stories
-**Files (2):** `Experience.jsx` · mechanism choice
-- Option A: sticky-stack (pin top-top, scale 0.92/op 0.55 handoff)
-- Option B: `21st/Timeline.tsx` story renderer
-- **USER DECIDES** before implementation
+## Phase 15 — Experience Scroll Stories (A/B Evaluation)
+**Files (2):** `Experience.jsx` · active mechanism component
+- **Build BOTH, keep the winner** (user directive):
+  - 15a. Option A: sticky-stack (pin top-top, scale 0.92/op 0.55 handoff) → review
+  - 15b. Option B: `21st/Timeline.tsx` story renderer (refactored per Rule #14: token-standardized classes, demos commented out) → review
+- Compare live on real data; user verdict recorded in phase log; loser marked UNUSED (file kept)
 
 ## Phase 16 — Projects Bento Rebuild ⭐
 **Files (3):** new `ProjectCard.jsx` (PricingCard-inspired minimal aesthetic) · rebuilt bento layout · `Projects.jsx` feed update
@@ -234,3 +237,20 @@ FAIL  cannot fix in-phase → revert + report
 | SEO metadata / JSON-LD | Phase 20 factory schemas |
 | Vercel Analytics / Web Vitals | Phase 6 WebVitals component |
 | Tailwind v4 PostCSS setup | Already correct (`@tailwindcss/postcss`) — verified |
+
+### Phase 2 research additions
+| Source | Finding |
+|--------|---------|
+| Context7 `/tailwindlabs/tailwindcss.com` → theme.mdx | `@theme` = utility-generation API; plain `:root` vars don't generate utilities |
+| Context7 `/tailwindlabs/tailwindcss.com` → colors.mdx | **`@theme inline`** required when tokens reference other CSS vars (`--color-canvas: var(--acme-canvas)`) — prevents scope-resolution failures; this is the shadcn-on-v4 pattern |
+| Skill: `design-system` → tailwind-integration.md | shadcn semantic var names confirmed (`--background`…`--radius`); HSL-channel pattern is v3 — we adapt to v4 hex/oklch + `@theme inline` mapping |
+| Skill: `high-end-visual-design` | Editorial Luxury archetype; motion beziers; DoubleBezel concentric formula (adapted to low radius per taste) |
+
+---
+
+## 📒 PHASE LOG
+
+```
+Phase 01 ✅ APPROVED 2026-08-23 — ROADMAP/ARCHITECTURE/COMPONENTS_MAP written; taste profile added to ARCHITECTURE.md; Rules #14 + @theme amendments applied.
+Phase 02 🔄 IN PROGRESS — token research done (table above); OPTIONS PRESENTED → awaiting user picks before file writes (Rule #7).
+```
