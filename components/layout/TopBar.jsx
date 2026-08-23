@@ -1,17 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { IconDownload } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { personal } from "@/data/idx.js";
 import { downloadResume } from "@/lib/download";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { Logo } from "@/components/layout/Logo";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
 /* ------------------------------------------------------------------ */
 function TopBar({ isVisible }) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const selectedTheme =
+    theme === "system" ? "system" : resolvedTheme === "dark" ? "dark" : "light";
 
   return (
     <header
@@ -22,25 +24,13 @@ function TopBar({ isVisible }) {
       <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background backdrop-blur-xl border border-border rounded-lg shadow-lg">
         <a
           href="#hero"
-          aria-label="Home"
-          className="flex items-center gap-2 font-bold tracking-tight text-foreground hover:text-primary transition-colors text-sm sm:text-base"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          {personal.logo ? (
-            <Image
-              src={personal.logo}
-              alt="Bilal Ahmad"
-              width={80}
-              height={24}
-              loading="eager"
-              className="h-auto object-contain"
-            />
-          ) : (
-            <span>DA</span>
-          )}
+          <Logo className="h-8 w-auto text-foreground" />
         </a>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <ThemeSwitcher
-            value={resolvedTheme === "dark" ? "dark" : "light"}
+            value={selectedTheme}
             onChange={(t) => setTheme(t)}
           />
           {personal.resumeUrl && (

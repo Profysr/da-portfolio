@@ -24,15 +24,21 @@ const emptySubscribe = () => () => {};
 type ThemeValue = "system" | "light" | "dark";
 
 interface ThemeSwitcherProps {
+  value?: ThemeValue;
+  onChange?: (theme: ThemeValue) => void;
   defaultValue?: ThemeValue;
   className?: string;
 }
 
 export function ThemeSwitcher({
+  value,
+  onChange,
   defaultValue = "system",
   className,
 }: ThemeSwitcherProps) {
-  const [theme, setThemeState] = useState<ThemeValue>(defaultValue);
+  const isControlled = value !== undefined;
+  const [internalTheme, setInternalTheme] = useState<ThemeValue>(defaultValue);
+  const theme: ThemeValue = isControlled ? value : internalTheme;
 
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -40,15 +46,19 @@ export function ThemeSwitcher({
     () => false
   );
 
-  const setTheme = useCallback((next: ThemeValue) => {
-    setThemeState(next);
-  }, []);
+  const setTheme = useCallback(
+    (next: ThemeValue) => {
+      if (!isControlled) setInternalTheme(next);
+      onChange?.(next);
+    },
+    [isControlled, onChange]
+  );
 
   if (!mounted) {
     return (
       <div
         aria-hidden="true"
-        className={cn("h-10 w-20 rounded-full", className)}
+        className={cn("h-10 w-20 rounded-md", className)}
       />
       );
   }
@@ -59,7 +69,7 @@ export function ThemeSwitcher({
       role="radiogroup"
       aria-label="Color theme"
       className={cn(
-        "relative flex h-8 items-center rounded-full bg-background p-1 ring-1 ring-border",
+        "relative flex h-8 items-center rounded-md bg-background p-1 ring-1 ring-border",
         className
       )}
     >
@@ -80,14 +90,16 @@ export function ThemeSwitcher({
             {isActive && (
               <motion.div
                 layoutId="activeTheme"
-                className="absolute inset-0 rounded-full bg-secondary"
-                transition={{ type: "spring", duration: 0.5 }}
+                className="absolute inset-0 rounded-full bg-foreground shadow-e1 transform-gpu"
+                transition={{ type: "spring", stiffness: 500, damping: 40 }}
               />
             )}
             <Icon
               className={cn(
-                "relative m-auto h-4 w-4",
-                isActive ? "text-foreground" : "text-muted-foreground"
+                "relative m-auto h-4 w-4 transition-colors duration-200",
+                isActive
+                  ? "text-background"
+                  : "text-muted-foreground hover:text-foreground"
               )}
               aria-hidden="true"
             />

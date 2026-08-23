@@ -67,7 +67,7 @@
 
 /* Dark overrides — next-themes class strategy (.dark on <html>) */
 .dark {
-  --background: #141414;
+  --background: #181818;
   --foreground: #F5F5F5;
 
   --surface: #201F1F;
