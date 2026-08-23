@@ -1,0 +1,11 @@
+/* ── TYPOGRAPHY TOKENS · font stacks (Geist Mono var deferred to P5) ──── */
+
+:root {
+  --font-stack-sans: var(--font-poppins), "Poppins", system-ui, sans-serif;
+  --font-stack-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@theme inline {
+  --font-sans: var(--font-stack-sans);
+  --font-mono: var(--font-stack-mono);
+}

@@ -1,0 +1,18 @@
+/* ── SPACING TOKENS · low-roundness radius + flex-gap-first rhythm ────── */
+
+:root {
+  --radius: 4px;
+}
+
+@theme inline {
+  /* Radius scale — DEFAULT 4px, caps at 12px (no pills/squircles) */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* Section rhythm — tighter per taste; use gap on flex-col parents */
+  --spacing-section: clamp(4rem, 7vw, 5rem);
+  --spacing-section-tight: clamp(3rem, 5vw, 4rem);
+  --spacing-gutter: clamp(1rem, 3vw, 2rem);
+}

@@ -2,125 +2,18 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* @custom-variant dark (&:is(.dark *)); */
+/* ── DESIGN TOKENS · single source of truth (lib/tokens/*.css) ─────────── */
+@import "../lib/tokens/colors.css";
+@import "../lib/tokens/typography.css";
+@import "../lib/tokens/spacing.css";
+@import "../lib/tokens/effects.css";
 
-/* ── DESIGN PALETTE: Light Editorial Luxury ───────────────────────────── */
-:root {
-  /* Surfaces */
-  --background: #FDFBF7;
-  --foreground: #1A1A1A;
-  
-  --surface: #FFFFFF;
-  --surface-hover: #F9F9F8;
-  --surface-muted: #F7F6F3;
+/* next-themes class strategy — dark: utilities respond to .dark on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Primary accent — Charcoal */
-  --primary: #ebc429;
-  --primary-foreground: #FDFBF7;
-  --primary-hover: #1A1A1A;
-
-  /* Secondary */
-  --secondary: #F7F6F3;
-  --secondary-foreground: #1A1A1A;
-
-  /* Muted */
-  --muted: #F7F6F3;
-  --muted-foreground: #787774;
-
-  /* Accent */
-  --accent: #3B3B3B;
-  --accent-foreground: #FDFBF7;
-  --accent-hover: #1A1A1A;
-
-  /* Destructive */
-  --destructive: #9F2F2D;
-  --destructive-foreground: #FDFBF7;
-
-  /* Borders & outlines */
-  --border: #EAEAEA;
-  --border-strong: #E2E2E2;
-  --input: #EAEAEA;
-  --ring: #d4a800;
-
-  /* Cards & Popovers */
-  --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-
-  /* Spot Pastels */
-  --pastel-red-bg: #FDEBEC;
-  --pastel-red-text: #9F2F2D;
-  --pastel-blue-bg: #E1F3FE;
-  --pastel-blue-text: #1F6C9F;
-  --pastel-green-bg: #EDF3EC;
-  --pastel-green-text: #346538;
-  --pastel-yellow-bg: #FBF3DB;
-  --pastel-yellow-text: #956400;
-
-  /* Radius */
-  --radius: 0.625rem;
-
-  /* Typography */
-  --font-sans: "Poppins", system-ui, sans-serif;
-  --font-mono: "Geist Mono", "SF Mono", monospace;
-
-  /* shadcn component aliases */
-  --sidebar: #FDFBF7;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #3B3B3B;
-  --sidebar-primary-foreground: #FDFBF7;
-  --sidebar-accent: #F7F6F3;
-  --sidebar-accent-foreground: #1A1A1A;
-  --sidebar-border: #EAEAEA;
-  --sidebar-ring: #3B3B3B;
-
-  /* Chart colors */
-  --chart-1: #3B3B3B;
-  --chart-2: #787774;
-  --chart-3: #A8A8A4;
-  --chart-4: #EAEAEA;
-  --chart-5: #F7F6F3;
-}
-
-/* Dark mode overrides */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #141414;
-    --foreground: #f5f5f5;
-    --primary: #d0bcff;
-    --primary-foreground: #141414;
-    --primary-hover: #e0cbff;
-    --secondary: #1c1b1b;
-    --secondary-foreground: #f5f5f5;
-    --muted: #1c1b1b;
-    --muted-foreground: #a1a1aa;
-    --accent: #d0bcff;
-    --accent-foreground: #141414;
-    --accent-hover: #e0cbff;
-    --destructive: #f47272;
-    --destructive-foreground: #141414;
-    --border: #494454;
-    --input: #494454;
-    --ring: #d0bcff;
-    --card: #201f1f;
-    --card-foreground: #f5f5f5;
-    --popover: #201f1f;
-    --popover-foreground: #f5f5f5;
-    --sidebar: #141414;
-    --sidebar-foreground: #f5f5f5;
-    --sidebar-primary: #d0bcff;
-    --sidebar-primary-foreground: #141414;
-    --sidebar-accent: #1c1b1b;
-    --sidebar-accent-foreground: #f5f5f5;
-    --sidebar-border: #494454;
-    --sidebar-ring: #d0bcff;
-  }
-}
-
-/* ── Base resets ──────────────────────────────────────────────────────── */
+/* ── BASE RESETS ──────────────────────────────────────────────────────── */
 html {
-  font-family: var(--font-sans);
+  font-family: var(--font-stack-sans);
   scroll-behavior: smooth;
 }
 
@@ -128,7 +21,7 @@ html {
   html {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {
@@ -144,7 +37,7 @@ body {
   min-height: 100svh;
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-stack-sans);
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -166,7 +59,7 @@ section[id] {
 
 /* ── Headings & Text ───────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
+  font-family: var(--font-stack-sans);
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
@@ -202,16 +95,16 @@ a {
 }
 
 code {
-  font-family: var(--font-mono);
+  font-family: var(--font-stack-mono);
   font-size: 0.875rem;
-  border-radius: 0.25rem;
+  border-radius: var(--radius);
   padding: 0.125rem 0.375rem;
   background-color: var(--muted);
   border: 1px solid var(--border);
 }
 
 pre {
-  font-family: var(--font-mono);
+  font-family: var(--font-stack-mono);
   font-size: 0.875rem;
   line-height: 1.6;
   border-radius: var(--radius);
