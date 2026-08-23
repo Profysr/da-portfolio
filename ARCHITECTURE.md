@@ -101,16 +101,18 @@ Semantic (background, foreground, primary, muted, destructive...)
 Component (button-primary-bg, card-surface, techstack-shade-1..5)
 ```
 
-| Token file | Contents |
+| Token file (CSS, self-contained) | Contents |
 |------------|----------|
-| `lib/design-tokens/colors.ts` | Gold scale 50–950 · neutral warm greys · semantic light/dark pairs |
-| `typography.ts` | Fluid clamp type scale (h1–h4, body, mono), weights actually used |
-| `spacing.ts` | 4px base scale · shadow elevation 1–5 (tinted, never pure-black) · radius scale incl. concentric DoubleBezel formula |
-| `theme-mapping.ts` | Maps tokens → Tailwind v4 `@theme` namespaces (`--color-*`, `--spacing-*`, `--font-*`) declared in globals.css — in v4, only `@theme` variables generate utility classes; semantic names stay shadcn-compatible (`--background`, `--primary`, ...) so components resolve unchanged. Dark values re-declared under `.dark` (next-themes class strategy) |
+| `lib/tokens/colors.css` | Semantic light/dark maps (shadcn names) · category pastels · sidebar/chart aliases + own `@theme inline` color mappings |
+| `typography.css` | Font stacks (`--font-stack-*`) + font utilities mapping |
+| `spacing.css` | Radius scale (DEFAULT 4px) · section rhythm/gutter spacing + mappings |
+| `effects.css` | Tinted elevation e1–e5 · motion easings · GlowFrame spotlight vars |
+
+Imported by `app/globals.css` via `@import "../lib/tokens/*.css"` — each file owns both its raw variables **and** its `@theme inline` namespace (Tailwind v4 merges multiple `@theme` blocks). No TS bridge, no drift.
 
 Special tokens:
-- **TechStack shades:** 5 solid tint steps derived from neutral/gold ramp (one per card category)
-- **Dark mode:** `.dark` class strategy via next-themes; both modes designed from start; no pure `#000`/`#FFF`
+- **TechStack shades:** 5 solid tint steps from pastel family (one per card category)
+- **Dark mode:** `.dark` class strategy via next-themes; gold-family primary; no pure `#000`/`#FFF`
 
 ---
 
@@ -143,7 +145,7 @@ Special tokens:
 │   ├── 21st/                   KEPT — style references (PricingCard→ProjectCard DNA, Timeline option)
 │   └── *.jsx                   feature components (FavoriteStack TechPill AvatarStatus Heatmap ...)
 ├── lib/
-│   ├── design-tokens/          *.ts token system
+│   ├── tokens/                 colors.css typography.css spacing.css effects.css
 │   ├── fonts.ts                seo.ts structured-data.ts analytics.ts utils.ts source.ts
 ├── hooks/                      useReducedMotion.js etc
 ├── data/                       personal.ts idx.ts (education-only credentials after P17)

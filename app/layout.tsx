@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
@@ -7,14 +6,7 @@ import {
   generateWebSiteSchema,
 } from "@/lib/structured-data";
 import { websiteDomain } from "@/data/personal";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-  preload: true,
-});
+import { geistMono, poppins } from "@/lib/fonts";
 
 export const viewport: Viewport = {
   themeColor: "#FDFBF7",
@@ -101,7 +93,11 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased`} data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={`${poppins.variable} ${geistMono.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           id="json-ld-person"
