@@ -25,7 +25,8 @@ function TopBar({ isVisible }) {
               alt="Bilal Ahmad"
               width={80}
               height={24}
-              loading="lazy"
+              loading="eager"
+              style={{ width: "auto", height: "auto" }}
             />
           ) : (
             <span>DA</span>

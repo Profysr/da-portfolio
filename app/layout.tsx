@@ -101,7 +101,7 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased dark`}>
+    <html lang="en" className={`${poppins.variable} h-full antialiased dark`} data-scroll-behavior="smooth">
       <head>
         <script
           id="json-ld-person"

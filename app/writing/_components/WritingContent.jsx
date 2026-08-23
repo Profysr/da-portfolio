@@ -22,7 +22,7 @@ export function WritingContent({ meta, children }) {
     <Section className="py-8 md:py-12" noFade>
       <div className="max-w-4xl mx-auto px-4">
         <Link
-          href="/#activities"
+          href="/#writings"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
           <IconArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
@@ -70,7 +70,6 @@ export function WritingContent({ meta, children }) {
         <div className="h-px bg-border mb-8" />
 
         <article className="prose prose-invert prose-sm sm:prose-base max-w-none">
-          {/* Renders <MDXContent /> with custom components */}
           {children}
         </article>
       </div>

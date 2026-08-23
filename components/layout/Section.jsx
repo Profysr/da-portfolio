@@ -3,22 +3,6 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { cn } from "@/lib/utils";
 import { Layout } from "@/components/layout/Layout";
 
-/**
- * Section — full-width vertical rhythm wrapper with optional scroll-reveal.
- *
- * The section itself spans full width so you can apply any background to it.
- * Content inside is automatically constrained via <Layout> (max-w-7xl + px).
- * Usage:
- *   // Full-width gradient background, content stays aligned
- *   <Section id="hero" className="bg-gradient-to-br from-slate-900 to-black py-24">
- *     <HeroContent />
- *   </Section>
- *
- *   // Subtle tinted background
- *   <Section id="about" className="bg-muted/20 py-20">
- *     <AboutContent />
- *   </Section>
- */
 export const Section = forwardRef(function Section(
   {
     className,

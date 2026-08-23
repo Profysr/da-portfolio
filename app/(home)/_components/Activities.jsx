@@ -149,7 +149,7 @@ function Panel({
 /* ── Main Combined Section ─────────────────────────────────────────── */
 function ActivityAndWritings() {
   return (
-    <Section id="activity-writings" className="py-8 sm:py-14">
+    <Section id="writings" className="py-8 sm:py-14">
       <Layout>
         <div className="flex flex-col gap-8 items-center">
           {/* Section header */}
