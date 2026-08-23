@@ -11,6 +11,10 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+### Generate a GitHub Personal Access Token (Optional but Recommended)
+1. Go to **GitHub -> Settings -> Developer Settings -> Personal Access Tokens (Fine-grained tokens or Tokens classic)**.
+2. Generate a read-only token (Scope: `public_repo` or `read:user`).
+
 ## React Compiler
 
 The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.

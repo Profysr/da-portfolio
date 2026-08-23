@@ -169,11 +169,9 @@ export default function Hero() {
     >
       <Suspense fallback={null}>
         <LazyLightRays
-          count={20}
-          color="rgba(160, 210, 255, 1)"
-          blur={100}
-          speed={20}
-          className="opacity-80"
+          // count={10}
+          color="rgba(160, 210, 255, 0.25)"
+          blur={50}
         />
       </Suspense>
 

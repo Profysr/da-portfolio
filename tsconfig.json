@@ -28,11 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "components/layout/HomeLayout.jsx",
-    "components/mdx-components.jsx",
-    "app/writing/[...slug]/page.jsx",
-    "app/writing/_components/WritingContent.jsx"
-, "app/projects/[...slug]/page.jsx", "app/not-found.jsx", "app/error.jsx", "app/loading.jsx"  ],
+    "**/*.mts"
+  ],
   "exclude": ["node_modules"]
 }
