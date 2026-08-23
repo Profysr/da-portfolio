@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { Providers } from "@/app/providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   generatePersonSchema,
@@ -9,8 +12,11 @@ import { websiteDomain } from "@/data/personal";
 import { geistMono, poppins } from "@/lib/fonts";
 
 export const viewport: Viewport = {
-  themeColor: "#FDFBF7",
-  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FDFBF7" },
+    { media: "(prefers-color-scheme: dark)", color: "#141414" },
+  ],
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -120,11 +126,15 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <TooltipProvider>
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
-        </TooltipProvider>
+        <Providers>
+          <TooltipProvider>
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+          </TooltipProvider>
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
