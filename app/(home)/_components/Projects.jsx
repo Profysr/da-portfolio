@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
 import {
   IconBrandGithub,
   IconExternalLink,
@@ -192,10 +193,13 @@ function ProjectCard({ project }) {
       {/* 1. Header Media Section */}
       {hasImage ? (
         <div className="relative h-48 w-full overflow-hidden shrink-0 border-b border-border">
-          <img
+          <Image
             src={project.image}
             alt={project.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-linear-to-t from-surface via-transparent to-black/30" />
 

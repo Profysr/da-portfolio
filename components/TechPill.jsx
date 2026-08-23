@@ -1,5 +1,6 @@
 import { getTechIcon } from "@/data/skills";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const SIZE_CLASSES = {
   sm: "gap-1 px-1.5 py-0.5 text-[9.5px] sm:text-[10px]",
@@ -11,12 +12,7 @@ const IMG_SIZE_CLASSES = {
   md: "size-5",
 };
 
-export function TechPill({
-  name,
-  subCategory = null,
-  className,
-  size = "md",
-}) {
+export function TechPill({ name, subCategory = null, className, size = "md" }) {
   const config = getTechIcon(name);
   const showImage = Boolean(config?.img);
   // Show name if: no image, OR image exists but hideName is not set
@@ -32,21 +28,28 @@ export function TechPill({
         "inline-flex items-center rounded border border-border bg-surface-high/40",
         "text-zinc-200 hover:border-primary/40 hover:text-white transition-all",
         SIZE_CLASSES[size],
-        className
+        className,
       )}
     >
       {showImage && (
-        <span className={cn("shrink-0 flex items-center justify-center", IMG_SIZE_CLASSES[size], iconWrapClass)}>
-          <img
+        <span
+          className={cn(
+            "shrink-0 flex items-center justify-center",
+            IMG_SIZE_CLASSES[size],
+            iconWrapClass,
+          )}
+        >
+          <Image
             src={config?.img}
             alt={name}
-            className="object-contain size-full"
+            width={32}
+            height={24}
+            loading="lazy"
+            className="object-contain"
           />
         </span>
       )}
-      {showName && (
-        <span className="font-medium">{name}</span>
-      )}
+      {showName && <span className="font-medium">{name}</span>}
       {subCategory && showName && (
         <span className="text-muted-foreground/70 font-mono border-l border-border pl-1 opacity-70">
           {subCategory}

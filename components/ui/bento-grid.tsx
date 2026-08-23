@@ -1,6 +1,7 @@
 "use client";
 
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { CursorGlow } from "@/components/ui/cursor-glow";
 
@@ -63,14 +64,17 @@ const BentoCard = ({
     >
       {/* Background Graphic Layer */}
       {bgImage && (
-        <img
+        <Image
           src={bgImage}
           alt=""
           aria-hidden="true"
+          fill
           className={cn(
             "pointer-events-none absolute inset-0 h-full w-full select-none z-0",
             bgClassName
           )}
+          sizes="100vw"
+          priority={false}
         />
       )}
       {background && (

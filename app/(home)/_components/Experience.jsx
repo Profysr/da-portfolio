@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
 import {
   IconChevronDown,
   IconCode,
@@ -25,9 +26,14 @@ import { cn } from "@/lib/utils";
 const ExperienceHeader = () => (
   <div className="flex flex-col items-center text-center gap-2.5">
     <Badge variant="light">CAREER</Badge>
-    <Heading variant="gradient" text="Work Experience" className="text-3xl! sm:text-5xl!" />
+    <Heading
+      variant="gradient"
+      text="Work Experience"
+      className="text-3xl! sm:text-5xl!"
+    />
     <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-      Engineering leadership, forward deployed solutions, and clinical RPA systems.
+      Engineering leadership, forward deployed solutions, and clinical RPA
+      systems.
     </p>
   </div>
 );
@@ -42,10 +48,13 @@ const CompanyHeader = ({ exp }) => (
     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
       <div className="size-8 sm:size-10 rounded border border-border bg-surface-high/60 p-1 flex items-center justify-center shrink-0">
         {exp.logo ? (
-          <img
+          <Image
             src={exp.logo}
             alt={`${exp.company} logo`}
-            className="size-full rounded object-contain"
+            width={48}
+            height={32}
+            className="object-contain"
+            loading="lazy"
           />
         ) : (
           <IconBriefcase className="size-3.5 sm:size-4 text-primary" />
@@ -120,7 +129,9 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
             <div
               className={cn(
                 "shrink-0 p-0.5 sm:p-1 rounded border border-border transition-transform duration-300",
-                isOpen ? "rotate-180 bg-white/10 text-white" : "text-muted-foreground"
+                isOpen
+                  ? "rotate-180 bg-white/10 text-white"
+                  : "text-muted-foreground",
               )}
             >
               <IconChevronDown className="size-3 sm:size-3.5" />
@@ -156,11 +167,7 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
                 {role.skills && role.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1 sm:gap-1.5 pt-0.5">
                     {role.skills.map((skill) => (
-                      <TechPill
-                        key={skill}
-                        name={skill}
-                        size="sm"
-                      />
+                      <TechPill key={skill} name={skill} size="sm" />
                     ))}
                   </div>
                 )}
@@ -184,7 +191,7 @@ const ExperienceCard = ({ exp, isLit }) => (
       "rounded-md bg-surface p-3 sm:p-4.5 shadow-lg space-y-4 sm:space-y-5 transition-all duration-500",
       isLit
         ? "border border-primary/50 shadow-primary/5"
-        : "border border-border hover:border-primary/30"
+        : "border border-border hover:border-primary/30",
     )}
   >
     <CompanyHeader exp={exp} />
