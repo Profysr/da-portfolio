@@ -15,7 +15,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
-import { CursorGlow } from "@/components/ui/cursor-glow";
+import { GlowFrame } from "@/components/ui/GlowFrame";
 import { TechPill } from "@/components/TechPill";
 import { TagFilter } from "@/components/TagFilter";
 
@@ -81,45 +81,42 @@ function TechStack() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.25, delay: groupIdx * 0.04 }}
-                    className="relative rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all group"
+                    className="h-full group"
                   >
-                    {/* Pointer-following glow border */}
-                    <CursorGlow
-                      variant="border"
-                      disabled={false}
-                      proximity={80}
+                    <GlowFrame
+                      className="h-full rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all"
                       spread={30}
-                      borderBlur={0}
                       borderWidth={1}
-                    />
-                    <div>
-                      {/* Group Header */}
-                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-                        <div className="flex items-center gap-2">
-                          <div className="size-5 rounded border border-border bg-white/5 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
-                            <IconComponent className="size-4.5" />
+                    >
+                      <div className="relative z-[2] flex flex-col justify-between h-full gap-3">
+                        {/* Group Header */}
+                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
+                          <div className="flex items-center gap-2">
+                            <div className="size-5 rounded border border-border bg-white/5 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
+                              <IconComponent className="size-4.5" />
+                            </div>
+                            <h4 className="text-sm sm:text-base font-semibold text-white">
+                              {group.category}
+                            </h4>
                           </div>
-                          <h4 className="text-sm sm:text-base font-semibold text-white">
-                            {group.category}
-                          </h4>
+                          <span className="font-mono text-[11px] text-muted-foreground">
+                            {group.items.length} tools
+                          </span>
                         </div>
-                        <span className="font-mono text-[11px] text-muted-foreground">
-                          {group.items.length} tools
-                        </span>
-                      </div>
 
-                      {/* Tech Chips */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.items.map((item) => (
-                          <TechPill
-                            key={item.name}
-                            name={item.name}
-                            subCategory={item.subCategory ?? undefined}
-                            size="md"
-                          />
-                        ))}
+                        {/* Tech Chips */}
+                        <div className="flex flex-wrap gap-1.5">
+                          {group.items.map((item) => (
+                            <TechPill
+                              key={item.name}
+                              name={item.name}
+                              subCategory={item.subCategory ?? undefined}
+                              size="md"
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    </GlowFrame>
                   </motion.div>
                 );
               })}

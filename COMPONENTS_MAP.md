@@ -69,10 +69,11 @@
 | animated-circular-progress-bar.tsx | 6 | Credential stat option (P17 decision) |
 | animated-beam.tsx | 5 | Lazy-load only if a use survives audit |
 
-### Spotlight family → CONSOLIDATE into ONE upgraded component (user directive)
+### Spotlight family → ✅ CONSOLIDATED into `GlowFrame.tsx` (DONE)
 | Component | Status |
 |-----------|--------|
-| cursor-glow.tsx · glowing-effect.tsx · spotlight-glow.tsx · spotlight.tsx · SpotlightCard.tsx | All five serve the same purpose (mouse-tracked highlight) but none is a single reusable wrapper. **Upgrade & merge into one `GlowFrame` component**: blur spotlight + border glow following mouse, wrapping ANY child (card/button/section). Card-local mousemove via CSS vars — decorative overlay only, opacity/transform-safe, disabled under reduced-motion + touch. Files of the five originals kept; imports migrate to `GlowFrame` during section phases |
+| GlowFrame.tsx | **The one component.** Wraps ANY child (card/button/section/grid item). Two unified layers driven by element-local pointer tracking (no window listeners): **interior circular glow** (light neutral `rgba(255,255,255,.14)`, 180px, blur 24px, follows cursor) + **border seam-leak** (conic-gradient ported from old cursor-glow border variant, gold, angle-chases mouse via motion). rAF-throttled CSS vars · reduced-motion + non-mouse-pointer guards · forwardRef |
+| ~~cursor-glow.tsx~~ · ~~glowing-effect.tsx~~ · ~~spotlight-glow.tsx~~ · ~~spotlight.tsx~~ · ~~SpotlightCard.tsx~~ | **DELETED** — user-authorized exception to Rule #13 (this family only). Migrations done: `bento-grid.tsx` BentoCard root → GlowFrame (`glowVariant` prop removed; `disableGlow` kept); `TechStack.jsx` category cards → GlowFrame |
 
 ### Marked UNUSED (imports removed when encountered — FILES KEPT)
 | Component | Reason |

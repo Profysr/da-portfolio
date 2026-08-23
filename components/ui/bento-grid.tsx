@@ -3,7 +3,7 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { CursorGlow } from "@/components/ui/cursor-glow";
+import { GlowFrame } from "@/components/ui/GlowFrame";
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
@@ -22,7 +22,6 @@ interface BentoCardProps extends Omit<ComponentPropsWithoutRef<"div">, "title"> 
   className?: string;
   children?: ReactNode;
   disableGlow?: boolean;
-  glowVariant?: "spotlight" | "border";
 }
 
 const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
@@ -51,13 +50,13 @@ const BentoCard = ({
   className,
   children,
   disableGlow = false,
-  glowVariant = "border",
   ...props
 }: BentoCardProps) => {
   return (
-    <div
+    <GlowFrame
+      disabled={disableGlow}
       className={cn(
-        "group/glow relative flex flex-col justify-between overflow-hidden rounded-md border border-white/10 bg-white/2 backdrop-blur-md p-4 sm:p-5 md:p-5.5 transition-all duration-300 hover:border-primary/40 hover:bg-white/[0.035] hover:shadow-[0_0_24px_rgba(208,188,255,0.05)]",
+        "relative flex flex-col justify-between overflow-hidden rounded-md border border-white/10 bg-white/2 backdrop-blur-md p-4 sm:p-5 md:p-5.5 transition-all duration-300 hover:border-primary/40 hover:bg-white/[0.035] hover:shadow-[0_0_24px_rgba(235,196,41,0.06)]",
         className,
       )}
       {...props}
@@ -82,20 +81,6 @@ const BentoCard = ({
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           {background}
         </div>
-      )}
-
-      {/* Proximity & Cursor Glow Effects */}
-      {!disableGlow && (
-        <CursorGlow
-          variant={glowVariant}
-          size={280}
-          color="rgba(212, 168, 0, 0.15)"
-          borderBlur={0}
-          spread={30}
-          proximity={45}
-          borderWidth={1}
-          disabled={false}
-        />
       )}
 
       {/* Card Content & Header Slots */}
@@ -135,7 +120,7 @@ const BentoCard = ({
 
         {children}
       </div>
-    </div>
+    </GlowFrame>
   );
 };
 
