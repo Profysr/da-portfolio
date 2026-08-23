@@ -21,10 +21,10 @@ function TopBar({ isVisible }) {
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
       }`}
     >
-      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background backdrop-blur-xl border border-border rounded-lg shadow-lg">
+      <div className="pointer-events-auto flex items-center justify-between max-w-7xl w-full mx-auto py-2 px-3 bg-background/50 backdrop-blur-xl border border-border rounded-lg shadow-lg">
         <a
           href="#hero"
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2"
         >
           <Logo className="h-8 w-auto text-foreground" />
         </a>
