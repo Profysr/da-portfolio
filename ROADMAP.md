@@ -252,5 +252,6 @@ FAIL  cannot fix in-phase → revert + report
 
 ```
 Phase 01 ✅ APPROVED 2026-08-23 — ROADMAP/ARCHITECTURE/COMPONENTS_MAP written; taste profile added to ARCHITECTURE.md; Rules #14 + @theme amendments applied.
-Phase 02 🔄 IN PROGRESS — token research done (table above); OPTIONS PRESENTED → awaiting user picks before file writes (Rule #7).
+Phase 02 ✅ APPROVED 2026-08-23 — Option A Gold Monochrome+ · radius DEFAULT 4px · flex-gap-over-padding · shadows/motion approved · spotlight family → consolidate into ONE upgraded GlowFrame wrapper (not new CSS) · dark mode auto+toggle w/ gold primary confirmed.
+Phase 03 🔄 BUILT — lib/tokens/{colors,typography,spacing,theme-mapping}.ts written. Contrast fixes: primary-foreground cream→ink (1.9:1→10.33:1 AA), dark purple primary→gold (12.06:1), muted-fg #787774→#6E6D69 (4.33→5.01:1). tsc EXIT:0. Awaiting review.
 ```

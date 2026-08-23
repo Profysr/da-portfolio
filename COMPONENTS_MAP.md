@@ -69,13 +69,17 @@
 | animated-circular-progress-bar.tsx | 6 | Credential stat option (P17 decision) |
 | animated-beam.tsx | 5 | Lazy-load only if a use survives audit |
 
+### Spotlight family → CONSOLIDATE into ONE upgraded component (user directive)
+| Component | Status |
+|-----------|--------|
+| cursor-glow.tsx · glowing-effect.tsx · spotlight-glow.tsx · spotlight.tsx · SpotlightCard.tsx | All five serve the same purpose (mouse-tracked highlight) but none is a single reusable wrapper. **Upgrade & merge into one `GlowFrame` component**: blur spotlight + border glow following mouse, wrapping ANY child (card/button/section). Card-local mousemove via CSS vars — decorative overlay only, opacity/transform-safe, disabled under reduced-motion + touch. Files of the five originals kept; imports migrate to `GlowFrame` during section phases |
+
 ### Marked UNUSED (imports removed when encountered — FILES KEPT)
 | Component | Reason |
 |-----------|--------|
 | light-rays.tsx | User removing from Hero; replaced by AmbientBackground |
 | particles.tsx | Replaced by CSS-only AmbientBackground |
-| spotlight.tsx / spotlight-glow.tsx / SpotlightCard.tsx / cursor-glow.tsx | Cursor-follow effects: accessibility-hostile + perf cost |
-| ripple.tsx / pointer.tsx / background-gradient.tsx / glowing-effect.tsx | Decorative redundancy — verify zero live imports then mark UNUSED |
+| ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED |
 | modal.tsx | dialog.tsx + drawer.tsx cover all overlay needs — verify usage first |
 
 ### shadcn primitives (all kept, token-migrated Phase 3–4)
