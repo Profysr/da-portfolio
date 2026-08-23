@@ -213,10 +213,6 @@ export default function About() {
       <Suspense fallback={null}>
         <LazyParticles
           className="absolute inset-0"
-          // quantity={120}
-          // ease={60}
-          // color="#ffffff"
-          // size={0.7}
         />
       </Suspense>
 

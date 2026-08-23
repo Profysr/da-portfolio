@@ -51,14 +51,14 @@ const BentoCard = ({
   className,
   children,
   disableGlow = false,
-  glowVariant = "spotlight",
+  glowVariant = "border",
   ...props
 }: BentoCardProps) => {
   return (
     <div
       className={cn(
         "group/glow relative flex flex-col justify-between overflow-hidden rounded-md border border-white/10 bg-white/2 backdrop-blur-md p-4 sm:p-5 md:p-5.5 transition-all duration-300 hover:border-primary/40 hover:bg-white/[0.035] hover:shadow-[0_0_24px_rgba(208,188,255,0.05)]",
-        className
+        className,
       )}
       {...props}
     >
@@ -71,12 +71,13 @@ const BentoCard = ({
           fill
           className={cn(
             "pointer-events-none absolute inset-0 h-full w-full select-none z-0",
-            bgClassName
+            bgClassName,
           )}
           sizes="100vw"
           priority={false}
         />
       )}
+
       {background && (
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           {background}
