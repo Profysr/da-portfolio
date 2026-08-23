@@ -31,7 +31,6 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
 .env
 
 # vercel
@@ -43,6 +42,10 @@ next-env.d.ts
 
 # fumadocs-mdx generated files
 .source/
+
+# Analysis & Lock files (local only)
+ANALYSIS.md
+skills-lock.json
 
 # Open Code Helpers
 s-lock
