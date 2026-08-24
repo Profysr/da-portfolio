@@ -37,20 +37,20 @@ const OptimizedImage = forwardRef(function OptimizedImage(
       ref={ref}
       data-status={status}
       className={cn(
-        "relative block overflow-hidden",
+        "grid",
         fill && "absolute inset-0",
         className
       )}
     >
       {status === "loading" && (
-        <Skeleton className="absolute inset-0 rounded-none" />
+        <Skeleton className="[grid-area:1/1]" />
       )}
 
       {status === "error" ? (
         <span
           role="img"
           aria-label={alt}
-          className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground"
+          className="flex items-center justify-center bg-muted text-muted-foreground [grid-area:1/1]"
         >
           <IconPhotoOff
             className="h-8 w-8 opacity-40"
@@ -72,9 +72,10 @@ const OptimizedImage = forwardRef(function OptimizedImage(
           onLoad={handleLoad}
           onError={handleError}
           className={cn(
+            "[grid-area:1/1]",
+            fill && "object-cover",
             "transition-opacity duration-500 ease-out-expo",
             status === "loaded" ? "opacity-100" : "opacity-0",
-            fill && "object-cover",
             imgClassName
           )}
           {...props}

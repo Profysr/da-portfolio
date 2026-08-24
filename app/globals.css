@@ -155,6 +155,67 @@ pre code {
   background-color: var(--muted-foreground);
 }
 
+/* ── Reveal system — IO-driven data-attribute, CSS-animated ───────────── */
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-visible="true"] {
+  animation: reveal-in var(--rv-dur, 0.6s) var(--ease-smooth)
+    var(--rv-delay, 0s) both;
+}
+
+.reveal-v-fade { --rv-y: 0px; }
+.reveal-v-slide-up { --rv-y: 40px; }
+.reveal-v-slide-down { --rv-y: -40px; }
+.reveal-v-slide-left { --rv-x: 40px; }
+.reveal-v-slide-right { --rv-x: -40px; }
+.reveal-v-scale { --rv-s: 0.9; }
+.reveal-v-flip { --rv-rx: -90deg; }
+.reveal-v-reveal { --rv-y: 30px; --rv-blur: 8px; }
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--rv-x, 0), var(--rv-y, 0), 0)
+      scale(var(--rv-s, 1)) rotateX(var(--rv-rx, 0deg));
+    filter: blur(var(--rv-blur, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+.reveal .reveal-item,
+.sr-text .sr-part {
+  opacity: 0;
+}
+
+.reveal[data-visible="true"] > .reveal-item {
+  animation: reveal-in var(--rv-dur, 0.5s) var(--ease-smooth)
+    var(--rv-delay, 0s) both;
+}
+
+.sr-text .sr-part {
+  display: inline-block;
+}
+
+.sr-text[data-visible="true"] .sr-part {
+  animation: reveal-in var(--rv-dur, 0.5s) var(--ease-smooth)
+    calc(var(--rv-delay, 0s) + var(--i, 0) * var(--rv-stagger, 0.03s)) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal .reveal-item,
+  .sr-text .sr-part {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
+
 /* ── Animations ────────────────────────────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; }

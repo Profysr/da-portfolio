@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import { motion } from "motion/react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-type HTMLMotionComponent = 
+type RevealTag =
   | "div"
   | "span"
   | "section"
@@ -27,52 +26,58 @@ type HTMLMotionComponent =
   | "h5"
   | "h6";
 
+type RevealVariant =
+  | "fade"
+  | "slide-up"
+  | "slide-down"
+  | "slide-left"
+  | "slide-right"
+  | "scale"
+  | "flip"
+  | "reveal";
+
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "fade" | "slide-up" | "slide-down" | "slide-left" | "slide-right" | "scale" | "flip" | "reveal";
+  variant?: RevealVariant;
   delay?: number;
   duration?: number;
   once?: boolean;
   margin?: string;
   amount?: number;
   style?: React.CSSProperties;
-  as?: HTMLMotionComponent;
+  as?: RevealTag;
 }
 
-const variantAnimations = {
-  fade: { initial: { opacity: 0 }, animate: { opacity: 1 } },
-  "slide-up": { initial: { opacity: 0, y: 40 }, animate: { opacity: 1, y: 0 } },
-  "slide-down": { initial: { opacity: 0, y: -40 }, animate: { opacity: 1, y: 0 } },
-  "slide-left": { initial: { opacity: 0, x: 40 }, animate: { opacity: 1, x: 0 } },
-  "slide-right": { initial: { opacity: 0, x: -40 }, animate: { opacity: 1, x: 0 } },
-  scale: { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 } },
-  flip: { initial: { opacity: 0, rotateX: -90 }, animate: { opacity: 1, rotateX: 0 } },
-  reveal: { initial: { opacity: 0, y: 30, filter: "blur(8px)" }, animate: { opacity: 1, y: 0, filter: "blur(0px)" } },
-};
+const useInView = (
+  ref: React.RefObject<HTMLElement | null>,
+  margin: string,
+  amount: number,
+  once: boolean
+) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-const motionComponentMap: Record<HTMLMotionComponent, React.ComponentType<any>> = {
-  div: motion.div,
-  span: motion.span,
-  section: motion.section,
-  article: motion.article,
-  header: motion.header,
-  footer: motion.footer,
-  main: motion.main,
-  aside: motion.aside,
-  nav: motion.nav,
-  button: motion.button,
-  a: motion.a,
-  li: motion.li,
-  ul: motion.ul,
-  ol: motion.ol,
-  p: motion.p,
-  h1: motion.h1,
-  h2: motion.h2,
-  h3: motion.h3,
-  h4: motion.h4,
-  h5: motion.h5,
-  h6: motion.h6,
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          if (once) observer.unobserve(element);
+        } else if (!once) {
+          setIsVisible(false);
+        }
+      },
+      { rootMargin: margin, threshold: amount }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, margin, amount, once]);
+
+  return isVisible;
 };
 
 export function ScrollReveal({
@@ -85,59 +90,32 @@ export function ScrollReveal({
   margin = "0px 0px -10% 0px",
   amount = 0.1,
   style,
-  as: Component = "div",
+  as: Tag = "div",
 }: ScrollRevealProps) {
-  const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (once) observer.unobserve(element);
-        } else if (!once) {
-          setIsVisible(false);
-        }
-      },
-      {
-        rootMargin: margin,
-        threshold: amount,
-      }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [margin, amount, once]);
-
-  const animation = variantAnimations[variant];
-  const MotionComponent = motionComponentMap[Component];
+  const isVisible = useInView(elementRef, margin, amount, once);
+  const Component = Tag as React.ElementType;
 
   return (
-    <MotionComponent
+    <Component
       ref={elementRef}
-      className={cn(className)}
-      style={style}
-      initial={animation.initial}
-      animate={isVisible ? animation.animate : animation.initial}
-      transition={{
-        duration,
-        delay,
-        ease: [0.32, 0.72, 0, 1],
-      }}
+      data-visible={isVisible}
+      className={cn("reveal", `reveal-v-${variant}`, className)}
+      style={{
+        "--rv-delay": `${delay}s`,
+        "--rv-dur": `${duration}s`,
+        ...style,
+      } as React.CSSProperties}
     >
       {children}
-    </MotionComponent>
+    </Component>
   );
 }
 
 interface StaggeredRevealProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "fade" | "slide-up" | "slide-down" | "slide-left" | "slide-right" | "scale" | "flip" | "reveal";
+  variant?: RevealVariant;
   staggerDelay?: number;
   delay?: number;
   duration?: number;
@@ -161,23 +139,29 @@ export function StaggeredReveal({
   containerClassName,
   itemClassName,
 }: StaggeredRevealProps) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const isVisible = useInView(elementRef, margin, amount, once);
   const childrenArray = React.Children.toArray(children);
 
   return (
-    <div className={cn(containerClassName, className)}>
+    <div
+      ref={elementRef}
+      data-visible={isVisible}
+      className={cn("reveal", `reveal-v-${variant}`, containerClassName, className)}
+    >
       {childrenArray.map((child, index) => (
-        <ScrollReveal
+        <div
           key={index}
-          variant={variant}
-          delay={delay + index * staggerDelay}
-          duration={duration}
-          once={once}
-          margin={margin}
-          amount={amount}
-          className={itemClassName}
+          className={cn("reveal-item", itemClassName)}
+          style={
+            {
+              "--rv-delay": `${delay + index * staggerDelay}s`,
+              "--rv-dur": `${duration}s`,
+            } as React.CSSProperties
+          }
         >
           {child}
-        </ScrollReveal>
+        </div>
       ))}
     </div>
   );
@@ -186,7 +170,7 @@ export function StaggeredReveal({
 interface ScrollRevealTextProps {
   children: string;
   className?: string;
-  as?: HTMLMotionComponent;
+  as?: RevealTag;
   variant?: "word" | "line" | "char";
   delay?: number;
   staggerDelay?: number;
@@ -199,7 +183,7 @@ interface ScrollRevealTextProps {
 export function ScrollRevealText({
   children,
   className,
-  as: Component = "div",
+  as: Tag = "div",
   variant = "word",
   delay = 0,
   staggerDelay = 0.03,
@@ -209,30 +193,8 @@ export function ScrollRevealText({
   amount = 0.1,
 }: ScrollRevealTextProps) {
   const textRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const element = textRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (once) observer.unobserve(element);
-        } else if (!once) {
-          setIsVisible(false);
-        }
-      },
-      {
-        rootMargin: margin,
-        threshold: amount,
-      }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [margin, amount, once]);
+  const isVisible = useInView(textRef, margin, amount, once);
+  const Component = Tag as React.ElementType;
 
   const splitText = (text: string) => {
     if (variant === "char") return text.split("");
@@ -242,26 +204,30 @@ export function ScrollRevealText({
 
   const parts = splitText(children);
   const separator = variant === "char" ? "" : variant === "word" ? " " : "\n";
-  const TextComponent = motionComponentMap[Component];
 
   return (
-    <TextComponent ref={textRef} className={cn("inline-block", className)}>
+    <Component
+      ref={textRef}
+      data-visible={isVisible}
+      className={cn("reveal sr-text inline-block", className)}
+      style={
+        {
+          "--rv-delay": `${delay}s`,
+          "--rv-dur": `${duration}s`,
+          "--rv-stagger": `${staggerDelay}s`,
+        } as React.CSSProperties
+      }
+    >
       {parts.map((part, index) => (
-        <motion.span
+        <span
           key={index}
-          initial={{ opacity: 0, y: "1.2em", filter: "blur(4px)" }}
-          animate={isVisible ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: "1.2em", filter: "blur(4px)" }}
-          transition={{
-            duration,
-            delay: delay + index * staggerDelay,
-            ease: [0.32, 0.72, 0, 1],
-          }}
-          style={{ display: "inline-block" }}
+          className="sr-part"
+          style={{ "--i": index } as React.CSSProperties}
         >
           {part}
           {index < parts.length - 1 && <span>{separator}</span>}
-        </motion.span>
+        </span>
       ))}
-    </TextComponent>
+    </Component>
   );
 }

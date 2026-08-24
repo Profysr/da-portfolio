@@ -58,7 +58,7 @@ export function ThemeSwitcher({
     return (
       <div
         aria-hidden="true"
-        className={cn("h-10 w-20 rounded-md", className)}
+        className={cn("h-8 w-22 rounded-full", className)}
       />
       );
   }

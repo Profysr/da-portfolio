@@ -119,7 +119,7 @@ const GlowFrame = memo(
     return (
       <div
         ref={containerRef}
-        className={cn("group/glow relative isolate", className)}
+        className={cn("group/glow relative", className)}
         style={{ "--active": 0 } as React.CSSProperties}
         {...props}
       >
@@ -130,7 +130,7 @@ const GlowFrame = memo(
           <div
             aria-hidden
             data-glow="interior"
-            className="pointer-events-none absolute inset-0 z-[2] rounded-[inherit] opacity-[var(--active)] transition-opacity duration-300"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-[var(--active)] transition-opacity duration-300"
             style={{
               background: `radial-gradient(${size}px circle at var(--glow-x, 50%) var(--glow-y, 50%), ${interiorColor}, transparent 80%)`,
               filter: "blur(20px)",
@@ -143,7 +143,7 @@ const GlowFrame = memo(
           <div
             aria-hidden
             data-glow="border"
-            className="pointer-events-none absolute -inset-px z-[3] rounded-[inherit] opacity-[var(--active)] transition-opacity duration-300"
+            className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-[var(--active)] transition-opacity duration-300"
             style={
               {
                 padding: `${borderWidth}px`,
