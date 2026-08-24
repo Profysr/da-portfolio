@@ -17,7 +17,7 @@
 | Hero.jsx | Avatar status, typewriter roles, FavoriteStack marquee, socials, magnetic CTA, scroll cue; currently mounts LightRays | Home | — | 7 | **P12 rebuild**: drop LightRays+Particles imports, add floating pill layer, restructure stack per hero discipline |
 | About.jsx | Bio section | Home | — | 8 | P13 editorial-split recomposition, DoubleBezel portrait, NumberTicker stats |
 | TechStack.jsx | Tech categories display | Home | FavoriteStack (marquee overlap) | 7 | **P14**: GSAP horizontal scroller, solid shade cards; absorbs page marquee budget decision |
-| Experience.jsx | Work history | Home | 21st/Timeline, GSAPScrollRail | 8 | P15 scroll-stories; mechanism user-decided (sticky-stack vs Timeline) |
+| Experience.jsx | Work history | Home | 21st/Timeline, GSAPScrollRail | 8 | ✅ **P14 DONE**: Timeline renderer (Rule #14 refactored — tokens, motion/react, scaleY spine); ScrollRail retired from this section (live in Credentials) |
 | Projects.jsx | Project grid feed | Home | layouts/ProjectsBento | 8 | P16 feeds rebuilt true bento |
 | Credentials.jsx | Education + certs + awards | Home | StatCard | 8 | **P17 education ONLY** — comment out certs/awards data |
 | Activities.jsx | Writings + activity mix | Home | Heatmap, JournalNavigation | 7 | **P17 redesign → Writings-only** |
@@ -57,7 +57,7 @@
 | StaggeredList.tsx | 5 | Role merged into StaggeredReveal (file kept) |
 | MagneticButton.tsx / MagneticDock.tsx | MagneticLink LIVE in Hero (keep as-is — no wrapper indirection); **MagneticDock → UNUSED** (P10 Option B: zero consumers, file kept) |
 | dock.tsx | ⭐ Dock A/B WINNER by evidence — live production dock inside BottomDock (P10 verdict) |
-| GSAPScrollRail.tsx | 6 | Overlaps Timeline/HorizontalScroll — pick one rail system |
+| GSAPScrollRail.tsx | 6→UNUSED | Zero consumers; superseded by Timeline spine (P14) — file kept |
 | shimmer-button.tsx | 5 | Fold styling into Magnetic variants (file kept) |
 | animated-shiny-text.tsx | 6 | Max once (badge accent) |
 | CurtainReveal.tsx | 6 | Route-transition candidate — future decision |
@@ -81,6 +81,7 @@
 | Component | Reason |
 |-----------|--------|
 | animations/AmbientBackground.jsx | ⛔ P08 DEPRECATED by user: plain solid backgrounds preferred; simplification pass (fewer relative/z/overflow). Kept for future revisit — grain still awaits noise asset |
+| animations/StackedCards.jsx | NEW P14 — CSS-sticky deck + GSAP scrub scale-handoff (0.92/0.55, reversible, reduced-motion-safe). **User-directed: reserved for a FUTURE section (not Experience)** — zero consumers today, file kept |
 | light-rays.tsx | User removing from Hero; replaced concept by AmbientBackground (now itself deprecated) |
 | particles.tsx | Replaced by CSS-only approach; superseded by deprecation above — file kept |
 | ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED |
@@ -126,7 +127,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Component | Purpose |
 |-----------|---------|
 | PricingCard.tsx | **Style DNA source** for new minimal ProjectCard (P16) — extract aesthetic, build `ProjectCard.jsx` |
-| Timeline.tsx | Story/timeline renderer — Experience P15 **A/B vs sticky-stack: both built, winner kept** (refactor first per Rule #14) |
+| Timeline.tsx | ✅ **P14 LIVE in Experience** (Rule #14 refactored: motion/react · tokens · scaleY transform-only spine · ResizeObserver · demo header removed · reduced-motion static) |
 
 ## components/layouts/
 
@@ -151,7 +152,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Cluster | Members | Resolution |
 |---------|---------|-----------|
 | Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | ✅ RESOLVED P10 Option B: dock.tsx wins (live evidence); MagneticDock UNUSED (kept) |
-| Scroll rails | GSAPScrollRail · tracing-beam · 21st/Timeline · GSAPHorizontalScroll | Each gets distinct job or marked UNUSED after P15/P17 |
+| Scroll rails | ScrollRail · GSAPScrollRail · tracing-beam · 21st/Timeline · GSAPHorizontalScroll | ✅ P14: Timeline = Experience spine; ScrollRail = Credentials only (height→scaleY conversion = P21 candidate); GSAPScrollRail UNUSED; tracing-beam = Writings candidate (P17) |
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
 | Marquees | marquee.tsx (via FavoriteStack, TechStack?) | Page budget ≤1 post-P14 |

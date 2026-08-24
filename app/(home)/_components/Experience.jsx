@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import {
   IconChevronDown,
-  IconCode,
   IconExternalLink,
   IconBriefcase,
 } from "@tabler/icons-react";
@@ -14,14 +13,9 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { TechPill } from "@/components/common/TechPill";
-import { ScrollRail } from "@/components/ui/ScrollRail";
+import { Timeline } from "@/components/21st/Timeline";
 import { cn } from "@/lib/utils";
 
-/**
- * ExperienceHeader
- * ----------------
- * Section title and badge descriptor.
- */
 const ExperienceHeader = () => (
   <div className="flex flex-col items-center text-center gap-2.5">
     <Badge variant="light">CAREER</Badge>
@@ -37,11 +31,6 @@ const ExperienceHeader = () => (
   </div>
 );
 
-/**
- * CompanyHeader
- * -------------
- * Company branding, external link, location meta, and present status pill.
- */
 const CompanyHeader = ({ exp }) => (
   <div className="flex items-start justify-between gap-2.5 sm:gap-3 border-b border-border pb-3 sm:pb-3.5">
     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -91,28 +80,17 @@ const CompanyHeader = ({ exp }) => (
   </div>
 );
 
-/**
- * RoleCard
- * --------
- * Collapsible position item with shared node timeline offset.
- */
-const RoleCard = ({ role, isLast, defaultOpen = true }) => {
+const RoleCard = ({ role, index, showIndex, isLast, defaultOpen = true }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
     <div className={cn(!isLast && "pb-4 sm:pb-5")}>
-      <div className="relative pl-5 sm:pl-7">
-        {/* Timeline connector node */}
-        <div className="absolute left-2 sm:left-2.5 top-1 z-10 flex size-4 sm:size-5 -translate-x-1/2 items-center justify-center rounded border border-border bg-surface text-primary ring-2 sm:ring-4 ring-background">
-          <IconCode className="size-2.5 sm:size-3" />
-        </div>
-
-        {/* Timeline vertical connector line */}
-        {!isLast && (
-          <div
-            className="absolute left-2 sm:left-2.5 top-5 sm:top-6 bottom-0 w-px -translate-x-1/2 bg-border"
-            aria-hidden
-          />
+      <div className="relative pl-7 sm:pl-10">
+        {/* Render large step index when company has multiple roles */}
+        {showIndex && (
+          <div className="absolute left-0 top-0.5 flex size-6 sm:size-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 text-xs sm:text-base font-bold text-muted-foreground shadow-sm">
+            {index + 1}
+          </div>
         )}
 
         {/* Role Toggle Button */}
@@ -179,50 +157,51 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
   );
 };
 
-/**
- * ExperienceCard
- * --------------
- * Container combining CompanyHeader and nested roles for a single experience entry.
- */
-const ExperienceCard = ({ exp, isLit }) => (
-  <div
-    className={cn(
-      "rounded-md bg-surface p-3 sm:p-4.5 shadow-e2 space-y-4 sm:space-y-5 transition-colors duration-500",
-      isLit
-        ? "border border-primary/40"
-        : "border border-border hover:border-primary/30",
-    )}
-  >
-    <CompanyHeader exp={exp} />
-    <div>
-      {exp.roles.map((role, idx) => (
-        <RoleCard
-          key={role.id || role.title}
-          role={role}
-          isLast={idx === exp.roles.length - 1}
-          defaultOpen={true}
-        />
-      ))}
+const ExperienceCard = ({ exp }) => {
+  const hasMultipleRoles = exp.roles.length > 1;
+
+  return (
+    <div
+      className={cn(
+        "rounded-md bg-surface p-3 sm:p-4.5 shadow-e2 space-y-4 sm:space-y-5 transition-colors duration-500",
+        "border border-border hover:border-primary/30",
+      )}
+    >
+      <CompanyHeader exp={exp} />
+      <div>
+        {exp.roles.map((role, idx) => (
+          <RoleCard
+            key={role.id || role.title}
+            role={role}
+            index={idx}
+            showIndex={hasMultipleRoles}
+            isLast={idx === exp.roles.length - 1}
+            defaultOpen={true}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Experience
  * ----------
- * Primary section component wrapping the ScrollRail rail items.
+ * Scroll-drawn timeline (21st/Timeline, Rule #14 refactored): sticky
+ * company era labels + gold spine; company cards as entry content.
  */
 const Experience = () => (
   <Section id="experience" noFade className="py-12 md:py-16">
     <ExperienceHeader />
 
-    <ScrollRail className="mt-8">
-      {experiences.map((exp, i) => (
-        <ScrollRail.Item key={exp.id || exp.company} index={i}>
-          {({ isLit }) => <ExperienceCard exp={exp} isLit={isLit} />}
-        </ScrollRail.Item>
-      ))}
-    </ScrollRail>
+    <div className="mt-8">
+      <Timeline
+        data={experiences.map((exp) => ({
+          title: exp.company,
+          content: <ExperienceCard exp={exp} />,
+        }))}
+      />
+    </div>
   </Section>
 );
 

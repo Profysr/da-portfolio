@@ -43,27 +43,17 @@ export function AvatarStatus() {
     dotColor: "green",
   });
 
-  // Start in syncing state by default
+  // Always start in the syncing state on page mount/reload
   const [isSyncing, setIsSyncing] = useState(true);
 
   useEffect(() => {
-    // Check if we've already shown the syncing animation during this session
-    const hasSynced = sessionStorage.getItem("statusSynced");
-
-    if (hasSynced) {
-      // If already synced this session, skip the loading state
+    // Run the syncing animation for 5 seconds on every reload
+    const timer = setTimeout(() => {
       setIsSyncing(false);
       setStatusInfo(getStatus());
-    } else {
-      // First time loading: show spinner for 7.5s (7500ms)
-      const timer = setTimeout(() => {
-        setIsSyncing(false);
-        setStatusInfo(getStatus());
-        sessionStorage.setItem("statusSynced", "true");
-      }, 7500);
+    }, 5000);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   const { status, dotColor } = statusInfo;
@@ -73,8 +63,8 @@ export function AvatarStatus() {
     <div className="flex flex-col items-center justify-center gap-4">
       {/* Avatar with dashed primary ring */}
       <Image
-        src={personal.avatar || "/avatar.jpg"}
-        alt={personal.name || "Avatar"}
+        src={personal?.avatar || "/avatar.jpg"}
+        alt={personal?.name || "Avatar"}
         width={120}
         height={120}
         className="object-cover rounded-full p-1 border-2 border-dashed border-primary"
@@ -84,7 +74,7 @@ export function AvatarStatus() {
       {/* Status Badge */}
       <div className="group inline-flex items-center justify-center rounded-md border transition-all duration-300 ease-out">
         {isSyncing ? (
-          // --- SYNCING STATE ---
+          /* --- SYNCING STATE --- */
           <div className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
             <IconLoader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
             <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
@@ -92,7 +82,7 @@ export function AvatarStatus() {
             </span>
           </div>
         ) : (
-          // --- LOADED STATE ---
+          /* --- LOADED STATE --- */
           <AnimatedShinyText className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out hover:text-foreground hover:duration-300">
             <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
               <span
