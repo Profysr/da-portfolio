@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
@@ -11,85 +10,165 @@ if (typeof window !== "undefined") {
 }
 
 interface GSAPHorizontalScrollProps {
-  children: React.ReactNode;
-  className?: string;
   items?: React.ReactNode[];
+  children?: React.ReactNode;
   itemWidth?: number;
   gap?: number;
+  start?: string;
+  distanceMultiplier?: number;
+  end?: string | number;
+  scrub?: boolean | number;
+  pin?: boolean;
   showScrollbar?: boolean;
+  ariaLabel?: string;
+  className?: string;
+  trackClassName?: string;
+  trackRef?: React.RefObject<HTMLDivElement | null>;
+  velocitySkew?: boolean;
+  maxSkew?: number;
+  onTweenReady?: (tween: gsap.core.Tween) => void;
+  // NEW: Allow static content to live inside the pinned wrapper
+  topContent?: React.ReactNode; 
 }
 
 export function GSAPHorizontalScroll({
-  children,
-  className,
   items,
-  itemWidth = 320,
+  children,
+  itemWidth,
   gap = 24,
-  showScrollbar = true,
+  start = "top top",
+  distanceMultiplier = 1,
+  end,
+  scrub = 1,
+  pin = true,
+  showScrollbar = false,
+  ariaLabel = "Horizontal content rail",
+  className,
+  trackClassName,
+  trackRef,
+  velocitySkew = true,
+  maxSkew = 6,
+  onTweenReady,
+  topContent,
 }: GSAPHorizontalScrollProps) {
-  const horizontalScrollRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const internalTrackRef = useRef<HTMLDivElement>(null);
+  const finalTrackRef = (trackRef ?? internalTrackRef) as React.RefObject<HTMLDivElement>;
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!horizontalScrollRef.current) return;
+    if (typeof window === "undefined") return;
+    const wrapper = wrapperRef.current;
+    const track = finalTrackRef.current;
+    if (!wrapper || !track) return;
 
-    const container = horizontalScrollRef.current;
-    const scrollWidth = container.scrollWidth - container.clientWidth;
-    
-    if (scrollWidth <= 0) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      wrapper.style.overflowX = "auto";
+      wrapper.tabIndex = 0;
+      return;
+    }
+
+    wrapper.style.overflow = "hidden";
 
     const ctx = gsap.context(() => {
-      gsap.to(container, {
-        x: -scrollWidth,
+      const getDistance = () => Math.max(0, track.scrollWidth - wrapper.clientWidth);
+
+      const skewTo = velocitySkew
+        ? gsap.quickTo(track, "skewX", { duration: 0.5, ease: "power3" })
+        : null;
+
+      let resetTimer: gsap.core.Tween | null = null;
+      const scheduleReset = () => {
+        if (!skewTo) return;
+        resetTimer?.kill();
+        resetTimer = gsap.delayedCall(0.15, () => skewTo(0));
+      };
+
+      const tween = gsap.to(track, {
+        x: () => -getDistance(),
         ease: "none",
         scrollTrigger: {
-          trigger: container,
-          start: "top center",
-          end: "bottom center",
-          scrub: 1,
+          trigger: wrapper,
+          start,
+          end: end ?? (() => `+=${getDistance() * distanceMultiplier}`),
+          scrub,
+          pin,
+          pinSpacing: true,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
           onUpdate: (self) => {
-            setScrollProgress(self.progress);
+            if (progressBarRef.current) {
+              progressBarRef.current.style.transform = `scaleX(${self.progress})`;
+            }
+            if (skewTo) {
+              const rawVelocity = self.getVelocity();
+              const normalized = gsap.utils.clamp(-maxSkew, maxSkew, -(rawVelocity / 300));
+              skewTo(normalized);
+              scheduleReset();
+            }
           },
         },
       });
-      return () => ctx.revert();
-    }, container);
+
+      onTweenReady?.(tween);
+
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }, wrapper);
 
     return () => {
-      ScrollTrigger.getAll().forEach(st => st.kill());
+      ctx.revert();
+      wrapper.style.overflow = "";
     };
-  }, []);
+  }, [
+    start,
+    end,
+    distanceMultiplier,
+    scrub,
+    pin,
+    finalTrackRef,
+    velocitySkew,
+    maxSkew,
+    onTweenReady,
+  ]);
 
-  if (!items?.length) return null;
+  const renderItems = () => {
+    if (children) return children;
+    if (!items?.length) return null;
+    return items.map((node, i) => (
+      <div key={i} className="shrink-0" style={itemWidth ? { width: itemWidth, flexShrink: 0 } : undefined}>
+        {node}
+      </div>
+    ));
+  };
 
   return (
-    <div ref={horizontalScrollRef} className={cn("relative overflow-hidden", className)}>
-      <div 
-        ref={scrollContainerRef}
-        className="flex gap-6" 
-        style={{ width: `calc(${items.length} * ${itemWidth}px + ${items.length - 1} * ${gap}px)` }}
-      >
-        {items.map((item, index) => (
-          <motion.div
-            key={`${index}`}
-            className="shrink-0"
-            style={{ width: itemWidth, flexShrink: 0 }}
-            layout
-          >
-            {item}
-          </motion.div>
-        ))}
-      </div>
+    <div
+      ref={wrapperRef}
+      role="region"
+      aria-label={ariaLabel}
+      className={cn("relative overflow-hidden w-full", className)}
+    >
+      {/* NEW: Render static pinned content here */}
+      {topContent} 
       
+      <div
+        ref={finalTrackRef}
+        className={cn("flex will-change-transform", trackClassName)}
+        style={{
+          ...(gap ? { gap: `${gap}px` } : undefined),
+          transformOrigin: "center center",
+        }}
+      >
+        {renderItems()}
+      </div>
+
       {showScrollbar && (
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-border mt-4 rounded-full overflow-hidden">
-          <motion.div
+        <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-1 mt-4 rounded-full bg-border overflow-hidden">
+          <div
+            ref={progressBarRef}
             className="h-full bg-accent origin-left"
-            style={{ transformOrigin: "left center" }}
-            animate={{ scaleX: [0, 1] }}
-            transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+            style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
           />
         </div>
       )}
@@ -103,21 +182,17 @@ interface GSAPHorizontalCardProps {
   width?: number;
 }
 
-export function GSAPHorizontalCard({ 
-  children, 
-  className, 
-  width = 320 
+export function GSAPHorizontalCard({
+  children,
+  className,
+  width,
 }: GSAPHorizontalCardProps) {
   return (
-    <motion.div
-      className={cn("shrink-0 rounded-2xl border border-border bg-surface overflow-hidden", className)}
-      style={{ width, flexShrink: 0 }}
-      layout
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+    <div
+      className={cn("shrink-0", className)}
+      style={width ? { width, flexShrink: 0 } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

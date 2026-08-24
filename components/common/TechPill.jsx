@@ -5,11 +5,15 @@ import Image from "next/image";
 const SIZE_CLASSES = {
   sm: "gap-1 px-1.5 py-0.5 text-[9.5px] sm:text-[10px]",
   md: "gap-1.5 px-2.5 py-1 text-xs",
+  lg: "gap-2 px-3 py-1.5 text-sm",
+  xl: "gap-2.5 px-4 py-2 text-base",
 };
 
 const IMG_SIZE_CLASSES = {
   sm: "size-3.5",
   md: "size-5",
+  lg: "size-6.5",
+  xl: "size-8",
 };
 
 export function TechPill({ name, subCategory = null, className, size = "md" }) {

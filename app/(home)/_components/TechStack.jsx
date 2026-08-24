@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useRef } from "react";
+import { gsap } from "gsap";
 import {
   IconSparkles,
   IconCpu,
@@ -10,118 +10,178 @@ import {
   IconCloud,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { Layout } from "@/components/layout/Layout";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
+import { GSAPHorizontalScroll } from "@/components/ui/GSAPHorizontalScroll";
 import { SkillsAndTools } from "@/data/idx";
-import { FavoriteStack } from "@/components/FavoriteStack";
-import { GlowFrame } from "@/components/ui/GlowFrame";
 import { TechPill } from "@/components/common/TechPill";
-import { TagFilter } from "@/components/TagFilter";
+import { cn } from "@/lib/utils";
 
-const CATEGORY_ICONS = {
-  "Automations & AI": IconCpu,
-  "Engineering & Backend": IconServer,
-  "Platforms & Cloud": IconCloud,
-  "Conceptual & Design": IconBrandReact,
+// Mapped directly to your theme's --pastel-* CSS tokens
+const CATEGORY_META = {
+  "Automations & AI": {
+    Icon: IconCpu,
+    bgVar: "var(--pastel-yellow-bg)",
+    textVar: "var(--pastel-yellow-text)",
+  },
+  "Engineering & Backend": {
+    Icon: IconServer,
+    bgVar: "var(--pastel-blue-bg)",
+    textVar: "var(--pastel-blue-text)",
+  },
+  "Platforms & Cloud": {
+    Icon: IconCloud,
+    bgVar: "var(--pastel-green-bg)",
+    textVar: "var(--pastel-green-text)",
+  },
+  "Conceptual & Design": {
+    Icon: IconBrandReact,
+    bgVar: "var(--pastel-rose-bg)",
+    textVar: "var(--pastel-rose-text)",
+  },
 };
 
 function TechStack() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const categories = ["All", ...SkillsAndTools.map((cat) => cat.category)];
-
-  const displayedCategories =
-    selectedCategory === "All"
-      ? SkillsAndTools
-      : SkillsAndTools.filter((cat) => cat.category === selectedCategory);
+  const tweenRef = useRef(null);
 
   return (
     <Section
       id="stack"
       noFade
-      className="py-10 md:py-16 overflow-hidden relative"
+      className="p-0! overflow-hidden relative bg-surface text-foreground transition-colors duration-300"
     >
-      <Layout>
-        <div className="flex flex-col items-center gap-7">
-          {/* Section Header */}
-          <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="light">ARSENAL & TOOLS</Badge>
+      {/* Dynamic ambient mesh driven by theme pastels — soft and non-intrusive */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-60 dark:opacity-25 transition-opacity duration-500"
+        style={{
+          background:
+            "radial-gradient(700px circle at 15% 50%, var(--pastel-yellow-bg), transparent 60%)," +
+            "radial-gradient(700px circle at 85% 50%, var(--pastel-blue-bg), transparent 60%)",
+        }}
+      />
+
+      <GSAPHorizontalScroll
+        ariaLabel="Technology stack categories"
+        start="top top"
+        distanceMultiplier={1.05}
+        scrub={1}
+        pin
+        showScrollbar={false}
+        velocitySkew={true}
+        maxSkew={2}
+        gap={10}
+        /* Adjusted container to 75% viewport height */
+        className="w-full h-[75vh] min-h-[550px] flex flex-col justify-center"
+        trackClassName="items-center mt-28 sm:mt-32"
+        topContent={
+          /* Tightened absolute header positioning to accommodate 75vh layout */
+          <div className="absolute top-6 sm:top-8 left-0 w-full flex flex-col items-center text-center gap-2 z-10 px-6">
+            <Badge
+              variant="outline"
+              className="tracking-[0.2em] text-[10px] bg-surface text-foreground border-border uppercase shadow-xs px-3 py-1 font-mono"
+            >
+              Arsenal & Tools
+            </Badge>
             <Heading
               variant="gradient"
               text="Technologies & Stack"
-              className="text-3xl! sm:text-5xl!"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground"
             />
-            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-lg font-normal leading-relaxed">
               Production tools, runtimes, and agentic orchestration frameworks I
               use to build scalable systems.
             </p>
           </div>
+        }
+        onTweenReady={(tween) => {
+          tweenRef.current = tween;
+          const groups = gsap.utils.toArray(".stack-cluster");
 
-          {/* Daily Drivers Callout Strip Component */}
-          <FavoriteStack variant="detailed" />
+          groups.forEach((el) => {
+            const pills = el.querySelectorAll(".stack-pill");
+            gsap.set(pills, { opacity: 0, x: 16, scale: 0.96 });
+            gsap.to(pills, {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.5,
+              ease: "power2.out",
+              stagger: 0.03,
+              scrollTrigger: {
+                containerAnimation: tween,
+                trigger: el,
+                start: "left 80%",
+                end: "left 40%",
+                scrub: false,
+                toggleActions: "play none none reverse",
+              },
+            });
+          });
+        }}
+      >
+        {SkillsAndTools.map((group, idx) => {
+          const meta = CATEGORY_META[group.category];
+          const Icon = meta?.Icon ?? IconSparkles;
 
-          {/* Category Filter Pills */}
-          <TagFilter
-            items={categories}
-            activeValue={selectedCategory}
-            onChange={setSelectedCategory}
-          />
+          return (
+            <div
+              key={group.category}
+              className={cn(
+                "stack-cluster shrink-0 flex flex-col justify-center",
+                "w-[80vw] max-w-lg md:max-w-xl",
+              )}
+            >
+              {/* Category Header */}
+              <div className="flex items-center gap-4 mb-4">
+                <div
+                  className="flex items-center justify-center size-11 rounded-md border border-border shadow-xs shrink-0 transition-transform duration-300 hover:scale-105"
+                  style={{
+                    backgroundColor: meta?.bgVar ?? "var(--surface)",
+                    color: meta?.textVar ?? "var(--foreground)",
+                  }}
+                >
+                  <Icon className="size-5" strokeWidth={1.75} />
+                </div>
+                <div>
+                  <span className="block font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-0.5">
+                    {String(idx + 1).padStart(2, "0")} /{" "}
+                    {String(SkillsAndTools.length).padStart(2, "0")}
+                  </span>
+                  <h4 className="text-2xl font-semibold tracking-tight text-foreground">
+                    {group.category}
+                  </h4>
+                </div>
+              </div>
 
-          {/* Categorized Tech Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
-            <AnimatePresence mode="popLayout">
-              {displayedCategories.map((group, groupIdx) => {
-                const IconComponent =
-                  CATEGORY_ICONS[group.category] || IconSparkles;
-                return (
-                  <motion.div
-                    key={group.category}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.97 }}
-                    transition={{ duration: 0.25, delay: groupIdx * 0.04 }}
-                    className="h-full group"
-                  >
-                    <GlowFrame
-                      className="h-full rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between"
-                    >
-                      <div className="relative z-2 flex flex-col justify-between h-full gap-3">
-                        {/* Group Header */}
-                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-                          <div className="flex items-center gap-2">
-                            <div className="size-5 rounded border border-border bg-white/5 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
-                              <IconComponent className="size-4.5" />
-                            </div>
-                            <h4 className="text-sm sm:text-base font-semibold text-white">
-                              {group.category}
-                            </h4>
-                          </div>
-                          <span className="font-mono text-[11px] text-muted-foreground">
-                            {group.items.length} tools
-                          </span>
-                        </div>
+              {/* Minimal Accent Divider */}
+              <div className="h-px w-20 bg-border-strong mb-5" />
 
-                        {/* Tech Chips */}
-                        <div className="flex flex-wrap gap-1.5">
-                          {group.items.map((item) => (
-                            <TechPill
-                              key={item.name}
-                              name={item.name}
-                              subCategory={item.subCategory ?? undefined}
-                              size="md"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </GlowFrame>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-        </div>
-      </Layout>
+              {/* Interactive Pills */}
+              <div className="flex flex-wrap gap-2.5 w-full">
+                {group.items.map((item) => (
+                  <div key={item.name} className="stack-pill">
+                    <TechPill
+                      name={item.name}
+                      subCategory={item.subCategory ?? undefined}
+                      size="xl"
+                      className={cn(
+                        "transition-all duration-300 ease-out",
+                        "bg-surface text-foreground hover:bg-surface-hover",
+                        "border border-border hover:border-border-strong",
+                        "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Trailing offset */}
+        <div className="w-[15vw] shrink-0" />
+      </GSAPHorizontalScroll>
     </Section>
   );
 }

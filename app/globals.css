@@ -7,6 +7,7 @@
 @import "../lib/tokens/typography.css";
 @import "../lib/tokens/spacing.css";
 @import "../lib/tokens/effects.css";
+@import "../lib/tokens/shades.css";
 
 /* next-themes class strategy — dark: utilities respond to .dark on <html> */
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,0 +1,94 @@
+/* ── Shade card system (Phase 13 — TechStack rail) ─────────────────────
+ * 5 solid color tints at controlled saturation, paired bg+text for AA
+ * contrast. Light mode = soft tint surfaces; dark mode = low-alpha
+ * saturated wash. Each shade gets an atomic utility class combining
+ * bg + text + border-tint so consumers only need ONE class per card.
+ * Token location disclosed: globals.css (vs other tokens in
+ * lib/tokens/colors.css) for phase-budget reasons — future phases
+ * may migrate to colors.css for consolidation.
+ * --------------------------------------------------------------------- */
+
+:root {
+  --shade-blue-bg:   #E5F1FB;
+  --shade-blue-text: #1F6C9F;
+  --shade-blue-border: rgba(31, 108, 159, 0.20);
+
+  --shade-gold-bg:   #FBF3DB;
+  --shade-gold-text: #956400;
+  --shade-gold-border: rgba(149, 100, 0, 0.20);
+
+  --shade-green-bg:   #EDF3EC;
+  --shade-green-text: #346538;
+  --shade-green-border: rgba(52, 101, 56, 0.20);
+
+  --shade-rose-bg:   #FDEBEC;
+  --shade-rose-text: #9F2F2D;
+  --shade-rose-border: rgba(159, 47, 45, 0.20);
+
+  --shade-canvas-bg:   var(--surface);
+  --shade-canvas-text: var(--foreground);
+  --shade-canvas-border: var(--border);
+}
+
+.dark {
+  --shade-blue-bg:   rgba(31, 108, 159, 0.18);
+  --shade-blue-text: #8CC6EA;
+  --shade-blue-border: rgba(140, 198, 234, 0.25);
+
+  --shade-gold-bg:   rgba(149, 100, 0, 0.18);
+  --shade-gold-text: #E3C268;
+  --shade-gold-border: rgba(227, 194, 104, 0.25);
+
+  --shade-green-bg:   rgba(52, 101, 56, 0.18);
+  --shade-green-text: #9DC79F;
+  --shade-green-border: rgba(157, 199, 159, 0.25);
+
+  --shade-rose-bg:   rgba(159, 47, 45, 0.18);
+  --shade-rose-text: #EBA6A4;
+  --shade-rose-border: rgba(235, 166, 164, 0.25);
+
+  --shade-canvas-bg:   var(--surface);
+  --shade-canvas-text: var(--foreground);
+  --shade-canvas-border: var(--border);
+}
+
+@theme inline {
+  --color-shade-blue-bg:   var(--shade-blue-bg);
+  --color-shade-blue-text: var(--shade-blue-text);
+  --color-shade-gold-bg:   var(--shade-gold-bg);
+  --color-shade-gold-text: var(--shade-gold-text);
+  --color-shade-green-bg:   var(--shade-green-bg);
+  --color-shade-green-text: var(--shade-green-text);
+  --color-shade-rose-bg:   var(--shade-rose-bg);
+  --color-shade-rose-text: var(--shade-rose-text);
+  --color-shade-canvas-bg:   var(--shade-canvas-bg);
+  --color-shade-canvas-text: var(--shade-canvas-text);
+}
+
+/* Atomic shade-card utilities — one class per hue. Bundles surface,
+ * accent text color, and tinted border so consumers stay terse. */
+.shade-card-blue {
+  background-color: var(--shade-blue-bg);
+  color: var(--shade-blue-text);
+  border-color: var(--shade-blue-border);
+}
+.shade-card-gold {
+  background-color: var(--shade-gold-bg);
+  color: var(--shade-gold-text);
+  border-color: var(--shade-gold-border);
+}
+.shade-card-green {
+  background-color: var(--shade-green-bg);
+  color: var(--shade-green-text);
+  border-color: var(--shade-green-border);
+}
+.shade-card-rose {
+  background-color: var(--shade-rose-bg);
+  color: var(--shade-rose-text);
+  border-color: var(--shade-rose-border);
+}
+.shade-card-canvas {
+  background-color: var(--shade-canvas-bg);
+  color: var(--shade-canvas-text);
+  border-color: var(--shade-canvas-border);
+}
