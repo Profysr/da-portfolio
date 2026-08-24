@@ -135,7 +135,8 @@ function HeatmapCell({ day, revealed, wIdx, dIdx }) {
       <TooltipTrigger asChild>
         <div
           className={cn(
-            "h-3 w-3 md:h-4 md:w-4 rounded-xs transition-all duration-300 hover:scale-105 cursor-pointer",
+            "h-3 w-3 md:h-4 md:w-4 rounded-xs transition-all duration-500 hover:scale-105 cursor-pointer",
+            revealed ? "scale-100 opacity-100" : "scale-50 opacity-30",
             LEVEL_COLORS[displayLevel],
           )}
           style={{
@@ -232,12 +233,17 @@ export function HeatmapGrid({
     overrideTotal,
   );
 
+  /* Reveal on mount + re-stagger the wave every time the week range changes */
   useEffect(() => {
-    if (isRealtime) {
-      const timer = setTimeout(() => setRevealed(true), 150);
-      return () => clearTimeout(timer);
-    }
-  }, [isRealtime]);
+    if (!isRealtime) return undefined;
+
+    const raf = requestAnimationFrame(() => setRevealed(false));
+    const timer = setTimeout(() => setRevealed(true), 150);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
+  }, [isRealtime, weeks]);
 
   return (
     <div

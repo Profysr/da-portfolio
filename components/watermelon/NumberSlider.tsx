@@ -13,6 +13,7 @@ interface NumberSliderProps {
   step?: number;
   defaultValue?: number;
   onChange?: (value: number) => void;
+  layout?: "col" | "row";
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export const NumberSlider: FC<NumberSliderProps> = ({
   step = 2,
   defaultValue = 30,
   onChange,
+  layout = "col",
   className,
 }) => {
   const [internalValue, setInternalValue] = useState<number>(defaultValue);
@@ -46,17 +48,26 @@ export const NumberSlider: FC<NumberSliderProps> = ({
           className="z-30 h-1.5 w-1.5 rounded-lg bg-muted-foreground/40"
         />
       )),
-    []
+    [],
   );
+
+  const isRow = layout === "row";
 
   return (
     <div
       className={cn(
-        "flex select-none flex-col gap-2 transition-colors",
-        className
+        "flex select-none transition-colors",
+        isRow ? "flex-row items-center gap-4" : "flex-col gap-2",
+        className,
       )}
     >
-      <div className="flex items-baseline justify-between gap-3">
+      {/* Label and Value Header / Side Display */}
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3",
+          isRow ? "shrink-0 min-w-30" : "w-full",
+        )}
+      >
         <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
           {label}
         </span>
@@ -73,22 +84,28 @@ export const NumberSlider: FC<NumberSliderProps> = ({
         </div>
       </div>
 
-      <div className="group bg-muted relative flex h-10 w-full items-center overflow-hidden rounded-md">
+      {/* Slider Track Container */}
+      <div
+        className={cn(
+          "group bg-muted relative flex h-10 items-center overflow-hidden rounded-md",
+          isRow ? "w-full flex-1" : "w-full",
+        )}
+      >
         <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-3">
           {dots}
         </div>
 
-      <motion.div
-        className="pointer-events-none absolute top-0 left-0 h-full"
-        style={{
-          background:
-            "linear-gradient(to right, var(--color-primary-hover), var(--color-primary))",
-        }}
-        animate={{
-          width: `calc((${percentage} / 100) * (100% - 40px) + 40px)`,
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      />
+        <motion.div
+          className="pointer-events-none absolute top-0 left-0 h-full"
+          style={{
+            background:
+              "linear-gradient(to right, var(--color-primary-hover), var(--color-primary))",
+          }}
+          animate={{
+            width: `calc((${percentage} / 100) * (100% - 40px) + 40px)`,
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
 
         <input
           type="range"
@@ -123,12 +140,7 @@ const AnimatedText = ({
   className?: string;
 }) => {
   return (
-    <div
-      className={cn(
-        "flex tracking-tight will-change-transform",
-        className
-      )}
-    >
+    <div className={cn("flex tracking-tight will-change-transform", className)}>
       <AnimatePresence mode="popLayout" initial={false}>
         {value.split("").map((char, index) => {
           const displayChar = char === " " ? "\u00A0" : char;
