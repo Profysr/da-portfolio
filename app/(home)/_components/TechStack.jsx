@@ -2,13 +2,7 @@
 
 import React, { useRef } from "react";
 import { gsap } from "gsap";
-import {
-  IconSparkles,
-  IconCpu,
-  IconServer,
-  IconBrandReact,
-  IconCloud,
-} from "@tabler/icons-react";
+import { IconSparkles } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
@@ -17,48 +11,11 @@ import { SkillsAndTools } from "@/data/idx";
 import { TechPill } from "@/components/common/TechPill";
 import { cn } from "@/lib/utils";
 
-const CATEGORY_META = {
-  "Automations & AI": {
-    Icon: IconCpu,
-    bgVar: "var(--pastel-yellow-bg)",
-    textVar: "var(--pastel-yellow-text)",
-  },
-  "Engineering & Backend": {
-    Icon: IconServer,
-    bgVar: "var(--pastel-blue-bg)",
-    textVar: "var(--pastel-blue-text)",
-  },
-  "Platforms & Cloud": {
-    Icon: IconCloud,
-    bgVar: "var(--pastel-green-bg)",
-    textVar: "var(--pastel-green-text)",
-  },
-  "Conceptual & Design": {
-    Icon: IconBrandReact,
-    bgVar: "var(--pastel-rose-bg)",
-    textVar: "var(--pastel-rose-text)",
-  },
-};
-
 function TechStack() {
   const tweenRef = useRef(null);
 
   return (
-    <Section
-      id="stack"
-      noFade
-      className="p-0! overflow-hidden relative bg-surface text-foreground transition-colors duration-300"
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-60 dark:opacity-25 transition-opacity duration-500"
-        style={{
-          background:
-            "radial-gradient(700px circle at 15% 50%, var(--pastel-yellow-bg), transparent 60%)," +
-            "radial-gradient(700px circle at 85% 50%, var(--pastel-blue-bg), transparent 60%)",
-        }}
-      />
-
+    <Section id="stack" noFade className="p-0! bg-surface">
       <GSAPHorizontalScroll
         ariaLabel="Technology stack categories"
         start="top top"
@@ -69,7 +26,7 @@ function TechStack() {
         velocitySkew={true}
         maxSkew={2}
         gap={48}
-        className="w-full h-[80vh] min-h-150 flex flex-col justify-center"
+        className="w-full h-[75vh] min-h-150 flex flex-col justify-center"
         trackClassName="items-start mt-40 sm:mt-48"
         topContent={
           <div className="absolute top-8 sm:top-12 left-0 w-full flex flex-col items-center text-center gap-2.5 z-10 px-6">
@@ -120,25 +77,23 @@ function TechStack() {
         <div className="w-[8vw] sm:w-[12vw] shrink-0" />
 
         {SkillsAndTools.map((group, idx) => {
-          const meta = CATEGORY_META[group.category];
-          const Icon = meta?.Icon ?? IconSparkles;
+          const Icon = group.Icon ?? IconSparkles;
 
           return (
             <div
               key={group.category}
               className={cn(
                 "stack-cluster shrink-0 flex flex-col justify-start",
-                "w-[75vw] sm:w-[500px] max-w-lg",
+                "w-[75vw] sm:w-125 max-w-lg",
               )}
             >
               {/* Category Header */}
               <div className="flex items-center gap-4 mb-4">
                 <div
-                  className="flex items-center justify-center size-11 rounded-md border border-border shadow-xs shrink-0 transition-transform duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor: meta?.bgVar ?? "var(--surface)",
-                    color: meta?.textVar ?? "var(--foreground)",
-                  }}
+                  className={[
+                    "flex items-center justify-center size-11 rounded-md border shadow-xs shrink-0 transition-transform duration-300 hover:scale-105",
+                    group.shade ?? "shade-card-canvas",
+                  ].join(" ")}
                 >
                   <Icon className="size-5" strokeWidth={1.75} />
                 </div>
@@ -168,7 +123,7 @@ function TechStack() {
                         "transition-all duration-300 ease-out",
                         "bg-surface text-foreground hover:bg-surface-hover",
                         "border border-border hover:border-border-strong",
-                        "shadow-xs hover:shadow-md hover:-translate-y-0.5",
+                        "shadow-xs hover:shadow-e2 hover:-translate-y-0.5",
                       )}
                     />
                   </div>

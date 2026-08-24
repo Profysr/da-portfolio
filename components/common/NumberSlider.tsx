@@ -98,8 +98,7 @@ export const NumberSlider: FC<NumberSliderProps> = ({
         <motion.div
           className="pointer-events-none absolute top-0 left-0 h-full"
           style={{
-            background:
-              "linear-gradient(to right, var(--color-primary-hover), var(--color-primary))",
+            background: "var(--color-primary)",
           }}
           animate={{
             width: `calc((${percentage} / 100) * (100% - 40px) + 40px)`,

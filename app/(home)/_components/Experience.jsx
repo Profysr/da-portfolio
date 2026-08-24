@@ -13,7 +13,6 @@ import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
-import { ExpandableList } from "@/components/ui/expandable-list";
 import { TechPill } from "@/components/common/TechPill";
 import { ScrollRail } from "@/components/ui/ScrollRail";
 import { cn } from "@/lib/utils";
@@ -46,14 +45,14 @@ const ExperienceHeader = () => (
 const CompanyHeader = ({ exp }) => (
   <div className="flex items-start justify-between gap-2.5 sm:gap-3 border-b border-border pb-3 sm:pb-3.5">
     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-      <div className="size-8 sm:size-10 rounded border border-border bg-surface-high/60 p-1 flex items-center justify-center shrink-0">
+      <div className="size-8 sm:size-10 rounded border border-border bg-surface-muted p-1 flex items-center justify-center shrink-0">
         {exp.logo ? (
           <Image
             src={exp.logo}
             alt={`${exp.company} logo`}
             width={48}
             height={32}
-            className="object-contain"
+            className="size-full object-contain"
             loading="lazy"
           />
         ) : (
@@ -120,17 +119,17 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="group w-full text-left rounded p-1.5 sm:p-2 -ml-1.5 sm:-ml-2 hover:bg-white/5 transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/50"
+          className="group w-full text-left rounded p-1.5 sm:p-2 -ml-1.5 sm:-ml-2 hover:bg-surface-muted transition-colors duration-200 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/50"
         >
           <div className="flex items-start justify-between gap-2 sm:gap-3">
-            <h4 className="min-w-0 flex-1 text-xs sm:text-base font-semibold text-white group-hover:text-primary transition-colors wrap-break-word">
+            <h4 className="min-w-0 flex-1 text-xs sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors wrap-break-word">
               {role.title}
             </h4>
             <div
               className={cn(
                 "shrink-0 p-0.5 sm:p-1 rounded border border-border transition-transform duration-300",
                 isOpen
-                  ? "rotate-180 bg-white/10 text-white"
+                  ? "rotate-180 bg-surface-muted text-foreground"
                   : "text-muted-foreground",
               )}
             >
@@ -141,9 +140,9 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
           <div className="flex flex-wrap items-center gap-x-1.5 sm:gap-x-2 gap-y-0.5 mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-muted-foreground">
             <span className="text-foreground/90 font-medium">{role.type}</span>
             <span className="opacity-50">•</span>
-            <span className="font-mono text-zinc-300">{role.period}</span>
+            <span className="font-mono text-foreground/80">{role.period}</span>
             <span className="opacity-50">•</span>
-            <span className="text-zinc-400">{role.duration}</span>
+            <span>{role.duration}</span>
           </div>
         </button>
 
@@ -159,7 +158,7 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
             >
               <div className="pt-1 pl-0.5 space-y-2 sm:space-y-2.5">
                 {role.description && (
-                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {role.description}
                   </p>
                 )}
@@ -167,7 +166,7 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
                 {role.skills && role.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1 sm:gap-1.5 pt-0.5">
                     {role.skills.map((skill) => (
-                      <TechPill key={skill} name={skill} size="sm" />
+                      <TechPill key={skill} name={skill} />
                     ))}
                   </div>
                 )}
@@ -188,9 +187,9 @@ const RoleCard = ({ role, isLast, defaultOpen = true }) => {
 const ExperienceCard = ({ exp, isLit }) => (
   <div
     className={cn(
-      "rounded-md bg-surface p-3 sm:p-4.5 shadow-lg space-y-4 sm:space-y-5 transition-all duration-500",
+      "rounded-md bg-surface p-3 sm:p-4.5 shadow-e2 space-y-4 sm:space-y-5 transition-colors duration-500",
       isLit
-        ? "border border-primary/50 shadow-primary/5"
+        ? "border border-primary/40"
         : "border border-border hover:border-primary/30",
     )}
   >
@@ -211,26 +210,18 @@ const ExperienceCard = ({ exp, isLit }) => (
 /**
  * Experience
  * ----------
- * Primary section component wrapping the ScrollRail and ExpandableList.
+ * Primary section component wrapping the ScrollRail rail items.
  */
 const Experience = () => (
-  <Section id="experience" noFade className="py-10 md:py-16 relative">
+  <Section id="experience" noFade className="py-12 md:py-16">
     <ExperienceHeader />
 
     <ScrollRail className="mt-8">
-      <ExpandableList
-        items={experiences}
-        initialCount={2}
-        showMoreLabel={(hiddenCount) =>
-          `Show ${hiddenCount} more ${hiddenCount === 1 ? "role" : "roles"}`
-        }
-        showLessLabel="Show less"
-        renderItem={(exp, i) => (
-          <ScrollRail.Item key={exp.id || exp.company} index={i}>
-            {({ isLit }) => <ExperienceCard exp={exp} isLit={isLit} />}
-          </ScrollRail.Item>
-        )}
-      />
+      {experiences.map((exp, i) => (
+        <ScrollRail.Item key={exp.id || exp.company} index={i}>
+          {({ isLit }) => <ExperienceCard exp={exp} isLit={isLit} />}
+        </ScrollRail.Item>
+      ))}
     </ScrollRail>
   </Section>
 );

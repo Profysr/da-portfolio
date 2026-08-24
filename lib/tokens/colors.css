@@ -2,15 +2,15 @@
 
 :root {
   /* Surfaces */
-  --background: #FDFBF7;
+  --background: #ececec;
   --foreground: #1A1A1A;
 
-  --surface: #FFFFFF;
+  --surface: #ffffff;
   --surface-hover: #F9F9F8;
   --surface-muted: #F7F6F3;
 
   /* Primary accent — Gold (ink foreground: 10.33:1 AA) */
-  --primary: #EBC429;
+  --primary: #e7b900;
   --primary-foreground: #1A1A1A;
   --primary-hover: #1A1A1A;
 
@@ -28,7 +28,7 @@
   --destructive: #9F2F2D;
   --destructive-foreground: #FDFBF7;
 
-  --border: #EAEAEA;
+  --border: #ccc;
   --border-strong: #E2E2E2;
   --input: #EAEAEA;
   --ring: #D4A800;

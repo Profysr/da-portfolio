@@ -13,8 +13,8 @@ import {
   IconBrandGithub,
 } from "@tabler/icons-react";
 import { HeatmapGrid } from "@/components/Heatmap";
-import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
-import { NumberSlider } from "@/components/watermelon/NumberSlider";
+import { ViewOnMap } from "@/components/common/ViewOnMap";
+import { NumberSlider } from "@/components/common/NumberSlider";
 import { downloadResume } from "@/lib/download";
 import { useState, useEffect } from "react";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
@@ -42,7 +42,7 @@ function LiveClock({ timeZone = "Asia/Karachi", label = "PKT" }) {
   }, [timeZone]);
 
   return (
-    <span className="font-poppins text-sm font-medium tracking-wide text-foreground">
+    <span className="text-sm font-medium tracking-wide text-foreground">
       {time ? `${time} ${label}` : "--:--:--"}
     </span>
   );
@@ -95,9 +95,9 @@ export default function About() {
     <Section id="about" className="py-section-tight" noFade>
       <div className="flex flex-col gap-6">
         <ScrollReveal variant="reveal" duration={0.8} once={false}>
-          <p className="text-3xl font-semibold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]">
+          <h2 className="text-3xl font-semibold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]">
             {statement}.
-          </p>
+          </h2>
         </ScrollReveal>
 
         {supporting && (
@@ -161,7 +161,7 @@ export default function About() {
             </div>
 
             {/* Enhanced Live Clock Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-3 py-1 shadow-sm backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-muted/50 px-3 py-1 shadow-e1">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
@@ -187,7 +187,7 @@ export default function About() {
                 <IconBrandGithub className="h-4.5 w-4.5" strokeWidth={1.5} />
               </span>
               <div>
-                <h4 className="text-base font-semibold">GitHub Rhythm</h4>
+                <h3 className="text-base font-semibold">GitHub Rhythm</h3>
                 <p className="text-xs text-muted-foreground">
                   Commits, open-source PRs, and build cadence
                 </p>

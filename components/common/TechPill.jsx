@@ -16,21 +16,29 @@ const IMG_SIZE_CLASSES = {
   xl: "size-8",
 };
 
-export function TechPill({ name, subCategory = null, className, size = "md" }) {
+// Icon-only pills (hideName) get a wider 3:2-ish box so wide logo
+// banners (NHS, SystmOne, EMIS...) render at meaningful size instead
+// of letterboxing inside a square.
+const ICON_ONLY_CLASSES = {
+  sm: "w-6 h-4",
+  md: "w-8 h-5",
+  lg: "w-10 h-6",
+  xl: "w-12 h-8",
+};
+
+export function TechPill({ name, className, size = "md" }) {
   const config = getTechIcon(name);
   const showImage = Boolean(config?.img);
   // Show name if: no image, OR image exists but hideName is not set
   const showName = !showImage || !config?.hideName;
 
-  const iconWrapClass = config?.lightBg
-    ? "rounded bg-white/90 dark:bg-white/15 p-0.5"
-    : "";
+  const iconWrapClass = config?.lightBg ? "rounded bg-foreground p-0.5" : "";
 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded border border-border bg-surface-high/40",
-        "text-zinc-200 hover:border-primary/40 hover:text-white transition-all",
+        "inline-flex items-center rounded border border-border bg-surface-muted",
+        "text-foreground hover:border-primary/40 hover:text-primary transition-all",
         SIZE_CLASSES[size],
         className,
       )}
@@ -39,26 +47,21 @@ export function TechPill({ name, subCategory = null, className, size = "md" }) {
         <span
           className={cn(
             "shrink-0 flex items-center justify-center",
-            IMG_SIZE_CLASSES[size],
+            showName ? IMG_SIZE_CLASSES[size] : ICON_ONLY_CLASSES[size],
             iconWrapClass,
           )}
         >
           <Image
             src={config?.img}
             alt={name}
-            width={32}
-            height={24}
+            width={showName ? 32 : 48}
+            height={showName ? 24 : 32}
             loading="lazy"
-            className="object-contain"
+            className="size-full object-contain"
           />
         </span>
       )}
       {showName && <span className="font-medium">{name}</span>}
-      {subCategory && showName && (
-        <span className="text-muted-foreground/70 font-mono border-l border-border pl-1 opacity-70">
-          {subCategory}
-        </span>
-      )}
     </span>
   );
 }

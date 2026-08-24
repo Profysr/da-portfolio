@@ -1,11 +1,12 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { IconArrowRight, IconLoader2 } from "@tabler/icons-react";
 import { personal } from "@/data/idx";
 import Image from "next/image";
 import { AnimatedShinyText } from "./ui/animated-shiny-text";
+
 /* ============================================================
  *  Timezone Helper (GMT+5:00 - Islamabad / Karachi)
  * ============================================================ */
@@ -34,7 +35,7 @@ const getStatus = () => {
 };
 
 /* ============================================================
- *  1. Avatar & Status Badge Sub-component (Double-Bezel Premium)
+ *  1. Avatar & Status Badge (dashed-ring avatar + status chip)
  * ============================================================ */
 export function AvatarStatus() {
   const [statusInfo, setStatusInfo] = useState({
@@ -54,7 +55,7 @@ export function AvatarStatus() {
       setIsSyncing(false);
       setStatusInfo(getStatus());
     } else {
-      // First time loading: show spinner for 3.5 seconds
+      // First time loading: show spinner for 7.5s (7500ms)
       const timer = setTimeout(() => {
         setIsSyncing(false);
         setStatusInfo(getStatus());
@@ -69,29 +70,22 @@ export function AvatarStatus() {
   const isGreen = dotColor === "green";
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-4">
-      {/* Double-Bezel Avatar */}
-      <div className="relative">
-        <Image
-          src={personal.avatar || "/avatar.jpg"}
-          alt={personal.name || "Avatar"}
-          width={120}
-          height={120}
-          className="object-cover rounded-full p-1 border-2 border-dashed border-primary"
-          priority
-        />
-      </div>
+    <div className="flex flex-col items-center justify-center gap-4">
+      {/* Avatar with dashed primary ring */}
+      <Image
+        src={personal.avatar || "/avatar.jpg"}
+        alt={personal.name || "Avatar"}
+        width={120}
+        height={120}
+        className="object-cover rounded-full p-1 border-2 border-dashed border-primary"
+        priority
+      />
 
-      {/* Status Badge - Double-Bezel */}
-      <div
-        className={cn(
-          "group relative inline-flex items-center justify-center px-2.5 py-1 rounded-full border transition-all duration-300 ease-out",
-        )}
-      >
-
+      {/* Status Badge */}
+      <div className="group inline-flex items-center justify-center rounded-md border transition-all duration-300 ease-out">
         {isSyncing ? (
           // --- SYNCING STATE ---
-          <div className="relative z-10 inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
+          <div className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
             <IconLoader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
             <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
               Syncing...
@@ -99,38 +93,26 @@ export function AvatarStatus() {
           </div>
         ) : (
           // --- LOADED STATE ---
-          <Suspense
-            fallback={
-              <span className="relative z-10 inline-flex items-center justify-center gap-1.5 px-2.5 py-1 text-xs sm:text-base font-semibold tracking-wide capitalize text-muted-foreground/80">
-                <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
-                  <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping bg-emerald-400" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-                </span>
-                {status}
-              </span>
-            }
-          >
-            <AnimatedShinyText className="relative z-10 inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-              <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
-                <span
-                  className={cn(
-                    "absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping",
-                    isGreen ? "bg-emerald-400" : "bg-amber-400",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "relative inline-flex h-2 w-2 rounded-full",
-                    isGreen ? "bg-emerald-500" : "bg-amber-500",
-                  )}
-                />
-              </span>
-              <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
-                {status}
-              </span>
-              <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-            </AnimatedShinyText>
-          </Suspense>
+          <AnimatedShinyText className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out hover:text-foreground hover:duration-300">
+            <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
+              <span
+                className={cn(
+                  "absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping",
+                  isGreen ? "bg-emerald-400" : "bg-amber-400",
+                )}
+              />
+              <span
+                className={cn(
+                  "relative inline-flex h-2 w-2 rounded-full",
+                  isGreen ? "bg-emerald-500" : "bg-amber-500",
+                )}
+              />
+            </span>
+            <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
+              {status}
+            </span>
+            <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </AnimatedShinyText>
         )}
       </div>
     </div>

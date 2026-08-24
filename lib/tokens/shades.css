@@ -25,6 +25,10 @@
   --shade-rose-text: #9F2F2D;
   --shade-rose-border: rgba(159, 47, 45, 0.20);
 
+  --shade-orange-bg:   #FFE9D8;
+  --shade-orange-text: #9A3412;
+  --shade-orange-border: rgba(154, 52, 18, 0.20);
+
   --shade-canvas-bg:   var(--surface);
   --shade-canvas-text: var(--foreground);
   --shade-canvas-border: var(--border);
@@ -47,6 +51,10 @@
   --shade-rose-text: #EBA6A4;
   --shade-rose-border: rgba(235, 166, 164, 0.25);
 
+  --shade-orange-bg:   rgba(154, 52, 18, 0.18);
+  --shade-orange-text: #F0A880;
+  --shade-orange-border: rgba(240, 168, 128, 0.25);
+
   --shade-canvas-bg:   var(--surface);
   --shade-canvas-text: var(--foreground);
   --shade-canvas-border: var(--border);
@@ -61,6 +69,8 @@
   --color-shade-green-text: var(--shade-green-text);
   --color-shade-rose-bg:   var(--shade-rose-bg);
   --color-shade-rose-text: var(--shade-rose-text);
+  --color-shade-orange-bg:   var(--shade-orange-bg);
+  --color-shade-orange-text: var(--shade-orange-text);
   --color-shade-canvas-bg:   var(--shade-canvas-bg);
   --color-shade-canvas-text: var(--shade-canvas-text);
 }
@@ -86,6 +96,11 @@
   background-color: var(--shade-rose-bg);
   color: var(--shade-rose-text);
   border-color: var(--shade-rose-border);
+}
+.shade-card-orange {
+  background-color: var(--shade-orange-bg);
+  color: var(--shade-orange-text);
+  border-color: var(--shade-orange-border);
 }
 .shade-card-canvas {
   background-color: var(--shade-canvas-bg);

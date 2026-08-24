@@ -19,7 +19,7 @@ import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";
 
 /* ============================================================
- *  Headline â€” watermark + kinetic typewriter roles
+ *  Headline — watermark + kinetic typewriter roles
  * ============================================================ */
 const ROLES = [
   "Software Engineer",
@@ -44,7 +44,7 @@ function Headline() {
 }
 
 /* ============================================================
- *  Actions â€” socials + single primary CTA (one cluster)
+ *  Actions — socials + single primary CTA (one cluster)
  * ============================================================ */
 function HeroActions() {
   const ctaRef = useRef(null);
@@ -68,7 +68,7 @@ function HeroActions() {
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-3xl">
-      <div className="flex items-center space-x-4 sm:space-x-5">
+      <div className="flex items-center gap-4 sm:gap-5">
         {socials.map(({ platform, label, icon: Icon, url, aria }) => (
           <Tooltip key={platform}>
             <TooltipTrigger asChild>
@@ -115,15 +115,15 @@ function HeroActions() {
 }
 
 /* ============================================================
- *  Hero â€” stack discipline: status Â· headline Â· subtext Â· CTA
+ *  Hero — stack discipline: status · headline · subtext · CTA
  * ============================================================ */
 export default function Hero() {
   return (
     <Section
       id="hero"
-      className="relative flex min-h-dvh items-center justify-center pt-18 md:pt-24"
+      className="flex min-h-dvh items-center justify-center pt-18 md:pt-24"
     >
-      <Layout className="relative flex w-full flex-col items-center justify-center gap-7 px-4 text-center sm:px-6">
+      <Layout className="flex w-full flex-col items-center justify-center gap-7 px-4 text-center sm:px-6">
         <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
         </ScrollReveal>
