@@ -181,7 +181,7 @@ Special tokens:
 
 ## ♿ ACCESSIBILITY COMMITMENTS
 
-- WCAG AA contrast on all token pairs (validated Phase 4 + Phase 22 sweep)
+- WCAG AA contrast on all token pairs (validated Phase 4 + Phase 21 sweep)
 - Full keyboard paths: nav, dock, chatbot focus trap + restore, palette
 - ARIA live regions for chatbot streaming; labels on all icon buttons
 - Reduced-motion honored globally (CSS gate + JS primitive guards)

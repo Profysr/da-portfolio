@@ -22,9 +22,9 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { projects } from "@/data/idx";
 import { TagFilter } from "@/components/TagFilter";
-import { TechPill } from "@/components/TechPill";
-import { ExtendedLink } from "@/components/ExtendedLink";
-import { LazyParticles } from "@/components/lazy";
+import { TechPill } from "@/components/common/TechPill";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
+import { LazyParticles } from "@/components/common/lazy";
 import { Suspense } from "react";
 import { ExpandableList } from "@/components/ui/expandable-list";
 
@@ -129,13 +129,12 @@ function ProjectBlueprintHero({ project, config }) {
   );
 }
 
-
 /* ── Reusable Project Card Footer Component ────────────────────────── */
 function ProjectCardFooter({
   github,
   live,
   isPrivate,
-  fallbackText = "Internal deployment — preview unavailable"
+  fallbackText = "Internal deployment — preview unavailable",
 }) {
   const hasGithub = Boolean(github && github !== "#");
   const hasLive = Boolean(live && live !== "#");
@@ -156,7 +155,8 @@ function ProjectCardFooter({
               </ExtendedLink>
             ) : isPrivate ? (
               <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground/60 italic">
-                <IconLock className="size-3 text-muted-foreground/50" /> Private Repository
+                <IconLock className="size-3 text-muted-foreground/50" /> Private
+                Repository
               </span>
             ) : null}
           </div>
@@ -289,17 +289,17 @@ function ProjectCard({ project }) {
             </span>
             <div className="flex flex-wrap gap-1">
               {project.tech.map((tag) => (
-                <TechPill
-                  key={tag}
-                  name={tag}
-                  size="sm"
-                />
+                <TechPill key={tag} name={tag} size="sm" />
               ))}
             </div>
           </div>
         )}
         {/* Bottom Action Links */}
-        <ProjectCardFooter github={project.github} isPrivate={project.isPrivate} live={project.live} />
+        <ProjectCardFooter
+          github={project.github}
+          isPrivate={project.isPrivate}
+          live={project.live}
+        />
       </div>
     </article>
   );
@@ -320,10 +320,10 @@ const Projects = () => {
       <Suspense fallback={null}>
         <LazyParticles
           className="absolute inset-0"
-        // quantity={120}
-        // ease={60}
-        // color="#ffffff"
-        // size={0.7}
+          // quantity={120}
+          // ease={60}
+          // color="#ffffff"
+          // size={0.7}
         />
       </Suspense>
       <Layout>
@@ -343,7 +343,11 @@ const Projects = () => {
           </div>
 
           {/* Filter Tabs */}
-          <TagFilter items={CATEGORIES} activeValue={activeTab} onChange={setActiveTab} />
+          <TagFilter
+            items={CATEGORIES}
+            activeValue={activeTab}
+            onChange={setActiveTab}
+          />
 
           {/* Integrated Expandable Grid */}
           <AnimatePresence mode="wait">

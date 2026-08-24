@@ -9,8 +9,8 @@
 
 | # | Rule |
 |---|------|
-| 1 | **No custom SVGs** — download via URL or ask user. Log source per asset |
-| 2 | **Formats:** `.jsx` everywhere; `.tsx` ONLY in `components/ui/`; `.ts` for lib/config/api routes; root `app/layout.tsx` stays `.tsx` |
+| 1 | **No custom SVGs** — download via URL or ask user. Library icon **components** (`@tabler/icons-react`, etc.) are sanctioned. Log source per asset |
+| 2 | **Formats & folders:** `.jsx` default everywhere. `components/ui/` = **library-added components only** (shadcn/registry drops; `.tsx` permitted there). Our shared primitives → `components/common/` (**`.jsx` mandatory once outside ui/**). `.ts` for lib/config/api routes; root `app/layout.tsx` stays `.tsx` |
 | 3 | **24 phases** — max **4 files per phase**, min 1 |
 | 4 | **Review gate** after EVERY phase — user approval required |
 | 5 | **Research-first** — Context7 MCP / skills validation logged per phase |
@@ -91,42 +91,39 @@ FAIL  cannot fix in-phase → revert + report
 
 # WEEK 2 — PERFORMANCE & ANIMATIONS
 
-## Phase 7 — Dynamic Import Registry
-**Files (2):** `components/lazy/index.jsx` · `components/ui/Skeleton.jsx`
-- `next/dynamic` wrappers: ssr:false → MagneticDock, FluidIslandNav, GSAPHorizontalScroll, GSAPScrollRail, AnimatedBeam, CursorGlow, Chatbot, CommandPalette
-- ssr:true → heavy-but-SEO-relevant islands
-- Consistent skeleton fallbacks per shape
+> **Amendment (user directive):** Lazy-import registry MOVED from Phase 7 → **Phase 22**. Rationale: build sections first, discover which components actually ship, then register loaders for real usage only — no speculative entries. OptimizedImage stays early (consumed during section rebuilds).
 
-## Phase 8 — OptimizedImage
-**Files (1):** `components/ui/OptimizedImage.jsx`
+## Phase 7 — OptimizedImage + Skeleton
+**Files (2):** `components/ui/OptimizedImage.jsx` · `components/ui/Skeleton.jsx`
 - Blur placeholder (auto SVG dataURL), priority→fetchPriority high, sizes defaults
 - Error state fallback, fade-in on load
+- Skeleton = shared pulse primitive (reused by registry in P22)
 
 ### Sub-phases:
-- 8a. Component build + test harness
-- 8b. Swap `<img>` usages found during section phases (tracked list)
+- 7a. Component build
+- 7b. Swap `<img>` usages found during section phases (tracked list)
 
-## Phase 9 — AmbientBackground Global Layer
+## Phase 8 — AmbientBackground Global Layer
 **Files (2):** `components/animations/AmbientBackground.jsx` · `app/globals.css` (keyframes append)
 - CSS-only orbs (blob keyframes) + fixed grain overlay
 - Retires Particles/LightRays usage page-wide (imports removed, files kept)
 - Variants: orb/grid · intensities: subtle/medium/strong
 
-## Phase 10 — Scroll Animation Primitives
+## Phase 9 — Scroll Animation Primitives
 **Files (2):** `components/animations/ScrollReveal.jsx` · `StaggeredReveal.jsx`
 - IntersectionObserver + CSS animations (zero JS anim overhead)
 - prefers-reduced-motion → static render
 - Absorbs StaggeredList role
 
-## Phase 11 — Magnetic & GSAP Hook
+## Phase 10 — Magnetic & GSAP Hook
 **Files (3):** `components/animations/Magnetic.jsx` · `useGSAP.js` · dock variant wiring
 - Consolidate MagneticButton/MagneticDock patterns into one primitive
 - useGSAP: gsap.context lifecycle, ctx.revert cleanup, `start:"top top"` canonical skeleton
-- **Dock A/B (user directive):** run BOTH `MagneticDock` and simple `dock.tsx` live in the BottomDock slot → compare UX/visuals/perf → keep whichever suits more; loser marked UNUSED (file kept). Verdict recorded at P11 review or deferred to a later polish phase if needed
+- **Dock A/B (user directive):** run BOTH `MagneticDock` and simple `dock.tsx` live in the BottomDock slot → compare UX/visuals/perf → keep whichever suits more; loser marked UNUSED (file kept). Verdict recorded at P10 review or deferred to a later polish phase if needed
 
-## Phase 12 — HERO REBUILD ⭐
+## Phase 11 — HERO REBUILD ⭐
 **Files (2):** `app/(home)/_components/Hero.jsx` · `components/HeroPills.jsx` (new floating layer)
-- ❌ Remove LightRays import (file stays, marked UNUSED)
+- ❌ Remove LightRays import + old `components/lazy.jsx` consumer migration (file stays, marked UNUSED)
 - Floating decorative TechPill cluster at 3 parallax depths (Motion values, not useState)
 - Stack discipline: avatar-status → kinetic headline (typewriter) → ≤20-word subtext → single CTA + socials
 - Entry: staggered blur-fade-up 800ms `cubic-bezier(0.32,0.72,0,1)`
@@ -136,39 +133,39 @@ FAIL  cannot fix in-phase → revert + report
 
 # WEEK 3 — SECTIONS & CHATBOT
 
-## Phase 13 — About Section
+## Phase 12 — About Section
 **Files (2):** `About.jsx` · portrait wrapper
 - Editorial Split: massive statement left, DoubleBezel portrait right
 - NumberTicker stats row
 - Handoff pairing with Hero exit
 
-## Phase 14 — TechStack Horizontal Scroller ⭐
+## Phase 13 — TechStack Horizontal Scroller ⭐
 **Files (3):** `TechStack.jsx` · shade-token classes in globals.css · watermelon `Tabs.tsx` refactor
 - GSAP horizontal pan using existing `GSAPHorizontalScroll.tsx` engine
 - **Solid different-shade background per card** (token tint steps forming color rhythm)
 - ✅ CONFIRMED: watermelon `Tabs.tsx` drives TechStack category switching
 - ⚠️ Rule #14 applies: Tabs.tsx refactored FIRST — standardize classes to `@theme` tokens, comment out demo content, then integrate
 
-## Phase 15 — Experience Scroll Stories (A/B Evaluation)
+## Phase 14 — Experience Scroll Stories (A/B Evaluation)
 **Files (2):** `Experience.jsx` · active mechanism component
 - **Build BOTH, keep the winner** (user directive):
   - 15a. Option A: sticky-stack (pin top-top, scale 0.92/op 0.55 handoff) → review
   - 15b. Option B: `21st/Timeline.tsx` story renderer (refactored per Rule #14: token-standardized classes, demos commented out) → review
 - Compare live on real data; user verdict recorded in phase log; loser marked UNUSED (file kept)
 
-## Phase 16 — Projects Bento Rebuild ⭐
+## Phase 15 — Projects Bento Rebuild ⭐
 **Files (3):** new `ProjectCard.jsx` (PricingCard-inspired minimal aesthetic) · rebuilt bento layout · `Projects.jsx` feed update
 - True asymmetric bento (current ProjectsBento is NOT the actual one — rebuild)
 - **Iterate ALL 8 MDX projects including in-progress** (status badge: Live / In Progress)
 - BorderBeam hover, stagger entrance, OptimizedImage thumbnails
 
-## Phase 17 — Writings Redesign + Credentials Focus
+## Phase 16 — Writings Redesign + Credentials Focus
 **Files (3):** `Activities.jsx` → writings-only redesign · `Credentials.jsx` education-only · data file comment-out
 - Activity section becomes **Writings**: 3 MDX articles on tracing-beam spine
 - JournalNavigation (watermelon) integration candidate
 - Credentials: **education entries ONLY**; certificates + awards commented out in data (preserved)
 
-## Phase 18 — Lightweight Chatbot Components
+## Phase 17 — Lightweight Chatbot Components
 **Files (3):** `components/chatbot/Chatbot.jsx` · `Message.jsx` · `QuickActions.jsx`
 - Custom streaming UI (no `ai` SDK dependency)
 - Quick-action chips: Projects / Experience / Stack / Contact
@@ -179,31 +176,39 @@ FAIL  cannot fix in-phase → revert + report
 
 # WEEK 4 — API, SEO, QUALITY, DEPLOY
 
-## Phase 19 — Chatbot API & Wiring
+## Phase 18 — Chatbot API & Wiring
 **Files (3):** `app/api/chat/route.ts` (Edge runtime) · `BottomDock.jsx` wiring · `package.json` (drop `ai` dep, −70KB)
 - Curated responses + character-stream simulation
-- LazyChatbot mount from registry
+- Chatbot mounted via P22 registry
 
-## Phase 20 — SEO Metadata System
+## Phase 19 — SEO Metadata System
 **Files (3):** `lib/seo.ts` · `lib/structured-data.ts` enhance · project detail page metadata
 - Metadata factory (canonical, OG, Twitter, robots per route)
 - Article + SoftwareApplication + BreadcrumbList JSON-LD
 
-## Phase 21 — OG Images, Listings, Navigation
+## Phase 20 — OG Images, Listings, Navigation
 **Files (3):** `app/og/route.jsx` · listing pages polish · NavLink rollout (replaces ExtendedLink usage)
 - Dynamic OG generation (1200×630, three templates)
 - TagFilter a11y pass, static generation verification
 - Footer contact candidates: ComposeEmail + ViewOnMap (watermelon) — user decides fit
 
-## Phase 22 — Accessibility Sweep
+## Phase 21 — Accessibility Sweep
 **Files:** 0 audit + ≤4 fix files
 - axe-core CLI full scan + manual keyboard/SR passes
 - Fix flagged issues within file budget; overflow → next-phase log
+
+## Phase 22 — Dynamic Import Registry (usage-driven) ⭐
+**Files (2):** `components/lazy/index.jsx` · retire old `components/lazy.jsx`
+- **Built AFTER the site exists** (user directive): audit final section/component usage → register ONLY real survivors via `next/dynamic`
+- ssr:false for GSAP/canvas/chatbot/palette-class islands; ssr:true where SEO-relevant
+- Skeleton fallbacks per shape (from P7)
+- Old `lazy.jsx` consumers migrated; file marked UNUSED
 
 ## Phase 23 — Bundle Budgets & Dep Pruning
 **Files (2):** `next.config.js` · `package.json`
 - Performance budgets (150KB/component), optimizePackageImports for icon packs
 - Verify removed deps: ai SDK; audit icon library usage concentration
+- Consumes P22 registry results
 
 ## Phase 24 — CI Pipeline & Final Regression
 **Files (2):** `lighthouserc.json` · `.github/workflows/ci.yml`
@@ -230,9 +235,9 @@ FAIL  cannot fix in-phase → revert + report
 | Query | Key Finding Applied In |
 |-------|----------------------|
 | App Router folder structure | ARCHITECTURE.md structure section |
-| dynamic imports / next/dynamic | Phase 7 registry (ssr control per component class) |
-| Image optimization props | Phase 8 OptimizedImage defaults |
-| Link prefetch strategies | Phase 21 NavLink (intent-based prefetch) |
+| dynamic imports / next/dynamic | Phase 22 registry (ssr control per component class) |
+| Image optimization props | Phase 7 OptimizedImage defaults |
+| Link prefetch strategies | Phase 20 NavLink (intent-based prefetch) |
 | Font optimization | Phase 5 fonts.ts (subsets, preload policy) |
 | SEO metadata / JSON-LD | Phase 20 factory schemas |
 | Vercel Analytics / Web Vitals | Phase 6 WebVitals component |
@@ -265,4 +270,8 @@ Phase 06d 🔧 FIXED — Two user reports: (1) System click highlighted Moon not
 Phase 06e 🔄 BUILT — User-supplied logo public/bilal.svg integrated dual-mode: SVG is monochrome white-only → rendered via CSS mask technique (.logo-mark utility in globals.css: mask url + -webkit-mask prefix) tinted bg-foreground → auto-inverts light/dark via tokens, single asset source, no path duplication. TopBar: <Image>+personal.logo conditional replaced by mask span (h-6 aspect-[551/313] from viewBox), unused Image import removed, aria-label improved. LINT/BUILD EXIT:0.
 Phase 06f 🔄 BUILT (user-directed, supersedes 06e mask approach) — user reformatted bilal.svg to structured paths → scripts/generate-logo.cjs created (reads public/bilal.svg → rewrites all non-currentColor fills to currentColor → emits components/layout/Logo.jsx inline component; rerunnable for future SVG revisions) · TopBar mask span → <Logo className="block h-6 w-auto text-foreground" /> · .logo-mark utility removed from globals.css. Logo.jsx = server-safe pure render, aria-hidden (link carries aria-label). LINT/BUILD EXIT:0.
 Phase 06g 🔄 BUILT — User delivered currentColor-native SVG (v3): public/bilal.svg synced · Logo.jsx rewritten to user's exact signature (named export, aria-label="Bilal Ahmad" on svg — TopBar link label removed to avoid double announcement; fillRule camelCase; type annotation adapted to .jsx zone per Rule #2) · generator script DELETED per user (obsolete now that user supplies currentColor SVGs directly; also resolves eslint react-hooks plugin crash on .cjs) · logo sized h-6→h-7 (+20% ≈28.8px→h-7=28px). tsc/LINT/BUILD EXIT:0.
+Phase 06h 🔧 FIXED — Two dev-runtime reports: (1) "Element type invalid / got undefined" in TopBar = stale Turbopack .next/dev cache after repeated export-shape flips on Logo.jsx (prod build proved graph valid) → remedy issued: stop server + Remove-Item .next\dev + restart. (2) Hydration diff warning on <html> (className+color-scheme dark added client-side) = next-themes anti-flash script mutating pre-hydration — suppressHydrationWarning had been accidentally lost from layout.tsx in a later edit → restored per Context7 /pacocoursey/next-themes mandate ("must add to <html> element"). Private-window irrelevant (empty storage → system theme → same mutation path). tsc/LINT/BUILD EXIT:0.
+Phase 07-AMENDMENT ✅ APPROVED — User directive: lazy registry moved P07→P22 (usage-driven: build site first, register real survivors only). Plan renumbered 1–24 cleanly; OptimizedImage promoted to P07. COMPONENTS_MAP/ARCHITECTURE/baseline cross-refs synced.
+Phase 07 🔄 BUILT — OptimizedImage + Skeleton: components/ui/Skeleton.jsx (shared pulse primitive) · components/ui/OptimizedImage.jsx (thin next/image wrapper: neutral blur dataURL default · fade-in 500ms ease-out-expo on load · error fallback w/ role=img+alt preserved · priority→fetchPriority high + native preload · sizes default responsive trio · quality 85 · forwardRef; verified ease-out-expo utility generated in build CSS). Consumers arrive P11 Hero + section rebuilds (7b swap list). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 07b 🔄 BUILT — Rule compliance + folder taxonomy (user directives): (1) ui/ = library-added only → user moved OptimizedImage/Skeleton to components/common/ (custom primitives home; GlowFrame/theme-switcher still pending move → will convert .tsx→.jsx on move per Rule #2); (2) hand-drawn fallback svg REPLACED by @tabler IconPhotoOff (library icons sanctioned); (3) NEUTRAL_BLUR base64 svg ELIMINATED entirely → placeholder="empty" + Skeleton underlay until load (fixes dark-mode light-flash bug from hardcoded #F7F6F3; container span contract, zero svg authored). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
 ```

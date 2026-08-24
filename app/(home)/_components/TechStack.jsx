@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { SkillsAndTools } from "@/data/idx";
 import { FavoriteStack } from "@/components/FavoriteStack";
 import { GlowFrame } from "@/components/ui/GlowFrame";
-import { TechPill } from "@/components/TechPill";
+import { TechPill } from "@/components/common/TechPill";
 import { TagFilter } from "@/components/TagFilter";
 
 const CATEGORY_ICONS = {
@@ -85,10 +85,10 @@ function TechStack() {
                   >
                     <GlowFrame
                       className="h-full rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all"
-                      spread={30}
-                      borderWidth={1}
+                      // spread={30}
+                      // borderWidth={1}
                     >
-                      <div className="relative z-[2] flex flex-col justify-between h-full gap-3">
+                      <div className="relative z-2 flex flex-col justify-between h-full gap-3">
                         {/* Group Header */}
                         <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
                           <div className="flex items-center gap-2">

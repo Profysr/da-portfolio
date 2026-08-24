@@ -14,7 +14,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { ExpandableList } from "@/components/ui/expandable-list";
-import { TechPill } from "@/components/TechPill";
+import { TechPill } from "@/components/common/TechPill";
 import { ScrollRail } from "@/components/ui/ScrollRail";
 import { cn } from "@/lib/utils";
 

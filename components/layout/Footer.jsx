@@ -17,7 +17,7 @@ import { nav, socials, personal, footer } from "@/data/idx";
 import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/lib/download";
 
-import { ExtendedLink } from "@/components/ExtendedLink";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
 
 /* ─────────────────────────────────────────────────────────────
  *  1. Footer CTA Action Buttons

@@ -8,7 +8,7 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { favoriteStack } from "@/data/idx";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { TechPill } from "@/components/TechPill";
+import { TechPill } from "@/components/common/TechPill";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export function FavoriteStack({ variant = "compact", className = "" }) {
@@ -25,7 +25,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
           "relative flex items-center w-full max-w-xl overflow-hidden rounded-lg p-2 border border-border bg-surface/80 backdrop-blur-md shadow-xs",
           "before:absolute before:left-0 before:z-10 before:h-full before:w-10 before:bg-linear-to-r before:from-surface/90 before:to-transparent",
           "after:absolute after:right-0 after:z-10 after:h-full after:w-10 after:bg-linear-to-l after:from-surface/90 after:to-transparent",
-          className
+          className,
         )}
       >
         <Marquee
@@ -60,7 +60,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
     <div
       className={cn(
         "relative w-full sm:max-w-3xl rounded-md border border-primary/30 bg-surface p-4 sm:p-5 flex flex-col gap-3.5 shadow-lg overflow-hidden",
-        className
+        className,
       )}
     >
       <BorderBeam

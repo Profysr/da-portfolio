@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import { ExtendedLink } from "@/components/ExtendedLink";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
 import { IconArrowUpRight, IconCode, IconPencil } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Layout } from "@/components/layout/Layout";

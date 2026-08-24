@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { TechPill } from "@/components/TechPill";
-import { ExtendedLink } from "@/components/ExtendedLink";
+import { TechPill } from "@/components/common/TechPill";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
 import { cn } from "@/lib/utils";
 import {
   IconExternalLink,

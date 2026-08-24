@@ -4,9 +4,15 @@ import { useMDXComponents } from "@/components/mdx-components";
 import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
-import { TechPill } from "@/components/TechPill";
-import { ExtendedLink } from "@/components/ExtendedLink";
-import { IconArrowLeft, IconCalendar, IconExternalLink, IconBrandGithub, IconRocket } from "@tabler/icons-react";
+import { TechPill } from "@/components/common/TechPill";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
+import {
+  IconArrowLeft,
+  IconCalendar,
+  IconExternalLink,
+  IconBrandGithub,
+  IconRocket,
+} from "@tabler/icons-react";
 import Link from "next/link";
 
 export function ProjectContent({ meta, children, changelog }) {
@@ -23,7 +29,12 @@ export function ProjectContent({ meta, children, changelog }) {
   const hasGithub = meta.github && meta.github !== "#";
   const hasLive = meta.live && meta.live !== "#";
 
-  const accessVariant = meta.access === "Open Source" ? "outline" : meta.access === "Hosted" ? "default" : "secondary";
+  const accessVariant =
+    meta.access === "Open Source"
+      ? "outline"
+      : meta.access === "Hosted"
+        ? "default"
+        : "secondary";
 
   return (
     <Section className="py-8 md:py-12" noFade>
@@ -147,7 +158,10 @@ export function ProjectContent({ meta, children, changelog }) {
                 </h2>
                 <div className="space-y-4">
                   {changelog.map((entry) => (
-                    <details key={entry.version} className="group border border-border rounded-lg overflow-hidden bg-surface/50">
+                    <details
+                      key={entry.version}
+                      className="group border border-border rounded-lg overflow-hidden bg-surface/50"
+                    >
                       <summary className="p-4 cursor-pointer list-none flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <span className="px-3 py-1 rounded bg-primary/10 text-primary text-sm font-mono font-semibold">
@@ -161,7 +175,9 @@ export function ProjectContent({ meta, children, changelog }) {
                             })}
                           </span>
                         </div>
-                        <span className="text-primary transition-transform group-open:rotate-90">▶</span>
+                        <span className="text-primary transition-transform group-open:rotate-90">
+                          ▶
+                        </span>
                       </summary>
                       <div className="px-4 pb-4 border-t border-border/50">
                         <ul className="space-y-2 text-muted-foreground text-sm">

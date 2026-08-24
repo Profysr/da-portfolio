@@ -2,9 +2,9 @@
 
 import { useRef, Suspense } from "react";
 import Image from "next/image";
-import { LazyAnimatedBeam } from "@/components/lazy";
+import { LazyAnimatedBeam } from "@/components/common/lazy";
 import { personal, socials } from "@/data/idx";
-import { ExtendedLink } from "@/components/ExtendedLink";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
 import {
   Tooltip,
   TooltipContent,

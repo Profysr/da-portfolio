@@ -27,9 +27,9 @@ const GlowFrame = forwardRef<HTMLDivElement, GlowFrameProps>(
       className,
       interior = true,
       border = true,
-      size = 180,
-      interiorColor = "rgba(255,255,255,0.14)",
-      spread = 40,
+      size = 120,
+      interiorColor = "rgba(255,255,255,0.25)",
+      spread = 25,
       borderWidth = 1,
       disabled = false,
       ...props
@@ -119,7 +119,7 @@ const GlowFrame = forwardRef<HTMLDivElement, GlowFrameProps>(
           <div
             aria-hidden
             data-glow="interior"
-            className="pointer-events-none absolute inset-0 z-[2] rounded-[inherit] opacity-0 transition-opacity duration-500 group-hover/gf:opacity-100"
+            className="pointer-events-none absolute inset-0 z-2 rounded-[inherit] opacity-0 transition-opacity duration-500 group-hover/gf:opacity-100"
             style={{
               background: `radial-gradient(${size}px circle at var(--mx, 50%) var(--my, 50%), ${interiorColor}, transparent 70%)`,
               filter: "blur(24px)",
@@ -157,13 +157,13 @@ const GlowFrame = forwardRef<HTMLDivElement, GlowFrameProps>(
               className={cn(
                 "glow",
                 "rounded-[inherit]",
-                'after:content-[""] after:rounded-[inherit] after:absolute after:inset-[calc(-1*var(--gf-border-width))]',
+                'after:content-[""] after:rounded-[inherit] after:absolute after:-inset-(--gf-border-width)',
                 "after:[border:var(--gf-border-width)_solid_transparent]",
-                "after:[background:var(--gradient)] after:[background-attachment:fixed]",
-                "after:opacity-[var(--active)] after:transition-opacity after:duration-500",
+                "after:[background:var(--gradient)] after:bg-fixed",
+                "after:opacity-(--active) after:transition-opacity after:duration-500",
                 "after:[mask-clip:padding-box,border-box]",
-                "after:[mask-composite:intersect]",
-                "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]"
+                "after:mask-intersect",
+                "after:mask-[linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]"
               )}
             />
           </div>

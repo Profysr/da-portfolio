@@ -3,6 +3,8 @@
 **Companion docs:** `ROADMAP.md` (phases) · `ARCHITECTURE.md` (sitemap/design)
 **Rule:** NO component is deleted. Deprecated items are marked `UNUSED` and their imports removed — files stay on disk.
 
+> **Phase renumber (P07 amendment, user directive):** lazy registry moved P07→**P22**; phases 8–11 shifted −1 (now 7–10); sections shifted −1 (About=12 … Chatbot=17); chat-api=18, SEO=19, OG/NavLinks=20; a11y sweep=21. Cells below reflect ORIGINAL numbers where historical; key targets now: TechStack=13 · Experience=14 · Projects=15 · Writings/Creds=16 · Chatbot swap=17 · NavLink rollout=20 · Registry=22.
+
 **Score legend:** 10 core keep-optimize · 7-8 keep-modify · 5-6 consolidate · 3-4 replace usage · UNUSED = retired from imports
 **Columns:** Where used today → Target role → Duplicates/similar → Disposition
 

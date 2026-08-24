@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { BentoCard } from "@/components/ui/bento-grid";
 import { AvatarStatus } from "@/components/AvatarStatus";
-import { LazyParticles } from "@/components/lazy";
+import { LazyParticles } from "@/components/common/lazy";
 import {
   IconMapPin,
   IconWorld,
@@ -154,9 +154,13 @@ export default function About() {
         <StatCard
           title="Projects Built"
           value={
-            stats?.publicRepos ? `${stats.publicRepos}+ Repos` : about.stats[1]?.value || "20+"
+            stats?.publicRepos
+              ? `${stats.publicRepos}+ Repos`
+              : about.stats[1]?.value || "20+"
           }
-          subtext={stats?.totalStars ? `${stats.totalStars} Stars` : "Public Repos"}
+          subtext={
+            stats?.totalStars ? `${stats.totalStars} Stars` : "Public Repos"
+          }
           icon={IconGitBranch}
           className="h-full"
         />
@@ -180,7 +184,9 @@ export default function About() {
           <div className="flex-1 flex items-center justify-center my-auto py-2 overflow-x-auto">
             <HeatmapGrid
               weeks={contributions.heatmapWeeks || 30}
-              githubUsername={stats?.username || contributions.githubUsername || "Profysr"}
+              githubUsername={
+                stats?.username || contributions.githubUsername || "Profysr"
+              }
               realContributionCalendar={stats?.contributionCalendar}
               overrideTotal={stats?.totalContributions}
             />
@@ -211,9 +217,7 @@ export default function About() {
   return (
     <Section id="about" className="relative py-12 md:py-16" noFade>
       <Suspense fallback={null}>
-        <LazyParticles
-          className="absolute inset-0"
-        />
+        <LazyParticles className="absolute inset-0" />
       </Suspense>
 
       {/* Unified 12-Column Bento Grid */}

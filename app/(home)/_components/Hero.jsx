@@ -2,7 +2,7 @@
 
 import { useRef, useState, Suspense } from "react";
 import { motion } from "motion/react";
-import { LazyLightRays } from "@/components/lazy";
+import { LazyLightRays } from "@/components/common/lazy";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
@@ -89,9 +89,7 @@ function HeroActions() {
 
   const getIconClass = (isWiggling) => {
     return `transition-all duration-300 ${
-      isWiggling
-        ? "animate-wiggle scale-125"
-        : "hover:scale-110"
+      isWiggling ? "animate-wiggle scale-125" : "hover:scale-110"
     }`;
   };
 
@@ -122,7 +120,9 @@ function HeroActions() {
                     <Icon
                       size={20}
                       weight="bold"
-                      className={getIconClass(wiggleIcon === label.toLowerCase())}
+                      className={getIconClass(
+                        wiggleIcon === label.toLowerCase(),
+                      )}
                     />
                   </a>
                 </TooltipTrigger>
