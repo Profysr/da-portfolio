@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState, Suspense } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
-import { LazyLightRays } from "@/components/common/lazy";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Layout } from "@/components/layout/Layout";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
@@ -165,16 +164,8 @@ export default function Hero() {
   return (
     <Section
       id="hero"
-      className="relative w-full overflow-hidden min-h-screen flex items-center justify-center pt-24"
+      className="relative w-full min-h-screen flex items-center justify-center pt-24"
     >
-      <Suspense fallback={null}>
-        <LazyLightRays
-          // count={10}
-          color="rgba(160, 210, 255, 0.25)"
-          blur={50}
-        />
-      </Suspense>
-
       <TooltipProvider delayDuration={0}>
         <Layout className="relative z-10 flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6">
           <ScrollReveal variant="fade" delay={0} duration={0.6} once={false}>

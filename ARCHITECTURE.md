@@ -69,14 +69,14 @@ GLOBAL CHROME (all pages): TopBar (FluidIslandNav + theme toggle) · BottomDock 
 - Layout families rotate per section (no repetition): Cascade → Split → Horizontal Pan → Stack → Bento → List → Spine → Accordion
 - ⚠️ Skill's "py-24 macro-whitespace" and "rounded-[2rem] squircle" defaults are OVERRIDDEN by taste profile (tighter spacing, lower roundness win)
 
-### Global Continuity System (replaces divider spacing)
+### Global Continuity System (simplified per user directive)
 
 | Technique | Implementation |
 |-----------|---------------|
-| Continuous canvas | ONE fixed `AmbientBackground` (CSS-only orbs, zero JS) + fixed grain overlay behind all sections |
-| No hard breaks | Negative-margin section overlap + soft gradient fade-masks. No `border-t`, no dead py-voids |
-| Handoff choreography | Section entrance pairs with previous exit-reverse (scrub): outgoing drifts up + de-blurs, incoming rises to meet it |
-| Reverse-based feel | Parallax layers counter-move (pills ↑ vs content ↓); stack cards scale DOWN as next arrives |
+| Backgrounds | **Plain solid token backgrounds** (`bg-background`) — ambient orb layer DEPRECATED at P08 (component kept unused for future revisit) |
+| Section rhythm | Tight `--spacing-section` clamp + flex-col gap-first layout; no divider borders, minimal relative/z/overflow usage |
+| Handoff choreography | Entrance reveals pair with previous exit-reverse (delivered via P09 ScrollReveal primitives) |
+| Reverse-based feel | Parallax/counter-moves reserved for Hero pill layer + Experience stack only |
 
 ### Motion Rules
 

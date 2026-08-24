@@ -80,8 +80,9 @@
 ### Marked UNUSED (imports removed when encountered — FILES KEPT)
 | Component | Reason |
 |-----------|--------|
-| light-rays.tsx | User removing from Hero; replaced by AmbientBackground |
-| particles.tsx | Replaced by CSS-only AmbientBackground |
+| animations/AmbientBackground.jsx | ⛔ P08 DEPRECATED by user: plain solid backgrounds preferred; simplification pass (fewer relative/z/overflow). Kept for future revisit — grain still awaits noise asset |
+| light-rays.tsx | User removing from Hero; replaced concept by AmbientBackground (now itself deprecated) |
+| particles.tsx | Replaced by CSS-only approach; superseded by deprecation above — file kept |
 | ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED |
 | modal.tsx | dialog.tsx + drawer.tsx cover all overlay needs — verify usage first |
 
