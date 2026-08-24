@@ -116,7 +116,7 @@ export function MagneticButton({
   return (
     <motion.button
       className={cn(
-        "relative inline-flex items-center justify-center font-medium rounded-xl border transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-50 disabled:pointer-events-none",
+        "relative inline-flex items-center justify-center font-medium rounded-lg border transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-50 disabled:pointer-events-none",
         sizeClasses[size],
         variantClasses[variant],
         fullWidth && "w-full",
@@ -198,7 +198,7 @@ export function MagneticLink({
     <motion.a
       href={href}
       className={cn(
-        "relative inline-flex items-center justify-center font-medium rounded-xl border transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
+        "relative inline-flex items-center justify-center font-medium rounded-lg border transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
         sizeClasses[size],
         variantClasses[variant],
         fullWidth && "w-full",
