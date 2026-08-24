@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Loader2, Map } from "lucide-react";
+import { IconX, IconLoader2, IconMap } from "@tabler/icons-react";
+
+const emptySubscribe = () => () => {};
 
 interface ViewOnMapProps {
   mapUrl?: string;
@@ -17,6 +20,11 @@ export const ViewOnMap: React.FC<ViewOnMapProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -39,22 +47,27 @@ export const ViewOnMap: React.FC<ViewOnMapProps> = ({
             backgroundPosition: "center",
           }}
         />
-        <Map className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary relative z-10" />
+        <IconMap
+          className="relative z-10 h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary"
+          strokeWidth={1.5}
+        />
         <span className="relative z-10">Location</span>
       </button>
 
-      {/* Sleek Overlay & Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            key="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={toggleOpen}
-          >
+      {/* Overlay & Modal — portaled to body (escapes transformed ancestors) */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                key="modal-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+                onClick={toggleOpen}
+              >
             <motion.div
               key="modal-card"
               initial={{ opacity: 0, scale: 0.95, y: 8 }}
@@ -62,7 +75,7 @@ export const ViewOnMap: React.FC<ViewOnMapProps> = ({
               exit={{ opacity: 0, scale: 0.95, y: 8 }}
               transition={{ type: "spring", duration: 0.3, bounce: 0.1 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-surface border border-border relative aspect-square w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl"
+              className="relative border border-border bg-surface shadow-e5 aspect-square w-full max-w-2xl overflow-hidden rounded-lg"
             >
               <iframe
                 title="Map Location"
@@ -81,7 +94,7 @@ export const ViewOnMap: React.FC<ViewOnMapProps> = ({
 
               {!isMapLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-surface">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    <IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                 </div>
               )}
 
@@ -91,12 +104,14 @@ export const ViewOnMap: React.FC<ViewOnMapProps> = ({
                 aria-label="Close Map"
                 className="absolute top-3 right-3 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-surface/80 border border-border text-foreground hover:bg-surface transition-colors shadow-sm"
               >
-                <X className="h-4 w-4" />
+                <IconX className="h-4 w-4" strokeWidth={1.5} />
               </button>
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+          document.body
+        )}
     </div>
   );
 };

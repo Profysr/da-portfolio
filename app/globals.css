@@ -67,19 +67,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 h3 {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: clamp(1.375rem, 2.5vw, 2rem);
   line-height: 1.2;
 }
 
@@ -155,14 +155,22 @@ pre code {
   background-color: var(--muted-foreground);
 }
 
-/* ── Reveal system — IO-driven data-attribute, CSS-animated ───────────── */
+/* ── Reveal system — IO-driven, transition-based (reversible both ways) ── */
 .reveal {
   opacity: 0;
+  transform: translate3d(var(--rv-x, 0), var(--rv-y, 0), 0)
+    scale(var(--rv-s, 1)) rotateX(var(--rv-rx, 0deg));
+  filter: blur(var(--rv-blur, 0px));
+  transition:
+    opacity var(--rv-dur, 0.6s) var(--ease-smooth) var(--rv-delay, 0s),
+    transform var(--rv-dur, 0.6s) var(--ease-smooth) var(--rv-delay, 0s),
+    filter var(--rv-dur, 0.6s) var(--ease-smooth) var(--rv-delay, 0s);
 }
 
 .reveal[data-visible="true"] {
-  animation: reveal-in var(--rv-dur, 0.6s) var(--ease-smooth)
-    var(--rv-delay, 0s) both;
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+  filter: blur(0);
 }
 
 .reveal-v-fade { --rv-y: 0px; }
@@ -174,37 +182,26 @@ pre code {
 .reveal-v-flip { --rv-rx: -90deg; }
 .reveal-v-reveal { --rv-y: 30px; --rv-blur: 8px; }
 
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translate3d(var(--rv-x, 0), var(--rv-y, 0), 0)
-      scale(var(--rv-s, 1)) rotateX(var(--rv-rx, 0deg));
-    filter: blur(var(--rv-blur, 0px));
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
-    filter: blur(0);
-  }
-}
-
 .reveal .reveal-item,
 .sr-text .sr-part {
   opacity: 0;
+  transform: translate3d(0, var(--rv-y, 0), 0);
+  filter: blur(var(--rv-blur, 0px));
+  transition:
+    opacity var(--rv-dur, 0.5s) var(--ease-smooth) var(--rv-delay, 0s),
+    transform var(--rv-dur, 0.5s) var(--ease-smooth) var(--rv-delay, 0s),
+    filter var(--rv-dur, 0.5s) var(--ease-smooth) var(--rv-delay, 0s);
 }
 
-.reveal[data-visible="true"] > .reveal-item {
-  animation: reveal-in var(--rv-dur, 0.5s) var(--ease-smooth)
-    var(--rv-delay, 0s) both;
+.reveal[data-visible="true"] > .reveal-item,
+.sr-text[data-visible="true"] .sr-part {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
 }
 
 .sr-text .sr-part {
   display: inline-block;
-}
-
-.sr-text[data-visible="true"] .sr-part {
-  animation: reveal-in var(--rv-dur, 0.5s) var(--ease-smooth)
-    calc(var(--rv-delay, 0s) + var(--i, 0) * var(--rv-stagger, 0.03s)) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -212,7 +209,9 @@ pre code {
   .reveal .reveal-item,
   .sr-text .sr-part {
     opacity: 1 !important;
-    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
   }
 }
 

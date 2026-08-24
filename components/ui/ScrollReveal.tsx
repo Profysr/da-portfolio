@@ -222,7 +222,12 @@ export function ScrollRevealText({
         <span
           key={index}
           className="sr-part"
-          style={{ "--i": index } as React.CSSProperties}
+          style={
+            {
+              "--i": index,
+              transitionDelay: `${delay + index * staggerDelay}s`,
+            } as React.CSSProperties
+          }
         >
           {part}
           {index < parts.length - 1 && <span>{separator}</span>}
