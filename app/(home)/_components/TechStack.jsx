@@ -17,7 +17,6 @@ import { SkillsAndTools } from "@/data/idx";
 import { TechPill } from "@/components/common/TechPill";
 import { cn } from "@/lib/utils";
 
-// Mapped directly to your theme's --pastel-* CSS tokens
 const CATEGORY_META = {
   "Automations & AI": {
     Icon: IconCpu,
@@ -50,7 +49,6 @@ function TechStack() {
       noFade
       className="p-0! overflow-hidden relative bg-surface text-foreground transition-colors duration-300"
     >
-      {/* Dynamic ambient mesh driven by theme pastels — soft and non-intrusive */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-60 dark:opacity-25 transition-opacity duration-500"
@@ -70,13 +68,11 @@ function TechStack() {
         showScrollbar={false}
         velocitySkew={true}
         maxSkew={2}
-        gap={10}
-        /* Adjusted container to 75% viewport height */
-        className="w-full h-[75vh] min-h-[550px] flex flex-col justify-center"
-        trackClassName="items-center mt-28 sm:mt-32"
+        gap={48}
+        className="w-full h-[80vh] min-h-150 flex flex-col justify-center"
+        trackClassName="items-start mt-40 sm:mt-48"
         topContent={
-          /* Tightened absolute header positioning to accommodate 75vh layout */
-          <div className="absolute top-6 sm:top-8 left-0 w-full flex flex-col items-center text-center gap-2 z-10 px-6">
+          <div className="absolute top-8 sm:top-12 left-0 w-full flex flex-col items-center text-center gap-2.5 z-10 px-6">
             <Badge
               variant="outline"
               className="tracking-[0.2em] text-[10px] bg-surface text-foreground border-border uppercase shadow-xs px-3 py-1 font-mono"
@@ -111,8 +107,8 @@ function TechStack() {
               scrollTrigger: {
                 containerAnimation: tween,
                 trigger: el,
-                start: "left 80%",
-                end: "left 40%",
+                start: "left 85%",
+                end: "left 45%",
                 scrub: false,
                 toggleActions: "play none none reverse",
               },
@@ -120,6 +116,9 @@ function TechStack() {
           });
         }}
       >
+        {/* Leading spacer gives the first card left breathing room */}
+        <div className="w-[8vw] sm:w-[12vw] shrink-0" />
+
         {SkillsAndTools.map((group, idx) => {
           const meta = CATEGORY_META[group.category];
           const Icon = meta?.Icon ?? IconSparkles;
@@ -128,8 +127,8 @@ function TechStack() {
             <div
               key={group.category}
               className={cn(
-                "stack-cluster shrink-0 flex flex-col justify-center",
-                "w-[80vw] max-w-lg md:max-w-xl",
+                "stack-cluster shrink-0 flex flex-col justify-start",
+                "w-[75vw] sm:w-[500px] max-w-lg",
               )}
             >
               {/* Category Header */}
@@ -179,8 +178,8 @@ function TechStack() {
           );
         })}
 
-        {/* Trailing offset */}
-        <div className="w-[15vw] shrink-0" />
+        {/* Trailing spacer */}
+        <div className="w-[12vw] shrink-0" />
       </GSAPHorizontalScroll>
     </Section>
   );
