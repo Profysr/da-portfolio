@@ -54,9 +54,9 @@ const BentoCard = ({
 }: BentoCardProps) => {
   return (
     <GlowFrame
-      disabled={disableGlow}
+      // disabled={disableGlow}
       className={cn(
-        "relative flex flex-col justify-between overflow-hidden rounded-md border border-white/10 bg-white/2 backdrop-blur-md p-4 sm:p-5 md:p-5.5 transition-all duration-300 hover:border-primary/40 hover:bg-white/[0.035] hover:shadow-[0_0_24px_rgba(235,196,41,0.06)]",
+        "relative flex flex-col justify-between rounded-md border border-border bg-surface/10 backdrop-blur-md p-4 md:p-5",
         className,
       )}
       {...props}

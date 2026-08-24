@@ -84,9 +84,7 @@ function TechStack() {
                     className="h-full group"
                   >
                     <GlowFrame
-                      className="h-full rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all"
-                      // spread={30}
-                      // borderWidth={1}
+                      className="h-full rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between"
                     >
                       <div className="relative z-2 flex flex-col justify-between h-full gap-3">
                         {/* Group Header */}
