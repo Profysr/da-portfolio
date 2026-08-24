@@ -55,8 +55,8 @@
 |-----------|-------|-------------|
 | ScrollReveal.tsx | 8 | Absorbed into `animations/ScrollReveal` P10 (file kept) |
 | StaggeredList.tsx | 5 | Role merged into StaggeredReveal (file kept) |
-| MagneticButton.tsx / MagneticDock.tsx | 7 | Consolidate into one `Magnetic` primitive P11 (files kept); dock-system winner decided with user |
-| dock.tsx | 6 | Competes with MagneticDock/BottomDock — ONE dock system total |
+| MagneticButton.tsx / MagneticDock.tsx | MagneticLink LIVE in Hero (keep as-is — no wrapper indirection); **MagneticDock → UNUSED** (P10 Option B: zero consumers, file kept) |
+| dock.tsx | ⭐ Dock A/B WINNER by evidence — live production dock inside BottomDock (P10 verdict) |
 | GSAPScrollRail.tsx | 6 | Overlaps Timeline/HorizontalScroll — pick one rail system |
 | shimmer-button.tsx | 5 | Fold styling into Magnetic variants (file kept) |
 | animated-shiny-text.tsx | 6 | Max once (badge accent) |
@@ -150,7 +150,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 | Cluster | Members | Resolution |
 |---------|---------|-----------|
-| Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | A/B BOTH live in BottomDock slot (P11) → keep winner; loser UNUSED (file kept) |
+| Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | ✅ RESOLVED P10 Option B: dock.tsx wins (live evidence); MagneticDock UNUSED (kept) |
 | Scroll rails | GSAPScrollRail · tracing-beam · 21st/Timeline · GSAPHorizontalScroll | Each gets distinct job or marked UNUSED after P15/P17 |
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
