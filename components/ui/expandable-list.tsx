@@ -10,8 +10,9 @@ export interface ExpandableListProps<T> {
   renderItem?: (item: T, index: number) => React.ReactNode;
   children?: React.ReactNode;
   collapsedHeight?: number;
-  showMoreLabel?: string;
-  showLessLabel?: string;
+  initialCount?: number;
+  showMoreLabel?: string | ((hiddenCount: number) => React.ReactNode);
+  showLessLabel?: string | (() => React.ReactNode);
   className?: string;
   listClassName?: string;
   buttonClassName?: string;
@@ -22,6 +23,7 @@ export function ExpandableList<T>({
   renderItem,
   children,
   collapsedHeight = 420,
+  initialCount = 4,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
   className,
@@ -29,6 +31,19 @@ export function ExpandableList<T>({
   buttonClassName,
 }: ExpandableListProps<T>) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const hiddenCount = items ? Math.max(0, items.length - initialCount) : 0;
+
+  const renderLabel = () => {
+    if (isExpanded) {
+      return typeof showLessLabel === "function"
+        ? showLessLabel()
+        : showLessLabel;
+    }
+    return typeof showMoreLabel === "function"
+      ? showMoreLabel(hiddenCount)
+      : showMoreLabel;
+  };
 
   return (
     <div className={cn("relative w-full flex flex-col", className)}>
@@ -76,11 +91,11 @@ export function ExpandableList<T>({
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
           className={cn(
-            "group inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border bg-surface/90 hover:bg-surface-hover hover:border-primary/50 text-xs sm:text-sm font-medium text-foreground transition-all duration-300 shadow-md backdrop-blur-md hover:scale-[1.02] active:scale-[0.98]",
+            "group inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border bg-surface/90 hover:bg-surface-hover hover:border-primary/50 text-xs sm:text-sm font-medium text-foreground transition-all duration-300 shadow-md backdrop-blur-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer",
             buttonClassName,
           )}
         >
-          <span>{isExpanded ? showLessLabel : showMoreLabel}</span>
+          <span>{renderLabel()}</span>
           <IconChevronDown
             className={cn(
               "h-4 w-4 text-primary transition-transform duration-300",

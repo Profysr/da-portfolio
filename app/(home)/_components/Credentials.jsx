@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { motion } from "motion/react";
 import {
   IconSchool,
   IconSparkles,
-  IconExternalLink,
-  IconCheck,
+  IconArrowUpRight,
+  IconMapPin,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
@@ -19,11 +18,11 @@ import { cn } from "@/lib/utils";
 function SkillBadges({ skills }) {
   if (!skills || skills.length === 0) return null;
   return (
-    <div className="flex flex-wrap gap-1 pt-0.5">
+    <div className="flex flex-wrap gap-1.5 pt-1">
       {skills.map((skill) => (
         <span
           key={skill}
-          className="inline-flex items-center rounded border border-border bg-surface-muted px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
+          className="inline-flex items-center rounded-md border border-border/40 bg-muted px-2 py-0.5 text-[11px] font-mono text-muted-foreground transition-colors hover:text-foreground hover:border-border/80"
         >
           {skill}
         </span>
@@ -32,129 +31,151 @@ function SkillBadges({ skills }) {
   );
 }
 
-/* Section header with icon */
-function SectionHeaderTitle({ icon: Icon, title }) {
-  return (
-    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground pl-0.5 pt-2">
-      <Icon className="size-3.5 text-primary" />
-      <span>{title}</span>
-    </div>
-  );
-}
+/* Minimalist Education Card */
+function EducationCard({ edu, index, total }) {
+  const revealVariant = index % 2 === 0 ? "slide-top-left" : "slide-top-right";
 
-/* Education card — reused from original, cleaned up */
-function EducationCard({ edu, index }) {
   return (
     <ScrollReveal
-      variant="slide-up"
-      delay={index * 0.07}
-      duration={0.5}
+      variant={revealVariant}
+      delay={index * 0.1}
+      duration={0.7}
       once={false}
+      className="h-full"
     >
-      <motion.article
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+      <article
         className={cn(
-          "rounded-lg border border-border bg-card p-4 sm:p-5 shadow-sm",
-          "flex flex-col justify-between gap-3",
-          "hover:border-primary/40 transition-colors duration-300",
-          "h-full",
+          "group relative flex flex-col justify-between h-full",
+          "rounded-md border border-border bg-card/50 hover:bg-card",
+          "hover:border-border-strong hover:shadow-xl transition-all duration-300",
+          "select-none p-6 sm:p-7"
         )}
       >
-        <div className="space-y-2.5">
-          <div className="flex items-start justify-between gap-2.5">
-            <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded border border-border bg-surface-muted flex items-center justify-center text-primary shrink-0">
-                <IconSchool className="size-4" />
-              </div>
-              <div>
-                <h4 className="text-sm sm:text-base font-semibold text-foreground">
-                  {edu.institution}
-                </h4>
-                <p className="text-xs text-primary font-medium">
-                  {edu.degree}
-                  {edu.fieldOfStudy ? ` • ${edu.fieldOfStudy}` : ""}
-                </p>
-              </div>
-            </div>
-            <span className="font-mono text-[11px] text-muted-foreground shrink-0 bg-surface-muted border border-border px-2 py-0.5 rounded">
-              {edu.startDate} — {edu.endDate}
+        <div className="space-y-4">
+          {/* Top metadata rail */}
+          <div className="flex items-center justify-between text-xs font-mono text-muted-foreground/70 pb-1 border-b border-border/30">
+            <span className="tracking-[0.2em] uppercase">
+              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")} • {edu.startDate} — {edu.endDate}
             </span>
+            {edu.grade && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-[10px] font-medium tracking-wide">
+                <IconSparkles className="size-3" />
+                <span>{edu.grade}</span>
+              </span>
+            )}
           </div>
 
-          {edu.grade && (
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary text-[11px] font-medium">
-              <IconSparkles className="size-3" />
-              <span>{edu.grade}</span>
-            </div>
-          )}
+          {/* Institution & Degree */}
+          <div>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  {edu.institution}
+                </h4>
+                <p className="text-sm sm:text-base font-medium text-foreground/90 mt-1">
+                  {edu.degree}
+                  {edu.fieldOfStudy ? (
+                    <span className="text-muted-foreground font-normal">
+                      {" "}in {edu.fieldOfStudy}
+                    </span>
+                  ) : null}
+                </p>
+                {edu.minor && (
+                  <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                    Minor in {edu.minor}
+                  </p>
+                )}
+              </div>
 
+              {edu.url && edu.url !== "#" && (
+                <a
+                  href={edu.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${edu.institution}`}
+                  className="size-8 rounded-lg border border-border/40 bg-muted flex items-center justify-center text-muted-foreground group-hover:text-foreground group-hover:border-border/80 transition-colors shrink-0"
+                >
+                  <IconArrowUpRight className="size-4" />
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Description */}
           {edu.description && (
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground/85 leading-relaxed">
               {edu.description}
             </p>
           )}
 
-          <SkillBadges skills={edu.skills} />
+          {/* Skills / Focus areas */}
+          <div className="pt-1">
+            <span className="block text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60 mb-2">
+              Focus & Methodologies
+            </span>
+            <SkillBadges skills={edu.skills} />
+          </div>
         </div>
 
-        {edu.url && edu.url !== "#" && (
-          <div className="pt-2.5 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+        {/* Card Footer */}
+        <div className="pt-4 mt-6 border-t border-border/30 flex items-center justify-between text-xs font-mono text-muted-foreground/70">
+          <div className="flex items-center gap-1.5">
+            <IconMapPin className="size-3.5 text-primary" />
             <span>{edu.location}</span>
-            <a
-              href={edu.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
-            >
-              <span>Institution Site</span>
-              <IconExternalLink className="size-3" />
-            </a>
           </div>
-        )}
-      </motion.article>
+          {edu.activities && (
+            <span className="hidden sm:inline-block text-[11px] truncate max-w-[200px] text-muted-foreground/60">
+              {edu.activities}
+            </span>
+          )}
+        </div>
+      </article>
     </ScrollReveal>
   );
 }
 
 /* Education section block */
-function EducationSection({ showHeader = true }) {
+function EducationSection() {
   return (
-    <div className="space-y-3">
-      {showHeader && (
-        <SectionHeaderTitle icon={IconSchool} title="Academic Education" />
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-        {education.map((edu, idx) => (
-          <EducationCard key={edu.id || idx} edu={edu} index={idx} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full max-w-5xl">
+      {education.map((edu, idx) => (
+        <EducationCard
+          key={edu.id || idx}
+          edu={edu}
+          index={idx}
+          total={education.length}
+        />
+      ))}
     </div>
   );
 }
 
 export default function Credentials() {
   return (
-    <Section id="credentials" noFade>
-      <div className="flex flex-col items-center gap-7">
-        {/* Header */}
-        <div className="flex flex-col items-center text-center gap-2.5">
-          {/* <Badge variant="outline">CREDENTIALS & BACKGROUND</Badge> */}
-          <Heading
-            variant="gradient"
-            text="Education"
-            className="text-3xl! sm:text-5xl!"
-          />
-          <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-            Academic degrees and certifications aligned with industry standards.
-          </p>
-        </div>
+    <Section id="credentials" className="py-16 md:py-24">
+      <div className="flex flex-col items-center gap-8 md:gap-12 w-full">
+        {/* Header — reveal */}
+        <ScrollReveal variant="reveal" delay={0} duration={0.6} once={false}>
+          <div className="flex flex-col items-center text-center gap-2.5 px-4 sm:px-6">
+            <Badge
+              variant="outline"
+              className="tracking-[0.25em] text-[10px] bg-background/80 text-muted-foreground border-border/60 uppercase shadow-none px-3.5 py-1 font-mono rounded-full"
+            >
+              Academic Credentials
+            </Badge>
+            <Heading
+              variant="gradient"
+              text="Education & Degrees"
+              className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground"
+            />
+            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-relaxed">
+              Formal foundation in computer science, distributed systems, and applied computational mathematics.
+            </p>
+          </div>
+        </ScrollReveal>
 
-        {/* Education grid — no tabs, no filter, no rail */}
-        {/* <div className="w-full max-w-4xl"> */}
-        <EducationSection showHeader={false} />
-        {/* </div> */}
+        {/* Education grid — diagonal reveals from top-left and top-right */}
+        <EducationSection />
       </div>
     </Section>
   );

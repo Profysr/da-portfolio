@@ -70,10 +70,10 @@ function FeaturesList({ features }) {
 function StatusBadge({ status }) {
   const isLive = status === "live";
   return (
-    <span className="absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-md border border-border bg-background/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-xs backdrop-blur-sm">
+    <span className="absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-sm">
       <span className="relative flex size-1.5">
         {isLive && (
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500/30" />
         )}
         <span
           className={cn(
@@ -94,7 +94,7 @@ function MediaPanel({ project }) {
   const hasImage = project.image && !project.image.endsWith("null");
 
   return (
-    <div className="relative min-h-40 overflow-hidden rounded-md border border-border/80 bg-muted/60">
+    <div className="relative min-h-40 overflow-hidden rounded-md border border-border/50 bg-muted/50">
       {hasImage ? (
         <OptimizedImage
           src={project.image}
@@ -127,7 +127,7 @@ function MediaPanel({ project }) {
             <span
               key={tag}
               className={cn(
-                "inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[10.5px] font-medium shadow-xs",
+                "inline-flex items-center gap-1 rounded border px-2 py-0.5 text-[10.5px] font-medium",
                 shade,
               )}
             >
@@ -155,13 +155,13 @@ function CardFooter({ project }) {
       {hasGithub ? (
         <ExtendedLink
           href={github}
-          className="inline-flex items-center gap-1.5 rounded border border-border bg-surface-muted px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
+          className="inline-flex items-center gap-1.5 rounded border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
         >
           <IconBrandGithub className="size-3.5" />
           <span>Source</span>
         </ExtendedLink>
       ) : (
-        <span className="inline-flex items-center gap-1.5 rounded border border-border bg-surface-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 rounded border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <IconLock className="size-3" /> Private Repository
         </span>
       )}
@@ -181,12 +181,11 @@ function CardFooter({ project }) {
 
 /**
  * ProjectCard — PricingCard-DNA minimal card: outer inset panel (p-1.5),
- * media panel with glass-muted surface, collapsible features, gold
- * BorderBeam that animates only while hovered.
+ * media panel with glass-muted surface, collapsible features.
  */
 function ProjectCard({ project }) {
   return (
-    <article className="group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-e2 transition-colors duration-300 hover:border-primary">
+    <article className="group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-sm transition-colors duration-300 hover:border-primary hover:shadow-md">
       <MediaPanel project={project} />
 
       <div className="flex flex-1 flex-col gap-3 p-3">
@@ -213,7 +212,7 @@ function ProjectCard({ project }) {
             {project.strategies.map((strategy) => (
               <span
                 key={strategy}
-                className="inline-flex items-center gap-1 rounded border border-border/80 bg-surface-muted px-2 py-0.5 text-[10.5px] font-medium text-foreground/80"
+                className="inline-flex items-center gap-1 rounded border border-border/50 bg-surface px-2 py-0.5 text-[10.5px] font-medium text-foreground/80"
               >
                 <IconCheck className="size-2.5 shrink-0 text-primary" />
                 {strategy}

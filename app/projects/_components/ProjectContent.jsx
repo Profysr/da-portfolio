@@ -89,7 +89,7 @@ export function ProjectContent({ meta, children, changelog }) {
                 <ExtendedLink
                   href={meta.github}
                   newTab
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border border-border/80 bg-surface-high/60 backdrop-blur-sm text-foreground hover:border-primary/50 hover:bg-surface-high hover:text-white hover:shadow-lg hover:shadow-primary/5"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border border-border bg-surface text-foreground hover:border-primary hover:bg-surface-hover"
                 >
                   <IconBrandGithub className="size-4" />
                   Source
@@ -99,9 +99,9 @@ export function ProjectContent({ meta, children, changelog }) {
                 <ExtendedLink
                   href={meta.live}
                   newTab
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border border-border/80 bg-surface-high/60 backdrop-blur-sm text-foreground hover:border-primary/50 hover:bg-surface-high hover:text-white hover:shadow-lg hover:shadow-primary/5"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border border-border bg-primary text-primary-foreground hover:bg-primary-hover"
                 >
-                  <IconRocket className="size-4 text-primary" />
+                  <IconRocket className="size-4" />
                   Live Demo
                   <IconExternalLink className="size-3.5 opacity-60" />
                 </ExtendedLink>
@@ -118,7 +118,7 @@ export function ProjectContent({ meta, children, changelog }) {
                 {meta.strategies.map((strat) => (
                   <span
                     key={strat}
-                    className="inline-flex items-center gap-1 rounded bg-surface-high border border-border/80 px-2 py-0.5 text-[10.5px] font-medium text-zinc-300"
+                    className="inline-flex items-center gap-1 rounded bg-surface border border-border/50 px-2 py-0.5 text-[10.5px] font-medium text-foreground"
                   >
                     <span className="size-1.5 rounded-full bg-primary" />
                     {strat}

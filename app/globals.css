@@ -179,6 +179,14 @@ pre code {
 .reveal-v-slide-down { --rv-y: -40px; }
 .reveal-v-slide-left { --rv-x: 40px; }
 .reveal-v-slide-right { --rv-x: -40px; }
+.reveal-v-top-left,
+.reveal-v-slide-top-left { --rv-x: -36px; --rv-y: -36px; --rv-blur: 6px; }
+.reveal-v-top-right,
+.reveal-v-slide-top-right { --rv-x: 36px; --rv-y: -36px; --rv-blur: 6px; }
+.reveal-v-bottom-left,
+.reveal-v-slide-bottom-left { --rv-x: -36px; --rv-y: 36px; --rv-blur: 6px; }
+.reveal-v-bottom-right,
+.reveal-v-slide-bottom-right { --rv-x: 36px; --rv-y: 36px; --rv-blur: 6px; }
 .reveal-v-scale { --rv-s: 0.9; }
 .reveal-v-flip { --rv-rx: -90deg; }
 .reveal-v-reveal { --rv-y: 30px; --rv-blur: 8px; }

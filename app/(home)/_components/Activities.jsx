@@ -1,6 +1,7 @@
-"use client";
-
-import React, { useState } from "react";
+// UNUSED — replaced by Writings.jsx (P16). Kept per Rule #13.
+// "use client";
+//
+// import React, { useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
 import { ExtendedLink } from "@/components/common/ExtendedLink";
 import { IconArrowUpRight, IconCode, IconPencil } from "@tabler/icons-react";

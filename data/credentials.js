@@ -1,3 +1,39 @@
+export const education = [
+  {
+    id: "edu-uml",
+    institution: "University of Massachusetts, Lowell",
+    degree: "Bachelor of Science",
+    fieldOfStudy: "Computer Science",
+    minor: "Mathematics",
+    startDate: "2020",
+    endDate: "2024",
+    grade: "3.8 GPA",
+    activities: "ACM Student Chapter, Distributed Systems Lab",
+    description:
+      "Core focus on algorithms, distributed computing, operating systems, and applied mathematics.",
+    location: "Lowell, MA",
+    skills: ["C/C++", "Python", "Algorithms", "Distributed Systems", "SQL", "Linux"],
+    url: "https://www.uml.edu",
+    image: "/experience/umasslowell_logo.jpg",
+  },
+  {
+    id: "edu-comsats",
+    institution: "COMSATS University",
+    degree: "Associate / Pre-Engineering",
+    fieldOfStudy: "Computer & Information Sciences",
+    startDate: "2018",
+    endDate: "2020",
+    grade: "First Class Honors",
+    activities: "Software Innovation Society",
+    description:
+      "Foundation in data structures, computational mathematics, and database management.",
+    location: "Islamabad, PK",
+    skills: ["Data Structures", "OOP", "Database Design", "Mathematics"],
+    url: "https://www.comsats.edu.pk",
+    image: null,
+  },
+];
+
 // =================================================
 // Note! we're not rednering certificates and awards. If you want to, you can update the credentials section to render these documents
 // =================================================

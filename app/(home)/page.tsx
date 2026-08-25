@@ -5,8 +5,8 @@ import TechStack from "@/app/(home)/_components/TechStack";
 import Experience from "@/app/(home)/_components/Experience";
 import Projects from "@/app/(home)/_components/Projects";
 import Credentials from "@/app/(home)/_components/Credentials";
+import Writings from "@/app/(home)/_components/Writings";
 import FAQ from "@/app/(home)/_components/FAQ";
-import ActivityAndWritings from "@/app/(home)/_components/Activities";
 
 export default function HomePage() {
   return (
@@ -18,7 +18,7 @@ export default function HomePage() {
         <Experience />
         <Projects />
         <Credentials />
-        <ActivityAndWritings />
+        <Writings />
         <FAQ />
       </main>
     </HomeLayout>

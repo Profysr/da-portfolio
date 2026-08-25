@@ -56,6 +56,7 @@ const tabs = [
       count: projects.filter((p) => p.tags?.includes(tag)).length,
     })),
 ];
+
 // Helper to render individual card within masonry columns
 const renderProjectItem = (project, idx) => (
   <div key={project.id || project.slug} className="w-full">
@@ -69,6 +70,9 @@ const renderProjectItem = (project, idx) => (
     </ScrollReveal>
   </div>
 );
+
+const INITIAL_PROJECT_COUNT = 6;
+
 // =========================================
 // Main Component
 // =========================================
@@ -81,7 +85,7 @@ const Projects = () => {
       : p.tags?.some((tag) => tag.toLowerCase() === activeTab.toLowerCase()),
   );
 
-  const HAS_MORE_THAN_6 = filtered.length > 6;
+  const hasMoreProjects = filtered.length > INITIAL_PROJECT_COUNT;
 
   return (
     <Section id="projects" noFade>
@@ -117,10 +121,12 @@ const Projects = () => {
               transition={{ duration: 0.2 }}
               className="w-full"
             >
-              {HAS_MORE_THAN_6 ? (
+              {hasMoreProjects ? (
                 <ExpandableList
+                  items={filtered}
+                  initialCount={INITIAL_PROJECT_COUNT}
                   collapsedHeight={900}
-                  showMoreLabel={`Show more (${filtered.length - 6} more)`}
+                  showMoreLabel={(hiddenCount) => `Show more (${hiddenCount} more)`}
                 >
                   <MasonryGrid
                     items={filtered}
