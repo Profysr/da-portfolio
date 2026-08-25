@@ -22,9 +22,9 @@ export const ProjectsEmptyState = ({ onReset }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className="flex w-full flex-col items-center justify-center space-y-2.5 rounded-md border border-dashed border-border bg-surface p-10 text-center"
+      className="flex w-full flex-col items-center justify-center space-y-2.5 rounded-md border border-border bg-surface p-10 text-center"
     >
-      <div className="rounded border border-border bg-surface-muted p-2.5 text-muted-foreground">
+      <div className="rounded border border-border bg-muted p-2.5 text-muted-foreground">
         <IconFolderOff className="size-6" />
       </div>
       <h4 className="text-sm font-semibold text-foreground">
@@ -71,8 +71,6 @@ const renderProjectItem = (project, idx) => (
   </div>
 );
 
-const INITIAL_PROJECT_COUNT = 6;
-
 // =========================================
 // Main Component
 // =========================================
@@ -85,7 +83,7 @@ const Projects = () => {
       : p.tags?.some((tag) => tag.toLowerCase() === activeTab.toLowerCase()),
   );
 
-  const hasMoreProjects = filtered.length > INITIAL_PROJECT_COUNT;
+  const HAS_MORE_THAN_6 = filtered.length > 6;
 
   return (
     <Section id="projects" noFade>
@@ -121,12 +119,10 @@ const Projects = () => {
               transition={{ duration: 0.2 }}
               className="w-full"
             >
-              {hasMoreProjects ? (
+              {HAS_MORE_THAN_6 ? (
                 <ExpandableList
-                  items={filtered}
-                  initialCount={INITIAL_PROJECT_COUNT}
                   collapsedHeight={900}
-                  showMoreLabel={(hiddenCount) => `Show more (${hiddenCount} more)`}
+                  showMoreLabel={`Show more (${filtered.length - 6} more)`}
                 >
                   <MasonryGrid
                     items={filtered}

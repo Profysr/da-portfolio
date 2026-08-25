@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { TracingBeam } from "@/components/ui/tracing-beam";
+import { ExpandableList } from "@/components/ui/expandable-list";
 import { writings } from "@/data/idx";
 import { cn } from "@/lib/utils";
 
@@ -25,9 +26,11 @@ function ArticleCard({ article, index }) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
-          "relative flex flex-col gap-3 p-4 sm:p-5 rounded-lg border border-border bg-card",
-          "w-full sm:max-w-[420px]",
-          index % 2 === 0 ? "ml-auto" : "mr-auto",
+          "relative flex flex-col gap-3 p-4 rounded-md border border-border bg-card",
+          "w-full max-w-xl",
+          index % 2 === 0
+            ? "mx-auto md:ml-auto md:mr-8"
+            : "mx-auto md:mr-auto md:ml-8",
         )}
       >
         {/* Date + read time row */}
@@ -41,36 +44,38 @@ function ArticleCard({ article, index }) {
 
         {/* Title + excerpt */}
         <div className="space-y-2">
-          <h3 className="text-lg sm:text-xl font-bold text-foreground leading-snug">
+          <h4 className="text-lg sm:text-xl font-bold text-foreground leading-snug">
             {article.title}
-          </h3>
+          </h4>
           <p className="text-sm text-muted-foreground/80 leading-relaxed line-clamp-3">
             {article.excerpt}
           </p>
         </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {article.tags?.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground"
-            >
-              <IconTag className="size-2.5" aria-hidden />
-              {tag}
-            </span>
-          ))}
-        </div>
+        <div className="flex justify-between gap-1.5 items-center">
+          {/* Tags */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {article.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground"
+              >
+                <IconTag className="size-2.5" aria-hidden />
+                {tag}
+              </span>
+            ))}
+          </div>
 
-        {/* Read link */}
-        <motion.a
-          href={`/writing/${article.slug}`}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline group"
-          whileHover={{ x: 4 }}
-        >
-          Read article
-          <IconExternalLink className="size-3.5 group-hover:translate-x-1 transition-transform" />
-        </motion.a>
+          {/* Read link */}
+          <motion.a
+            href={`/writing/${article.slug}`}
+            className="inline-flex items-center gap-1.5 text-sm font-medium bg-primary text-primary-foreground p-1 px-2 rounded hover:underline group"
+            whileHover={{ x: 4 }}
+          >
+            Read article
+            <IconExternalLink className="size-3.5 group-hover:translate-x-1 transition-transform" />
+          </motion.a>
+        </div>
       </motion.article>
     </ScrollReveal>
   );
@@ -78,20 +83,42 @@ function ArticleCard({ article, index }) {
 
 /* Tracing beam wrapper with article cards as children */
 function WritingsBeam() {
-  return (
-    <TracingBeam className="w-full max-w-4xl mx-auto">
-      <div className="flex flex-col gap-6 lg:gap-8 px-2 lg:px-0">
+  const HAS_MORE_THAN_4 = writings.length > 4;
+
+  const content = (
+    <TracingBeam className="w-full max-w-6xl">
+      <div className="flex flex-col gap-4">
         {writings.map((article, index) => (
-          <ArticleCard key={article.slug} article={article} index={index} />
+          <ArticleCard
+            key={article.id || `${article.slug}-${index}`}
+            article={article}
+            index={index}
+          />
         ))}
       </div>
     </TracingBeam>
   );
+
+  if (HAS_MORE_THAN_4) {
+    return (
+      <ExpandableList
+        collapsedHeight={720}
+        showMoreLabel={`Show more (${writings.length - 4} more)`}
+        showLessLabel="Show less"
+        className="w-full max-w-6xl"
+        gradientClassName="bg-gradient-to-t from-surface via-surface/90 to-transparent"
+      >
+        {content}
+      </ExpandableList>
+    );
+  }
+
+  return content;
 }
 
 export default function Writings() {
   return (
-    <Section id="writings" noFade>
+    <Section id="writings" className="bg-surface">
       <div className="flex flex-col items-center gap-7">
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-2.5">

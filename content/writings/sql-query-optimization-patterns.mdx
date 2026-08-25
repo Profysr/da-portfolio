@@ -1,0 +1,26 @@
+---
+title: "SQL Query Optimization Patterns for High-Scale Analytics"
+description: "Index tuning, CTE materialization quirks, and query plan diagnosis for production workloads."
+date: "2025-03-11"
+tags: ["SQL", "Performance"]
+readTime: "10 min"
+thumbnail: "/tools/analytics-dashboard.svg"
+---
+
+## Overview
+
+When analytical databases process billions of rows, query performance quickly separates maintainable data systems from expensive bottlenecks.
+
+## Core Optimization Patterns
+
+### 1. Selective Indexing & Partition Pruning
+
+Ensure timestamp and tenant filter columns align with physical storage partitioning to avoid full table scans.
+
+### 2. CTE Materialization & Query Optimizer Hints
+
+Common Table Expressions (CTEs) can sometimes prevent predicate pushdown depending on database engine defaults. Explicitly test materialized versus inlined expressions.
+
+### 3. Window Functions vs. Self-Joins
+
+Replace expensive multi-pass self-joins with partition-aware analytical window functions (`ROW_NUMBER()`, `LEAD()`, `LAG()`) to reduce I/O round trips.

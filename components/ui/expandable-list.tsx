@@ -16,6 +16,7 @@ export interface ExpandableListProps<T> {
   className?: string;
   listClassName?: string;
   buttonClassName?: string;
+  gradientClassName?: string;
 }
 
 export function ExpandableList<T>({
@@ -29,6 +30,7 @@ export function ExpandableList<T>({
   className,
   listClassName,
   buttonClassName,
+  gradientClassName,
 }: ExpandableListProps<T>) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -74,7 +76,10 @@ export function ExpandableList<T>({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/85 to-transparent z-10"
+              className={cn(
+                "pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-linear-to-t from-background via-background/85 to-transparent z-10",
+                gradientClassName
+              )}
             />
           )}
         </AnimatePresence>
