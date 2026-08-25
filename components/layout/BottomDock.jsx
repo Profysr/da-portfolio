@@ -79,7 +79,7 @@ function BottomDock({ isVisible, onAIClick }) {
                     type="button"
                     onClick={onAIClick}
                     aria-label="Open AI Recruiter Assistant"
-                    className="relative flex p-2 items-center justify-center rounded-full bg-primary/15"
+                    className="relative flex p-2 items-center justify-center rounded-full bg-primary/10"
                   >
                     <IconSparkles className="text-primary" />
 

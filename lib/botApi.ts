@@ -24,6 +24,9 @@ const currentRole = experiences[0]?.roles[0];
 const prevRole = experiences[0]?.roles[1];
 const otherExp = experiences[1];
 
+const formatPeriod = (role?: { startDate: string; endDate: string | null }) =>
+  role ? `${role.startDate} — ${role.endDate ?? "Present"}` : "";
+
 export async function sendMessage(
   text: string,
   _history: BotMessage[],
@@ -35,12 +38,12 @@ export async function sendMessage(
   if (/\b(experience|work|role|kynoby|simplamo|career|background)\b/.test(q)) {
     return {
       content: [
-        `**${currentRole?.title}** at **${experiences[0].company}** (${experiences[0].location} — ${experiences[0].locationType}), ${currentRole?.period}`,
+        `**${currentRole?.title}** at **${experiences[0].company}** (${experiences[0].location} — ${experiences[0].locationType}), ${formatPeriod(currentRole)}`,
         currentRole?.description,
         ``,
-        `Previously **${prevRole?.title}** at ${experiences[0].company} (${prevRole?.period}): ${prevRole?.description}`,
+        `Previously **${prevRole?.title}** at ${experiences[0].company} (${formatPeriod(prevRole)}): ${prevRole?.description}`,
         ``,
-        `Before that: **${otherExp.roles[0].title}** at **${otherExp.company}**, ${otherExp.location} (${otherExp.roles[0].period}).`,
+        `Before that: **${otherExp.roles[0].title}** at **${otherExp.company}**, ${otherExp.location} (${formatPeriod(otherExp.roles[0])}).`,
         ``,
         `**Total professional experience: 2 years 8 months.**`,
       ].join("\n"),

@@ -26,7 +26,7 @@ function TechStack() {
         velocitySkew={true}
         maxSkew={2}
         gap={48}
-        className="w-full h-[75vh] min-h-150 flex flex-col justify-center"
+        className="w-full h-dvh sm:h-[75vh] min-h-150 flex flex-col justify-center"
         trackClassName="items-start mt-40 sm:mt-48"
         topContent={
           <div className="absolute top-8 sm:top-12 left-0 w-full flex flex-col items-center text-center gap-2.5 z-10 px-6">
@@ -118,7 +118,7 @@ function TechStack() {
                     <TechPill
                       name={item.name}
                       subCategory={item.subCategory ?? undefined}
-                      size="xl"
+                      size="lg"
                       className={cn(
                         "transition-all duration-300 ease-out",
                         "bg-surface text-foreground hover:bg-surface-hover",
