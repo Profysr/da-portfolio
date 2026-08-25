@@ -133,27 +133,23 @@ export default function FAQClient() {
         {/* Right Column: FAQ Accordion Component */}
         <BlurFade inView delay={0.1} className="w-full lg:w-7/12">
           <div className="w-full rounded-md border border-border bg-surface p-3.5 sm:p-5 shadow-sm">
-            {hasMoreQuestions ? (
-              <ExpandableList
-                items={FrequentQuestions.items}
-                initialCount={INITIAL_FAQ_COUNT}
-                showMoreLabel={(hiddenCount) =>
-                  `Show more questions (+${hiddenCount})`
-                }
-                showLessLabel="Show fewer questions"
-                renderItem={(item) => (
-                  <FAQAccordionItem
-                    key={item.id}
-                    question={item.question}
-                    answer={item.answer}
-                    isOpen={openId === item.id}
-                    onToggle={() => handleToggle(item.id)}
-                  />
-                )}
-              />
-            ) : (
-              <div>{renderFAQList()}</div>
-            )}
+            <ExpandableList
+              items={FrequentQuestions.items}
+              initialCount={INITIAL_FAQ_COUNT}
+              showMoreLabel={(hiddenCount) =>
+                `Show more questions (+${hiddenCount})`
+              }
+              showLessLabel="Show fewer questions"
+              renderItem={(item) => (
+                <FAQAccordionItem
+                  key={item.id}
+                  question={item.question}
+                  answer={item.answer}
+                  isOpen={openId === item.id}
+                  onToggle={() => handleToggle(item.id)}
+                />
+              )}
+            />
           </div>
         </BlurFade>
       </div>

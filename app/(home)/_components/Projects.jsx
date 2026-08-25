@@ -119,29 +119,22 @@ const Projects = () => {
               transition={{ duration: 0.2 }}
               className="w-full"
             >
-              {HAS_MORE_THAN_6 ? (
-                <ExpandableList
-                  items={filtered}
-                  initialCount={6}
-                  showMoreLabel={(hiddenCount) =>
-                    `Show more (${hiddenCount} more)`
-                  }
-                  showLessLabel="Show less"
-                  renderContent={(items) => (
-                    <MasonryGrid
-                      items={items}
-                      renderItem={(project, idx) =>
-                        renderProjectItem(project, idx)
-                      }
-                    />
-                  )}
-                />
-              ) : (
-                <MasonryGrid
-                  items={filtered}
-                  renderItem={(project, idx) => renderProjectItem(project, idx)}
-                />
-              )}
+              <ExpandableList
+                items={filtered}
+                initialCount={6}
+                showMoreLabel={(hiddenCount) =>
+                  `Show more (${hiddenCount} more)`
+                }
+                showLessLabel="Show less"
+                renderContent={(items) => (
+                  <MasonryGrid
+                    items={items}
+                    renderItem={(project, idx) =>
+                      renderProjectItem(project, idx)
+                    }
+                  />
+                )}
+              />
             </motion.div>
           ) : (
             <ProjectsEmptyState onReset={() => setActiveTab("All")} />

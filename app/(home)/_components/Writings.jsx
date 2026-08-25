@@ -169,8 +169,6 @@ const renderArticleItem = (article, idx) => (
 );
 
 export default function Writings() {
-  const HAS_MORE_THAN_4 = writings.length > 4;
-
   return (
     <Section id="writings" className="bg-surface">
       <div className="flex flex-col items-center gap-7 w-full">
@@ -188,28 +186,21 @@ export default function Writings() {
           </p>
         </div>
 
-        {/* Article Cards in MasonryGrid with ExpandableList if > 4 */}
+        {/* Article Cards in MasonryGrid with ExpandableList */}
         <div className="w-full">
-          {HAS_MORE_THAN_4 ? (
-            <ExpandableList
-              items={writings}
-              initialCount={4}
-              showMoreLabel={(hiddenCount) => `Show more (${hiddenCount} more)`}
-              showLessLabel="Show less"
-              className="w-full"
-              renderContent={(items) => (
-                <MasonryGrid
-                  items={items}
-                  renderItem={(article, idx) => renderArticleItem(article, idx)}
-                />
-              )}
-            />
-          ) : (
-            <MasonryGrid
-              items={writings}
-              renderItem={(article, idx) => renderArticleItem(article, idx)}
-            />
-          )}
+          <ExpandableList
+            items={writings}
+            initialCount={4}
+            showMoreLabel={(hiddenCount) => `Show more (${hiddenCount} more)`}
+            showLessLabel="Show less"
+            className="w-full"
+            renderContent={(items) => (
+              <MasonryGrid
+                items={items}
+                renderItem={(article, idx) => renderArticleItem(article, idx)}
+              />
+            )}
+          />
         </div>
       </div>
     </Section>

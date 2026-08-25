@@ -47,7 +47,9 @@ export function ExpandableList<T>({
 
   // Case 1: Custom container renderer (e.g. MasonryGrid with sliced items)
   if (renderContent && items.length > 0) {
-    const displayedItems = isExpanded ? items : items.slice(0, initialCount);
+    const hasOverflow = items.length > initialCount;
+    const displayedItems =
+      hasOverflow && !isExpanded ? items.slice(0, initialCount) : items;
 
     return (
       <div className={cn("relative w-full flex flex-col", className)}>
@@ -59,7 +61,7 @@ export function ExpandableList<T>({
           {renderContent(displayedItems, isExpanded)}
         </motion.div>
 
-        {hiddenCount > 0 && (
+        {hasOverflow && (
           <div className="flex w-full items-center justify-center pt-5 sm:pt-6">
             <button
               type="button"
@@ -85,8 +87,9 @@ export function ExpandableList<T>({
 
   // Case 2: Individual item renderer (e.g. FAQ list or vertical item cards)
   if (renderItem && items.length > 0) {
-    const visibleItems = items.slice(0, initialCount);
-    const hiddenItems = items.slice(initialCount);
+    const hasOverflow = items.length > initialCount;
+    const visibleItems = hasOverflow ? items.slice(0, initialCount) : items;
+    const hiddenItems = hasOverflow ? items.slice(initialCount) : [];
 
     return (
       <div className={cn("relative w-full flex flex-col", className)}>
@@ -100,28 +103,30 @@ export function ExpandableList<T>({
         </div>
 
         {/* Expandable overflow items */}
-        <AnimatePresence initial={false}>
-          {isExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden w-full"
-            >
-              <div className={cn("w-full pt-3", listClassName)}>
-                {hiddenItems.map((item, index) => (
-                  <React.Fragment key={initialCount + index}>
-                    {renderItem(item, initialCount + index)}
-                  </React.Fragment>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {hasOverflow && (
+          <AnimatePresence initial={false}>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden w-full"
+              >
+                <div className={cn("w-full pt-3", listClassName)}>
+                  {hiddenItems.map((item, index) => (
+                    <React.Fragment key={initialCount + index}>
+                      {renderItem(item, initialCount + index)}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
 
         {/* Trigger Button */}
-        {hiddenCount > 0 && (
+        {hasOverflow && (
           <div className="flex w-full items-center justify-center pt-5 sm:pt-6">
             <button
               type="button"
