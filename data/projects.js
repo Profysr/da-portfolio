@@ -1,5 +1,6 @@
 export const projects = [
-  // ── Featured Projects (appear in homepage Projects grid) ──────────────
+  // ── Featured Projects (appear in homepage Projects bento) ─────────────
+  // status: "live" | "in-progress" · features: collapsible list in card
   {
     id: "proj-1",
     slug: "analytics-dashboard",
@@ -10,6 +11,12 @@ export const projects = [
     category: "Web",
     industry: "E-Commerce Fintech",
     access: "Hosted",
+    status: "live",
+    features: [
+      "Real-time WebSocket KPI streaming with sub-second refresh",
+      "Custom D3 visualisation suite tuned for 60fps canvas renders",
+      "Threshold alerting engine backed by Redis queues",
+    ],
     strategies: ["WebSockets Streaming", "Canvas Optimization", "Bento Grid UX"],
     github: "https://github.com/example/analytics",
     live: "https://example.com/analytics",
@@ -27,13 +34,20 @@ export const projects = [
     category: "Open Source",
     industry: "Developer Tools",
     access: "Open Source",
+    status: "live",
+    features: [
+      "Zero-config CLI with AST-driven job inference",
+      "Async worker pools for parallel ETL execution",
+      "Multi-tenant schema isolation out of the box",
+    ],
     strategies: ["AST Parsing", "Zero-Config CLI", "Async Worker Pools"],
     github: "https://github.com/example/pipeline-cli",
     live: "#",
     image: null,
     featured: true,
     isActivity: false,
-    terminalSnippet: "data-pipeline sync --config pipeline.yaml --parallel 8\n✓ Schema validated\n✓ 1.2M rows migrated in 4.2s",
+    terminalSnippet:
+      "data-pipeline sync --config pipeline.yaml --parallel 8\n✓ Schema validated\n✓ 1.2M rows migrated in 4.2s",
   },
   {
     id: "proj-3",
@@ -45,7 +59,17 @@ export const projects = [
     category: "Automation",
     industry: "Healthcare / NHS",
     access: "Private",
-    strategies: ["Desktop OCR Extraction", "Queue-Based Retries", "HIPAA/GDPR Compliance"],
+    status: "live",
+    features: [
+      "Desktop OCR extraction across SystmOne & EMIS",
+      "Queue-based retry pipeline with full audit trail",
+      "HIPAA/GDPR-compliant data handling",
+    ],
+    strategies: [
+      "Desktop OCR Extraction",
+      "Queue-Based Retries",
+      "HIPAA/GDPR Compliance",
+    ],
     github: "#",
     live: "#",
     image: null,
@@ -66,6 +90,12 @@ export const projects = [
     category: "Web",
     industry: "Design & Creative",
     access: "Hosted",
+    status: "live",
+    features: [
+      "Interactive WebGL globe (cobe) with shader glow trails",
+      "Deterministic contribution heatmap, zero API calls",
+      "Edge-cached static export, <100ms TTFB",
+    ],
     strategies: ["WebGL Shaders", "Framerate Throttling", "Edge Caching"],
     github: "https://github.com/example/agency-portfolio",
     live: "https://example.com",
@@ -74,12 +104,21 @@ export const projects = [
     isActivity: false,
   },
 
-  // ── Side Projects (appear in Activities section) ──────────────────────
+  // ── Side Projects (in-progress; also listed in Activities until P16) ──
   {
     id: "proj-5",
     slug: "da-profiler",
     title: "Da Profiler",
-    description: "Open-source Python REST API profiler & N+1 query workbench",
+    description:
+      "Open-source Python REST API profiler & N+1 query workbench",
+    category: "Open Source",
+    status: "in-progress",
+    features: [
+      "N+1 query detection workbench",
+      "REST endpoint profiling harness",
+      "CLI + JSON reporting output",
+    ],
+    tech: ["Python", "SQL"],
     link: "https://github.com",
     isExternal: true,
     tag: "Open Source",
@@ -91,6 +130,14 @@ export const projects = [
     slug: "jcn-engine",
     title: "JCN Engine",
     description: "Multi-tenant SaaS project management engine",
+    category: "Web",
+    status: "in-progress",
+    features: [
+      "Multi-tenant project management core",
+      "Role-based access & team workspaces",
+      "SaaS-ready subscription scaffolding",
+    ],
+    tech: ["TypeScript", "PostgreSQL"],
     link: "https://github.com",
     isExternal: true,
     tag: "SaaS",
@@ -102,6 +149,14 @@ export const projects = [
     slug: "clinical-rpa-core",
     title: "Clinical RPA Core",
     description: "Desktop automation hooks for SystmOne & EMIS",
+    category: "Automation",
+    status: "in-progress",
+    features: [
+      "Reusable automation hooks for SystmOne",
+      "EMIS workflow triggers",
+      "Local-first credential handling",
+    ],
+    tech: ["Power Automate", "AutoHotkey"],
     link: "#",
     isExternal: false,
     tag: "Private",
@@ -113,6 +168,14 @@ export const projects = [
     slug: "agentic-cli-coder",
     title: "Agentic CLI Coder",
     description: "Terminal refactoring agent powered by local LLMs",
+    category: "AI",
+    status: "in-progress",
+    features: [
+      "Local-LLM refactoring agent",
+      "Terminal-native workflow",
+      "Repo-aware context indexing",
+    ],
+    tech: ["Python", "TypeScript"],
     link: "https://github.com",
     isExternal: true,
     tag: "AI",
@@ -121,36 +184,3 @@ export const projects = [
   },
 ];
 
-export const contributions = {
-  heading: "Github",
-  subheading:
-    "A live snapshot of build velocity, open-source contributions, and development consistency.",
-  githubUsername: "Profysr",
-  heatmapWeeks: 32,
-  stats: [
-    {
-      label: "Repositories",
-      value: 38,
-      suffix: "",
-      icon: null,
-      badge: "Public & Private",
-      spanClass: "md:col-span-2 md:col-start-9 md:row-start-1",
-    },
-    {
-      label: "Achievements",
-      value: 10,
-      suffix: "+",
-      icon: null,
-      badge: "Tracked",
-      spanClass: "md:col-span-2 md:col-start-9 md:row-start-2",
-    },
-    {
-      label: "Commits Logged",
-      value: 2500,
-      suffix: "+",
-      icon: null,
-      badge: "Year to Date",
-      spanClass: "md:col-span-2 md:row-span-2 md:col-start-11 md:row-start-1",
-    },
-  ],
-};

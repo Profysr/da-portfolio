@@ -1,6 +1,6 @@
 "use client";
 
-import { personal, about, contributions } from "@/data/idx";
+import { personal, about } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
 import { ScrollReveal, StaggeredReveal } from "@/components/ui/ScrollReveal";
 import { NumberTicker } from "@/components/ui/number-ticker";
@@ -209,9 +209,7 @@ export default function About() {
             <HeatmapGrid
               key={heatmapWeeks}
               weeks={heatmapWeeks}
-              githubUsername={
-                stats?.username || contributions.githubUsername || "Profysr"
-              }
+              githubUsername={stats?.username || personal.githubUsername}
               realContributionCalendar={stats?.contributionCalendar}
               overrideTotal={stats?.totalContributions}
             />

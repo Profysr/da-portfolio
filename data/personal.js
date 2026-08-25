@@ -61,6 +61,7 @@ export const personal = {
   location: "Pakistan",
   locationLabel: "Islamabad, PK → Worldwide",
   timezone: "GMT+5",
+  githubUsername: "Profysr",
   email: "hello@da-portfolio.dev",
   resumeUrl: "/Resume Bilal Ahmad.pdf",
   socials,
