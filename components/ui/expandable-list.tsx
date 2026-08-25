@@ -6,8 +6,9 @@ import { IconChevronDown } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 export interface ExpandableListProps<T> {
-  items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
+  items?: T[];
+  renderItem?: (item: T, index: number) => React.ReactNode;
+  children?: React.ReactNode;
   collapsedHeight?: number;
   showMoreLabel?: string;
   showLessLabel?: string;
@@ -19,7 +20,8 @@ export interface ExpandableListProps<T> {
 export function ExpandableList<T>({
   items,
   renderItem,
-  collapsedHeight = 880,
+  children,
+  collapsedHeight = 420,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
   className,
@@ -39,13 +41,14 @@ export function ExpandableList<T>({
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full overflow-hidden"
       >
-        {/* Pass listClassName here so CSS Columns targets renderItem elements directly */}
         <div className={cn("w-full", listClassName)}>
-          {items.map((item, index) => (
-            <React.Fragment key={index}>
-              {renderItem(item, index)}
-            </React.Fragment>
-          ))}
+          {children
+            ? children
+            : items?.map((item, index) => (
+                <React.Fragment key={index}>
+                  {renderItem?.(item, index)}
+                </React.Fragment>
+              ))}
         </div>
 
         {/* Dynamic Gradient Overlay */}

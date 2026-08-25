@@ -10,7 +10,9 @@ import { projects, TAG_META } from "@/data/idx";
 import { ContinuousTabs } from "@/components/common/Tabs";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import ProjectCard from "./ProjectCard";
+import { MasonryGrid } from "@/components/MasonryGrid";
 import { ExpandableList } from "@/components/ui/expandable-list";
+
 // =========================================
 // Empty State
 // =========================================
@@ -56,10 +58,7 @@ const tabs = [
 ];
 // Helper to render individual card within masonry columns
 const renderProjectItem = (project, idx) => (
-  <div
-    key={project.id || project.slug}
-    className="mb-3.5 break-inside-avoid inline-block w-full"
-  >
+  <div key={project.id || project.slug} className="w-full">
     <ScrollReveal
       variant="slide-up"
       delay={(idx % 4) * 0.07}
@@ -120,18 +119,21 @@ const Projects = () => {
             >
               {HAS_MORE_THAN_6 ? (
                 <ExpandableList
-                  items={filtered}
                   collapsedHeight={900}
-                  listClassName="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full"
                   showMoreLabel={`Show more (${filtered.length - 6} more)`}
+                >
+                  <MasonryGrid
+                    items={filtered}
+                    renderItem={(project, idx) =>
+                      renderProjectItem(project, idx)
+                    }
+                  />
+                </ExpandableList>
+              ) : (
+                <MasonryGrid
+                  items={filtered}
                   renderItem={(project, idx) => renderProjectItem(project, idx)}
                 />
-              ) : (
-                <div className="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full">
-                  {filtered.map((project, idx) =>
-                    renderProjectItem(project, idx),
-                  )}
-                </div>
               )}
             </motion.div>
           ) : (
