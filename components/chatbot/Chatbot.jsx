@@ -1,18 +1,25 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  IconX,
-  IconSend,
-  IconSparkles,
-  IconLoader2,
-} from "@tabler/icons-react";
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "@/components/ui/drawer";
+import { IconSparkles, IconArrowUp, IconLoader2 } from "@tabler/icons-react";
 import { Message, WelcomeMessage } from "./Message";
 import { QuickActions } from "./QuickActions";
 import { cn } from "@/lib/utils";
 
-/* Curated responses — single source of truth for Bilal's portfolio */
+// ============================================================================
+// DATA & UTILITIES
+// ============================================================================
+
 const RESPONSES = {
   projects: `I've built 8 projects spanning open source, healthcare automation, and developer tooling:
 
@@ -52,202 +59,247 @@ Led frontend architecture, built component libraries, optimized application perf
 
 function matchResponse(input) {
   const lower = input.toLowerCase();
-  if (lower.includes("project") || lower.includes("built") || lower.includes("portfolio")) return RESPONSES.projects;
-  if (lower.includes("experience") || lower.includes("work") || lower.includes("job") || lower.includes("career")) return RESPONSES.experience;
-  if (lower.includes("stack") || lower.includes("tech") || lower.includes("technology") || lower.includes("language")) return RESPONSES.stack;
-  if (lower.includes("contact") || lower.includes("email") || lower.includes("reach") || lower.includes("hire")) return RESPONSES.contact;
+  if (
+    lower.includes("project") ||
+    lower.includes("built") ||
+    lower.includes("portfolio")
+  )
+    return RESPONSES.projects;
+  if (
+    lower.includes("experience") ||
+    lower.includes("work") ||
+    lower.includes("job") ||
+    lower.includes("career")
+  )
+    return RESPONSES.experience;
+  if (
+    lower.includes("stack") ||
+    lower.includes("tech") ||
+    lower.includes("technology") ||
+    lower.includes("language")
+  )
+    return RESPONSES.stack;
+  if (
+    lower.includes("contact") ||
+    lower.includes("email") ||
+    lower.includes("reach") ||
+    lower.includes("hire")
+  )
+    return RESPONSES.contact;
   return `I can help with:\n▸ **Projects** — 8 engineering projects\n▸ **Experience** — Kynoby, Simplamo\n▸ **Tech Stack** — TypeScript, React, Python, PostgreSQL\n▸ **Contact** — bilal@profysr.dev\n\nWhat would you like to know?`;
 }
 
-/* Streaming simulation — character-by-character */
-function* streamText(text, chunkSize = 2) {
-  for (let i = 0; i < text.length; i += chunkSize) {
-    yield text.slice(0, i + chunkSize);
-  }
+let msgIdCounter = 0;
+function uniqueId() {
+  return `${Date.now()}-${++msgIdCounter}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export function Chatbot({ isOpen, onClose }) {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamQueue, setStreamQueue] = useState(null);
+// ============================================================================
+// COMPONENT: ChatHeader (Smaller text, minimal padding, no close icon)
+// ============================================================================
+
+function ChatHeader() {
+  return (
+    <DrawerHeader className="py-2 px-3 border-b border-border">
+      <div className="flex items-center gap-1.5">
+        <IconSparkles className="size-3.5 text-muted-foreground" />
+        <DrawerTitle className="text-sm! font-semibold tracking-tight text-foreground">
+          AI Assistant
+        </DrawerTitle>
+      </div>
+      <DrawerDescription className="text-[11px] text-muted-foreground/80 mt-0.5 text-left">
+        Ask about projects, experience, or tech stack
+      </DrawerDescription>
+    </DrawerHeader>
+  );
+}
+
+// ============================================================================
+// COMPONENT: ChatMessagesContainer
+// ============================================================================
+
+function ChatMessagesContainer({ messages, isStreaming }) {
   const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
-  const panelRef = useRef(null);
-  const previousActiveRef = useRef(null);
 
-  /* Focus trap + restore on close */
-  useEffect(() => {
-    if (isOpen) {
-      previousActiveRef.current = document.activeElement;
-      panelRef.current?.focus();
-      inputRef.current?.focus();
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      previousActiveRef.current?.focus?.();
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
-
-  /* Focus trap inside panel */
-  const handleKeyDown = (e) => {
-    if (!isOpen) return;
-    if (e.key === "Escape") { onClose(); return; }
-    if (e.key === "Tab") {
-      const focusable = panelRef.current?.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (!focusable?.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    scrollToBottom();
+  }, [messages, isStreaming]);
+
+  return (
+    <div
+      className="flex-1 overflow-y-auto px-2 py-3 space-y-4 w-full"
+      role="log"
+      aria-live="polite"
+      aria-label="Conversation history"
+    >
+      <WelcomeMessage />
+
+      {messages.map((msg, index) => (
+        <Message
+          key={msg.id}
+          content={msg.content}
+          role={msg.role}
+          isStreaming={
+            isStreaming &&
+            index === messages.length - 1 &&
+            msg.role === "assistant"
+          }
+        />
+      ))}
+
+      <div ref={messagesEndRef} />
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: ChatInputForm (Includes QuickActions on top + increased input height)
+// ============================================================================
+
+function ChatInputForm({
+  input,
+  setInput,
+  onSubmit,
+  isStreaming,
+  isOpen,
+  showQuickActions,
+  onQuickAction,
+}) {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
   }, [isOpen]);
 
-  /* Auto-scroll to bottom */
-  const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
-  useEffect(() => { scrollToBottom(); }, [messages, isStreaming]);
+  return (
+    <DrawerFooter className="p-2 gap-2 bg-background/50 backdrop-blur-md border-t border-border/40 flex flex-col items-center">
+      {/* Quick actions in a single-line horizontally scrollable container */}
+      {showQuickActions && (
+        <QuickActions onActionClick={onQuickAction} disabled={isStreaming} />
+      )}
+
+      {/* Main Input Form */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(input);
+        }}
+        className="relative flex items-center w-full"
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Reply to assistant..."
+          disabled={isStreaming}
+          className="w-full h-14 pl-3 pr-11 text-sm bg-muted/30 hover:bg-muted/50 border border-border/40 focus:border-foreground/20 rounded-lg focus:outline-none transition-all placeholder:text-muted-foreground/60 disabled:opacity-50"
+          aria-label="Chat input"
+          autoComplete="off"
+        />
+        <button
+          type="submit"
+          disabled={!input.trim() || isStreaming}
+          className={cn(
+            "absolute right-2 size-8 rounded-md flex items-center justify-center transition-all",
+            input.trim() && !isStreaming
+              ? "bg-foreground text-background hover:opacity-90 scale-100"
+              : "bg-muted text-muted-foreground opacity-40 cursor-not-allowed scale-95",
+          )}
+          aria-label={isStreaming ? "Streaming response" : "Send message"}
+        >
+          {isStreaming ? (
+            <IconLoader2 className="size-4 animate-spin" />
+          ) : (
+            <IconArrowUp className="size-4 stroke-[2.5]" />
+          )}
+        </button>
+      </form>
+
+      {/* Centered text below the input field */}
+      <p className="text-[11px] text-muted-foreground/60 text-center select-none pt-0.5">
+        AI responses are generated based on portfolio details and may vary.
+      </p>
+    </DrawerFooter>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT: Chatbot (Height updated to 85dvh)
+// ============================================================================
+
+export function Chatbot({ open, onClose }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
 
   /* Streaming generator */
   const processStream = useCallback(async (text) => {
     setIsStreaming(true);
-    setMessages(prev => [...prev, { role: "assistant", content: "", id: Date.now() }]);
-    for await (const chunk of streamText(text)) {
-      setMessages(prev => prev.map((m, i) => i === prev.length - 1 ? { ...m, content: chunk } : m));
-      await new Promise(r => setTimeout(r, 12));
+    const msgId = uniqueId();
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "", id: msgId },
+    ]);
+
+    for (let i = 0; i < text.length; i += 2) {
+      const chunk = text.slice(0, i + 2);
+      setMessages((prev) =>
+        prev.map((m) => (m.id === msgId ? { ...m, content: chunk } : m)),
+      );
+      await new Promise((r) => setTimeout(r, 12));
     }
     setIsStreaming(false);
   }, []);
 
-  /* Send message */
+  /* Send handler */
   const handleSend = (text) => {
     if (!text.trim() || isStreaming) return;
     const userText = text.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userText, id: Date.now() }]);
-    const response = matchResponse(userText);
-    processStream(response);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: userText, id: uniqueId() },
+    ]);
+    processStream(matchResponse(userText));
   };
 
-  /* Quick action click */
-  const handleQuickAction = (query) => { handleSend(query); };
-
-  /* Minimize animation */
-  const [isMinimized, setIsMinimized] = useState(false);
-
-  if (!isOpen && !isMinimized) return null;
-
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={panelRef}
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className={cn(
-            "fixed bottom-20 right-4 z-50 w-full max-w-sm",
-            "bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden",
-            "flex flex-col"
-          )}
-          tabIndex={-1}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Chat with Bilal's assistant"
-          onKeyDown={handleKeyDown}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface/80 backdrop-blur-sm">
-            <div className="flex items-center gap-2">
-              <span className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <IconSparkles className="size-4 text-primary" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-foreground">Bilal's Assistant</p>
-                <p className="text-xs text-muted-foreground">AI-powered · Streaming responses</p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="size-8 rounded-lg border border-border bg-surface text-muted-foreground hover:bg-surface-hover hover:text-foreground transition-colors"
-              aria-label="Close chat"
-            >
-              <IconX className="size-4" />
-            </button>
-          </div>
+    <Drawer
+      open={open}
+      onOpenChange={(val) => !val && onClose()}
+      direction="bottom"
+    >
+      <DrawerPortal>
+        <DrawerOverlay className="bg-black/40 backdrop-blur-xs" />
+        <DrawerContent className="w-full mx-auto max-w-2xl bg-background rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
+          {/* Header without Close Button and minimal padding */}
+          <ChatHeader />
 
-          {/* Messages */}
-          <div
-            className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px]"
-            role="log"
-            aria-live="polite"
-            aria-label="Conversation"
-          >
-            <WelcomeMessage />
-            {messages.map((msg) => (
-              <Message
-                key={msg.id}
-                content={msg.content}
-                role={msg.role}
-                isStreaming={isStreaming && messages[messages.length - 1]?.id === msg.id && msg.role === "assistant"}
-              />
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+          {/* Messages Scroll Area */}
+          <ChatMessagesContainer
+            messages={messages}
+            isStreaming={isStreaming}
+          />
 
-          {/* Quick Actions */}
-          {!isStreaming && messages.length <= 1 && (
-            <QuickActions onActionClick={handleQuickAction} disabled={isStreaming} />
-          )}
-
-          {/* Input */}
-          <div className="border-t border-border bg-surface/80 backdrop-blur-sm p-3">
-            <form
-              onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
-              className="flex gap-2"
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about projects, experience, stack..."
-                disabled={isStreaming}
-                className="flex-1 px-3 py-2 text-sm bg-background border border-border rounded-xl focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
-                aria-label="Chat input"
-                autoComplete="off"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || isStreaming}
-                className={cn(
-                  "size-10 rounded-xl flex items-center justify-center transition-colors",
-                  "bg-primary text-primary-foreground hover:bg-primary-hover",
-                  "disabled:opacity-50 disabled:cursor-not-allowed"
-                )}
-                aria-label={isStreaming ? "Streaming response" : "Send message"}
-              >
-                {isStreaming ? (
-                  <IconLoader2 className="size-4 animate-spin" />
-                ) : (
-                  <IconSend className="size-4" />
-                )}
-              </button>
-            </form>
-            <p className="text-[10px] text-muted-foreground/60 text-center mt-2 font-mono">
-              Press <kbd className="px-1.5 py-0.5 bg-muted rounded">Esc</kbd> to close
-            </p>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          {/* Input Area containing Quick Actions directly on top */}
+          <ChatInputForm
+            input={input}
+            setInput={setInput}
+            onSubmit={handleSend}
+            isStreaming={isStreaming}
+            isOpen={open}
+            showQuickActions={!isStreaming}
+            onQuickAction={handleSend}
+          />
+        </DrawerContent>
+      </DrawerPortal>
+    </Drawer>
   );
 }
