@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 export interface ExpandableListProps<T> {
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
-  /** Fixed pixel height when collapsed (default: 420) */
   collapsedHeight?: number;
   showMoreLabel?: string;
   showLessLabel?: string;
@@ -20,7 +19,7 @@ export interface ExpandableListProps<T> {
 export function ExpandableList<T>({
   items,
   renderItem,
-  collapsedHeight = 420,
+  collapsedHeight = 880,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
   className,
@@ -38,9 +37,10 @@ export function ExpandableList<T>({
           height: isExpanded ? "auto" : collapsedHeight,
         }}
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        className={cn("relative w-full overflow-hidden", listClassName)}
+        className="relative w-full overflow-hidden"
       >
-        <div className="w-full">
+        {/* Pass listClassName here so CSS Columns targets renderItem elements directly */}
+        <div className={cn("w-full", listClassName)}>
           {items.map((item, index) => (
             <React.Fragment key={index}>
               {renderItem(item, index)}
@@ -48,7 +48,7 @@ export function ExpandableList<T>({
           ))}
         </div>
 
-        {/* Dynamic Gradient Overlay (Adapts to Light/Dark --background) */}
+        {/* Dynamic Gradient Overlay */}
         <AnimatePresence>
           {!isExpanded && (
             <motion.div
@@ -56,13 +56,13 @@ export function ExpandableList<T>({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-background via-background/85 to-transparent z-10"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/85 to-transparent z-10"
             />
           )}
         </AnimatePresence>
       </motion.div>
 
-      {/* Dynamic Floating Trigger Button */}
+      {/* Floating Center Trigger Button */}
       <div
         className={cn(
           "z-20 flex w-full items-center justify-center transition-all duration-300",

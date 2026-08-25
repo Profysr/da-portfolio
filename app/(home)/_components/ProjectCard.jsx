@@ -22,7 +22,7 @@ function getTagConfig(tag) {
 
 /* Collapsible feature list — expanded by default, collapsible */
 function FeaturesList({ features }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() => (features?.length ?? 0) <= 3);
   if (!features?.length) return null;
 
   return (
