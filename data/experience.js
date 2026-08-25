@@ -98,20 +98,3 @@ export const education = [
     image: null,
   },
 ];
-
-export const awards = [
-  {
-    id: "award-1",
-    title: "Engineering Excellence & Innovation Award",
-    issuer: "Kynoby Leadership",
-    date: "2025",
-    description: "Awarded for architecting healthcare interoperability pipelines reducing clinical data processing latency by 40%.",
-  },
-  {
-    id: "award-2",
-    title: "Dean's Honor List",
-    issuer: "University of Massachusetts",
-    date: "2023",
-    description: "Academic honors in Computer Science & Applied Mathematics.",
-  },
-];

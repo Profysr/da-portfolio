@@ -1,3 +1,27 @@
+// =================================================
+// Note! we're not rednering certificates and awards. If you want to, you can update the credentials section to render these documents
+// =================================================
+// =================================================
+// Keep them for bot api compatibility
+// =================================================
+export const awards = [
+  {
+    id: "award-1",
+    title: "Engineering Excellence & Innovation Award",
+    issuer: "Kynoby Leadership",
+    date: "2025",
+    description:
+      "Awarded for architecting healthcare interoperability pipelines reducing clinical data processing latency by 40%.",
+  },
+  {
+    id: "award-2",
+    title: "Dean's Honor List",
+    issuer: "University of Massachusetts",
+    date: "2023",
+    description: "Academic honors in Computer Science & Applied Mathematics.",
+  },
+];
+
 export const certificates = [
   {
     id: "cert-aws",
@@ -16,7 +40,8 @@ export const certificates = [
     issueDate: "Aug 2023",
     expirationDate: null,
     credentialId: "GCP-DA-49210",
-    credentialUrl: "https://coursera.org/verify/professional-cert/google-data-analytics",
+    credentialUrl:
+      "https://coursera.org/verify/professional-cert/google-data-analytics",
     skills: ["SQL", "Data Pipelines", "R", "Tableau", "Data Modeling"],
   },
   {
