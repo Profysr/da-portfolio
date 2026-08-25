@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
         hostname: "raw.githubusercontent.com",
       }
     ],
+    qualities: [75, 85],
     unoptimized: process.env.NODE_ENV === "development",
   },
 };

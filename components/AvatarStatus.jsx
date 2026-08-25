@@ -68,7 +68,6 @@ export function AvatarStatus() {
         width={120}
         height={120}
         className="object-cover rounded-full p-1 border-2 border-dashed border-primary"
-        priority
       />
 
       {/* Status Badge */}

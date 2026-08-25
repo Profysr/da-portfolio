@@ -11,23 +11,6 @@ const SIZE_CLASSES = {
     "gap-2 px-3 py-1.5 text-sm xl:gap-2.5 xl:px-4 xl:py-2 xl:text-base",
 };
 
-const IMG_SIZE_CLASSES = {
-  sm: "size-3.5",
-  md: "size-5",
-  lg: "size-6.5",
-  xl: "size-8",
-  responsive: "size-6.5 xl:size-8",
-};
-
-// Icon-only pills (hideName) get a wider 3:2-ish box so wide logo banners (NHS, SystmOne, EMIS...) render at meaningful size instead of letterboxing inside a square.
-const ICON_ONLY_CLASSES = {
-  sm: "w-6 h-4",
-  md: "w-8 h-5",
-  lg: "w-10 h-6",
-  xl: "w-12 h-8",
-  responsive: "w-8 h-5 lg:w-10 lg:h-6 xl:w-12 xl:h-8",
-};
-
 export function TechPill({ name, className, size = "md" }) {
   const config = getTechIcon(name);
   const showImage = Boolean(config?.img);
@@ -37,9 +20,6 @@ export function TechPill({ name, className, size = "md" }) {
   // const iconWrapClass = config?.lightBg ? "rounded bg-foreground p-0.5" : "";
 
   const sizeClass = SIZE_CLASSES[size] ?? SIZE_CLASSES.md;
-  const imgSizeClass =
-    (showName ? IMG_SIZE_CLASSES : ICON_ONLY_CLASSES)[size] ??
-    (showName ? IMG_SIZE_CLASSES.md : ICON_ONLY_CLASSES.md);
 
   return (
     <span
@@ -53,18 +33,18 @@ export function TechPill({ name, className, size = "md" }) {
       {showImage && (
         <span
           className={cn(
-            "shrink-0 flex items-center justify-center",
-            imgSizeClass,
+            "shrink-0 flex items-center justify-center relative",
+            showName ? "size-8" : "size-10",
             // iconWrapClass,
           )}
         >
           <Image
             src={config?.img}
             alt={name}
-            width={showName ? 32 : 48}
-            height={showName ? 24 : 32}
+            fill
             loading="lazy"
-            className="h-auto w-auto object-contain"
+            sizes="32px"
+            className="object-contain"
           />
         </span>
       )}
