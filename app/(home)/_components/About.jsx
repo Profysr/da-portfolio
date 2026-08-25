@@ -92,7 +92,7 @@ export default function About() {
   ];
 
   return (
-    <Section id="about" className="py-section-tight" noFade>
+    <Section id="about" noFade>
       <div className="flex flex-col gap-6">
         <ScrollReveal variant="reveal" duration={0.8} once={false}>
           <h2 className="text-3xl font-semibold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]">

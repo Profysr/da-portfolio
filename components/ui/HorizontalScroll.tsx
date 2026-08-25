@@ -29,7 +29,6 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
       if (trackRef.current) {
         const trackWidth = trackRef.current.scrollWidth;
         const viewportWidth = window.innerWidth;
-        // Total horizontal translation so the last card aligns nicely in view
         const distance = Math.max(0, trackWidth - viewportWidth);
         setScrollDistance(distance);
       }
@@ -37,7 +36,6 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
 
     calculateDistance();
 
-    // Use ResizeObserver if available for instant responsive updates
     if (typeof ResizeObserver !== "undefined" && trackRef.current) {
       const observer = new ResizeObserver(() => calculateDistance());
       observer.observe(trackRef.current);
@@ -52,13 +50,11 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
     }
   }, [children]);
 
-  // Framer Motion scroll tracking relative to containerRef
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Physical spring smoothing for fluid horizontal motion
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 90,
     damping: 25,
@@ -67,7 +63,6 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
 
   const x = useTransform(smoothProgress, [0, 1], [0, -scrollDistance]);
 
-  // Update active index indicator based on progress
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
       const idx = Math.min(
@@ -85,24 +80,32 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
       style={{ height: `${scrollLengthVh}vh` }}
       className="relative w-full"
     >
-      {/* Sticky Viewport Container */}
-      <div className="sticky top-0 flex h-screen w-full flex-col py-6 sm:py-8 md:py-10 overflow-hidden">
-        {/* Pinned Section Header */}
-        {header && <div className="w-full shrink-0 z-10">{header}</div>}
+      {/* Sticky Viewport — full screen, top-0 so it pins behind the floating TopBar */}
+      <div className="sticky top-0 h-screen w-full flex flex-col overflow-hidden">
 
-        {/* Pinned Cards Horizontal Track */}
-        <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto">
+        {/* ── Section Header ─────────────────────────────────────────── */}
+        {header && (
+          <div className="w-full shrink-0 pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-5">
+            {header}
+          </div>
+        )}
+
+        {/* ── Cards Track — natural height, directly below header */}
+        <div className="relative w-full shrink-0 pt-3 sm:pt-4 overflow-hidden">
           <motion.div
             ref={trackRef}
             style={{ x }}
-            className={`flex shrink-0 items-center gap-4 px-6 sm:px-12 md:px-16 lg:px-24 xl:px-32 will-change-transform motion-reduce:transform-none! ${className}`}
+            className={`flex shrink-0 items-start gap-3 sm:gap-4 md:gap-5 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28 will-change-transform motion-reduce:transform-none! ${className}`}
           >
             {children}
           </motion.div>
         </div>
 
-        {/* Interactive Progress Indicator Bar */}
-        <div className="w-full shrink-0 z-10 px-6 sm:px-12 max-w-7xl mx-auto flex items-center justify-between text-xs text-muted-foreground font-mono">
+        {/* Spacer — pushes progress bar to viewport bottom */}
+        <div className="flex-1" />
+
+        {/* ── Progress Bar ────────────────────────────────────────────── */}
+        <div className="w-full shrink-0 pb-4 sm:pb-6 px-4 sm:px-8 max-w-7xl mx-auto flex items-center justify-between text-xs text-muted-foreground font-mono">
           <div className="flex items-center gap-3 sm:gap-4">
             <span className="text-foreground font-bold tracking-widest text-xs sm:text-sm">
               {String(activeIndex + 1).padStart(2, "0")}

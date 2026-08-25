@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState } from "react";
 import {
@@ -6,7 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import { personal, socials } from "@/data/idx.js";
 import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
@@ -118,11 +118,8 @@ function HeroActions() {
  * ============================================================ */
 export default function Hero() {
   return (
-    <Section
-      id="hero"
-      className="flex min-h-dvh items-center justify-center pt-18 md:pt-24"
-    >
-      <div className="flex w-full flex-col items-center justify-center gap-7 text-center">
+    <Section id="hero">
+      <div className="flex w-full flex-col items-center justify-center gap-7 text-center pt-18 md:pt-32">
         <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
         </ScrollReveal>
@@ -140,6 +137,30 @@ export default function Hero() {
         <ScrollReveal variant="slide-up" duration={0.7} delay={0.3}>
           <HeroActions />
         </ScrollReveal>
+
+        {/* Scroll-down indicator — fills the visual gap & guides user to next section */}
+        <div
+          onClick={() =>
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          aria-label="Scroll to About section"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) =>
+            e.key === "Enter" &&
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground/50 hover:text-muted-foreground transition-colors group"
+        >
+          <span className="text-[10px] font-mono tracking-[0.2em] uppercase opacity-70 group-hover:opacity-100 transition-opacity">
+            Scroll
+          </span>
+          <IconChevronDown size={24} strokeWidth={2.5} />
+        </div>
       </div>
     </Section>
   );

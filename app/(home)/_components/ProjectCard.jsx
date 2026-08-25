@@ -20,9 +20,9 @@ function getTagConfig(tag) {
   return TAG_META[tag] || TAG_META.default;
 }
 
-/* Collapsible feature list — collapsed shows the count, expands to bullets */
+/* Collapsible feature list — expanded by default, collapsible */
 function FeaturesList({ features }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   if (!features?.length) return null;
 
   return (

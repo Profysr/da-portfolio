@@ -13,7 +13,7 @@ import ProjectCard from "./ProjectCard";
 
 // =========================================
 // Empty State
-// =++++++++++++++++++++++++++++++++++++++++
+// =========================================
 export const ProjectsEmptyState = ({ onReset }) => {
   return (
     <motion.div
@@ -44,19 +44,6 @@ export const ProjectsEmptyState = ({ onReset }) => {
   );
 };
 
-// =========================================
-// Helper Functions
-// =++++++++++++++++++++++++++++++++++++++++
-function getFlexConfig(project) {
-  if (project.featured && project.terminalSnippet) {
-    return { flexGrow: 2, flexBasis: "420px", minWidth: "320px" };
-  }
-  if (project.featured || project.image) {
-    return { flexGrow: 1.5, flexBasis: "360px", minWidth: "300px" };
-  }
-  return { flexGrow: 1, flexBasis: "280px", minWidth: "260px" };
-}
-
 const tabs = [
   { id: "All", label: "All", count: projects.length },
   ...Object.keys(TAG_META)
@@ -70,7 +57,7 @@ const tabs = [
 
 // =========================================
 // Main Component
-// =++++++++++++++++++++++++++++++++++++++++
+// =========================================
 const Projects = () => {
   const [activeTab, setActiveTab] = useState("All");
 
@@ -112,31 +99,23 @@ const Projects = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="flex flex-wrap gap-3.5 w-full items-stretch"
+              className="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full"
             >
-              {filtered.map((project, idx) => {
-                const flexStyle = getFlexConfig(project);
-
-                return (
+              {filtered.map((project, idx) => (
+                <div
+                  key={project.id || project.slug}
+                  className="mb-3.5 break-inside-avoid inline-block w-full"
+                >
                   <ScrollReveal
-                    key={project.id || project.slug}
                     variant="slide-up"
                     delay={(idx % 4) * 0.07}
                     duration={0.6}
                     once={false}
-                    style={{
-                      flexGrow: flexStyle.flexGrow,
-                      flexBasis: flexStyle.flexBasis,
-                      minWidth: flexStyle.minWidth,
-                    }}
-                    className="shrink-0"
                   >
                     <ProjectCard project={project} />
                   </ScrollReveal>
-                );
-              })}
-
-              <div className="grow-99 h-0 min-w-65" />
+                </div>
+              ))}
             </motion.div>
           ) : (
             <ProjectsEmptyState onReset={() => setActiveTab("All")} />
