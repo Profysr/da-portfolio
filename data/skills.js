@@ -30,7 +30,7 @@ export const TECH_ICON_MAP = {
   "C/C++": { img: "/tools/cpp.svg", category: "Language" },
   C: { img: "/tools/c.svg", category: "Language" },
   "C++": { img: "/tools/cpp.svg", category: "Language" },
-  Rust: { img: "/tools/rust.svg", category: "Language", lightBg: true },
+  Rust: { img: "/tools/rust.svg", category: "Language" },
   SQL: { img: "/tools/sql.svg", category: "Language" },
   HTML: { img: "/tools/html.svg", category: "Language" },
   CSS: { img: "/tools/css.svg", category: "Language" },
@@ -86,12 +86,11 @@ export const TECH_ICON_MAP = {
   MCPs: { img: "/tools/mcp.svg", category: "AI" },
   Tampermonkey: {
     img: "/tools/tampermonkey.svg",
-    lightBg: true,
+
     category: "Automation",
   },
   PowerShell: {
     img: "/tools/powershell.svg",
-    lightBg: true,
     category: "Automation",
   },
   AutoHotkey: { img: undefined, category: "Automation" },
@@ -108,7 +107,6 @@ export const TECH_ICON_MAP = {
   EMIS: {
     img: "/tools/emis.webp",
     hideName: true,
-    lightBg: true,
     category: "Healthcare",
   },
   Docman: { img: "/tools/docman.png", category: "Healthcare" },

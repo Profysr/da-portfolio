@@ -123,7 +123,7 @@ export default function Hero() {
       id="hero"
       className="flex min-h-dvh items-center justify-center pt-18 md:pt-24"
     >
-      <Layout className="flex w-full flex-col items-center justify-center gap-7 px-4 text-center sm:px-6">
+      <div className="flex w-full flex-col items-center justify-center gap-7 text-center">
         <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
         </ScrollReveal>
@@ -141,7 +141,7 @@ export default function Hero() {
         <ScrollReveal variant="slide-up" duration={0.7} delay={0.3}>
           <HeroActions />
         </ScrollReveal>
-      </Layout>
+      </div>
     </Section>
   );
 }

@@ -11,7 +11,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { TechPill } from "@/components/common/TechPill";
-import { Timeline } from "@/components/21st/Timeline";
+import { Timeline } from "@/components/Timeline";
 import { cn } from "@/lib/utils";
 
 const MONTHS = [

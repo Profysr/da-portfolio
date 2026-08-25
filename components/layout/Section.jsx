@@ -16,7 +16,7 @@ export const Section = forwardRef(function Section(
   },
   ref
 ) {
-  const base = "w-full py-12 md:py-18";
+  const base = "w-full py-8 md:py-12";
 
   const content = (
     <section ref={ref} id={id} className={cn(base, className)} {...props}>

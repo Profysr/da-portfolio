@@ -42,7 +42,7 @@ function HomeLayout({ children }) {
   }, [lastScrollY]);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-clip">
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
