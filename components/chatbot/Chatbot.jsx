@@ -178,7 +178,7 @@ function ChatInputForm({
   }, [isOpen]);
 
   return (
-    <DrawerFooter className="p-2 gap-2 bg-background/50 backdrop-blur-md border-t border-border/40 flex flex-col items-center">
+    <DrawerFooter className="p-2 gap-2 bg-surface backdrop-blur-md border-t border-border/40 flex flex-col items-center">
       {/* Quick actions in a single-line horizontally scrollable container */}
       {showQuickActions && (
         <QuickActions onActionClick={onQuickAction} disabled={isStreaming} />
@@ -199,7 +199,7 @@ function ChatInputForm({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Reply to assistant..."
           disabled={isStreaming}
-          className="w-full h-14 pl-3 pr-11 text-sm bg-muted/30 hover:bg-muted/50 border border-border/40 focus:border-foreground/20 rounded-lg focus:outline-none transition-all placeholder:text-muted-foreground/60 disabled:opacity-50"
+          className="w-full h-14 pl-3 pr-11 text-sm bg-background/50 hover:bg-background border border-border/40 focus:border-foreground/20 rounded-lg focus:outline-none transition-all placeholder:text-muted-foreground/60 disabled:opacity-50"
           aria-label="Chat input"
           autoComplete="off"
         />
@@ -209,7 +209,7 @@ function ChatInputForm({
           className={cn(
             "absolute right-2 size-8 rounded-md flex items-center justify-center transition-all",
             input.trim() && !isStreaming
-              ? "bg-foreground text-background hover:opacity-90 scale-100"
+              ? "bg-primary text-primary-foreground hover:bg-primary-hover hover:scale-105"
               : "bg-muted text-muted-foreground opacity-40 cursor-not-allowed scale-95",
           )}
           aria-label={isStreaming ? "Streaming response" : "Send message"}
@@ -277,8 +277,8 @@ export function Chatbot({ open, onClose }) {
       direction="bottom"
     >
       <DrawerPortal>
-        <DrawerOverlay className="bg-black/40 backdrop-blur-xs" />
-        <DrawerContent className="w-full mx-auto max-w-2xl bg-background rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
+        <DrawerOverlay className="bg-background/50 backdrop-blur-sm" />
+        <DrawerContent className="w-full mx-auto max-w-2xl bg-surface rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
           {/* Header without Close Button and minimal padding */}
           <ChatHeader />
 

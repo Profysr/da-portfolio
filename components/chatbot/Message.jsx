@@ -138,7 +138,7 @@ export function Message({ content, role, isStreaming }) {
             onClick={handleCopy}
           >
             {copied ? (
-              <IconCheck className="size-3.5 text-green-500" />
+              <IconCheck className="size-3.5 text-emerald-500" />
             ) : (
               <IconCopy className="size-3.5" />
             )}
