@@ -1,73 +1,108 @@
 "use client";
 
+import React from "react";
 import { motion } from "motion/react";
 import {
   IconArrowUpRight,
   IconClock,
   IconTag,
+  IconBook,
 } from "@tabler/icons-react";
+import OptimizedImage from "@/components/common/OptimizedImage";
+import { ExtendedLink } from "@/components/common/ExtendedLink";
 import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { GlowFrame } from "@/components/ui/GlowFrame";
 import { ExpandableList } from "@/components/ui/expandable-list";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { writings } from "@/data/idx";
 import { cn } from "@/lib/utils";
+import { GlowFrame } from "@/components/ui/GlowFrame";
 
 const ARTICLE_SHADES = [
   {
-    bgClass: "bg-linear-to-br from-shade-blue-bg/80 via-card/85 to-shade-blue-bg/40",
-    borderClass: "border-shade-blue-border/70 hover:border-shade-blue-accent",
-    accentColor: "var(--shade-blue-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-blue-accent) 22%, transparent)",
-    tagClass: "border-shade-blue-border bg-shade-blue-bg text-shade-blue-text",
-    numberClass: "text-shade-blue-accent",
+    tagShade: "shade-card-blue",
+    accentColor: "bg-blue-500",
+    hoverBorder: "hover:border-blue-500/50",
   },
   {
-    bgClass: "bg-linear-to-br from-shade-green-bg/80 via-card/85 to-shade-green-bg/40",
-    borderClass: "border-shade-green-border/70 hover:border-shade-green-accent",
-    accentColor: "var(--shade-green-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-green-accent) 22%, transparent)",
-    tagClass: "border-shade-green-border bg-shade-green-bg text-shade-green-text",
-    numberClass: "text-shade-green-accent",
+    tagShade: "shade-card-green",
+    accentColor: "bg-emerald-500",
+    hoverBorder: "hover:border-emerald-500/50",
   },
   {
-    bgClass: "bg-linear-to-br from-shade-purple-bg/80 via-card/85 to-shade-purple-bg/40",
-    borderClass: "border-shade-purple-border/70 hover:border-shade-purple-accent",
-    accentColor: "var(--shade-purple-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-purple-accent) 22%, transparent)",
-    tagClass: "border-shade-purple-border bg-shade-purple-bg text-shade-purple-text",
-    numberClass: "text-shade-purple-accent",
+    tagShade: "shade-card-purple",
+    accentColor: "bg-purple-500",
+    hoverBorder: "hover:border-purple-500/50",
   },
   {
-    bgClass: "bg-linear-to-br from-shade-gold-bg/80 via-card/85 to-shade-gold-bg/40",
-    borderClass: "border-shade-gold-border/70 hover:border-shade-gold-accent",
-    accentColor: "var(--shade-gold-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-gold-accent) 22%, transparent)",
-    tagClass: "border-shade-gold-border bg-shade-gold-bg text-shade-gold-text",
-    numberClass: "text-shade-gold-accent",
+    tagShade: "shade-card-gold",
+    accentColor: "bg-amber-500",
+    hoverBorder: "hover:border-amber-500/50",
   },
   {
-    bgClass: "bg-linear-to-br from-shade-cyan-bg/80 via-card/85 to-shade-cyan-bg/40",
-    borderClass: "border-shade-cyan-border/70 hover:border-shade-cyan-accent",
-    accentColor: "var(--shade-cyan-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-cyan-accent) 22%, transparent)",
-    tagClass: "border-shade-cyan-border bg-shade-cyan-bg text-shade-cyan-text",
-    numberClass: "text-shade-cyan-accent",
+    tagShade: "shade-card-cyan",
+    accentColor: "bg-cyan-500",
+    hoverBorder: "hover:border-cyan-500/50",
   },
   {
-    bgClass: "bg-linear-to-br from-shade-rose-bg/80 via-card/85 to-shade-rose-bg/40",
-    borderClass: "border-shade-rose-border/70 hover:border-shade-rose-accent",
-    accentColor: "var(--shade-rose-accent)",
-    glowColor: "color-mix(in srgb, var(--shade-rose-accent) 22%, transparent)",
-    tagClass: "border-shade-rose-border bg-shade-rose-bg text-shade-rose-text",
-    numberClass: "text-shade-rose-accent",
+    tagShade: "shade-card-rose",
+    accentColor: "bg-rose-500",
+    hoverBorder: "hover:border-rose-500/50",
   },
 ];
 
-/* Individual article card with colorful background shade, spotlight glow, and hover micro-interactions */
+/* Media Panel for writing articles with image preview and overlay badges */
+function WritingMediaPanel({ article, shade }) {
+  const hasImage = Boolean(article.image);
+
+  return (
+    <div className="relative aspect-video w-full min-h-40 overflow-hidden rounded-md border border-border/50 bg-muted/40 group/media">
+      {hasImage ? (
+        <OptimizedImage
+          src={article.image}
+          alt={article.title}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+      ) : (
+        <div className="flex size-full min-h-40 items-center justify-center bg-linear-to-br from-muted to-muted/60">
+          <IconBook
+            className="size-10 text-muted-foreground/30"
+            strokeWidth={1.5}
+            aria-hidden
+          />
+        </div>
+      )}
+
+      {/* Subtle overlay gradient for readability */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+
+      {/* Top-left: Category / Primary Tag Chip */}
+      <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1">
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-wide backdrop-blur-md shadow-xs",
+            shade.tagShade,
+          )}
+        >
+          <IconTag className="size-2.5 opacity-80" aria-hidden />
+          {article.tags?.[0] || article.category || "Article"}
+        </span>
+      </div>
+
+      {/* Top-right: Read Time Badge */}
+      <div className="absolute right-2.5 top-2.5 inline-flex items-center gap-1 rounded-md border border-border/80 bg-card/90 px-2 py-0.5 text-[10px] font-medium text-foreground backdrop-blur-md shadow-xs">
+        <IconClock className="size-2.5 text-primary" aria-hidden />
+        <span>{article.readTime}</span>
+      </div>
+    </div>
+  );
+}
+
+/* Individual article card styled with ProjectCard DNA */
 function ArticleCard({ article, index }) {
   const shade = ARTICLE_SHADES[index % ARTICLE_SHADES.length];
 
@@ -83,78 +118,82 @@ function ArticleCard({ article, index }) {
         interior
         border
         size={240}
-        interiorColor={shade.glowColor}
+        interiorColor={shade.accentColor}
         proximity={60}
         spread={25}
         className="h-full rounded-md"
       >
         <article
           className={cn(
-            "group relative flex flex-col justify-between h-full p-5 sm:p-6",
-            "rounded-md border transition-all duration-300 backdrop-blur-xs shadow-xs hover:shadow-xl",
-            shade.bgClass,
-            shade.borderClass,
+            "group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-xs transition-all duration-300",
+            "hover:shadow-lg",
+            shade.hoverBorder,
           )}
         >
-          <div className="space-y-3">
-            {/* Date + read time row */}
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-medium">{article.date}</span>
-                <span className="opacity-40">•</span>
-                <span className="flex items-center gap-1">
-                  <IconClock className="size-3 opacity-80" aria-hidden />
-                  <span>{article.readTime}</span>
+          {/* Inset Media Panel with Image */}
+          <WritingMediaPanel article={article} shade={shade} />
+
+          {/* Content Body */}
+          <div className="flex flex-1 flex-col justify-between gap-3 p-3 sm:p-3.5">
+            <div className="space-y-2">
+              {/* Meta Category + Date row */}
+              <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={cn(
+                      "inline-block size-1.5 rounded-full",
+                      shade.accentColor,
+                    )}
+                  />
+                  <span className="font-mono text-foreground/80">
+                    {article.category || article.tags?.[0] || "Engineering"}
+                  </span>
+                </div>
+                <span className="font-mono text-muted-foreground/70 text-[10.5px]">
+                  {article.date}
                 </span>
               </div>
 
-              {/* Number indicator */}
-              <span className={cn("font-mono text-[11px] font-bold tracking-wider", shade.numberClass)}>
-                #{String(index + 1).padStart(2, "0")}
-              </span>
-            </div>
-
-            {/* Title + excerpt */}
-            <div className="space-y-2">
-              <h4 className="text-base sm:text-lg font-bold text-foreground leading-snug group-hover:text-foreground/90 transition-colors">
-                <a href={`/writing/${article.slug}`} className="focus:outline-none focus:underline">
+              {/* Title */}
+              <h4 className="text-base font-bold text-foreground transition-colors group-hover:text-primary leading-snug">
+                <a
+                  href={`/writing/${article.slug}`}
+                  className="focus:outline-none focus:underline"
+                >
                   {article.title}
                 </a>
               </h4>
-              <p className="text-xs sm:text-sm text-foreground/80 dark:text-foreground/75 leading-relaxed line-clamp-3">
+
+              {/* Excerpt */}
+              <p className="text-xs leading-relaxed text-muted-foreground line-clamp-3">
                 {article.excerpt}
               </p>
             </div>
-          </div>
 
-          {/* Footer: Tags + Read Action */}
-          <div className="flex items-center justify-between gap-2 pt-4 mt-3 border-t border-current/10">
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1.5 min-w-0">
-              {article.tags?.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className={cn(
-                    "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10.5px] font-semibold",
-                    shade.tagClass,
-                  )}
-                >
-                  <IconTag className="size-2.5 opacity-70" aria-hidden />
-                  {tag}
-                </span>
-              ))}
+            {/* Tags + Read Link Footer */}
+            <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
+              {/* Secondary Tags */}
+              <div className="flex flex-wrap gap-1">
+                {article.tags?.slice(0, 2).map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center rounded border border-border/60 bg-surface px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Read Button */}
+              <ExtendedLink
+                href={`/writing/${article.slug}`}
+                className="ml-auto inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 shadow-2xs group/btn"
+                aria-label={`Read article: ${article.title}`}
+              >
+                <span>Read</span>
+                <IconArrowUpRight className="size-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+              </ExtendedLink>
             </div>
-
-            {/* Read link */}
-            <motion.a
-              href={`/writing/${article.slug}`}
-              className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-foreground hover:text-primary px-2.5 py-1 rounded-md bg-background/80 hover:bg-background border border-border/60 transition-colors group/btn shadow-2xs"
-              whileHover={{ x: 2 }}
-              aria-label={`Read article: ${article.title}`}
-            >
-              <span>Read</span>
-              <IconArrowUpRight className="size-3.5 text-muted-foreground group-hover/btn:text-primary group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-            </motion.a>
           </div>
         </article>
       </GlowFrame>
@@ -190,7 +229,7 @@ export default function Writings() {
         <div className="w-full">
           <ExpandableList
             items={writings}
-            initialCount={4}
+            initialCount={3}
             showMoreLabel={(hiddenCount) => `Show more (${hiddenCount} more)`}
             showLessLabel="Show less"
             className="w-full"

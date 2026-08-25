@@ -12,7 +12,7 @@ export const nav = [
   // { id: "contributions", label: "Contributions", icon: IconActivity },
   { id: "experience", label: "Experience", icon: IconBriefcase },
   { id: "projects", label: "Projects", icon: IconFolderCode },
-  { id: "blog", label: "Blog", icon: IconBook },
+  { id: "writings", label: "Writings", icon: IconBook },
   // { id: "contact", label: "Contact", icon: IconMail },
 ];
 
