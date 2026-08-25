@@ -11,23 +11,23 @@
 :root {
   --shade-blue-bg:   #E5F1FB;
   --shade-blue-text: #1F6C9F;
-  --shade-blue-border: rgba(31, 108, 159, 0.20);
+  --shade-blue-border: rgba(31, 108, 159, 0.25);
 
   --shade-gold-bg:   #FBF3DB;
   --shade-gold-text: #956400;
-  --shade-gold-border: rgba(149, 100, 0, 0.20);
+  --shade-gold-border: rgba(149, 100, 0, 0.25);
 
   --shade-green-bg:   #EDF3EC;
   --shade-green-text: #346538;
-  --shade-green-border: rgba(52, 101, 56, 0.20);
+  --shade-green-border: rgba(52, 101, 56, 0.25);
 
   --shade-rose-bg:   #FDEBEC;
   --shade-rose-text: #9F2F2D;
-  --shade-rose-border: rgba(159, 47, 45, 0.20);
+  --shade-rose-border: rgba(159, 47, 45, 0.25);
 
   --shade-orange-bg:   #FFE9D8;
   --shade-orange-text: #9A3412;
-  --shade-orange-border: rgba(154, 52, 18, 0.20);
+  --shade-orange-border: rgba(154, 52, 18, 0.25);
 
   --shade-canvas-bg:   var(--surface);
   --shade-canvas-text: var(--foreground);
@@ -35,23 +35,23 @@
 }
 
 .dark {
-  --shade-blue-bg:   rgba(31, 108, 159, 0.18);
+  --shade-blue-bg:   rgba(31, 108, 159, 0.25);
   --shade-blue-text: #8CC6EA;
   --shade-blue-border: rgba(140, 198, 234, 0.25);
 
-  --shade-gold-bg:   rgba(149, 100, 0, 0.18);
+  --shade-gold-bg:   rgba(193, 130, 3, 0.25);
   --shade-gold-text: #E3C268;
   --shade-gold-border: rgba(227, 194, 104, 0.25);
 
-  --shade-green-bg:   rgba(52, 101, 56, 0.18);
+  --shade-green-bg:   rgba(52, 101, 56, 0.25);
   --shade-green-text: #9DC79F;
   --shade-green-border: rgba(157, 199, 159, 0.25);
 
-  --shade-rose-bg:   rgba(159, 47, 45, 0.18);
+  --shade-rose-bg:   rgba(159, 47, 45, 0.25);
   --shade-rose-text: #EBA6A4;
   --shade-rose-border: rgba(235, 166, 164, 0.25);
 
-  --shade-orange-bg:   rgba(154, 52, 18, 0.18);
+  --shade-orange-bg:   rgba(154, 52, 18, 0.25);
   --shade-orange-text: #F0A880;
   --shade-orange-border: rgba(240, 168, 128, 0.25);
 

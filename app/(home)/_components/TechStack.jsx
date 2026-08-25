@@ -40,20 +40,20 @@ export function TechClusterCard({ group, index, totalGroups }) {
       className={cn(
         "group relative shrink-0 flex flex-col justify-between",
         "w-md sm:w-lg",
-        "h-100 sm:h-105",
-        "rounded-xl border p-6 sm:p-7 transition-all duration-300 select-none overflow-hidden shadow-xs hover:shadow-md hover:scale-[1.01]",
+        "h-90 sm:h-120",
+        "rounded-md border p-4 transition-all duration-300 select-none overflow-hidden shadow-xs hover:shadow-md",
         group.shade ?? "shade-card-canvas"
       )}
     >
       {/* Top subtle highlight line */}
-      <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-current/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-xl" />
+      {/* <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-current/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-xl" /> */}
 
       {/* Card Content */}
       <div className="flex flex-col h-full justify-between">
-        <div>
+        <div className="flex flex-col gap-2">
           {/* Header row with index badge & Icon */}
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-[11px] tracking-[0.2em] uppercase opacity-75">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-xs tracking-[0.2em] uppercase">
               {String(index + 1).padStart(2, "0")} / {String(totalGroups).padStart(2, "0")}
             </span>
             <div className="flex items-center justify-center size-9 rounded-lg border border-current/20 bg-current/10 shrink-0">
@@ -62,12 +62,12 @@ export function TechClusterCard({ group, index, totalGroups }) {
           </div>
 
           {/* Category Title */}
-          <h3 className="text-xl sm:text-2xl font-bold tracking-tight mb-5">
+          <h4 className="text-xl sm:text-2xl font-bold tracking-tight">
             {group.category}
-          </h3>
+          </h4>
 
           {/* Minimalist Tech Pills grid */}
-          <div className="flex flex-wrap gap-2 sm:gap-2.5 w-full">
+          <div className="flex flex-wrap gap-1 w-full">
             {group.items?.map((item) => (
               <div key={item.name} className="stack-pill">
                 <TechPill
@@ -81,7 +81,7 @@ export function TechClusterCard({ group, index, totalGroups }) {
         </div>
 
         {/* Minimalist Footer */}
-        <div className="pt-4 border-t border-current/15 flex items-center justify-between font-mono text-[10px] tracking-widest uppercase opacity-75">
+        <div className="pt-2 border-t border-current/15 flex items-center justify-between font-mono text-xs tracking-widest uppercase">
           <span>{group.items?.length ?? 0} ITEMS</span>
           <span className="size-1.5 rounded-full bg-current opacity-80" />
         </div>
@@ -100,7 +100,7 @@ export default function TechStack() {
     >
       <ScrollWrapper
         itemCount={SkillsAndTools.length}
-        scrollLengthVh={280}
+        scrollLengthVh={400}
         header={<TechHeader />}
       >
         {SkillsAndTools.map((group, idx) => (

@@ -177,7 +177,7 @@ const ExperienceCard = ({ exp }) => {
  * company era labels + gold spine; company cards as entry content.
  */
 const Experience = () => (
-  <Section id="experience" noFade className="py-12 md:py-16">
+  <Section id="experience" noFade innerClassName="p-0! md:px-4">
     <ExperienceHeader />
 
     <div className="mt-8">

@@ -8,7 +8,7 @@ const SIZE_CLASSES = {
   lg: "gap-2 px-3 py-1.5 text-sm",
   xl: "gap-2.5 px-4 py-2 text-base",
   responsive:
-    "gap-1.5 px-2.5 py-1 text-xs lg:gap-2 lg:px-3 lg:py-1.5 lg:text-sm xl:gap-2.5 xl:px-4 xl:py-2 xl:text-base",
+    "gap-2 px-3 py-1.5 text-sm xl:gap-2.5 xl:px-4 xl:py-2 xl:text-base",
 };
 
 const IMG_SIZE_CLASSES = {
@@ -16,7 +16,7 @@ const IMG_SIZE_CLASSES = {
   md: "size-5",
   lg: "size-6.5",
   xl: "size-8",
-  responsive: "size-5 lg:size-6.5 xl:size-8",
+  responsive: "size-6.5 xl:size-8",
 };
 
 // Icon-only pills (hideName) get a wider 3:2-ish box so wide logo banners (NHS, SystmOne, EMIS...) render at meaningful size instead of letterboxing inside a square.

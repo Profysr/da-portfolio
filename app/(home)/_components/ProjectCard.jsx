@@ -12,7 +12,6 @@ import {
 import OptimizedImage from "@/components/common/OptimizedImage";
 import { TechPill } from "@/components/common/TechPill";
 import { ExtendedLink } from "@/components/common/ExtendedLink";
-import { BorderBeam } from "@/components/ui/border-beam";
 import { TAG_META } from "@/data/idx";
 import { cn } from "@/lib/utils";
 
@@ -162,7 +161,7 @@ function CardFooter({ project }) {
           <span>Source</span>
         </ExtendedLink>
       ) : (
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono italic text-muted-foreground/60">
+        <span className="inline-flex items-center gap-1.5 rounded border border-border bg-surface-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <IconLock className="size-3" /> Private Repository
         </span>
       )}
@@ -187,15 +186,7 @@ function CardFooter({ project }) {
  */
 function ProjectCard({ project }) {
   return (
-    <article className="group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-e2 transition-colors duration-300 hover:border-primary/40">
-      {/* Gold border sweep — paused until hover (no idle battery drain) */}
-      <BorderBeam
-        colorFrom="var(--primary)"
-        colorTo="transparent"
-        size={90}
-        duration={6}
-        className="opacity-0 transition-opacity duration-300 after:[animation-play-state:paused] group-hover:opacity-100 group-hover:after:[animation-play-state:running]"
-      />
+    <article className="group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-e2 transition-colors duration-300 hover:border-primary">
 
       <MediaPanel project={project} />
 
@@ -208,9 +199,9 @@ function ProjectCard({ project }) {
         </div>
 
         <div className="space-y-1.5">
-          <h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
+          <h4 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
             {project.title}
-          </h3>
+          </h4>
           <p className="text-xs leading-relaxed text-muted-foreground line-clamp-3">
             {project.description}
           </p>

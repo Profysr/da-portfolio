@@ -86,7 +86,7 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
       className="relative w-full"
     >
       {/* Sticky Viewport Container */}
-      <div className="sticky top-0 flex h-screen w-full flex-col justify-between py-6 sm:py-8 md:py-10 overflow-hidden">
+      <div className="sticky top-0 flex h-screen w-full flex-col py-6 sm:py-8 md:py-10 overflow-hidden">
         {/* Pinned Section Header */}
         {header && <div className="w-full shrink-0 z-10">{header}</div>}
 
