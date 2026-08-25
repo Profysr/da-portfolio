@@ -121,16 +121,21 @@ const Projects = () => {
             >
               {HAS_MORE_THAN_6 ? (
                 <ExpandableList
-                  collapsedHeight={900}
-                  showMoreLabel={`Show more (${filtered.length - 6} more)`}
-                >
-                  <MasonryGrid
-                    items={filtered}
-                    renderItem={(project, idx) =>
-                      renderProjectItem(project, idx)
-                    }
-                  />
-                </ExpandableList>
+                  items={filtered}
+                  initialCount={6}
+                  showMoreLabel={(hiddenCount) =>
+                    `Show more (${hiddenCount} more)`
+                  }
+                  showLessLabel="Show less"
+                  renderContent={(items) => (
+                    <MasonryGrid
+                      items={items}
+                      renderItem={(project, idx) =>
+                        renderProjectItem(project, idx)
+                      }
+                    />
+                  )}
+                />
               ) : (
                 <MasonryGrid
                   items={filtered}
