@@ -47,9 +47,9 @@ function FeaturesList({ features }) {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="space-y-1.5 overflow-hidden"
           >
-            {features.map((feature) => (
+            {features.map((feature, index) => (
               <li
-                key={feature}
+                key={`${index}-${feature}`}
                 className="flex items-start gap-1.5 text-xs text-muted-foreground"
               >
                 <IconCheck
@@ -187,7 +187,6 @@ function CardFooter({ project }) {
 function ProjectCard({ project }) {
   return (
     <article className="group relative flex h-full flex-col rounded-lg border border-border bg-card p-1.5 shadow-e2 transition-colors duration-300 hover:border-primary">
-
       <MediaPanel project={project} />
 
       <div className="flex flex-1 flex-col gap-3 p-3">

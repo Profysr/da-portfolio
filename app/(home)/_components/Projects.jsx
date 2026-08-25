@@ -10,6 +10,7 @@ import { projects, TAG_META } from "@/data/idx";
 import { ContinuousTabs } from "@/components/common/Tabs";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import ProjectCard from "./ProjectCard";
+import { ExpandableList } from "@/components/ui/expandable-list";
 
 // =========================================
 // Empty State
@@ -55,6 +56,23 @@ const tabs = [
     })),
 ];
 
+// Helper to render individual card within masonry columns
+const renderProjectItem = (project, idx) => (
+  <div
+    key={project.id || project.slug}
+    className="mb-3.5 break-inside-avoid inline-block w-full"
+  >
+    <ScrollReveal
+      variant="slide-up"
+      delay={(idx % 4) * 0.07}
+      duration={0.6}
+      once={false}
+    >
+      <ProjectCard project={project} />
+    </ScrollReveal>
+  </div>
+);
+
 // =========================================
 // Main Component
 // =========================================
@@ -67,9 +85,12 @@ const Projects = () => {
       : p.tags?.some((tag) => tag.toLowerCase() === activeTab.toLowerCase()),
   );
 
+  const HAS_MORE_THAN_6 = filtered.length > 6;
+
   return (
     <Section id="projects" noFade>
       <div className="flex flex-col items-center gap-7">
+        {/* Header */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Badge variant="light">PORTFOLIO</Badge>
           <Heading
@@ -83,6 +104,7 @@ const Projects = () => {
           </p>
         </div>
 
+        {/* Filter Tabs */}
         <ContinuousTabs
           tabs={tabs}
           defaultActiveId="All"
@@ -90,6 +112,7 @@ const Projects = () => {
           ariaLabel="Filter projects by tag"
         />
 
+        {/* Grid Container */}
         <AnimatePresence mode="wait">
           {filtered.length > 0 ? (
             <motion.div
@@ -99,23 +122,24 @@ const Projects = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full"
+              className="w-full"
             >
-              {filtered.map((project, idx) => (
-                <div
-                  key={project.id || project.slug}
-                  className="mb-3.5 break-inside-avoid inline-block w-full"
-                >
-                  <ScrollReveal
-                    variant="slide-up"
-                    delay={(idx % 4) * 0.07}
-                    duration={0.6}
-                    once={false}
-                  >
-                    <ProjectCard project={project} />
-                  </ScrollReveal>
+              {HAS_MORE_THAN_6 ? (
+                <ExpandableList
+                  items={filtered}
+                  collapsedHeight={680}
+                  listClassName="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full"
+                  showMoreLabel={`Show more (${filtered.length - 4} more)`}
+                  renderItem={(project, idx) => renderProjectItem(project, idx)}
+                />
+              ) : (
+                /* Standard Masonry Grid when <= 4 projects */
+                <div className="columns-1 sm:columns-2 lg:columns-3 gap-3.5 w-full">
+                  {filtered.map((project, idx) =>
+                    renderProjectItem(project, idx),
+                  )}
                 </div>
-              ))}
+              )}
             </motion.div>
           ) : (
             <ProjectsEmptyState onReset={() => setActiveTab("All")} />
