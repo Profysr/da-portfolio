@@ -64,7 +64,7 @@ export function TechPill({ name, className, size = "md" }) {
             width={showName ? 32 : 48}
             height={showName ? 24 : 32}
             loading="lazy"
-            className="size-full object-contain"
+            className="h-auto w-auto object-contain"
           />
         </span>
       )}

@@ -16,7 +16,6 @@ import { TypingAnimation } from "@/components/ui/typing-animation";
 import { MagneticLink } from "@/components/ui/MagneticButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Section } from "@/components/layout/Section";
-import { Layout } from "@/components/layout/Layout";
 
 /* ============================================================
  *  Headline — watermark + kinetic typewriter roles

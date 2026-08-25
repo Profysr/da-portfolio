@@ -1,29 +1,23 @@
+import {
+  IconAB,
+  IconCode,
+  IconCpu,
+  IconGlobe,
+  IconRobot,
+  IconServer,
+} from "@tabler/icons-react";
+
+/* Tag metadata — single source of truth for tag display (Icon + shade) */
+export const TAG_META = {
+  Web: { Icon: IconGlobe, shade: "shade-card-blue" },
+  Automation: { Icon: IconRobot, shade: "shade-card-gold" },
+  "Open Source": { Icon: IconCode, shade: "shade-card-green" },
+  AI: { Icon: IconCpu, shade: "shade-card-rose" },
+  SaaS: { Icon: IconServer, shade: "shade-card-blue" },
+  default: { Icon: IconAB, shade: "shade-card-canvas" },
+};
+
 export const projects = [
-  // ── Featured Projects (appear in homepage Projects bento) ─────────────
-  // status: "live" | "in-progress" · features: collapsible list in card
-  {
-    id: "proj-1",
-    slug: "analytics-dashboard",
-    title: "Analytics Dashboard",
-    description:
-      "Real-time KPI dashboard with custom visualisations and alerting built for high-throughput e-commerce operations.",
-    tech: ["React", "TypeScript", "D3.js", "Python", "Redis"],
-    category: "Web",
-    industry: "E-Commerce Fintech",
-    access: "Hosted",
-    status: "live",
-    features: [
-      "Real-time WebSocket KPI streaming with sub-second refresh",
-      "Custom D3 visualisation suite tuned for 60fps canvas renders",
-      "Threshold alerting engine backed by Redis queues",
-    ],
-    strategies: ["WebSockets Streaming", "Canvas Optimization", "Bento Grid UX"],
-    github: "https://github.com/example/analytics",
-    live: "https://example.com/analytics",
-    image: null,
-    featured: true,
-    isActivity: false,
-  },
   {
     id: "proj-2",
     slug: "data-pipeline-toolkit",
@@ -31,7 +25,7 @@ export const projects = [
     description:
       "CLI tool that orchestrates ETL jobs with minimal configuration and multi-tenant schema isolation.",
     tech: ["Python", "Docker", "SQL", "ClickHouse"],
-    category: "Open Source",
+    tags: ["Open Source"],
     industry: "Developer Tools",
     access: "Open Source",
     status: "live",
@@ -56,7 +50,7 @@ export const projects = [
     description:
       "End-to-end clinical software automation integrated with SystmOne, EMIS, and Docman systems.",
     tech: ["Power Automate", "Python", "AutoHotkey", "JavaScript"],
-    category: "Automation",
+    tags: ["Automation", "AI"],
     industry: "Healthcare / NHS",
     access: "Private",
     status: "live",
@@ -87,7 +81,7 @@ export const projects = [
     description:
       "Single-page portfolio with interactive WebGL globe, contribution heatmap, and glassmorphic UI.",
     tech: ["React", "Motion", "Tailwind CSS", "cobe"],
-    category: "Web",
+    tags: ["Web"],
     industry: "Design & Creative",
     access: "Hosted",
     status: "live",
@@ -111,7 +105,7 @@ export const projects = [
     title: "Da Profiler",
     description:
       "Open-source Python REST API profiler & N+1 query workbench",
-    category: "Open Source",
+    tags: ["Open Source"],
     status: "in-progress",
     features: [
       "N+1 query detection workbench",
@@ -130,7 +124,7 @@ export const projects = [
     slug: "jcn-engine",
     title: "JCN Engine",
     description: "Multi-tenant SaaS project management engine",
-    category: "Web",
+    tags: ["Web", "SaaS"],
     status: "in-progress",
     features: [
       "Multi-tenant project management core",
@@ -149,7 +143,7 @@ export const projects = [
     slug: "clinical-rpa-core",
     title: "Clinical RPA Core",
     description: "Desktop automation hooks for SystmOne & EMIS",
-    category: "Automation",
+    tags: ["Automation"],
     status: "in-progress",
     features: [
       "Reusable automation hooks for SystmOne",
@@ -168,7 +162,7 @@ export const projects = [
     slug: "agentic-cli-coder",
     title: "Agentic CLI Coder",
     description: "Terminal refactoring agent powered by local LLMs",
-    category: "AI",
+    tags: ["AI", "Open Source"],
     status: "in-progress",
     features: [
       "Local-LLM refactoring agent",
@@ -184,3 +178,36 @@ export const projects = [
   },
 ];
 
+export const contributions = {
+  heading: "Github",
+  subheading:
+    "A live snapshot of build velocity, open-source contributions, and development consistency.",
+  githubUsername: "Profysr",
+  heatmapWeeks: 32,
+  stats: [
+    {
+      label: "Repositories",
+      value: 38,
+      suffix: "",
+      icon: null,
+      badge: "Public & Private",
+      spanClass: "md:col-span-2 md:col-start-9 md:row-start-1",
+    },
+    {
+      label: "Achievements",
+      value: 10,
+      suffix: "+",
+      icon: null,
+      badge: "Tracked",
+      spanClass: "md:col-span-2 md:col-start-9 md:row-start-2",
+    },
+    {
+      label: "Commits Logged",
+      value: 2500,
+      suffix: "+",
+      icon: null,
+      badge: "Year to Date",
+      spanClass: "md:col-span-2 md:row-span-2 md:col-start-11 md:row-start-1",
+    },
+  ],
+};

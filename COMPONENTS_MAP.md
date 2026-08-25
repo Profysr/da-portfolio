@@ -99,7 +99,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | AvatarStatus.jsx | Availability avatar chip | 9 | Hero element #1 |
 | CommandPallete.jsx | ⌘K command palette | 8 | Strict lazy island |
 | Heatmap.jsx | Contribution heatmap | 8 | Lazy + cached API; candidate visual for Writings/Activity strip |
-| TagFilter.jsx | Tag filtering UI | 8 | Listing pages |
+| TagFilter.jsx | Tag filtering UI | 8 | Projects section swapped to common/Tabs (P15); remaining consumer: Credentials — file kept (Rule #13) |
 | StatCard.jsx | Metric card | 8 | Listings/stats |
 | ContactCard.jsx | Contact info card | 8 | Contact/footer area |
 | mdx-components.jsx | MDX renderer map | 9 | Keep |
@@ -114,7 +114,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 | Component | What it does | Proposed fit | Phase |
 |-----------|-------------|--------------|-------|
-| Tabs.tsx | Animated tab switcher | ✅ CONFIRMED: TechStack category switcher (P14); Writings filter reuse optional later | P14 — ⚠️ refactor first per Rule #14 (token-standardize classes, comment out demos) |
+| Tabs.tsx | ✅ **P15 LIVE in Projects** (user moved to `components/common/Tabs.tsx`; Rule #14 refactored: token classes, demos commented, keyboard nav, count chips). Filter tabs derive from TAG_META + live counts; grid carries dynamic `tabpanel-{activeTab}` id so aria-controls resolves |
 | JournalNavigation.tsx | Journal-style prev/next nav | Writings section navigation | P17 |
 | ComposeEmail.tsx | Email compose widget | Contact composer in footer area | P21 |
 | ViewOnMap.tsx | Location map block | Location near contact/footer | P21 |

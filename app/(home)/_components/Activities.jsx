@@ -5,7 +5,6 @@ import { motion, AnimatePresence, useInView } from "motion/react";
 import { ExtendedLink } from "@/components/common/ExtendedLink";
 import { IconArrowUpRight, IconCode, IconPencil } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
-import { Layout } from "@/components/layout/Layout";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 
@@ -149,47 +148,45 @@ function Panel({
 /* ── Main Combined Section ─────────────────────────────────────────── */
 function ActivityAndWritings() {
   return (
-    <Section id="writings" className="py-8 sm:py-14">
-      <Layout>
-        <div className="flex flex-col gap-8 items-center">
-          {/* Section header */}
-          <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="light">BUILDING & WRITING</Badge>
-            <Heading variant="gradient" text="Activity & Contributions" />
-            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              Open experiments, developer tools, and essays on engineering
-              patterns I've shipped or published.
-            </p>
-          </div>
-
-          {/* Two-column grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-            <Panel
-              icon={IconCode}
-              badge="OPEN SOURCE"
-              heading="Side projects & things I'm building"
-              description="Active experiments, developer tools, and clinical automation initiatives — some open, some proprietary."
-              items={SIDE_PROJECTS}
-              type="project"
-              initialCount={4}
-              showMoreLabel={(n) => `Show ${n} more projects`}
-              showLessLabel="Show fewer"
-            />
-
-            <Panel
-              icon={IconPencil}
-              badge="WRITINGS"
-              heading="Essays & community contributions"
-              description="Sharing what I learn: API profiling, healthcare automation, multi-tenant SaaS, and agentic workflows."
-              items={COMMUNITY_WRITINGS}
-              type="writing"
-              initialCount={4}
-              showMoreLabel={(n) => `Show ${n} more articles`}
-              showLessLabel="Show fewer"
-            />
-          </div>
+    <Section id="writings">
+      <div className="flex flex-col gap-8 items-center">
+        {/* Section header */}
+        <div className="flex flex-col items-center text-center gap-2.5">
+          <Badge variant="light">BUILDING & WRITING</Badge>
+          <Heading variant="gradient" text="Activity & Contributions" />
+          <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
+            Open experiments, developer tools, and essays on engineering
+            patterns I've shipped or published.
+          </p>
         </div>
-      </Layout>
+
+        {/* Two-column grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+          <Panel
+            icon={IconCode}
+            badge="OPEN SOURCE"
+            heading="Side projects & things I'm building"
+            description="Active experiments, developer tools, and clinical automation initiatives — some open, some proprietary."
+            items={SIDE_PROJECTS}
+            type="project"
+            initialCount={4}
+            showMoreLabel={(n) => `Show ${n} more projects`}
+            showLessLabel="Show fewer"
+          />
+
+          <Panel
+            icon={IconPencil}
+            badge="WRITINGS"
+            heading="Essays & community contributions"
+            description="Sharing what I learn: API profiling, healthcare automation, multi-tenant SaaS, and agentic workflows."
+            items={COMMUNITY_WRITINGS}
+            type="writing"
+            initialCount={4}
+            showMoreLabel={(n) => `Show ${n} more articles`}
+            showLessLabel="Show fewer"
+          />
+        </div>
+      </div>
     </Section>
   );
 }
