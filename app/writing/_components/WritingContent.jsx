@@ -1,15 +1,18 @@
 "use client";
 
-import { useMDXComponents } from "@/components/mdx-components";
-import { Section } from "@/components/layout/Section";
-import { Heading } from "@/components/ui/Heading";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
-import Link from "next/link";
+import { Heading } from "@/components/ui/Heading";
+import { ReadingLayout } from "@/components/layout/ReadingLayout";
+import { personal } from "@/data/personal";
+import { IconCalendar, IconClock } from "@tabler/icons-react";
 
-export function WritingContent({ meta, children }) {
-  const mdxComponents = useMDXComponents();
-
+export function WritingContent({
+  meta,
+  toc = [],
+  similarPosts = [],
+  children,
+}) {
   const formattedDate = meta?.date
     ? new Date(meta.date).toLocaleDateString("en-US", {
         year: "numeric",
@@ -18,61 +21,92 @@ export function WritingContent({ meta, children }) {
       })
     : null;
 
-  return (
-    <Section className="py-8 md:py-12" noFade>
-      <div className="max-w-4xl mx-auto px-4">
-        <Link
-          href="/#writings"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mb-8 group"
-        >
-          <IconArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
-          Back to Writings
-        </Link>
+  const header = (
+    <div>
+      {/* Tags */}
+      {meta?.tags && meta.tags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 mb-4">
+          {meta.tags.map((tag) => (
+            <Badge
+              key={tag}
+              variant="outline"
+              className="text-[11px] font-mono px-2.5 py-0.5 border-border/80 bg-surface-muted/50"
+            >
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )}
 
-        <header className="mb-10">
-          <Heading
-            variant="gradient"
-            as="h1"
-            className="text-2xl sm:text-3xl md:text-4xl mb-3"
-          >
-            {meta?.title}
-          </Heading>
+      {/* Title */}
+      <Heading
+        variant="gradient"
+        as="h1"
+        className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight"
+      >
+        {meta?.title}
+      </Heading>
 
-          {meta?.description && (
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-5">
-              {meta.description}
-            </p>
+      {/* Description */}
+      {meta?.description && (
+        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6 font-normal max-w-3xl">
+          {meta.description}
+        </p>
+      )}
+
+      {/* Author & Publication Meta */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-border/60 text-xs sm:text-sm text-muted-foreground">
+        {/* Author Chip */}
+        <div className="flex items-center gap-3">
+          <div className="relative size-9 rounded-full overflow-hidden border border-border/80 bg-surface-muted shrink-0">
+            <Image
+              src={personal.avatar}
+              alt={personal.name}
+              fill
+              sizes="36px"
+              className="object-cover"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-semibold text-foreground text-xs sm:text-sm">
+              {personal.name}
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              {personal.tagline}
+            </span>
+          </div>
+        </div>
+
+        {/* Date & Read Time */}
+        <div className="flex items-center gap-3 sm:gap-4 text-xs">
+          {formattedDate && (
+            <span className="inline-flex items-center gap-1.5">
+              <IconCalendar className="size-3.5 text-primary/80" />
+              {formattedDate}
+            </span>
           )}
 
-          <div className="flex flex-wrap items-center gap-3">
-            {formattedDate && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <IconCalendar className="size-3.5" />
-                {formattedDate}
-              </span>
-            )}
-
-            {meta?.readTime && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <IconClock className="size-3.5" />
-                {meta.readTime} read
-              </span>
-            )}
-
-            {meta?.tags?.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-[11px]">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </header>
-
-        <div className="h-px bg-border mb-8" />
-
-        <article className="prose prose-invert prose-sm sm:prose-base max-w-none">
-          {children}
-        </article>
+          {meta?.readTime && (
+            <span className="inline-flex items-center gap-1.5">
+              <IconClock className="size-3.5 text-primary/80" />
+              {meta.readTime} read
+            </span>
+          )}
+        </div>
       </div>
-    </Section>
+    </div>
+  );
+
+  return (
+    <ReadingLayout
+      type="writing"
+      title={meta?.title}
+      header={header}
+      toc={toc}
+      similarItems={similarPosts}
+      currentSlug={meta?.slug}
+    >
+      {children}
+    </ReadingLayout>
   );
 }

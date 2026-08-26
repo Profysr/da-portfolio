@@ -3,55 +3,7 @@
 import React, { useState } from "react";
 import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-
-/* Simple markdown renderer for curated responses */
-function renderMarkdown(text) {
-  const parts = text.split(/(\n\n|\n)/);
-  return parts.map((part, i) => {
-    if (part === "\n\n" || part === "\n") return <br key={`br-${i}`} />;
-    if (part.startsWith("▸") || part.startsWith("•")) {
-      return (
-        <div key={i} className="ml-4 my-1 text-sm text-muted-foreground">
-          {part}
-        </div>
-      );
-    }
-    if (part.includes("**")) {
-      const boldParts = part.split(/\*\*(.*?)\*\*/);
-      return (
-        <span key={i} className="text-sm leading-relaxed">
-          {boldParts.map((bp, j) =>
-            j % 2 === 1 ? <strong key={j}>{bp}</strong> : bp,
-          )}
-        </span>
-      );
-    }
-    if (part.includes("`")) {
-      const codeParts = part.split(/`(.*?)`/);
-      return (
-        <span key={i} className="text-sm leading-relaxed">
-          {codeParts.map((cp, j) =>
-            j % 2 === 1 ? (
-              <code
-                key={j}
-                className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono text-primary"
-              >
-                {cp}
-              </code>
-            ) : (
-              cp
-            ),
-          )}
-        </span>
-      );
-    }
-    return (
-      <p key={i} className="text-sm leading-relaxed">
-        {part}
-      </p>
-    );
-  });
-}
+import { Markdown } from "@/components/common/Markdown";
 
 export function Message({ content, role, isStreaming }) {
   const isUser = role === "user";
@@ -116,9 +68,11 @@ export function Message({ content, role, isStreaming }) {
             : "bg-muted/60 border border-border/40 text-foreground rounded-tl-xs",
         )}
       >
-        <div className="whitespace-pre-wrap">
-          {role === "assistant" ? renderMarkdown(content) : content}
-        </div>
+        {isUser ? (
+          <div className="whitespace-pre-wrap">{content}</div>
+        ) : (
+          <Markdown>{content}</Markdown>
+        )}
 
         {/* Streaming cursor */}
         {isStreaming && role === "assistant" && (

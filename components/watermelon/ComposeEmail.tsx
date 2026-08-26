@@ -3,23 +3,23 @@
 import { useState, useRef, useEffect, useLayoutEffect, type FC } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  X,
-  Minus,
-  Maximize2,
-  Mail,
-  ChevronDown,
-  Smile,
-  Paperclip,
-  Link2,
-  Sparkles,
-  MoreHorizontal,
-  Bold,
-  Italic,
-  Calendar,
-  Upload,
-  Check,
-} from "lucide-react";
-import { IconSend } from "@tabler/icons-react";
+  IconX,
+  IconMinus,
+  IconArrowsDiagonal,
+  IconMail,
+  IconChevronDown,
+  IconMoodSmile,
+  IconPaperclip,
+  IconLink,
+  IconSparkles,
+  IconDots,
+  IconBold,
+  IconItalic,
+  IconCalendar,
+  IconUpload,
+  IconCheck,
+  IconSend,
+} from "@tabler/icons-react";
 
 // --- Types ---
 export interface Attachment {
@@ -270,7 +270,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
       <div className="bg-card flex flex-none items-center justify-between py-3 pr-3 pl-4 sm:py-4 sm:pr-4 sm:pl-5">
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg sm:h-10 sm:w-10 sm:rounded-xl">
-            <Mail size={18} className="sm:w-5" strokeWidth={1.5} />
+            <IconMail size={18} className="sm:w-5" strokeWidth={1.5} />
           </div>
           <span className="text-foreground text-sm font-semibold tracking-tight sm:text-base">
             Compose email
@@ -281,20 +281,20 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
             title="minimize"
             className="text-muted-foreground hover:text-foreground/70 rounded-lg p-1.5 transition-colors sm:p-2"
           >
-            <Minus size={16} />
+            <IconMinus size={16} />
           </button>
           <button
             title="Maximize"
             className="text-muted-foreground hover:text-foreground/70 hidden rounded-lg p-2 transition-colors sm:block"
           >
-            <Maximize2 size={15} />
+            <IconArrowsDiagonal size={15} />
           </button>
           <button
             title="close"
             onClick={onClose}
             className="hover:text-foreground/70 text-muted-foreground rounded-lg p-1.5 transition-colors sm:p-2"
           >
-            <X size={18} />
+            <IconX size={18} />
           </button>
         </div>
       </div>
@@ -318,7 +318,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                 <span className="text-foreground truncate font-medium">
                   {selectedFrom.name}
                 </span>
-                <ChevronDown
+                <IconChevronDown
                   size={14}
                   className={`text-muted-foreground shrink-0 transition-transform ${fromOpen ? "rotate-180" : ""}`}
                 />
@@ -374,7 +374,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                           </p>
                         </div>
                         {selectedFrom.name === acc.name && (
-                          <Check size={13} className="ml-auto shrink-0" />
+                          <IconCheck size={13} className="ml-auto shrink-0" />
                         )}
                       </button>
                     ))}
@@ -447,7 +447,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                 style={{ top: toolbarPos.y }}
               >
                 <button className="bg-secondary hover:bg-accent flex items-center gap-2 rounded-xl px-2 py-1.5 whitespace-nowrap transition-colors sm:px-3">
-                  <Sparkles size={14} className="text-primary" />
+                  <IconSparkles size={14} className="text-primary" />
                   <span className="text-foreground text-xs font-semibold sm:text-sm">
                     Ask AI
                   </span>
@@ -457,13 +457,13 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                   title="bold"
                   className="hover:bg-accent text-muted-foreground rounded-lg p-1.5 sm:p-2"
                 >
-                  <Bold size={14} />
+                  <IconBold size={14} />
                 </button>
                 <button
                   title="italic"
                   className="hover:bg-accent text-muted-foreground rounded-lg p-1.5 sm:p-2"
                 >
-                  <Italic size={14} />
+                  <IconItalic size={14} />
                 </button>
               </motion.div>
             )}
@@ -528,7 +528,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                     }
                     className="hover:bg-accent text-muted-foreground rounded-full p-1 transition-colors"
                   >
-                    <X size={12} />
+                    <IconX size={12} />
                   </button>
                 </motion.div>
               ))}
@@ -550,7 +550,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
               onClick={() => togglePopover("more")}
               className="hover:text-foreground rounded-lg p-2 transition-all"
             >
-              <MoreHorizontal size={18} />
+              <IconDots size={18} />
             </button>
             <AnimatePresence>
               {activePopover === "more" && (
@@ -588,7 +588,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
               onClick={() => togglePopover("emoji")}
               className="hover:text-foreground rounded-lg p-2 transition-all"
             >
-              <Smile size={18} />
+              <IconMoodSmile size={18} />
             </button>
             <AnimatePresence>
               {activePopover === "emoji" && (
@@ -622,7 +622,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
               onClick={() => togglePopover("attach")}
               className="hover:text-foreground rounded-lg p-2 transition-all"
             >
-              <Paperclip size={18} />
+              <IconPaperclip size={18} />
             </button>
             <AnimatePresence>
               {activePopover === "attach" && (
@@ -647,7 +647,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                     onClick={handleFakeAttach}
                     className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed p-4 transition-all ${isDraggingOver ? "border-primary bg-accent" : "border-border hover:border-primary/50 hover:bg-accent/50"}`}
                   >
-                    <Upload size={20} className="text-muted-foreground" />
+                    <IconUpload size={20} className="text-muted-foreground" />
                     <p className="text-muted-foreground text-center text-xs">
                       Click or drag files here
                     </p>
@@ -664,7 +664,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
               onClick={() => togglePopover("link")}
               className="hover:text-foreground rounded-lg p-2 transition-all"
             >
-              <Link2 size={18} />
+              <IconLink size={18} />
             </button>
             <AnimatePresence>
               {activePopover === "link" && (
@@ -697,7 +697,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                     >
                       {linkInserted ? (
                         <>
-                          <Check size={14} /> Inserted!
+                          <IconCheck size={14} /> Inserted!
                         </>
                       ) : (
                         "Insert Link"
@@ -716,7 +716,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
               onClick={() => togglePopover("ai")}
               className="hover:text-primary rounded-lg p-2 transition-all"
             >
-              <Sparkles size={18} />
+              <IconSparkles size={18} />
             </button>
             <AnimatePresence>
               {activePopover === "ai" && (
@@ -725,7 +725,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                   className="bg-popover border-border absolute bottom-full left-0 z-50 mb-2 w-56 -translate-x-24 rounded-2xl border p-4 shadow-2xl sm:w-72 sm:translate-x-0"
                 >
                   <div className="mb-3 flex items-center gap-2">
-                    <Sparkles size={14} className="text-primary" />
+                    <IconSparkles size={14} className="text-primary" />
                     <p className="text-muted-foreground text-[11px] font-semibold tracking-wider uppercase">
                       AI Suggestions
                     </p>
@@ -761,7 +761,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                 onClick={() => togglePopover("schedule")}
                 className={`flex items-center justify-center gap-1.5 rounded-full border px-2.5 py-1.5 text-sm font-normal transition-all ${scheduledTime ? "border-primary/40 text-primary bg-accent" : "border-border text-muted-foreground hover:bg-accent"}`}
               >
-                <Calendar size={15} strokeWidth={2.5} />
+                <IconCalendar size={15} strokeWidth={2.5} />
                 {!scheduledTime && (
                   <span className="hidden sm:inline">Schedule</span>
                 )}
@@ -783,7 +783,7 @@ export const ComposeEmailCard: FC<ComposeEmailCardProps> = ({
                           className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${scheduledTime === opt.label ? "bg-accent text-primary" : "text-foreground hover:bg-accent/50"}`}
                         >
                           {opt.label}
-                          {scheduledTime === opt.label && <Check size={14} />}
+                          {scheduledTime === opt.label && <IconCheck size={14} />}
                         </button>
                       ))}
                     </div>

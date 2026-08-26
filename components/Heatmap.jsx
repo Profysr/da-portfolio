@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Activity } from "lucide-react";
+import { IconActivity } from "@tabler/icons-react";
 
 const LEVEL_COLORS = [
   "bg-[#ebedf0] dark:bg-white/[0.04] border border-black/5 dark:border-white/[0.06]", // Level 0 (None)
