@@ -51,7 +51,7 @@ export function Callout({
   return (
     <Alert
       variant={config.variant}
-      className={cn("my-6 shadow-xs", className)}
+      className={cn("my-5 shadow-xs", className)}
       {...props}
     >
       <Icon className="size-4" />

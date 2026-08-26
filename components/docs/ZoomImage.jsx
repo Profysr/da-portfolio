@@ -36,22 +36,22 @@ export function ZoomImage({
       <figure className={cn("my-6 group/img block", className)}>
         <div
           onClick={() => setIsOpen(true)}
-          className="relative rounded-xl border border-border/80 bg-surface/40 overflow-hidden cursor-zoom-in transition-all duration-200 hover:border-primary/50 hover:shadow-md"
+          className="relative rounded-xl border border-border/80 bg-surface/40 overflow-hidden cursor-zoom-in transition-all duration-200 hover:border-primary/50 hover:shadow-e2"
         >
-          <div className="relative aspect-video w-full overflow-hidden bg-surface-muted">
+          <div className="relative w-full overflow-hidden bg-surface-muted">
             <Image
               src={src}
               alt={alt}
               width={width}
               height={height}
-              className="w-full h-full object-contain transition-transform duration-300 group-hover/img:scale-[1.01]"
+              className="w-full h-auto"
               loading="lazy"
               {...props}
             />
           </div>
 
           {/* Zoom Badge Indicator on hover */}
-          <div className="absolute bottom-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity bg-background/80 backdrop-blur-md border border-border/80 rounded-lg px-2.5 py-1 text-[11px] font-medium text-foreground flex items-center gap-1.5 shadow-sm">
+          <div className="absolute bottom-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity bg-background/80 backdrop-blur-md border border-border/80 rounded-lg px-2.5 py-1 text-[11px] font-medium text-foreground flex items-center gap-1.5 shadow-e1">
             <IconZoomIn className="size-3.5 text-primary" />
             <span>Click to zoom</span>
           </div>
@@ -77,7 +77,7 @@ export function ZoomImage({
             type="button"
             onClick={() => setIsOpen(false)}
             aria-label="Close image preview"
-            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-surface border border-border text-foreground hover:bg-surface-hover hover:border-primary transition-colors cursor-pointer shadow-lg"
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-surface border border-border text-foreground hover:bg-surface-hover hover:border-primary transition-colors cursor-pointer shadow-e2"
           >
             <IconX className="size-5" />
           </button>
@@ -86,7 +86,7 @@ export function ZoomImage({
             onClick={(e) => e.stopPropagation()}
             className="relative max-w-5xl max-h-[90vh] w-full flex flex-col items-center cursor-default"
           >
-            <div className="relative w-full max-h-[80vh] flex items-center justify-center rounded-xl overflow-hidden border border-border bg-surface/50 shadow-2xl">
+            <div className="relative w-full max-h-[80vh] flex items-center justify-center rounded-xl overflow-hidden border border-border bg-surface/50 shadow-e5">
               <Image
                 src={src}
                 alt={alt}
@@ -97,7 +97,7 @@ export function ZoomImage({
               />
             </div>
             {displayCaption && (
-              <p className="mt-3 text-xs sm:text-sm text-foreground/90 font-medium text-center bg-surface/80 border border-border/60 px-4 py-1.5 rounded-full backdrop-blur-sm">
+              <p className="mt-3 text-xs sm:text-sm text-foreground/90 font-medium text-center bg-surface/80 border border-border/60 px-3 py-1.5 rounded-lg backdrop-blur-sm">
                 {displayCaption}
               </p>
             )}

@@ -154,7 +154,7 @@ export function TableOfContents({ toc = [], className = "" }) {
 
       {/* Desktop Sticky Table of Contents Sidebar */}
       <aside className={cn("hidden lg:block w-full sticky top-24 space-y-5", className)}>
-        <div className="rounded-xl border border-border/80 bg-surface/40 backdrop-blur-sm p-4 shadow-sm">
+        <div className="rounded-xl border border-border/80 bg-surface/40 backdrop-blur-sm p-4 shadow-e1">
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/60">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
               <IconList className="size-3.5 text-primary" />
