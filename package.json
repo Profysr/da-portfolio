@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "fumadocs-mdx && next dev",
     "build": "fumadocs-mdx && next build",
+    "build:index": "node scripts/build-index.js",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.51",
     "@gsap/react": "^2.1.2",
     "@huggingface/transformers": "^4.2.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -18,9 +20,10 @@
     "@streamdown/math": "^1.0.2",
     "@streamdown/mermaid": "^1.0.2",
     "@tabler/icons-react": "^3.46.0",
+    "@upstash/vector": "^1.2.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "ai": "^7.0.70",
+    "ai": "^7.0.79",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fumadocs-core": "^16.14.5",
