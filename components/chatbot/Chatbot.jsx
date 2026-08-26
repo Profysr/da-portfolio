@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from "react";
 import {
   Drawer,
   DrawerPortal,
@@ -11,83 +11,17 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
-import { IconSparkles, IconArrowUp, IconLoader2 } from "@tabler/icons-react";
+import {
+  IconSparkles,
+  IconArrowUp,
+  IconLoader2,
+  IconCheck,
+  IconAlertTriangle,
+} from "@tabler/icons-react";
 import { Message, WelcomeMessage } from "./Message";
 import { QuickActions } from "./QuickActions";
 import { cn } from "@/lib/utils";
-
-// ============================================================================
-// DATA & UTILITIES
-// ============================================================================
-
-const RESPONSES = {
-  projects: `I've built 8 projects spanning open source, healthcare automation, and developer tooling:
-
-▸ **Data Pipeline Toolkit** — Open Source ETL CLI with AST-driven job inference, async worker pools, multi-tenant schema isolation (Python, Docker, ClickHouse)
-
-▸ **RPA Clinical Automation Suite** — Private NHS integration with SystmOne, EMIS, Docman; OCR extraction, queue-based retries, HIPAA/GDPR compliant (Power Automate, Python, AutoHotkey)
-
-▸ **Agency Portfolio Platform** — WebGL globe (cobe), deterministic contribution heatmap, edge-cached static export <100ms TTFB (React, Motion, Tailwind)
-
-▸ **Da Profiler** (in progress) — Python REST API profiler & N+1 query workbench with CLI + JSON reporting
-
-▸ **JCN Engine** (in progress) — Multi-tenant SaaS project management with RBAC, team workspaces, subscription scaffolding (TypeScript, PostgreSQL)
-
-▸ **Clinical RPA Core** (in progress) — Reusable automation hooks for SystmOne & EMIS, local-first credential handling
-
-▸ **Agentic CLI Coder** (in progress) — Terminal refactoring agent powered by local LLMs, repo-aware context indexing`,
-
-  experience: `**Current:** Software Development Lead @ Kynoby (Mar 2026–present)
-Leading engineering team, architecting healthcare integrations, driving technical direction across automation platforms. Stack: React, Next.js, Django, PostgreSQL, Redis, Celery, Docker.
-
-**Previous:** Senior Frontend Developer @ Simplamo (Oct 2022–Jan 2026)
-Led frontend architecture, built component libraries, optimized application performance. React Native, Next.js, Tailwind CSS, Agile.`,
-
-  stack: `**Core Languages:** TypeScript, Python, JavaScript
-**Frontend:** React, Next.js, Motion, Tailwind CSS, shadcn/ui (Radix)
-**Backend:** Node.js, Django, PostgreSQL, Redis, Celery, ClickHouse
-**Infra:** Docker, AWS/GCP, GitHub Actions
-**Data/ML:** SQL, ETL pipelines, AST parsing, local LLMs
-**Tools:** VS Code, Git, Linear, Figma`,
-
-  contact: `**Email:** bilal@profysr.dev
-**GitHub:** github.com/Profysr
-**LinkedIn:** linkedin.com/in/bilalahmad
-**Location:** London, UK (Remote)
-**Open to:** Senior/Lead roles, healthcare tech, developer tooling, open source collaboration`,
-};
-
-function matchResponse(input) {
-  const lower = input.toLowerCase();
-  if (
-    lower.includes("project") ||
-    lower.includes("built") ||
-    lower.includes("portfolio")
-  )
-    return RESPONSES.projects;
-  if (
-    lower.includes("experience") ||
-    lower.includes("work") ||
-    lower.includes("job") ||
-    lower.includes("career")
-  )
-    return RESPONSES.experience;
-  if (
-    lower.includes("stack") ||
-    lower.includes("tech") ||
-    lower.includes("technology") ||
-    lower.includes("language")
-  )
-    return RESPONSES.stack;
-  if (
-    lower.includes("contact") ||
-    lower.includes("email") ||
-    lower.includes("reach") ||
-    lower.includes("hire")
-  )
-    return RESPONSES.contact;
-  return `I can help with:\n▸ **Projects** — 8 engineering projects\n▸ **Experience** — Kynoby, Simplamo\n▸ **Tech Stack** — TypeScript, React, Python, PostgreSQL\n▸ **Contact** — bilal@profysr.dev\n\nWhat would you like to know?`;
-}
+import { cannedResponses, matchCannedResponse } from "@/data/botContent";
 
 let msgIdCounter = 0;
 function uniqueId() {
@@ -95,7 +29,7 @@ function uniqueId() {
 }
 
 // ============================================================================
-// COMPONENT: ChatHeader (Smaller text, minimal padding, no close icon)
+// COMPONENT: ChatHeader
 // ============================================================================
 
 function ChatHeader() {
@@ -111,6 +45,59 @@ function ChatHeader() {
         Ask about projects, experience, or tech stack
       </DrawerDescription>
     </DrawerHeader>
+  );
+}
+
+// ============================================================================
+// COMPONENT: SourcesChips (renders clickable source links)
+// ============================================================================
+
+function SourcesChips({ sources }) {
+  if (!sources?.length) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-2">
+      {sources.map((src, i) => (
+        <a
+          key={i}
+          href={src.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-primary bg-primary/10 rounded hover:bg-primary/20 transition-colors"
+        >
+          <IconCheck className="size-3" />
+          {src.title} › {src.heading}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: Message (enhanced with sources)
+// ============================================================================
+
+function EnhancedMessage({ content, role, isStreaming, sources }) {
+  return (
+    <div
+      className={cn(
+        "flex gap-2",
+        role === "user" ? "justify-end" : "justify-start",
+      )}
+    >
+      <div
+        className={cn(
+          "relative max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+          role === "user"
+            ? "bg-primary text-primary-foreground rounded-tr-sm"
+            : "bg-muted text-foreground rounded-tl-sm",
+        )}
+      >
+        <Message content={content} role={role} isStreaming={isStreaming} />
+        {role === "assistant" && !isStreaming && (
+          <SourcesChips sources={sources} />
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -137,9 +124,8 @@ function ChatMessagesContainer({ messages, isStreaming }) {
       aria-label="Conversation history"
     >
       <WelcomeMessage />
-
       {messages.map((msg, index) => (
-        <Message
+        <EnhancedMessage
           key={msg.id}
           content={msg.content}
           role={msg.role}
@@ -148,17 +134,49 @@ function ChatMessagesContainer({ messages, isStreaming }) {
             index === messages.length - 1 &&
             msg.role === "assistant"
           }
+          sources={msg.sources}
         />
       ))}
-
       <div ref={messagesEndRef} />
     </div>
   );
 }
 
 // ============================================================================
-// COMPONENT: ChatInputForm (Includes QuickActions on top + increased input height)
+// COMPONENT: ChatInputForm
 // ============================================================================
+const AutoResizeTextArea = forwardRef(
+  ({ value, onChange, onKeyDown, className, ...props }, ref) => {
+    const textareaRef = useRef(null);
+
+    useImperativeHandle(ref, () => textareaRef.current);
+
+    useEffect(() => {
+      const textarea = textareaRef.current;
+      if (textarea) {
+        textarea.style.height = "0px";
+        textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
+      }
+    }, [value]);
+
+    return (
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        rows={1}
+        className={cn(
+          "w-full min-h-[56px] max-h-40 py-4 pl-3 pr-11 text-sm resize-none overflow-y-auto bg-background/50 hover:bg-background border border-border/40 focus:border-foreground/20 rounded-lg focus:outline-none transition-all placeholder:text-muted-foreground/60 disabled:opacity-50",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+
+AutoResizeTextArea.displayName = "AutoResizeTextArea";
 
 function ChatInputForm({
   input,
@@ -168,6 +186,7 @@ function ChatInputForm({
   isOpen,
   showQuickActions,
   onQuickAction,
+  maxLength = 500,
 }) {
   const inputRef = useRef(null);
 
@@ -177,37 +196,59 @@ function ChatInputForm({
     }
   }, [isOpen]);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (input.trim() && !isStreaming) {
+        onSubmit(input);
+      }
+    }
+  };
+
   return (
     <DrawerFooter className="p-2 gap-2 bg-surface backdrop-blur-md border-t border-border/40 flex flex-col items-center">
-      {/* Quick actions in a single-line horizontally scrollable container */}
       {showQuickActions && (
         <QuickActions onActionClick={onQuickAction} disabled={isStreaming} />
       )}
 
-      {/* Main Input Form */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(input);
+          if (input.trim() && !isStreaming) {
+            onSubmit(input);
+          }
         }}
-        className="relative flex items-center w-full"
+        className="relative flex items-end w-full"
       >
-        <input
+        <AutoResizeTextArea
           ref={inputRef}
-          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          maxLength={maxLength}
           placeholder="Reply to assistant..."
           disabled={isStreaming}
-          className="w-full h-14 pl-3 pr-11 text-sm bg-background/50 hover:bg-background border border-border/40 focus:border-foreground/20 rounded-lg focus:outline-none transition-all placeholder:text-muted-foreground/60 disabled:opacity-50"
           aria-label="Chat input"
           autoComplete="off"
         />
+
+        {/* Character Count Indicator */}
+        <span
+          className={cn(
+            "absolute right-12 bottom-2 text-[10px] select-none transition-colors",
+            input.length >= maxLength
+              ? "text-destructive font-medium"
+              : "text-muted-foreground/50",
+          )}
+        >
+          {input.length}/{maxLength}
+        </span>
+
         <button
           type="submit"
           disabled={!input.trim() || isStreaming}
           className={cn(
-            "absolute right-2 size-8 rounded-md flex items-center justify-center transition-all",
+            "absolute right-2 bottom-3 size-8 rounded-md flex items-center justify-center transition-all",
             input.trim() && !isStreaming
               ? "bg-primary text-primary-foreground hover:bg-primary-hover hover:scale-105"
               : "bg-muted text-muted-foreground opacity-40 cursor-not-allowed scale-95",
@@ -222,7 +263,6 @@ function ChatInputForm({
         </button>
       </form>
 
-      {/* Centered text below the input field */}
       <p className="text-[11px] text-muted-foreground/60 text-center select-none pt-0.5">
         AI responses are generated based on portfolio details and may vary.
       </p>
@@ -231,34 +271,85 @@ function ChatInputForm({
 }
 
 // ============================================================================
-// MAIN COMPONENT: Chatbot (Height updated to 85dvh)
+// MAIN COMPONENT: Chatbot
 // ============================================================================
 
 export function Chatbot({ open, onClose }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [fallbackMode, setFallbackMode] = useState(false);
 
-  /* Streaming generator */
-  const processStream = useCallback(async (text) => {
-    setIsStreaming(true);
-    const msgId = uniqueId();
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: "", id: msgId },
-    ]);
+  const processRealStream = useCallback(
+    async (userText, currentPath) => {
+      setIsStreaming(true);
+      const msgId = uniqueId();
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "", id: msgId, sources: [] },
+      ]);
 
-    for (let i = 0; i < text.length; i += 2) {
-      const chunk = text.slice(0, i + 2);
-      setMessages((prev) =>
-        prev.map((m) => (m.id === msgId ? { ...m, content: chunk } : m)),
-      );
-      await new Promise((r) => setTimeout(r, 12));
-    }
-    setIsStreaming(false);
-  }, []);
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [...messages, { role: "user", content: userText }],
+            currentPath,
+          }),
+        });
 
-  /* Send handler */
+        if (!res.ok) {
+          if (res.status === 503) throw new Error("FALLBACK");
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const sourcesHeader = res.headers.get("X-Sources");
+        let sources = [];
+        try {
+          sources = sourcesHeader ? JSON.parse(sourcesHeader) : [];
+        } catch {
+          sources = [];
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          fullText += chunk;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === msgId ? { ...m, content: fullText, sources } : m,
+            ),
+          );
+        }
+
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msgId ? { ...m, content: fullText, sources } : m,
+          ),
+        );
+      } catch (err) {
+        // Fallback to canned responses
+        setFallbackMode(true);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msgId
+              ? { ...m, content: matchCannedResponse(userText), sources: [] }
+              : m,
+          ),
+        );
+      } finally {
+        setIsStreaming(false);
+      }
+    },
+    [messages],
+  );
+
   const handleSend = (text) => {
     if (!text.trim() || isStreaming) return;
     const userText = text.trim();
@@ -267,7 +358,9 @@ export function Chatbot({ open, onClose }) {
       ...prev,
       { role: "user", content: userText, id: uniqueId() },
     ]);
-    processStream(matchResponse(userText));
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname : "/";
+    processRealStream(userText, currentPath);
   };
 
   return (
@@ -279,23 +372,18 @@ export function Chatbot({ open, onClose }) {
       <DrawerPortal>
         <DrawerOverlay className="bg-background/50 backdrop-blur-sm" />
         <DrawerContent className="w-full mx-auto max-w-2xl bg-surface rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
-          {/* Header without Close Button and minimal padding */}
           <ChatHeader />
-
-          {/* Messages Scroll Area */}
           <ChatMessagesContainer
             messages={messages}
             isStreaming={isStreaming}
           />
-
-          {/* Input Area containing Quick Actions directly on top */}
           <ChatInputForm
             input={input}
             setInput={setInput}
             onSubmit={handleSend}
             isStreaming={isStreaming}
             isOpen={open}
-            showQuickActions={!isStreaming}
+            showQuickActions={!isStreaming && messages.length === 0}
             onQuickAction={handleSend}
           />
         </DrawerContent>

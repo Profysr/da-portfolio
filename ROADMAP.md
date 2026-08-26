@@ -298,4 +298,232 @@ Phase 17b 🔄 BUILT — Unified Markdown Formatter (user-directed mid-P18: one 
 Phase 17c 🔄 BUILT — Docs-layer rationalization post-Streamdown (full audit: 8 docs/* files + 3 ui primitives; user verdicts per component): (1) CODE FENCES → components/common/CodeBlock.jsx NEW [MarkdownPre: extracts language/raw text from compiled <code class=language-x> child, re-fences, renders <Streamdown mode="static" plugins={code} shikiTheme github-light/dark>] — real Shiki highlighting arrives on pages for the first time; mdx-components pre rewired; OLD docs/CodeBlock.jsx DELETED (zero refs verified pre-delete). Token theming via globals.css [data-streamdown] overrides — attr names verified against dist (code-block/-header/-actions exist; -features does not); --radius-lg 8px + --shadow-e1 confirmed live tokens. (2) ReadingProgressBar.jsx DELETED by USER mid-phase (banned scroll-listener + width anim) + self-unmounted from DocsTopBar. (3) DocsComponents.jsx QUARANTINED UNUSED: Steps/MDXTabs/Cards/Kbd/FileTree had ZERO consumers across all 14 MDX files (grep-verified); imports+map entries removed from mdx-components.jsx, file kept per Rule #13. (4) KEPT as-is: TableOfContents (IO scrollspy solid), DocsTopBar, SimilarContent, Callout, ui/accordion·alert·breadcrumb. QUEUED 17d (user-approved scope): token polish TableOfContents/SimilarContent/ZoomImage/alert.tsx + ZoomImage aspect-video fix; lightbox→ui/dialog swap = separate candidate. ⚠️ User editing in parallel during phase — DocsTopBar state shifted mid-build (handled). Tests pending user request (standing directive). Pending review gate.
 Phase 17d 🔄 BUILT — Token polish pass on surviving docs-layer components (user-approved scope): (1) ui/alert.tsx info/success/warning variants: hardcoded blue/emerald/amber Tailwind families → pastel token pairs (border+text = pastel-*-text, bg = pastel-*-bg; auto light/dark swap, zero dark: duplicates) — contrast verified: warning 6.37:1 · info 6.59:1 AA ✓ [green family pre-validated P13 range]; destructive already tokenized, untouched. (2) TableOfContents.jsx desktop card shadow-sm→shadow-e1. (3) SimilarContent.jsx hover:shadow-md→hover:shadow-e2. (4) ZoomImage.jsx — aspect-video FORCED CROP removed → natural w-full h-auto flow (non-16:9 images no longer letterboxed); caption rounded-full pill→rounded-lg (taste: no pills); shadows lg/2xl/sm/md→e2/e5/e1/e2. Rationale ledger delivered to user pre-build (why each custom component exists / what it gives). Lightbox→ui/dialog focus-trap swap remains logged candidate. Tests pending user request (standing directive). Pending review gate.
 Phase 17e 🔄 BUILT — SimilarContent vibe upgrade to house DNA (user: "doesn't match the vibe"): rewritten to the Writings/TechStack card treatment — ScrollReveal slide-up stagger (index*80ms, once={false} reversible) wrapping GlowFrame per card (size 240, proximity 60, spread 25, gold interior color-mix primary 14%) wrapping single whole-card Link (aria-label, focus-visible ring, rounded-lg border bg-card p-1.5 inset panel = ProjectCard DNA); inset aspect-16/9 media w/ group-hover scale-[1.04]; meta row mono dot+category/date; hover shadow-xs→e2; Read arrow translate micro-motion; header reveal + View all arrow nudge; decorative imgs alt="" (link label carries meaning), icons aria-hidden. Dropped Badge import → lighter MetaChip (Writings-style). ux-mcp: 0 axe issues @ AA. Tests pending user request (standing directive). Pending review gate.
+
+Phase 18 ✅ COMPLETED 2026-08-27 — Chatbot API + BottomDock wiring + build-index rewrite:
+- app/api/chat/route.ts: Groq `openai/gpt-oss-120b` primary → Google `gemini-3.1-flash-lite` fallback → 503 FALLBACK signal for canned responses; multi-turn (last 6 msgs); Upstash query-data (model-based index); X-Sources header for citations.
+- scripts/build-index.js: fumadocs sources + all structured data (experience, skills, credentials, projects, writings, botKnowledge); stable IDs; index.reset(); upsert-data (raw text, no embedding calls).
+- components/chatbot/Chatbot.jsx: real fetch streaming + canned fallback on error; sources rendered as clickable chips; currentPath sent.
+- Installed @ai-sdk/groq; removed lib/embeddings.ts, lib/fumadocs-chunker.ts, vectra dep; fixed .env.example typo + GROQ_API_KEY.
+- tsc/LINT/BUILD all EXIT:0.
+
+---
+
+## 🤖 REPLICATION GUIDE: Add AI Chatbot to Your Fork
+
+Follow these exact steps to wire the same RAG chatbot into your portfolio fork.
+
+### Prerequisites
+- Node.js 20+, pnpm/npm
+- GitHub account (for repo + Actions later)
+- 15 minutes
+
+---
+
+### Step 1: Upstash Vector Index (2 min)
+
+1. Go to **console.upstash.com** → **Vector** → **Create Index**
+2. Name: `yourname-portfolio-rag`
+3. **Embedding Model**: `openai/text-embedding-3-small` (1536-dim) — *critical: this enables `query({ data })`*
+4. **Distance Metric**: Cosine
+5. **Plan**: Free (10K queries/day, 1 GB)
+6. Copy `UPSTASH_VECTOR_REST_URL` and `UPSTASH_VECTOR_REST_TOKEN`
+
+---
+
+### Step 2: API Keys (3 min)
+
+| Key | Where to Get | Env Var |
+|-----|--------------|---------|
+| **Groq** | console.groq.com → API Keys | `GROQ_API_KEY` |
+| **Google AI Studio** | aistudio.google.com → Get API Key | `GEMINI_API_KEY` |
+| **Upstash** | From Step 1 | `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN` |
+
+Add to your `.env` (copy `.env.example` → `.env` and fill in):
+
+```bash
+UPSTASH_VECTOR_REST_URL=https://your-index.upstash.io
+UPSTASH_VECTOR_REST_TOKEN=your-token
+GEMINI_API_KEY=your-gemini-key
+GROQ_API_KEY=your-groq-key
 ```
+
+---
+
+### Step 3: Install Dependency (1 min)
+
+```bash
+npm install @ai-sdk/groq
+```
+
+(Already in `package.json` if you pulled latest)
+
+---
+
+### Step 4: Verify Files Exist
+
+Ensure these are in your fork (they should be after pulling):
+
+| File | Purpose |
+|------|---------|
+| `scripts/build-index.js` | Indexes all content into Upstash |
+| `app/api/chat/route.ts` | RAG endpoint with Groq→Google fallback |
+| `components/chatbot/Chatbot.jsx` | Streaming UI with canned fallback |
+| `components/chatbot/Message.jsx` | Markdown renderer (Streamdown) |
+| `components/chatbot/QuickActions.jsx` | Prompt chips |
+| `data/botContent.js` | 54 curated knowledge strings — **edit this for your bio** |
+| `.env.example` | Template for env vars |
+
+---
+
+### Step 5: Customize Your Knowledge Base (5 min)
+
+**Edit `data/botContent.js`** — this is what the LLM sees as "ground truth":
+
+```js
+export const botKnowledge = [
+  `Your Name is a Role based in City, Country. Email: you@domain.com.`,
+  `Your tagline: "What you do." You specialize in X, Y, Z.`,
+  `Current role: Title at Company (Date–present). Description. Stack: Tech.`,
+  `Previous role: Title at Company (Date–Date). Description.`,
+  `Core Stack: Language1, Language2, Framework1, Framework2.`,
+  `Project: Name — Description. Tech: Stack. Live: URL.`,
+  `Article: "Title" — Summary. Tags: Tag1, Tag2.`,
+  `Availability: Open to Role types. Remote/Hybrid. Contact: email.`,
+];
+```
+
+**Also update structured data files if needed:**
+- `data/experience.js` — your roles
+- `data/projects.js` — your projects
+- `data/writings.js` — your articles
+- `data/skills.js` — your stack groups
+- `data/credentials.js` — education, awards, certificates
+
+---
+
+### Step 6: Build the Index (1 min)
+
+```bash
+node --env-file=.env scripts/build-index.js
+```
+
+Output should show:
+```
+🔄 Resetting index...
+✅ Index reset.
+Indexing 140+ chunks into Upstash Vector...
+[100/141] batch upserted
+[141/141] batch upserted
+✅ All chunks indexed.
+```
+
+---
+
+### Step 7: Run Dev & Test (2 min)
+
+```bash
+npm run dev
+```
+
+1. Open `http://localhost:3000`
+2. Click the **sparkles icon** in the BottomDock (bottom-right)
+3. Ask: *"What projects have you built?"* or *"What's your tech stack?"*
+4. Verify:
+   - Streaming response appears
+   - Source chips render below answer (clickable links to your pages)
+   - QuickAction chips work
+
+---
+
+### Step 8: (Optional) GitHub Actions for Auto-Reindex
+
+Create `.github/workflows/index-vectors.yml`:
+
+```yaml
+name: Index Vectors
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'content/**'
+      - 'data/**'
+      - 'scripts/build-index.js'
+  workflow_dispatch:
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: node --env-file=.env scripts/build-index.js
+        env:
+          UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
+          UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+```
+
+Add the three secrets in **GitHub → Settings → Secrets → Actions**.
+
+---
+
+### Free-tier → Premium Upgrade Path
+
+| Trigger | Action | Cost |
+|---------|--------|------|
+| Hitting Groq free limits (30 RPM / 14.4K RPD) | Add `$10` to OpenRouter → 1K free req/day forever | $10 one-time |
+| Need privacy (recruiter chats not training data) | Enable billing on Google AI Studio → Paid Tier 1 | ~$1–2/mo |
+| Higher embedding quality | Migrate to `gemini-embedding-001@1536` + re-index | Free (same Upstash index dims) |
+
+---
+
+### Architecture Summary (for your docs)
+
+| Layer | Implementation |
+|-------|---------------|
+| **Primary LLM** | Groq `llama-3.3-70b-versatile` (~500 tok/s, free tier) |
+| **Fallback LLM** | Google `gemini-2.5-flash` (free tier, GA ≥May 2027) |
+| **Last Resort** | Canned `RESPONSES` in Chatbot.jsx (never shows error) |
+| **Vector Store** | Upstash Vector (model-based: `openai/text-embedding-3-small`, 1536-dim) |
+| **Embeddings** | Upstash built-in (`upsert-data` / `query-data`) — zero external API |
+| **Indexer** | `scripts/build-index.js` — fumadocs + all structured data; stable IDs; `reset()` + batched `upsert-data` |
+| **Retrieval** | `index.query({ data: userQuery, topK: 3 })` — no embedding call |
+| **Prompt** | Active page context (`currentPath`) + global RAG; last 6 messages |
+| **Streaming** | Vercel AI SDK `streamText` → `toTextStreamResponse()`; sources via `X-Sources` header |
+| **Client** | Custom fetch + ReadableStream; canned fallback on any error |
+
+---
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| "Missing UPSTASH_VECTOR_REST_URL" | Check `.env` exists and vars are spelled exactly |
+| "FALLBACK" every request | Groq key invalid or rate-limited; check console for fallback logs |
+| Sources show "No specific vector context" | Re-run `build-index.js`; verify index has data in Upstash console |
+| Build fails on `Activity` | Ensure `Heatmap.jsx` imports `IconActivity` from `@tabler/icons-react` |
+| TypeScript errors on `route.ts` | Run `npx tsc --noEmit` — fix any `any[]` → `CoreMessage[]` if needed |
+
+---
+
+### Files to Commit
+
+```
+scripts/build-index.js
+app/api/chat/route.ts
+components/chatbot/Chatbot.jsx
+components/chatbot/Message.jsx
+components/chatbot/QuickActions.jsx
+data/botContent.js          # ← YOUR CUSTOM CONTENT
+.env.example
+package.json                # @ai-sdk/groq added
+.github/workflows/index-vectors.yml  # optional
+```
+
+**Do NOT commit:** `.env` (contains secrets), `node_modules`, `.next`
+
+---
+
+Now anyone forking this repo has a production-ready, free-tier RAG chatbot they can customize in 15 minutes. ```

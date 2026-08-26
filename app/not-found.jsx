@@ -15,6 +15,7 @@ export default function NotFound() {
           src="/404 error.svg"
           alt="Page Not Found"
           width={320}
+          height={220}
           className="mx-auto mb-6"
         />
         <Heading variant="gradient" as="h1" className="text-2xl mb-3">

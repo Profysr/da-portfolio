@@ -27,11 +27,11 @@ bilalahmad.dev/
 ├── [/writing] LIST ── HomeLayout · article index + TagFilter
 │    └── /[slug] DETAIL ── ReadingLayout · WritingContent · JSON-LD Article · OG image · TOC
 │
-├── /api/chat (Edge) · /api/github · /api/revalidate       ├── /og (dynamic OG 1200×630)
+├── /api/chat (Node.js) · /api/github · /api/revalidate       ├── /og (dynamic OG 1200×630)
 ├── /sitemap.xml · /robots.txt · /manifest                 └── error / loading / not-found states
 │
 GLOBAL CHROME (all pages): TopBar (FluidIslandNav + theme toggle) · BottomDock (chatbot trigger)
-                           · Footer · fixed AmbientBackground layer · grain overlay
+                            · Footer
 ```
 
 ### Page → Component → Data map
@@ -186,6 +186,29 @@ Special tokens:
 - ARIA live regions for chatbot streaming; labels on all icon buttons
 - Reduced-motion honored globally (CSS gate + JS primitive guards)
 - Cursor-follow effects retired (a11y-hostile) — files kept, marked UNUSED
+
+---
+
+## 🤖 AI / RAG CHATBOT (Phase 18)
+
+| Layer | Implementation |
+|-------|---------------|
+| **Primary LLM** | Groq `openai/gpt-oss-120b` (free tier: ~30 RPM, 14.4K RPD on 70B-class; ~500 tok/s streaming) |
+| **Fallback LLM** | Google `gemini-3.1-flash-lite` (free tier, GA until ≥May 2027) |
+| **Last Resort** | Canned `RESPONSES` object in Chatbot.jsx (never shows error) |
+| **Vector Store** | Upstash Vector (model-based index: `openai/text-embedding-3-small`, 1536-dim) |
+| **Embeddings** | Built-in Upstash (`upsert-data` / `query-data` with raw text) — zero external embedding API calls |
+| **Indexer** | `scripts/build-index.js` — fumadocs sources + all structured data (experience, skills, credentials, projects, writings, botKnowledge); stable IDs; `index.reset()` + batched `upsert-data` |
+| **Retrieval** | `index.query({ data: userQuery, topK: 3 })` — no embedding call at query time |
+| **Prompt** | Two-tier: active page context (`currentPath`) + global RAG context; last 6 messages for multi-turn |
+| **Streaming** | Vercel AI SDK `streamText` → `toTextStreamResponse()`; sources via `X-Sources` header |
+| **Client** | Custom fetch + ReadableStream reader (no `useChat`); canned fallback on any error |
+| **Dependencies** | `@ai-sdk/groq`, `@ai-sdk/google`, `ai@7` (server-only), `@upstash/vector` |
+
+### Free-tier → Premium Path
+1. **Now**: Groq free tier + Google free tier + Upstash free tier (10K queries/day, 1 GB)
+2. **Growth trigger**: OpenRouter $10 one-time top-up (1K free req/day forever) OR Google Paid Tier 1 (~$1–2/mo, training opt-out)
+3. **Embeddings**: Already zero-cost (Upstash built-in); migration to `gemini-embedding-001@1536` if higher quality needed later (requires re-index)
 
 ---
 

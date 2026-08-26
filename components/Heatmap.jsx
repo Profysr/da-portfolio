@@ -186,7 +186,7 @@ function HeatmapGridContent({ weeksData, revealed }) {
 function HeatmapEmptyState() {
   return (
     <div className="w-full py-8 px-4 rounded-lg border border-dashed border-border bg-surface-muted/40 flex flex-col items-center justify-center text-center gap-1.5 my-auto">
-      <Activity className="h-5 w-5 text-muted-foreground/60 mb-1" />
+      <IconActivity className="h-5 w-5 text-muted-foreground/60 mb-1" />
       <span className="text-xs font-medium text-foreground">
         GitHub API Not Connected
       </span>
