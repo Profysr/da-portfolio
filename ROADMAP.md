@@ -179,7 +179,7 @@ FAIL  cannot fix in-phase → revert + report
 ## Phase 18 — Chatbot API & Wiring
 **Files (3):** `app/api/chat/route.ts` (Edge runtime) · `BottomDock.jsx` wiring · `package.json` (drop `ai` dep, −70KB)
 - Curated responses + character-stream simulation
-- Chatbot mounted via P22 registry
+- Chatbot mounted via P22 registry 
 
 ## Phase 19 — SEO Metadata System
 **Files (3):** `lib/seo.ts` · `lib/structured-data.ts` enhance · project detail page metadata
