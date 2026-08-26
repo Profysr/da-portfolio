@@ -108,6 +108,19 @@ button · button-group · card · badge · input · input-group · textarea · l
 | lazy.jsx | React.lazy registry | 3→UNUSED | Superseded by lazy/index.jsx next/dynamic P7 (file kept) |
 | ~~ai-elements/message·conversation·suggestion.tsx~~ | Chat UI patterns | **DELETED** (folder) | User-authorized Rule #13 exception 2026-08-26 — design reference absorbed into lightweight chatbot + common/Markdown; zero live imports verified pre-delete (AssistantAi.jsx keeps commented refs only) |
 
+## components/docs/ — reading-experience layer (user-built P16 era)
+
+| Component | What it does | Used in | Score | Disposition |
+|-----------|-------------|---------|-------|-------------|
+| ~~CodeBlock.jsx~~ | Pre-wrapper w/ mac-dots header, copy btn — NO highlighting | mdx-components pre | — | **DELETED** (user-authorized Rule #13 exception 2026-08-26) — superseded by `common/CodeBlock.jsx` = Streamdown static-mode Shiki block |
+| TableOfContents.jsx | IO scrollspy TOC, mobile collapse, back-to-top/share | ReadingLayout ×2 | 8 | Keep; token polish queued (17d) |
+| ~~ReadingProgressBar.jsx~~ | Scroll-progress bar | DocsTopBar | — | **DELETED** (user decision): banned scroll-listener + width animation; position communicated by TOC/scrollbar |
+| DocsTopBar.jsx | Reading chrome: logo/breadcrumb/back/theme | ReadingLayout | 8 | Keep (intentionally distinct from TopBar) |
+| SimilarContent.jsx | Related items grid | ReadingLayout | 8 | Keep; shadow-e pass queued (17d) |
+| ZoomImage.jsx | Lightbox zoom images | mdx-components img/Image | 7 | Keep; lightbox→ui/dialog swap = candidate; aspect-video force-fix queued (17d) |
+| Callout.jsx | Admonitions over ui/alert | mdx-components | 9 | Keep as-is |
+| DocsComponents.jsx | Steps/MDXTabs/Cards/Kbd/FileTree authoring widgets | **ZERO consumers** (verified across all 14 MDX files) | UNUSED | **Quarantined 17c** — imports removed from mdx map, file kept (Rule #13); MDXTabs role → common/Tabs if ever needed |
+
 ## components/watermelon/ — PLANNED INTEGRATION (user directive: USE these)
 
 > ⚠️ **Rule #14 — REFACTOR GATE:** every component below MUST be refactored before wiring in: standardize CSS classes to `@theme` tokens · comment out demo/sample content · then integrate. Never import raw.

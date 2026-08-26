@@ -20,7 +20,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CodeBlock } from "@/components/docs/CodeBlock";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { MarkdownPre } from "@/components/common/CodeBlock";
 import { ZoomImage } from "@/components/docs/ZoomImage";
 import {
   Callout,
@@ -30,17 +45,6 @@ import {
   Danger,
   Important,
 } from "@/components/docs/Callout";
-import {
-  Steps,
-  Step,
-  MDXTabs,
-  MDXTab,
-  Cards,
-  DocCard,
-  Kbd,
-  FileTree,
-  TreeItem,
-} from "@/components/docs/DocsComponents";
 import { cn } from "@/lib/utils";
 import { createMarkdownElements } from "@/components/common/Markdown";
 import {
@@ -180,13 +184,7 @@ export const mdxComponents = {
 
   ...docBase,
 
-  pre: ({ children, className, title, language, ...props }) => {
-    return (
-      <CodeBlock title={title} language={language} className={className} {...props}>
-        {children}
-      </CodeBlock>
-    );
-  },
+  pre: (props) => <MarkdownPre {...props} />,
 
   img: (props) => <ZoomImage {...props} />,
   Image: (props) => <ZoomImage {...props} />,
@@ -221,18 +219,6 @@ export const mdxComponents = {
   Warning,
   Danger,
   Important,
-  Steps,
-  Step,
-  Tabs: MDXTabs,
-  Tab: MDXTab,
-  MDXTabs,
-  MDXTab,
-  Cards,
-  Card: DocCard,
-  DocCard,
-  Kbd,
-  FileTree,
-  TreeItem,
   Badge: ({ variant = "outline", children, className, ...props }) => (
     <Badge
       variant={variant}
