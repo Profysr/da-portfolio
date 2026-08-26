@@ -106,7 +106,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | ExtendedLink.jsx | Custom link wrapper | 3→UNUSED | Replaced by analytics/NavLink P21 (file kept) |
 | AssistantAi.jsx | AI chat panel (ai SDK) | 3→UNUSED | Replaced by chatbot/* P18 (file kept) |
 | lazy.jsx | React.lazy registry | 3→UNUSED | Superseded by lazy/index.jsx next/dynamic P7 (file kept) |
-| ai-elements/message·conversation·suggestion.tsx | Chat UI patterns | UNUSED | Design reference absorbed into lightweight chatbot (files kept) |
+| ~~ai-elements/message·conversation·suggestion.tsx~~ | Chat UI patterns | **DELETED** (folder) | User-authorized Rule #13 exception 2026-08-26 — design reference absorbed into lightweight chatbot + common/Markdown; zero live imports verified pre-delete (AssistantAi.jsx keeps commented refs only) |
 
 ## components/watermelon/ — PLANNED INTEGRATION (user directive: USE these)
 
@@ -156,4 +156,4 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
 | Marquees | marquee.tsx (via FavoriteStack, TechStack?) | Page budget ≤1 post-P14 |
-| Chat stacks | AssistantAi + ai-elements → chatbot/* | Swap P18–P19, old files kept |
+| Chat stacks | AssistantAi (UNUSED, kept) · ai-elements (DELETED 2026-08-26) → chatbot/* + common/Markdown | ✅ chatbot/* LIVE; AssistantAi swap completes at P18 |

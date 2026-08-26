@@ -3,22 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "fumadocs-mdx && next dev",
-    "build": "fumadocs-mdx && next build",
     "build:index": "node scripts/build-index.js",
+    "dev": "fumadocs-mdx && next dev --turbopack",
+    "build": "fumadocs-mdx && next build",
     "start": "next start",
-    "lint": "eslint",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.51",
-    "@gsap/react": "^2.1.2",
-    "@huggingface/transformers": "^4.2.0",
-    "@phosphor-icons/react": "^2.1.10",
-    "@streamdown/cjk": "^1.0.3",
     "@streamdown/code": "^1.1.1",
-    "@streamdown/math": "^1.0.2",
-    "@streamdown/mermaid": "^1.0.2",
     "@tabler/icons-react": "^3.46.0",
     "@upstash/vector": "^1.2.3",
     "@vercel/analytics": "^2.0.1",
