@@ -10,11 +10,11 @@ import {
 import { IconActivity } from "@tabler/icons-react";
 
 const LEVEL_COLORS = [
-  "bg-[#ebedf0] dark:bg-white/[0.04] border border-black/5 dark:border-white/[0.06]", // Level 0 (None)
-  "bg-[#9be9a8] dark:bg-[#0e4429] border border-emerald-700/10 dark:border-emerald-500/40", // Level 1 (1+ contributions)
-  "bg-[#40c463] dark:bg-[#006d32] border border-emerald-700/10 dark:border-emerald-400/50", // Level 2
-  "bg-[#30a14e] dark:bg-[#26a641] border border-emerald-700/10 dark:border-emerald-300/60", // Level 3
-  "bg-[#216e39] dark:bg-[#39d353] border border-emerald-700/10 dark:border-emerald-300 dark:shadow-[0_0_8px_rgba(52,211,153,0.35)]", // Level 4
+  "bg-[#ebedf0] dark:bg-white/[0.05] border border-black/5 dark:border-white/[0.06]", // Level 0 (None)
+  "bg-[#9be9a8] dark:bg-[#0e4429] border border-emerald-700/20 dark:border-emerald-500/40", // Level 1 (1+ contributions)
+  "bg-[#40c463] dark:bg-[#006d32] border border-emerald-700/20 dark:border-emerald-400/50", // Level 2
+  "bg-[#30a14e] dark:bg-[#26a641] border border-emerald-700/20 dark:border-emerald-300/60", // Level 3
+  "bg-[#216e39] dark:bg-[#39d353] border border-emerald-700/20 dark:border-emerald-300 dark:shadow-[0_0_8px_rgba(57,211,83,0.4)]", // Level 4
 ];
 
 // Custom Hook: Data Extraction & Normalization
@@ -32,12 +32,13 @@ function useContributionData(realContributionCalendar, weeks, overrideTotal) {
     const parsedWeeks = rawWeeks.map((w) =>
       w.contributionDays.map((d) => {
         let level = 0;
-        if (d.contributionLevel === "FIRST_QUARTILE") level = 1;
-        else if (d.contributionLevel === "SECOND_QUARTILE") level = 2;
-        else if (d.contributionLevel === "THIRD_QUARTILE") level = 3;
-        else if (d.contributionLevel === "FOURTH_QUARTILE") level = 4;
-        else if (d.contributionCount > 0)
-          level = Math.min(4, Math.ceil(d.contributionCount / 3));
+        const count = d.contributionCount ?? 0;
+        const lvlStr = (d.contributionLevel || "").toUpperCase();
+
+        if (lvlStr === "FOURTH_QUARTILE" || count >= 10) level = 4;
+        else if (lvlStr === "THIRD_QUARTILE" || count >= 6) level = 3;
+        else if (lvlStr === "SECOND_QUARTILE" || count >= 3) level = 2;
+        else if (lvlStr === "FIRST_QUARTILE" || count > 0) level = 1;
 
         const dateObj = new Date(d.date);
         return {
@@ -48,7 +49,7 @@ function useContributionData(realContributionCalendar, weeks, overrideTotal) {
             year: "numeric",
           }),
           level,
-          count: d.contributionCount,
+          count,
           dayOfWeek: dateObj.getDay(),
         };
       }),
@@ -118,7 +119,7 @@ function HeatmapHeader({ totalContributions, isRealtime, githubUsername }) {
         href={`https://github.com/${githubUsername}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline transition-all flex items-center gap-1"
+        className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline transition-all flex items-center gap-1 font-mono"
       >
         @{githubUsername}
       </a>
@@ -128,19 +129,19 @@ function HeatmapHeader({ totalContributions, isRealtime, githubUsername }) {
 
 // Sub-component: Individual Heatmap Square
 function HeatmapCell({ day, revealed, wIdx, dIdx }) {
-  const displayLevel = revealed ? day.level : 0;
+  const level = day.level ?? 0;
 
   return (
     <Tooltip key={day.date}>
       <TooltipTrigger asChild>
         <div
           className={cn(
-            "h-3 w-3 md:h-4 md:w-4 rounded-xs transition-all duration-500 hover:scale-105 cursor-pointer",
-            revealed ? "scale-100 opacity-100" : "scale-50 opacity-30",
-            LEVEL_COLORS[displayLevel],
+            "h-3 w-3 md:h-4 md:w-4 rounded-xs transition-all duration-300 hover:scale-125 hover:z-10 cursor-pointer",
+            revealed ? "scale-100 opacity-100" : "scale-90 opacity-40",
+            LEVEL_COLORS[level],
           )}
           style={{
-            transitionDelay: `${(wIdx * 7 + dIdx) * 3}ms`,
+            transitionDelay: `${Math.min((wIdx * 7 + dIdx) * 2, 200)}ms`,
           }}
         />
       </TooltipTrigger>
@@ -226,23 +227,17 @@ export function HeatmapGrid({
   realContributionCalendar = null,
   overrideTotal = null,
 }) {
-  const [revealed, setRevealed] = useState(false);
+  const [revealed, setRevealed] = useState(true);
   const { isRealtime, weeksData, totalContributions } = useContributionData(
     realContributionCalendar,
     weeks,
     overrideTotal,
   );
 
-  /* Reveal on mount + re-stagger the wave every time the week range changes */
+  /* Brief stagger on week change without stripping level colors */
   useEffect(() => {
     if (!isRealtime) return undefined;
-
-    const raf = requestAnimationFrame(() => setRevealed(false));
-    const timer = setTimeout(() => setRevealed(true), 150);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(timer);
-    };
+    setRevealed(true);
   }, [isRealtime, weeks]);
 
   return (
@@ -265,3 +260,5 @@ export function HeatmapGrid({
     </div>
   );
 }
+
+export default HeatmapGrid;

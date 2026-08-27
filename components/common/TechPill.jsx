@@ -11,6 +11,15 @@ const SIZE_CLASSES = {
     "gap-2 px-3 py-1.5 text-sm xl:gap-2.5 xl:px-4 xl:py-2 xl:text-base",
 };
 
+const ICON_SIZE_VARIANTS = {
+  sm: { name: "size-4", default: "size-5" },
+  md: { name: "size-5", default: "size-6" },
+  lg: { name: "size-6", default: "size-7" },
+  xl: { name: "size-7", default: "size-8" },
+  responsive: { name: "size-6", default: "size-8" },
+  
+};
+
 export function TechPill({ name, className, size = "md" }) {
   const config = getTechIcon(name);
   const showImage = Boolean(config?.img);
@@ -20,7 +29,7 @@ export function TechPill({ name, className, size = "md" }) {
   // const iconWrapClass = config?.lightBg ? "rounded bg-foreground p-0.5" : "";
 
   const sizeClass = SIZE_CLASSES[size] ?? SIZE_CLASSES.md;
-
+const sizeVariant = ICON_SIZE_VARIANTS[size] || ICON_SIZE_VARIANTS.sm;
   return (
     <span
       className={cn(
@@ -34,7 +43,7 @@ export function TechPill({ name, className, size = "md" }) {
         <span
           className={cn(
             "shrink-0 flex items-center justify-center relative",
-            showName ? "size-8" : "size-10",
+            showName ? sizeVariant.name : sizeVariant.default,
             // iconWrapClass,
           )}
         >

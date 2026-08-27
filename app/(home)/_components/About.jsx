@@ -183,7 +183,7 @@ export default function About() {
         <div className="rounded-lg border border-border bg-surface">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex size-10 items-center justify-center rounded-md bg-primary/20">
+              <span className="flex size-10 items-center justify-center rounded-md bg-background">
                 <IconBrandGithub className="h-4.5 w-4.5" strokeWidth={1.5} />
               </span>
               <div>
