@@ -16,11 +16,13 @@ import {
   IconArrowUp,
   IconLoader2,
   IconCheck,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import { Message, WelcomeMessage } from "./Message";
 import { QuickActions } from "./QuickActions";
 import { cn } from "@/lib/utils";
 import { cannedResponses, matchCannedResponse } from "@/data/botContent";
+import { validateInputClientSide, CHAT_CONSTRAINTS } from "@/lib/validation-client";
 
 let msgIdCounter = 0;
 function uniqueId() {
@@ -187,9 +189,11 @@ function ChatInputForm({
   isOpen,
   showQuickActions,
   onQuickAction,
-  maxLength = 500,
+  maxLength = CHAT_CONSTRAINTS.MAX_LENGTH,
 }) {
   const inputRef = useRef(null);
+  const [validationError, setValidationError] = useState("");
+  const [isOverLimit, setIsOverLimit] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -197,13 +201,37 @@ function ChatInputForm({
     }
   }, [isOpen]);
 
+  const validateAndSetError = useCallback((value) => {
+    const result = validateInputClientSide(value);
+    if (!result.isValid) {
+      setValidationError(result.error || "Invalid input");
+    } else {
+      setValidationError("");
+    }
+    setIsOverLimit(value.length >= maxLength);
+    return result.isValid;
+  }, [maxLength]);
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (input.trim() && !isStreaming) {
+      if (input.trim() && !isStreaming && validateAndSetError(input)) {
         onSubmit(input);
       }
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim() && !isStreaming && validateAndSetError(input)) {
+      onSubmit(input);
+    }
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setInput(value);
+    validateAndSetError(value);
   };
 
   return (
@@ -212,32 +240,39 @@ function ChatInputForm({
         <QuickActions onActionClick={onQuickAction} disabled={isStreaming} />
       )}
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (input.trim() && !isStreaming) {
-            onSubmit(input);
-          }
-        }}
-        className="relative flex items-end w-full"
-      >
+      <form onSubmit={handleSubmit} className="relative flex items-end w-full">
         <AutoResizeTextArea
           ref={inputRef}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleChange}
           onKeyDown={handleKeyDown}
           maxLength={maxLength}
-          placeholder="Reply to assistant..."
+          placeholder={validationError ? `Error: ${validationError}` : "Reply to assistant..."}
           disabled={isStreaming}
           aria-label="Chat input"
           autoComplete="off"
+          aria-invalid={validationError ? "true" : "false"}
+          aria-describedby={validationError ? "validation-error" : undefined}
         />
+
+        {/* Validation Error Display */}
+        {validationError && (
+          <div
+            id="validation-error"
+            className="absolute bottom-full left-3 right-12 mb-1 px-2 py-1 text-[10px] text-destructive bg-destructive/10 border border-destructive/30 rounded"
+            role="alert"
+            aria-live="polite"
+          >
+            <IconAlertCircle className="inline size-2.5 mr-1" />
+            {validationError}
+          </div>
+        )}
 
         {/* Character Count Indicator */}
         <span
           className={cn(
             "absolute right-12 bottom-2 text-[10px] select-none transition-colors",
-            input.length >= maxLength
+            isOverLimit
               ? "text-destructive font-medium"
               : "text-muted-foreground/50",
           )}
@@ -247,14 +282,14 @@ function ChatInputForm({
 
         <button
           type="submit"
-          disabled={!input.trim() || isStreaming}
+          disabled={!input.trim() || isStreaming || validationError}
           className={cn(
             "absolute right-2 bottom-3 size-8 rounded-md flex items-center justify-center transition-all",
-            input.trim() && !isStreaming
+            input.trim() && !isStreaming && !validationError
               ? "bg-primary text-primary-foreground hover:bg-primary-hover hover:scale-105"
               : "bg-muted text-muted-foreground opacity-40 cursor-not-allowed scale-95",
           )}
-          aria-label={isStreaming ? "Streaming response" : "Send message"}
+          aria-label={isStreaming ? "Streaming response" : validationError ? `Error: ${validationError}` : "Send message"}
         >
           {isStreaming ? (
             <IconLoader2 className="size-4 animate-spin" />
@@ -267,6 +302,24 @@ function ChatInputForm({
       <p className="text-[11px] text-muted-foreground/60 text-center select-none pt-0.5">
         AI responses are generated based on portfolio details and may vary.
       </p>
+
+      {/* Constraints Visual Indicator */}
+      <div className="w-full px-2 pt-1 text-center">
+        <div className="flex items-center justify-center gap-3 text-[10px] text-muted-foreground/60 flex-wrap">
+          <span className="inline-flex items-center gap-1">
+            <IconCheck className="size-2.5 text-emerald-500" />
+            <span>Max {CHAT_CONSTRAINTS.MAX_LENGTH} chars</span>
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <IconCheck className="size-2.5 text-emerald-500" />
+            <span>{CHAT_CONSTRAINTS.MAX_MESSAGES_PER_MINUTE} msg/min</span>
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <IconCheck className="size-2.5 text-emerald-500" />
+            <span>{CHAT_CONSTRAINTS.MAX_MESSAGES_PER_HOUR} msg/hour</span>
+          </span>
+        </div>
+      </div>
     </DrawerFooter>
   );
 }

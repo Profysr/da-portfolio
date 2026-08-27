@@ -2,7 +2,9 @@ import { streamText, toTextStream, createTextStreamResponse } from "ai";
 import { google } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import { Index } from "@upstash/vector";
+import { validateChatRequest, checkAllRateLimits, sanitizeInput } from "@/lib/validation";
 
+export const runtime = "nodejs";
 export const maxDuration = 30;
 
 function getIndex() {
@@ -34,6 +36,14 @@ ${context}`;
 //   return JSON.stringify(sources);
 // }
 
+function getClientIdentifier(req: Request): string {
+  // Try to get IP from headers (Vercel/Cloudflare)
+  const forwarded = req.headers.get("x-forwarded-for");
+  const realIp = req.headers.get("x-real-ip");
+  const ip = forwarded?.split(",")[0]?.trim() || realIp || "unknown";
+  return ip;
+}
+
 async function tryModelStream(model: any, messages: any[], context: string) {
   const result = streamText({
     model,
@@ -48,15 +58,48 @@ async function tryModelStream(model: any, messages: any[], context: string) {
 
 export async function POST(req: Request) {
   try {
-    // 1- Extracting the message
-    const { messages } = (await req.json()) as { messages: any[] };
-    if (!messages?.length) {
-      return new Response("No messages", { status: 400 });
+    // 0. Rate limiting by IP
+    const clientIp = getClientIdentifier(req);
+    const rateLimit = checkAllRateLimits(clientIp);
+    if (rateLimit.limited) {
+      return new Response(
+        JSON.stringify({ error: rateLimit.reason }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Retry-After": String(rateLimit.retryAfter || 60),
+          },
+        },
+      );
     }
 
-    // 2- Ask the upstash for the top 3 match indexes
-    const userQuery = messages[messages.length - 1].content;
+    // 1. Parse and validate request body
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON body" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
+    // Validate request structure
+    const validation = validateChatRequest(body);
+    if (!validation.isValid) {
+      return new Response(
+        JSON.stringify({ error: "Validation failed", details: validation.errors }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const { messages } = validation.data!;
+    
+    // 1. Extract and sanitize the user query
+    const userQuery = sanitizeInput(messages[messages.length - 1].content);
+
+    // 2. Query Upstash Vector for top 3 matches
     const matches = await getIndex().query({
       data: userQuery,
       topK: 3,
@@ -64,25 +107,25 @@ export async function POST(req: Request) {
       includeData: true,
     });
 
-    // 3- Parsing the context and adding up recent 6 messages with the built context for better results
+    // 3. Build context with retrieved chunks
     const context =
       matches
         ?.map(
           (m) =>
-            `[Source: ${m.metadata?.title} > ${m.metadata?.heading}]:\n${m.data || m.metadata?.text}`,
+            `[Source: ${m.metadata?.title} > ${m.metadata?.heading}]:\n${m.data || m.metadata?.text}`
         )
         .join("\n\n---\n\n") || "No specific vector context found.";
 
+    // 4. Build conversation context (last 6 messages)
     const recentMessages = messages.slice(-6);
 
-    // 4- Send a Post Req to Groq Model
+    // 5. Try Groq (primary model)
     try {
       const response = await tryModelStream(
         groq("openai/gpt-oss-120b"),
         recentMessages,
         context,
       );
-      // response.headers.set("X-Sources", buildSourcesHeader(matches));
       return response;
     } catch (groqErr: unknown) {
       console.warn(
@@ -90,26 +133,30 @@ export async function POST(req: Request) {
         (groqErr as Error).message,
       );
     }
-    
-    // 5- Using Gemini as a Fallback Model
+
+    // 6. Fallback to Google
     try {
       const response = await tryModelStream(
         google("gemini-2.5-flash"),
         recentMessages,
         context,
       );
-      // response.headers.set("X-Sources", buildSourcesHeader(matches));
       return response;
     } catch (googleErr: unknown) {
       console.error("Google failed:", (googleErr as Error).message);
     }
 
+    // 7. Final fallback
     return new Response("FALLBACK", {
       status: 503,
-      // headers: { "X-Sources": "[]" },
     });
   } catch (err: unknown) {
     console.error("Chat route error:", (err as Error).message);
-    return new Response("Internal error", { status: 500 });
+    
+    // Don't leak internal errors to client
+    return new Response(
+      JSON.stringify({ error: "Internal server error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }
