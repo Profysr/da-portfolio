@@ -55,7 +55,7 @@ export function WritingContent({
       )}
 
       {/* Author & Publication Meta Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-border/70">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-5">
         {/* Author Info */}
         <div className="flex items-center gap-3">
           <div className="relative size-10 rounded-full overflow-hidden border border-border/80 bg-surface-muted shrink-0 shadow-xs">
