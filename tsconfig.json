@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "scripts/build-index.js", "lib/validation.js"  ],
+, "scripts/build-index.js", "lib/validation.js", "app/api/chat/route.js"  ],
   "exclude": ["node_modules"]
 }

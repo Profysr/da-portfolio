@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IconCopy, IconCheck, IconUser, IconRobot } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { Markdown } from "@/components/common/Markdown";
@@ -105,6 +105,101 @@ export function WelcomeMessage() {
           Projects, experience, tech stack, or contact info
         </p>
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: SourcesChips (renders clickable source links) — DISABLED
+// ============================================================================
+
+/*
+function SourcesChips({ sources }) {
+  if (!sources?.length) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-2">
+      {sources.map((src, i) => (
+        <a
+          key={i}
+          href={src.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-primary bg-primary/10 rounded hover:bg-primary/20 transition-colors"
+        >
+          <IconCheck className="size-3" />
+          {src.title} › {src.heading}
+        </a>
+      ))}
+    </div>
+  );
+}
+*/
+
+// ============================================================================
+// COMPONENT: Message (enhanced with sources)
+// ============================================================================
+
+function EnhancedMessage({ content, role, isStreaming, sources }) {
+  return (
+    <div
+      className={cn(
+        "flex gap-2",
+        role === "user" ? "justify-end" : "justify-start",
+      )}
+    >
+      <div
+        className={cn(
+          "relative max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed",
+          role === "user"
+            ? "bg-primary text-primary-foreground rounded-tr-sm"
+            : "bg-muted text-foreground rounded-tl-sm",
+        )}
+      >
+        <Message content={content} role={role} isStreaming={isStreaming} />
+        {/* {role === "assistant" && !isStreaming && (
+          <SourcesChips sources={sources} />
+        )} */}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// COMPONENT: ChatMessagesContainer
+// ============================================================================
+export function ChatMessagesContainer({ messages, isStreaming }) {
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isStreaming]);
+
+  return (
+    <div
+      className="flex-1 overflow-y-auto px-2 py-3 space-y-4 w-full"
+      role="log"
+      aria-live="polite"
+      aria-label="Conversation history"
+    >
+      <WelcomeMessage />
+      {messages.map((msg, index) => (
+        <EnhancedMessage
+          key={msg.id}
+          content={msg.content}
+          role={msg.role}
+          isStreaming={
+            isStreaming &&
+            index === messages.length - 1 &&
+            msg.role === "assistant"
+          }
+          sources={msg.sources}
+        />
+      ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 }
