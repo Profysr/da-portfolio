@@ -27,7 +27,7 @@ bilalahmad.dev/
 ├── [/writing] LIST ── HomeLayout · article index + TagFilter
 │    └── /[slug] DETAIL ── ReadingLayout · WritingContent · JSON-LD Article · OG image · TOC
 │
-├── /api/chat (Node.js) · /api/github · /api/revalidate       ├── /og (dynamic OG 1200×630)
+├── app/api/chat/route.ts (Edge runtime — Groq primary, Google fallback, Upstash Vector RAG) · app/api/github/route.ts · app/api/revalidate/route.ts
 ├── /sitemap.xml · /robots.txt · /manifest                 └── error / loading / not-found states
 │
 GLOBAL CHROME (all pages): TopBar (FluidIslandNav + theme toggle) · BottomDock (chatbot trigger)
@@ -134,19 +134,26 @@ Special tokens:
 │   ├── globals.css             token-driven styles
 │   └── sitemap.ts robots.ts manifest.ts loading.jsx error.jsx not-found.jsx
 ├── components/
-│   ├── ui/                     shadcn primitives (.tsx PERMITTED ZONE)
-│   ├── animations/             ScrollReveal StaggeredReveal Magnetic AmbientBackground
-│   │                           HeroPills useGSAP.js
-│   ├── lazy/                   index.jsx (next/dynamic registry) Skeleton.jsx
-│   ├── chatbot/                Chatbot Message QuickActions
-│   ├── analytics/              WebVitals NavLink
-│   ├── layout/                 TopBar BottomDock Footer HomeLayout ReadingLayout Section Layout
-│   ├── watermelon/             KEPT — integration targets mapped (see COMPONENTS_MAP.md)
-│   ├── 21st/                   KEPT — style references (PricingCard→ProjectCard DNA, Timeline option)
-│   └── *.jsx                   feature components (FavoriteStack TechPill AvatarStatus Heatmap ...)
+│   ├── ui/                     shadcn primitives (.tsx) + animation/scan/scroll engines
+│   │                           (ScrollReveal, HorizontalScroll, GSAPScrollRail, tracing-beam,
+│   │                            ScrollRail, MagneticButton, dock, shimmer-button, etc.)
+│   ├── common/                 custom primitives: Tabs, Markdown, OptimizedImage, Skeleton,
+│   │                           CodeBlock, ViewOnMap, NumberSlider, ContentCarousel, lazy, ExtendedLink
+│   ├── chatbot/                Chatbot, Message, QuickActions, ChatInputForm, AutoResizeTextArea
+│   ├── lazy/                   next/dynamic registry (index.jsx) + Skeleton.jsx
+│   ├── docs/                   reading-experience layer: TableOfContents, DocsTopBar, SimilarContent,
+│   │                           ZoomImage, Callout, mdx-custom-components, DocsComponents (UNUSED)
+│   ├── layout/                 TopBar, BottomDock, Footer, HomeLayout, ReadingLayout, Section, Layout, Logo
+│   ├── analytics/              WebVitals, NavLink
+│   ├── watermelon/             ComposeEmail, JournalNavigation (Tabs/ViewOnMap/NumberSlider moved to common/)
+│   └── *.jsx                   feature components (FavoriteStack, TechPill, AvatarStatus, Heatmap,
+│                               StatCard, ContactCard, CommandPallete, MasonryGrid,
+│                               StackedCards, Timeline))
 ├── lib/
-│   ├── tokens/                 colors.css typography.css spacing.css effects.css
-│   ├── fonts.ts                seo.ts structured-data.ts analytics.ts utils.ts source.ts
+│   ├── tokens/                 colors.css typography.css spacing.css effects.css shades.css
+│   ├── fonts.ts                structured-data.js utils.ts source.ts download.ts
+│   ├── chat-guard.js           Zod validation · prompt injection guard (`<user_query>` XML boundary)
+│   └── rate-limit.js           Upstash Redis sliding window · credit system hook
 ├── hooks/                      useReducedMotion.js etc
 ├── data/                       personal.ts idx.ts (education-only credentials after P17)
 └── content/                    projects/*.mdx (8) writings/*.mdx (3)
@@ -193,17 +200,20 @@ Special tokens:
 
 | Layer | Implementation |
 |-------|---------------|
-| **Primary LLM** | Groq `openai/gpt-oss-120b` (free tier: ~30 RPM, 14.4K RPD on 70B-class; ~500 tok/s streaming) |
-| **Fallback LLM** | Google `gemini-3.1-flash-lite` (free tier, GA until ≥May 2027) |
+| **Primary LLM** | Groq `gpt-oss-120b` via direct fetch (free tier, ~30 RPM, streaming) |
+| **Fallback LLM** | Google `gemini-2.0-flash` via direct fetch |
 | **Last Resort** | Canned `RESPONSES` object in Chatbot.jsx (never shows error) |
-| **Vector Store** | Upstash Vector (model-based index: `openai/text-embedding-3-small`, 1536-dim) |
-| **Embeddings** | Built-in Upstash (`upsert-data` / `query-data` with raw text) — zero external embedding API calls |
-| **Indexer** | `scripts/build-index.js` — fumadocs sources + all structured data (experience, skills, credentials, projects, writings, botKnowledge); stable IDs; `index.reset()` + batched `upsert-data` |
+| **Vector Store** | Upstash Vector (model-based index · 1536-dim) |
+| **Embeddings** | Upstash built-in (`upsert-data` / `query-data` with raw text) — zero external embedding API calls |
+| **Indexer** | `scripts/build-index.js` — fumadocs sources + structured data; `index.reset()` + batched `upsert-data` |
 | **Retrieval** | `index.query({ data: userQuery, topK: 3 })` — no embedding call at query time |
-| **Prompt** | Two-tier: active page context (`currentPath`) + global RAG context; last 6 messages for multi-turn |
-| **Streaming** | Vercel AI SDK `streamText` → `toTextStreamResponse()`; sources via `X-Sources` header |
+| **Prompt guard** | `<user_query>` XML boundary · Zod validation · input normalization in `lib/chat-guard.js` |
+| **Rate limiting** | Upstash Redis sliding window (5 req/min per IP) · credit system hook in `lib/rate-limit.js` |
+| **Prompt** | Two-tier: active page context + global RAG context; last 6 messages for multi-turn |
+| **Streaming** | Direct `createTextStreamResponse` + `toTextStream`; sources via `X-Sources` header |
 | **Client** | Custom fetch + ReadableStream reader (no `useChat`); canned fallback on any error |
-| **Dependencies** | `@ai-sdk/groq`, `@ai-sdk/google`, `ai@7` (server-only), `@upstash/vector` |
+| **Frontend** | Chatbot.jsx · ChatInputForm (Zod validation · char counter · rate-limit display · 1000-char max) |
+| **Dependencies** | `groq-sdk` or direct `fetch` · `@ai-sdk/google` (library) · `@upstash/vector` · `@upstash/redis` · `zod` |
 
 ### Free-tier → Premium Path
 1. **Now**: Groq free tier + Google free tier + Upstash free tier (10K queries/day, 1 GB)

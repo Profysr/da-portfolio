@@ -1,7 +1,7 @@
 # 🧩 COMPONENTS MAP — Full Audit
 
 **Companion docs:** `ROADMAP.md` (phases) · `ARCHITECTURE.md` (sitemap/design)
-**Rule:** NO component is deleted. Deprecated items are marked `UNUSED` and their imports removed — files stay on disk.
+**Rule:** NO component is deleted. Deprecated items are marked `UNUSED` and their imports removed — files stay on disk. *User-authorized exceptions:* HeroPills.jsx (P11b) · spotlight family (P03b) · ai-elements/ (P17c) · CodeBlock docs/ version (P17c).
 
 > **Phase renumber (P07 amendment, user directive):** lazy registry moved P07→**P22**; phases 8–11 shifted −1 (now 7–10); sections shifted −1 (About=12 … Chatbot=17); chat-api=18, SEO=19, OG/NavLinks=20; a11y sweep=21. Cells below reflect ORIGINAL numbers where historical; key targets now: TechStack=13 · Experience=14 · Projects=15 · Writings/Creds=16 · Chatbot swap=17 · NavLink rollout=20 · Registry=22.
 
@@ -9,153 +9,204 @@
 **Columns:** Where used today → Target role → Duplicates/similar → Disposition
 
 ---
+## Filesystem note
+
+`components/animations/` does **not** exist as a directory. Files historically referenced with that prefix are on disk at `components/ui/` (ScrollReveal.tsx, StaggeredList.tsx, MagneticButton.tsx, MagneticDock.tsx, dock.tsx, GSAPScrollRail.tsx, shimmer-button.tsx, animated-shiny-text.tsx, CurtainReveal.tsx, EditorialHeading.tsx, tracing-beam.tsx) or `hooks/useGSAP.js`. This file uses the **actual on-disk paths**.
+
+`components/21st/` does **not** exist on disk. Timeline.tsx lives at `components/Timeline.tsx`. PricingCard.tsx has no disk presence.
+
+---
 
 ## app/(home)/_components/ — Home Sections
 
 | Component | What it does | Used in | Similar to | Score | Disposition |
 |-----------|-------------|---------|------------|-------|-------------|
-| Hero.jsx | Avatar status, typewriter roles, FavoriteStack marquee, socials, magnetic CTA, scroll cue; currently mounts LightRays | Home | — | 7 | **P12 rebuild**: drop LightRays+Particles imports, add floating pill layer, restructure stack per hero discipline |
-| About.jsx | Bio section | Home | — | 8 | P13 editorial-split recomposition, DoubleBezel portrait, NumberTicker stats |
-| TechStack.jsx | Tech categories display | Home | FavoriteStack (marquee overlap) | 7 | **P14**: GSAP horizontal scroller, solid shade cards; absorbs page marquee budget decision |
-| Experience.jsx | Work history | Home | 21st/Timeline, GSAPScrollRail | 8 | ✅ **P14 DONE**: Timeline renderer (Rule #14 refactored — tokens, motion/react, scaleY spine); ScrollRail retired from this section (live in Credentials) |
-| Projects.jsx | Project grid feed | Home | layouts/ProjectsBento | 8 | P16 feeds rebuilt true bento |
-| Credentials.jsx | Education + certs + awards | Home | StatCard | 8 | **P17 education ONLY** — comment out certs/awards data |
-| Activities.jsx | Writings + activity mix | Home | Heatmap, JournalNavigation | 7 | **P17 redesign → Writings-only** |
-| FAQ.jsx / FAQClient.jsx | Accordion (server wrapper + client island) | Home | — | 9 | Keep pattern; lazy client island |
+| Hero.jsx | Avatar status, typewriter roles, socials, magnetic CTA; LightRays removed P12 | Home | — | 7 | **P12 rebuild done**: LightRays+Particles+Suspense dropped; stack = status → kinetic headline → tagline → socials+CTA on plain solid bg |
+| About.jsx | Bio editorial split · DoubleBezel portrait (removed P12d; portrait content now inline/asymmetric) · NumberTicker stats · NumberSlider heatmap range · ViewOnMap | Home | — | 8 | ✅ **P12 DONE**: single-column max-w-3xl; NumberTicker on numeric stats; ViewOnMap and NumberSlider integrated P12bc |
+| TechStack.jsx | GSAP dual-dimensional horizontal scroller · shade-differentiated cards | Home | FavoriteStack (marquee overlap) | 7 | ✅ **P13 DONE**: GSAP pin-scrub engine `components/ui/HorizontalScroll.tsx` · solid shade cards · no FavoriteStack; envItem wrap fix included |
+| Experience.jsx | Work history scroll stories | Home | ScrollRail, GSAPScrollRail | 8 | ✅ **P14 DONE**: Timeline renderer (Rule #14 refactored — motion/react, tokens, scaleY spine, ResizeObserver, reduced-motion static); ScrollRail retired from this section (live in Credentials) |
+| Projects.jsx | ALL projects incl. in-progress · asymmetric bento grid | Home | layouts/ProjectsBento | 8 | ✅ **P15 DONE**: ProjectCard.jsx PricingCard DNA; BorderBeam paused-until-hover; ContinuousTabs from TAG_META; all 8 projects including in-progress |
+| Credentials.jsx | Education only (certs/awards commented out in data) | Home | StatCard | 8 | **P17 education ONLY** — certs + awards data preserved but commented out; ScrollRail.jsx is live consumer here (height→scaleY conversion = P21 candidate) |
+| Activities.jsx → Writings.jsx | Writings · MDX articles on tracing-beam spine | Home | Heatmap, JournalNavigation | 7 | ✅ **P17 DONE**: Activity section renamed to Writings; tracing-beam spine — JournalNavigation (watermelon) integration = P21 |
+| FAQ.jsx / FAQClient.jsx | Accordion (server wrapper + client island) | Home | — | 9 | Keep; lazy client island |
+
+---
 
 ## components/layout/
 
-| Component | What it does | Used in | Similar to | Score | Disposition |
-|-----------|-------------|---------|------------|-------|-------------|
-| HomeLayout.jsx | App shell: TopBar, dock, AI, footer; scroll listener for nav visibility | Home route | Layout.jsx | 8 | Replace banned scroll-listener with IO/Motion; mount AmbientBackground layer |
-| TopBar.jsx | Fixed top navigation | HomeLayout | FluidIslandNav | 8 | Integrate theme toggle + NavLink prefetching |
-| BottomDock.jsx | Bottom macOS-style dock w/ chatbot trigger | HomeLayout | dock.tsx, MagneticDock.tsx | 9 | Keep; wire LazyChatbot P19 |
+| Component | What it does | Used in | Score | Disposition |
+|-----------|-------------|---------|-------|-------------|
+| HomeLayout.jsx | App shell: TopBar, dock, footer, AmbientBackground retracted P08d | Home route | Layout.jsx | 8 | Replace banned scroll-listener with IO/Motion; plain solid bg confirmed (AmbientBackground DEPRECATED, file kept UNUSED) |
+| TopBar.jsx | Fixed top navigation · theme toggle · NavLink | HomeLayout | FluidIslandNav | 8 | ✅ Integrated: theme switch + NavLink prefetching; Logo.jsx mounted |
+| BottomDock.jsx | Bottom macOS-style dock · chatbot trigger | HomeLayout | dock.tsx, MagneticDock.tsx | 9 | ✅ Kept; ChatInputForm wired |
 | Footer.jsx | Site footer | HomeLayout | ContactCard | 9 | Keep; ComposeEmail/ViewOnMap integration candidates |
 | Section.jsx | Section wrapper | All sections | — | 9 | Add overlap/fade-mask variants (seamless system) |
 | ReadingLayout.jsx | Article reading shell | Detail pages | — | 9 | Keep |
 | Layout.jsx | Base layout primitives | Various | HomeLayout | 9 | Keep |
+| Logo.jsx | Inline SVG logo (currentColor-native) | TopBar | — | 9 | Keep; server-safe render; h-7 |
+
+---
 
 ## components/ui/ (.tsx permitted zone)
 
+Files previously misplaced to `components/animations/` in older docs live here. No `components/animations/` directory exists on disk.
+
 ### ⭐ Core engines
+
 | Component | Role | Score | Disposition |
 |-----------|------|-------|-------------|
-| GSAPHorizontalScroll.tsx | Horizontal pin-scrub scroll engine | 9 | **P14 TechStack engine** |
+| components/ui/HorizontalScroll.tsx (export `ScrollWrapper`) | Horizontal pin-scrub scroll engine — P13 repaired (ctx-cleanup, overlay mount, container pan, a11y overflow fallback) | 9 | ✅ **P13 LIVE** in TechStack |
 | DoubleBezel.tsx | Nested machined-container aesthetic | 9 | Core premium container everywhere |
 | blur-fade.tsx | Blur-in entrance | 8 | Hero entry workhorse |
 | typing-animation.tsx | Typewriter effect | 9 | Headline device |
 | kinetic-text.tsx | Animated text emphasis | 8 | Headline emphasis |
 | number-ticker.tsx | Count-up numbers | 8 | Stats rows |
-| border-beam.tsx | Animated border sweep | 8 | Bento card hover |
-| tracing-beam.tsx | Vertical scroll-drawn spine | 8 | Writings spine |
+| border-beam.tsx | Animated border sweep | 8 | Bento card hover (paused-until-hover) |
+| tracing-beam.tsx | Vertical scroll-drawn spine | 8 | Writings spine (P21 candidate) |
 | FluidIslandNav.tsx | Morphing island navigation | 8 | TopBar integration |
+| useGSAP.js | ⚠️ Lives at `hooks/useGSAP.js` — GSAP context cleanup, reduced-motion guard, re-exports gsap/ScrollTrigger | — | Keep; P10 DONE |
 
-### Animation/reveal family (consolidation targets)
+### Animation/reveal family (consolidated)
+
 | Component | Score | Disposition |
 |-----------|-------|-------------|
-| ScrollReveal.tsx | 8 | Absorbed into `animations/ScrollReveal` P10 (file kept) |
-| StaggeredList.tsx | 5 | Role merged into StaggeredReveal (file kept) |
-| MagneticButton.tsx / MagneticDock.tsx | MagneticLink LIVE in Hero (keep as-is — no wrapper indirection); **MagneticDock → UNUSED** (P10 Option B: zero consumers, file kept) |
-| dock.tsx | ⭐ Dock A/B WINNER by evidence — live production dock inside BottomDock (P10 verdict) |
+| ScrollReveal.tsx | 9 | ✅ **P10/P09 UPGRADED (LIVE)** — unified system with StaggeredReveal + ScrollRevealText; CSS data-visible keyframes; reduced-motion handled; consumer: Hero, About, Projects, Credentials, ContentCarousel, EditorialHeading |
+| StaggeredList.tsx | 5 | Role merged into ScrollReveal (file kept) |
+| MagneticButton.tsx / MagneticDock.tsx | — | MagneticLink/MagneticButton LIVE in Hero, live pattern in TechPill, About; **MagneticDock → UNUSED** (P10 Option B: zero consumers, 12KB, file kept) |
+| dock.tsx | 9 | ⭐ Dock A/B WINNER — live production dock inside BottomDock (P10 Option B verdict) |
 | GSAPScrollRail.tsx | 6→UNUSED | Zero consumers; superseded by Timeline spine (P14) — file kept |
 | shimmer-button.tsx | 5 | Fold styling into Magnetic variants (file kept) |
-| animated-shiny-text.tsx | 6 | Max once (badge accent) |
+| animated-shiny-text.tsx | 6 | Max once (badge accent); check live use |
 | CurtainReveal.tsx | 6 | Route-transition candidate — future decision |
-| EditorialHeading.tsx / Heading.tsx | 6 | Two heading systems — consolidate (files kept) |
+| EditorialHeading.tsx / Heading.tsx | 6 | Two heading systems — consolidate (files kept); EditorialHeading uses ScrollRevealText internally |
 
 ### Content/display
+
 | Component | Score | Disposition |
 |-----------|-------|-------------|
-| bento-grid.tsx | 6 | Reference base for P16 rebuild (extend or replace) |
-| TextMaskReveal.tsx | 7 | Section headings |
+| bento-grid.tsx | 6 | Reference base for P15 rebuild (rebuilt true asymmetric; file kept) |
+| TextMaskReveal.tsx | 7 | Section headings; consolidate heading roles P13+ |
 | animated-circular-progress-bar.tsx | 6 | Credential stat option (P17 decision) |
-| animated-beam.tsx | 5 | Lazy-load only if a use survives audit |
+| animated-beam.tsx | 5 | Verify zero live imports then retire |
 
-### Spotlight family → ✅ CONSOLIDATED into `GlowFrame.tsx` (DONE)
+### Spotlight family → ✅ CONSOLIDATED into `GlowFrame.tsx` (DONE P03b)
+
 | Component | Status |
 |-----------|--------|
-| GlowFrame.tsx | **The one component.** Wraps ANY child (card/button/section/grid item). Two unified layers driven by element-local pointer tracking (no window listeners): **interior circular glow** (light neutral `rgba(255,255,255,.14)`, 180px, blur 24px, follows cursor) + **border seam-leak** (conic-gradient ported from old cursor-glow border variant, gold, angle-chases mouse via motion). rAF-throttled CSS vars · reduced-motion + non-mouse-pointer guards · forwardRef |
-| ~~cursor-glow.tsx~~ · ~~glowing-effect.tsx~~ · ~~spotlight-glow.tsx~~ · ~~spotlight.tsx~~ · ~~SpotlightCard.tsx~~ | **DELETED** — user-authorized exception to Rule #13 (this family only). Migrations done: `bento-grid.tsx` BentoCard root → GlowFrame (`glowVariant` prop removed; `disableGlow` kept); `TechStack.jsx` category cards → GlowFrame |
+| GlowFrame.tsx | **The one component.** Wraps ANY child. Element-local pointer tracking (no window listeners): interior circular glow (`rgba(255,255,255,.14)`, 180px, blur 24px) + border seam-leak (conic-gradient, angle-chases mouse via motion). rAF-throttled CSS vars · reduced-motion + non-mouse-pointer guards · forwardRef |
+| ~~cursor-glow.tsx~~ · ~~glowing-effect.tsx~~ · ~~spotlight-glow.tsx~~ · ~~spotlight.tsx~~ · ~~SpotlightCard.tsx~~ | **DELETED** — user-authorized Rule #13 exception (P03b). Migrations: `bento-grid.tsx` BentoCard root → GlowFrame; `TechStack.jsx` category cards → GlowFrame |
 
-### Marked UNUSED (imports removed when encountered — FILES KEPT)
+### Marked UNUSED (imports removed — FILES KEPT)
+
 | Component | Reason |
 |-----------|--------|
-| animations/AmbientBackground.jsx | ⛔ P08 DEPRECATED by user: plain solid backgrounds preferred; simplification pass (fewer relative/z/overflow). Kept for future revisit — grain still awaits noise asset |
-| animations/StackedCards.jsx | NEW P14 — CSS-sticky deck + GSAP scrub scale-handoff (0.92/0.55, reversible, reduced-motion-safe). **User-directed: reserved for a FUTURE section (not Experience)** — zero consumers today, file kept |
-| light-rays.tsx | User removing from Hero; replaced concept by AmbientBackground (now itself deprecated) |
-| particles.tsx | Replaced by CSS-only approach; superseded by deprecation above — file kept |
-| ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED |
-| modal.tsx | dialog.tsx + drawer.tsx cover all overlay needs — verify usage first |
+| AmbientBackground.jsx | ⛔ P08 DEPRECATED by user: plain solid backgrounds preferred; simplification pass. Kept for future revisit — grain still awaits noise asset |
+| StackedCards.jsx | **FILESYSTEM NOTE:** lives at `components/StackedCards.jsx` (root, NOT `components/animations/`). P14 CSS-sticky deck + GSAP scrub scale-handoff (0.92/0.55, reversible, reduced-motion-safe). **User-directed: reserved for a FUTURE section (not Experience)** — zero consumers today, file kept |
+| light-rays.tsx | User removing from Hero; superseded by plain-solid directive; file kept |
+| particles.tsx | Replaced by CSS-only approach; superseded by plain-solid directive; file kept |
+| ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED permanently |
+| modal.tsx | dialog.tsx + drawer.tsx cover all overlay needs — verify usage first (zero consumers believed) |
 
 ### shadcn primitives (all kept, token-migrated Phase 3–4)
-button · button-group · card · badge · input · input-group · textarea · label · select · checkbox · switch · slider · tooltip · hover-card · collapsible · dropdown-menu · separator · scroll-area · spinner · sonner · drawer · dialog · expandable-list · terminal
 
-## Root components/
+button · button-group · card · badge · input · input-group · textarea · label · select · checkbox · switch · slider · tooltip · hover-card · collapsible · dropdown-menu · separator · scroll-area · spinner · sonner · drawer · dialog · expandable-list · terminal · breadcrumb · alert · carousel · accordion · theme-switcher
+
+---
+
+## components/common/ (custom primitives — `.jsx` mandatory per Rule #2)
 
 | Component | What it does | Score | Disposition |
 |-----------|-------------|-------|-------------|
-| FavoriteStack.jsx | Compact tech marquee + full grid variant | 7 | Data source for Hero floating pills; compact-marquee role retired P12 |
-| TechPill.jsx | Tech logo/name pill atom | 9 | Reused in Hero pills, TechStack, bento meta |
-| AvatarStatus.jsx | Availability avatar chip | 9 | Hero element #1 |
-| CommandPallete.jsx | ⌘K command palette | 8 | Strict lazy island |
-| Heatmap.jsx | Contribution heatmap | 8 | Lazy + cached API; candidate visual for Writings/Activity strip |
-| TagFilter.jsx | Tag filtering UI | 8 | Projects section swapped to common/Tabs (P15); remaining consumer: Credentials — file kept (Rule #13) |
-| StatCard.jsx | Metric card | 8 | Listings/stats |
-| ContactCard.jsx | Contact info card | 8 | Contact/footer area |
-| mdx-components.jsx | MDX renderer map | 9 | Keep |
-| ExtendedLink.jsx | Custom link wrapper | 3→UNUSED | Replaced by analytics/NavLink P21 (file kept) |
-| AssistantAi.jsx | AI chat panel (ai SDK) | 3→UNUSED | Replaced by chatbot/* P18 (file kept) |
-| lazy.jsx | React.lazy registry | 3→UNUSED | Superseded by lazy/index.jsx next/dynamic P7 (file kept) |
-| ~~ai-elements/message·conversation·suggestion.tsx~~ | Chat UI patterns | **DELETED** (folder) | User-authorized Rule #13 exception 2026-08-26 — design reference absorbed into lightweight chatbot + common/Markdown; zero live imports verified pre-delete (AssistantAi.jsx keeps commented refs only) |
+| Tabs.tsx | Tabbed switching with count chips · aria-selected + arrow-key nav | 9 | ✅ **P15 LIVE in Projects** (moved here from watermelon; Rule #14 refactored: token classes, demos commented, keyboard nav, filter tabs derive from TAG_META + live counts) |
+| Markdown.jsx | Unified markdown renderer (AI + Project + Writing layers) | 9 | ✅ **P17b LIVE** — Streamdown@2.5, Shiki highlighting, ChatLink internal/external, streamdown:incomplete-link fallback; accessible contrast for chat inline-code |
+| OptimizedImage.jsx | next/image wrapper · neutral blur · Skeleton fallback | 9 | ✅ **P07 LIVE** (moved ui→common P07b; IconPhotoOff fallback; Skeleton underlay) |
+| Skeleton.jsx | Shared pulse primitive · shape fallbacks | 9 | ✅ **P07 LIVE** |
+| ViewOnMap.tsx | Location map block · modal-portal to body | 8 | ✅ **P12bc INTEGRATED** in About CTA row (Rule #14 refactored: gold token gradient, IconIcon set, rounded-lg) |
+| NumberSlider.tsx | Interactive number range control | 8 | ✅ **P12bc INTEGRATED** in About (drives GitHub heatmap week range 24–44 wks; debounced 350ms; gold token gradient; strokeWidth-1.5 icons) |
+| CodeBlock.jsx | Streamdown static-mode Shiki block (mac-dots header + copy btn) | 9 | ✅ **P17c LIVE** in mdx-components pre — supersedes deleted docs/CodeBlock.jsx |
+| ContentCarousel.jsx | Embla-carousel shell (scroll-reveal wrapped) | 8 | ✅ **LIVE** — used by Writings.jsx and SimilarContent.jsx |
+| lazy.jsx | React.lazy registry | 3→UNUSED | Superseded by `components/lazy/index.jsx` next/dynamic P22 (file kept Rule #13) |
+| ExtendedLink.jsx | Custom link wrapper | 3→UNUSED | Replaced by NavLinkP21 (file kept Rule #13) |
+
+---
 
 ## components/docs/ — reading-experience layer (user-built P16 era)
 
+> **mdx-components.jsx note:** `mdx-components.jsx` (project root) is a re-export wrapper that imports `{ mdxCustomComponents }` from `components/docs/mdx-custom-components.jsx`. The real live map is `components/docs/mdx-custom-components.jsx`.
+
 | Component | What it does | Used in | Score | Disposition |
 |-----------|-------------|---------|-------|-------------|
-| ~~CodeBlock.jsx~~ | Pre-wrapper w/ mac-dots header, copy btn — NO highlighting | mdx-components pre | — | **DELETED** (user-authorized Rule #13 exception 2026-08-26) — superseded by `common/CodeBlock.jsx` = Streamdown static-mode Shiki block |
-| TableOfContents.jsx | IO scrollspy TOC, mobile collapse, back-to-top/share | ReadingLayout ×2 | 8 | Keep; token polish queued (17d) |
-| ~~ReadingProgressBar.jsx~~ | Scroll-progress bar | DocsTopBar | — | **DELETED** (user decision): banned scroll-listener + width animation; position communicated by TOC/scrollbar |
+| mdx-custom-components.jsx | Real MDX renderer map (live implementation) | mdx-components.jsx re-export | 9 | Keep; imports from here globally |
+| ~CodeBlock.jsx~ | Pre-wrapper w/ mac-dots header · NO highlighting | OLD mdx-components pre | — | **DELETED** (P17c user-authorized Rule #13 exception) — superseded by `common/CodeBlock.jsx` = Streamdown Shiki block. Zero live imports verified pre-delete. |
+| TableOfContents.jsx | IO scrollspy TOC · mobile collapse · back-to-top/share | ReadingLayout ×2 | 8 | Keep; token polish queued |
 | DocsTopBar.jsx | Reading chrome: logo/breadcrumb/back/theme | ReadingLayout | 8 | Keep (intentionally distinct from TopBar) |
-| SimilarContent.jsx | Related items grid | ReadingLayout | 8 | Keep; shadow-e pass queued (17d) |
-| ZoomImage.jsx | Lightbox zoom images | mdx-components img/Image | 7 | Keep; lightbox→ui/dialog swap = candidate; aspect-video force-fix queued (17d) |
+| SimilarContent.jsx | Related items grid · house-DNA card | ReadingLayout | 8 | ✅ P17e vibe upgrade (GlowFrame + ScrollReveal stagger); shadow-e2 |
+| ZoomImage.jsx | Lightbox zoom images | mdx-components img/Image | 7 | Keep; lightbox→ui/dialog swap = candidate; aspect-video fix queued |
 | Callout.jsx | Admonitions over ui/alert | mdx-components | 9 | Keep as-is |
-| DocsComponents.jsx | Steps/MDXTabs/Cards/Kbd/FileTree authoring widgets | **ZERO consumers** (verified across all 14 MDX files) | UNUSED | **Quarantined 17c** — imports removed from mdx map, file kept (Rule #13); MDXTabs role → common/Tabs if ever needed |
+| DocsComponents.jsx | Steps/MDXTabs/Cards/Kbd/FileTree authoring widgets | **ZERO consumers** (verified across all MDX files) | UNUSED | **Quarantined P17c** — imports + map entries removed from mdx-custom-components.jsx, file kept Rule #13 |
+| ~ReadingProgressBar.jsx~ | Scroll-progress bar | ~~DocsTopBar~~ | — | **DELETED** (user decision P17c): banned scroll-listener + width animation; role replaced by TOC/scrollbar |
 
-## components/watermelon/ — PLANNED INTEGRATION (user directive: USE these)
+---
 
-> ⚠️ **Rule #14 — REFACTOR GATE:** every component below MUST be refactored before wiring in: standardize CSS classes to `@theme` tokens · comment out demo/sample content · then integrate. Never import raw.
+## components/chatbot/ — LIVE (P17/P18)
+
+| Component | What it does | Score | Disposition |
+|-----------|-------------|-------|-------------|
+| Chatbot.jsx | Custom streaming UI · focus trap · no ai SDK | 9 | ✅ **P17/P18 LIVE** in BottomDock |
+| Message.jsx | Message bubble · Markdown rendering · streamdown | 9 | ✅ **P17b LIVE** — regex renderMarkdown replaced by `<Markdown>` |
+| QuickActions.jsx | Quick-action chips (Projects/Experience/Stack/Contact) | 9 | ✅ **P17 LIVE** |
+| ChatInputForm.jsx | Client-side validation · character counter · rate-limit display · submit gating | 9 | ✅ **P17b/P18 LIVE** — Zod guard + credit system wired |
+| AutoResizeTextArea.jsx | Auto-growing textarea | 9 | ✅ **P17 LIVE** — imported by ChatInputForm |
+
+---
+
+## Root `components/`
+
+| Component | What it does | Score | Disposition |
+|-----------|-------------|-------|-------------|
+| FavoriteStack.jsx | Compact tech marquee + grid; data source retained | 7 | **Zero consumers as marquee** (P13); data reused for Hero pills; file kept |
+| TechPill.jsx | Tech logo/name pill atom | 9 | Reused in Hero, TechStack, bento meta; icon-only box widened |
+| AvatarStatus.jsx | Availability avatar chip | 9 | Hero element #1; post-P12 optimized |
+| CommandPallete.jsx | ⌘K command palette | 8 | Strict lazy island |
+| Heatmap.jsx | Contribution heatmap · lazy + cached API | 8 | Candidate visual for Writings/Activity strip; NumberSlider (in About) controls week range |
+| StatCard.jsx | Metric card | 8 | Listings/stats |
+| ContactCard.jsx | Contact info card | 8 | Contact/footer area |
+| StackedCards.jsx | **FILESYSTEM NOTE:** lives at `components/StackedCards.jsx` (root, NOT `components/animations/`). CSS-sticky deck + GSAP scrub scale-handoff | — | Reserved for a future section (not Experience) · zero consumers · file kept |
+| MasonryGrid.jsx | Masonry grid layout | — | Verify live imports (internal reference from expandable-list) · file kept |
+| Timeline.tsx | **FILESYSTEM NOTE:** lives at `components/Timeline.tsx` (root). NOT `components/21st/Timeline.tsx` (that path does not exist) | 8 | ✅ **P14 LIVE in Experience** (Rule #14 refactored: motion/react · tokens · scaleY transform-only spine · ResizeObserver · reduced-motion) |
+
+---
+
+## components/watermelon/ — INTEGRATED
+
+> Rule #14: components refactored before wiring in. ViewOnMap and NumberSlider now live in `components/common/`.
 
 | Component | What it does | Proposed fit | Phase |
 |-----------|-------------|--------------|-------|
-| Tabs.tsx | ✅ **P15 LIVE in Projects** (user moved to `components/common/Tabs.tsx`; Rule #14 refactored: token classes, demos commented, keyboard nav, count chips). Filter tabs derive from TAG_META + live counts; grid carries dynamic `tabpanel-{activeTab}` id so aria-controls resolves |
-| JournalNavigation.tsx | Journal-style prev/next nav | Writings section navigation | P17 |
-| ComposeEmail.tsx | Email compose widget | Contact composer in footer area | P21 |
-| ViewOnMap.tsx | Location map block | Location near contact/footer | P21 |
-| NumberSlider.tsx | Interactive number slider | Filter/stat control (optional) | Candidate P16/P17 |
+| Tabs.tsx | ✅ **P15 LIVE in Projects** — moved to `components/common/Tabs.tsx`; Rule #14 refactored: token classes, demos commented, keyboard nav, count chips, aria-controls | Projects section | ✅ P15 |
+| JournalNavigation.tsx | Journal-style prev/next nav | Writings section navigation | P21 candidate |
+| ComposeEmail.tsx | Email compose widget | Contact composer in footer area | P21 candidate |
+| ViewOnMap.tsx | ✅ **P12bc INTEGRATED in About** — moved to `components/common/ViewOnMap.tsx`; portaled to body; Rule #14 refactored | About CTA row | ✅ P12 |
+| NumberSlider.tsx | ✅ **P12bc INTEGRATED in About** — moved to `components/common/NumberSlider.tsx`; drives GitHub heatmap week range; Rule #14 refactored | About band (heatmap control) | ✅ P12 |
 
-## components/21st/ — KEPT WITH PURPOSE (user directive)
-
-> ⚠️ **Rule #14 — REFACTOR GATE:** same as watermelon — token-standardize classes, comment out demos, then integrate.
-
-| Component | Purpose |
-|-----------|---------|
-| PricingCard.tsx | **Style DNA source** for new minimal ProjectCard (P16) — extract aesthetic, build `ProjectCard.jsx` |
-| Timeline.tsx | ✅ **P14 LIVE in Experience** (Rule #14 refactored: motion/react · tokens · scaleY transform-only spine · ResizeObserver · demo header removed · reduced-motion static) |
+---
 
 ## components/layouts/
 
 | Component | Score | Disposition |
 |-----------|-------|-------------|
-| ProjectsBento.tsx | 5 | Current version NOT the actual bento → **P16 rebuild** as true asymmetric bento iterating ALL 8 projects incl. in-progress status |
+| ProjectsBento.tsx | 5 | **P16 rebuild** — true asymmetric bento iterating ALL 8 projects incl. in-progress status |
+
+---
 
 ## app/ infrastructure
 
 | File | Score | Disposition |
 |------|-------|-------------|
 | layout.tsx | 8 | P6: providers, Analytics, SpeedInsights, WebVitals, dual themeColor (stays .tsx — Next root convention) |
-| globals.css | 9 | Token injection P4, keyframes P9, seamless masks |
+| globals.css | 9 | Token injection P4, keyframes P9, seamless masks, reveal system, ambient-orb block removed P08d |
 | loading.jsx / error.jsx / not-found.jsx | 9 | Polish during relevant passes |
-| sitemap.ts / robots.ts / manifest.ts | 9 | Add dynamic MDX slugs |
+| sitemap.ts / robots.ts / manifest.ts | 9 | Dynamic MDX slugs |
 | api/github/route.ts | 8 | Cache headers pass |
 
 ---
@@ -165,8 +216,9 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Cluster | Members | Resolution |
 |---------|---------|-----------|
 | Dock systems | BottomDock · dock.tsx · MagneticDock.tsx | ✅ RESOLVED P10 Option B: dock.tsx wins (live evidence); MagneticDock UNUSED (kept) |
-| Scroll rails | ScrollRail · GSAPScrollRail · tracing-beam · 21st/Timeline · GSAPHorizontalScroll | ✅ P14: Timeline = Experience spine; ScrollRail = Credentials only (height→scaleY conversion = P21 candidate); GSAPScrollRail UNUSED; tracing-beam = Writings candidate (P17) |
+| Scroll rails | ScrollRail (live in Credentials) · GSAPScrollRail · tracing-beam · Timeline · HorizontalScroll | ✅ P14: Timeline = Experience spine; ScrollRail = Credentials only (height→scaleY conversion = P21 candidate); GSAPScrollRail UNUSED; tracing-beam = Writings candidate (P21); HorizontalScroll = TechStack engine |
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
-| Marquees | marquee.tsx (via FavoriteStack, TechStack?) | Page budget ≤1 post-P14 |
+| Marquees | FavoriteStack (zero marquee consumers, data source kept) · TechStack shade cards | Page budget ≤1 post-P14 |
 | Chat stacks | AssistantAi (UNUSED, kept) · ai-elements (DELETED 2026-08-26) → chatbot/* + common/Markdown | ✅ chatbot/* LIVE; AssistantAi swap completes at P18 |
+| mdx exports | mdx-components.jsx (root re-export) · mdx-custom-components.jsx (docs directory, live implementation) | ✅ Resolved: root file re-exports from docs/mdx-custom-components.jsx |

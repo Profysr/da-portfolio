@@ -1,85 +1,124 @@
-# React + TypeScript + Vite
+# Bilal Ahmad — Data Engineer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Engineer portfolio for recruiters, technical leads, and collaborators — editorial-luxury language, GSAP motion-first, WCAG AA.
 
-## 🚀 Integrations & Documentation
+**Live at:** [`bilalahmad.dev`](https://bilalahmad.dev)
 
-- **GitHub API Integration**: Dynamic GitHub statistics (repo counts, stars, contribution heatmaps) are fetched securely via a Vercel Serverless Function (`/api/github`). For setup, architecture, and deployment instructions, see [GITHUB_Integration.md](file:///c:/Users/mprof/OneDrive/Desktop/da-portfolio/GITHUB_Integration.md).
+---
 
-Currently, two official plugins are available:
+## 📑 Sections
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Section | Content |
+|---------|---------|
+| **Hero** | Avatar status chip · kinetic typewriter headline · social links · magnetic CTA |
+| **About** | Editorial-split bio · DoubleBezel portrait · NumberTicker stats · GitHub rhythm · NumberSlider heatmap control |
+| **TechStack** | GSAP dual-dimensional horizontal scroller · shade-differentiated cards (5‑category palette) |
+| **Experience** | Pinned scroll stories · scale‑down spine · ResizeObserver · one‑shot glow |
+| **Projects** | Asymmetric bento (all 8 incl. in-progress) · PricingCard‑inspired minimal cards · BorderBeam hover · ContinuousTabs |
+| **Credentials** | Education only · StatCard listings · certs/awards commented out in data |
+| **Writings** | MDX articles · tracing-beam spine · JournalNavigation · TableOfContents |
+| **FAQ** | Accordion island · lazy client component |
+| **Chatbot** | RAG-powered AI · Groq primary → Google fallback · Upstash Vector · quick chips |
 
-### Generate a GitHub Personal Access Token (Optional but Recommended)
-1. Go to **GitHub -> Settings -> Developer Settings -> Personal Access Tokens (Fine-grained tokens or Tokens classic)**.
-2. Generate a read-only token (Scope: `public_repo` or `read:user`).
+---
 
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🗂️ Component Architecture
 
 ```
+app/
+├── (home)/_components/      Hero · About · TechStack · Experience · Projects · Credentials · Writings · FAQ
+├── (projects)/[...slug]/    ProjectContent · ReadingLayout · JSON-LD SoftwareApplication
+├── (writing)/[...slug]/     WritingContent · ReadingLayout · JSON-LD Article · TOC
+├── api/
+│   ├── chat/route.ts        Edge runtime · Groq→Google fallback · Upstash Vector RAG · Zod guard
+│   ├── github/route.ts      Vercel serverless · GitHub API with cache headers
+│   └── revalidate/route.ts  ISR revalidation endpoint
+├── globals.css              @theme inline token wiring (colors, spacing, typography, effects)
+├── layout.tsx               root layout · Providers · Analytics · SpeedInsights · dual themeColor
+├── providers.jsx            next-themes (class strategy · suppressHydrationWarning)
+└── [og]/route.jsx           Dynamic OG images 1200×630 (3 templates)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+components/
+├── ui/                      shadcn primitives + animation/scroll/scan engines
+├── common/                  Tabs · Markdown · OptimizedImage · Skeleton · CodeBlock · ContentCarousel
+├── chatbot/                 Chatbot · Message · QuickActions · ChatInputForm
+├── docs/                    TableOfContents · DocsTopBar · SimilarContent · ZoomImage · Callout
+├── layout/                  HomeLayout · TopBar · BottomDock · Footer · ReadingLayout · Section
+├── watermelon/              JournalNavigation · ComposeEmail (Tabs/ViewOnMap/NumberSlider moved to common/)
+└── *.jsx                    FavoriteStack · TechPill · AvatarStatus · Heatmap · StatCard · ContactCard
 ```
+
+---
+
+## 🎨 Design System
+
+Three-layer token architecture (CSS files, self-contained `@theme inline` per file):
+
+| Layer | File | Contents |
+|-------|------|----------|
+| `colors.css` | Semantic light/dark maps · pastel family · sidebar/chart aliases |
+| `typography.css` | Font stacks (`--font-stack-*`) · fluid clamp scale |
+| `spacing.css` | Radius (DEFAULT 4px) · section rhythm · gutter spacing |
+| `effects.css` | Elevation shadows (e1–e5) · motion easings · spotlight vars |
+
+**Taste profile:** editorial-luxury · warm cream `#FDFBF7` · gold accent `#EBC429` · reverse-animated entrances · lower roundness · tighter spacing · multi-hue tint system for card categories.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js (App Router, Edge runtime)
+- **Runtime:** React 19 · Server Components + client islands
+- **Styling:** Tailwind CSS v4 — `@theme inline` namespace tokens
+- **Animation:** Motion (Framer Motion) · GSAP (ScrollTrigger, pin-scrub)
+- **Content:** MDX + Streamdown@2.5 (Shiki highlighting) · Fumadocs-MDX
+- **Chat:** Groq `openai/gpt-oss-120b` primary · Google `gemini-2.0-flash` fallback · Upstash Vector RAG
+- **Analytics:** @vercel/analytics · @vercel/speed-insights · WebVitals
+- **UI primitives:** shadcn/ui (Radix + Tailwind)
+- **Deploy:** Vercel (ISR · edge · dynamic OG)
+
+---
+
+## ♿ Accessibility
+
+- WCAG AA contrast on all token pairs (validated Phase 4 + Phase 21 sweep)
+- Full keyboard paths: nav, dock, chatbot focus trap + restore, ⌘K palette
+- ARIA live regions for chatbot streaming; labels on all icon buttons
+- `prefers-reduced-motion` enforced globally (CSS gate + JS guards)
+- No window scroll listeners — IO / Motion useScroll / GSAP ScrollTrigger only
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# Install
+npm install
+
+# Environment
+cp .env.example .env.local
+# Required: DATABASE_URL, GROQ_API_KEY, GOOGLE_GENERATIVE_AI_API_KEY, UPSTASH_VECTOR_REST_URL, UPSTASH_VECTOR_REST_TOKEN, UPLOADTHING_SECRET, UPLOADTHING_APP_ID
+
+# Dev server
+npm run dev
+
+# Build
+npm run build
+```
+
+---
+
+## 📋 Documentation Map
+
+| Concern | File |
+|---------|------|
+| Full component audit | `COMPONENTS_MAP.md` |
+| 24-phase build plan | `ROADMAP.md` |
+| Sitemap / token system / design direction | `ARCHITECTURE.md` |
+| Testing standards / contribution guide | `CONTRIBUTING.md` |
+
+---
+
+## 📄 License
+
+MIT — see `LICENSE`
