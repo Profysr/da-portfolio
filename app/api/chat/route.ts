@@ -1,9 +1,8 @@
-import { streamText } from "ai";
+import { streamText, toTextStream, createTextStreamResponse } from "ai";
 import { google } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import { Index } from "@upstash/vector";
 
-export const runtime = "nodejs";
 export const maxDuration = 30;
 
 function getIndex() {
@@ -23,41 +22,39 @@ Context:
 ${context}`;
 }
 
-async function tryGroqStream(messages: any[], context: string) {
-  return streamText({
-    model: groq("llama-3.3-70b-versatile"),
+// function buildSourcesHeader(matches: Array<{ metadata?: Record<string, unknown>; data?: string }>) {
+//   const sources = matches
+//     ?.map((m) => ({
+//       title: m.metadata?.title,
+//       heading: m.metadata?.heading,
+//       url: m.metadata?.url,
+//       category: m.metadata?.category,
+//     }))
+//     .slice(0, 3) || [];
+//   return JSON.stringify(sources);
+// }
+
+async function tryModelStream(model: any, messages: any[], context: string) {
+  const result = streamText({
+    model,
     system: getSystemPrompt(context),
     messages,
-  }).toTextStreamResponse();
-}
-
-async function tryGoogleStream(messages: any[], context: string) {
-  return streamText({
-    model: google("gemini-2.5-flash"),
-    system: getSystemPrompt(context),
-    messages,
-  }).toTextStreamResponse();
-}
-
-function buildSourcesHeader(matches: Array<{ metadata?: Record<string, unknown>; data?: string }>) {
-  const sources = matches
-    ?.map((m) => ({
-      title: m.metadata?.title,
-      heading: m.metadata?.heading,
-      url: m.metadata?.url,
-      category: m.metadata?.category,
-    }))
-    .slice(0, 3) || [];
-  return JSON.stringify(sources);
+    temperature: 0.7,
+  });
+  return createTextStreamResponse({
+    stream: toTextStream({ stream: result.stream }),
+  });
 }
 
 export async function POST(req: Request) {
   try {
+    // 1- Extracting the message
     const { messages } = (await req.json()) as { messages: any[] };
     if (!messages?.length) {
       return new Response("No messages", { status: 400 });
     }
 
+    // 2- Ask the upstash for the top 3 match indexes
     const userQuery = messages[messages.length - 1].content;
 
     const matches = await getIndex().query({
@@ -67,27 +64,41 @@ export async function POST(req: Request) {
       includeData: true,
     });
 
+    // 3- Parsing the context and adding up recent 6 messages with the built context for better results
     const context =
       matches
         ?.map(
           (m) =>
-            `[Source: ${m.metadata?.title} > ${m.metadata?.heading}]:\n${m.data || m.metadata?.text}`
+            `[Source: ${m.metadata?.title} > ${m.metadata?.heading}]:\n${m.data || m.metadata?.text}`,
         )
         .join("\n\n---\n\n") || "No specific vector context found.";
 
     const recentMessages = messages.slice(-6);
 
+    // 4- Send a Post Req to Groq Model
     try {
-      const response = await tryGroqStream(recentMessages, context);
-      response.headers.set("X-Sources", buildSourcesHeader(matches));
+      const response = await tryModelStream(
+        groq("openai/gpt-oss-120b"),
+        recentMessages,
+        context,
+      );
+      // response.headers.set("X-Sources", buildSourcesHeader(matches));
       return response;
     } catch (groqErr: unknown) {
-      console.warn("Groq failed, falling back to Google:", (groqErr as Error).message);
+      console.warn(
+        "Groq failed, falling back to Google:",
+        (groqErr as Error).message,
+      );
     }
-
+    
+    // 5- Using Gemini as a Fallback Model
     try {
-      const response = await tryGoogleStream(recentMessages, context);
-      response.headers.set("X-Sources", buildSourcesHeader(matches));
+      const response = await tryModelStream(
+        google("gemini-2.5-flash"),
+        recentMessages,
+        context,
+      );
+      // response.headers.set("X-Sources", buildSourcesHeader(matches));
       return response;
     } catch (googleErr: unknown) {
       console.error("Google failed:", (googleErr as Error).message);
@@ -95,7 +106,7 @@ export async function POST(req: Request) {
 
     return new Response("FALLBACK", {
       status: 503,
-      headers: { "X-Sources": "[]" },
+      // headers: { "X-Sources": "[]" },
     });
   } catch (err: unknown) {
     console.error("Chat route error:", (err as Error).message);

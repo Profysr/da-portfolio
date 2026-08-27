@@ -118,7 +118,7 @@ function getExperienceChunks() {
       chunks.push({
         text: text.trim(),
         metadata: {
-          url: "/experience",
+          url: "/",
           title: `${role.title} — ${exp.company}`,
           heading: "Experience",
           category: "experience",
@@ -136,7 +136,7 @@ function getSkillsChunks() {
     chunks.push({
       text: `Skill Group: ${group.category}\nTools: ${names}`,
       metadata: {
-        url: "/skills",
+        url: "/",
         title: group.category,
         heading: "Skills",
         category: "skills",
@@ -147,7 +147,7 @@ function getSkillsChunks() {
   chunks.push({
     text: `Favorite Stack: ${favNames}\n${favoriteStack.stack}`,
     metadata: {
-      url: "/skills",
+      url: "/",
       title: "Favorite Stack",
       heading: "Skills",
       category: "skills",
@@ -232,7 +232,7 @@ function getBotKnowledgeChunks() {
   return botKnowledge.map((text, i) => ({
     text,
     metadata: {
-      url: "/about",
+      url: "#about",
       title: "Profile Knowledge",
       heading: `Knowledge ${i + 1}`,
       category: "profile",

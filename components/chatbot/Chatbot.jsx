@@ -16,7 +16,6 @@ import {
   IconArrowUp,
   IconLoader2,
   IconCheck,
-  IconAlertTriangle,
 } from "@tabler/icons-react";
 import { Message, WelcomeMessage } from "./Message";
 import { QuickActions } from "./QuickActions";
@@ -49,9 +48,10 @@ function ChatHeader() {
 }
 
 // ============================================================================
-// COMPONENT: SourcesChips (renders clickable source links)
+// COMPONENT: SourcesChips (renders clickable source links) — DISABLED
 // ============================================================================
 
+/*
 function SourcesChips({ sources }) {
   if (!sources?.length) return null;
   return (
@@ -71,6 +71,7 @@ function SourcesChips({ sources }) {
     </div>
   );
 }
+*/
 
 // ============================================================================
 // COMPONENT: Message (enhanced with sources)
@@ -86,16 +87,16 @@ function EnhancedMessage({ content, role, isStreaming, sources }) {
     >
       <div
         className={cn(
-          "relative max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+          "relative max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed",
           role === "user"
             ? "bg-primary text-primary-foreground rounded-tr-sm"
             : "bg-muted text-foreground rounded-tl-sm",
         )}
       >
         <Message content={content} role={role} isStreaming={isStreaming} />
-        {role === "assistant" && !isStreaming && (
+        {/* {role === "assistant" && !isStreaming && (
           <SourcesChips sources={sources} />
-        )}
+        )} */}
       </div>
     </div>
   );
