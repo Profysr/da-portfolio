@@ -18,13 +18,13 @@ import {
   IconFileText,
 } from "@tabler/icons-react";
 
-export function ProjectContent({
+const ProjectContent = ({
   meta,
   changelog = [],
   toc = [],
   similarProjects = [],
   children,
-}) {
+}) => {
   const formattedDate = meta?.date
     ? new Date(meta.date).toLocaleDateString("en-US", {
         year: "numeric",
@@ -48,7 +48,10 @@ export function ProjectContent({
       {/* Metadata Badges */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         {meta.category && (
-          <Badge variant="outline" className="text-[11px] uppercase font-mono tracking-wider px-2.5 py-0.5">
+          <Badge
+            variant="outline"
+            className="text-[11px] uppercase font-mono tracking-wider px-2.5 py-0.5"
+          >
             {meta.category}
           </Badge>
         )}
@@ -58,7 +61,10 @@ export function ProjectContent({
           </Badge>
         )}
         {meta.access && (
-          <Badge variant={accessVariant} className="text-[11px] px-2.5 py-0.5 font-mono">
+          <Badge
+            variant={accessVariant}
+            className="text-[11px] px-2.5 py-0.5 font-mono"
+          >
             {meta.access}
           </Badge>
         )}
@@ -222,8 +228,12 @@ export function ProjectContent({
                     <ul className="space-y-2 text-muted-foreground text-xs sm:text-sm pt-2">
                       {entry.items.map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <span className="text-primary font-bold shrink-0">•</span>
-                          <span className="leading-relaxed text-foreground/90">{item}</span>
+                          <span className="text-primary font-bold shrink-0">
+                            •
+                          </span>
+                          <span className="leading-relaxed text-foreground/90">
+                            {item}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -236,4 +246,6 @@ export function ProjectContent({
       )}
     </ReadingLayout>
   );
-}
+};
+
+export default ProjectContent

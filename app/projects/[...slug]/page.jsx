@@ -1,6 +1,7 @@
 import { projectSource } from "@/lib/source";
 import { notFound } from "next/navigation";
-import { ProjectContent } from "../_components/ProjectContent";
+import ProjectContent from "../_components/ProjectContent";
+import { mdxCustomComponents } from "@/components/docs/mdx-custom-components";
 import {
   generateProjectSchema,
   generateBreadcrumbSchema,
@@ -88,7 +89,9 @@ export default async function ProjectPage({ params }) {
       let score = 0;
       if (p.data.category === currentCategory) score += 3;
       if (p.data.industry === page.data.industry) score += 2;
-      const sharedTech = (p.data.tech || []).filter((t) => currentTech.has(t)).length;
+      const sharedTech = (p.data.tech || []).filter((t) =>
+        currentTech.has(t),
+      ).length;
       score += sharedTech;
 
       return {
@@ -97,15 +100,18 @@ export default async function ProjectPage({ params }) {
         description: p.data.description,
         date: p.data.date,
         category: p.data.category,
-        industry: p.data.industry,
+        industry: page.data.industry,
         access: p.data.access,
         tech: p.data.tech || [],
         thumbnail: p.data.thumbnail,
         score,
       };
     })
-    .sort((a, b) => b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0))
-    .slice(0, 3);
+    .sort(
+      (a, b) =>
+        b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0),
+    )
+    .slice(0, 6);
 
   const meta = {
     title: page.data.title,
@@ -163,7 +169,7 @@ export default async function ProjectPage({ params }) {
         toc={toc}
         similarProjects={similarProjects}
       >
-        <MDXContent />
+        <MDXContent components={mdxCustomComponents} />
       </ProjectContent>
     </>
   );

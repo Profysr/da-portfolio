@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/Heading";
 import { ReadingLayout } from "@/components/layout/ReadingLayout";
 import { personal } from "@/data/personal";
-import { IconCalendar, IconClock } from "@tabler/icons-react";
+import { IconCalendar, IconClock, IconTag } from "@tabler/icons-react";
 
 export function WritingContent({
   meta,
@@ -22,18 +22,18 @@ export function WritingContent({
     : null;
 
   const header = (
-    <div>
-      {/* Tags */}
+    <div className="space-y-4">
+      {/* Tags Row */}
       {meta?.tags && meta.tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 mb-4">
+        <div className="flex flex-wrap items-center gap-2">
           {meta.tags.map((tag) => (
-            <Badge
+            <span
               key={tag}
-              variant="outline"
-              className="text-[11px] font-mono px-2.5 py-0.5 border-border/80 bg-surface-muted/50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-primary/25 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary tracking-wide"
             >
-              {tag}
-            </Badge>
+              <IconTag className="size-3 opacity-80" />
+              <span>{tag}</span>
+            </span>
           ))}
         </div>
       )}
@@ -42,54 +42,56 @@ export function WritingContent({
       <Heading
         variant="gradient"
         as="h1"
-        className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight"
+        className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] text-balance text-left"
       >
         {meta?.title}
       </Heading>
 
       {/* Description */}
       {meta?.description && (
-        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6 font-normal max-w-3xl">
+        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed font-normal text-pretty">
           {meta.description}
         </p>
       )}
 
-      {/* Author & Publication Meta */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-border/60 text-xs sm:text-sm text-muted-foreground">
-        {/* Author Chip */}
+      {/* Author & Publication Meta Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-border/70">
+        {/* Author Info */}
         <div className="flex items-center gap-3">
-          <div className="relative size-9 rounded-full overflow-hidden border border-border/80 bg-surface-muted shrink-0">
+          <div className="relative size-10 rounded-full overflow-hidden border border-border/80 bg-surface-muted shrink-0 shadow-xs">
             <Image
               src={personal.avatar}
               alt={personal.name}
               fill
-              sizes="36px"
+              sizes="40px"
               className="object-cover"
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-foreground text-xs sm:text-sm">
-              {personal.name}
-            </span>
-            <span className="text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-foreground text-sm">
+                {personal.name}
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground">
               {personal.tagline}
             </span>
           </div>
         </div>
 
         {/* Date & Read Time */}
-        <div className="flex items-center gap-3 sm:gap-4 text-xs">
+        <div className="flex items-center gap-3 sm:gap-4 text-xs font-mono text-muted-foreground">
           {formattedDate && (
-            <span className="inline-flex items-center gap-1.5">
-              <IconCalendar className="size-3.5 text-primary/80" />
-              {formattedDate}
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1">
+              <IconCalendar className="size-3.5 text-primary" />
+              <span>{formattedDate}</span>
             </span>
           )}
 
           {meta?.readTime && (
-            <span className="inline-flex items-center gap-1.5">
-              <IconClock className="size-3.5 text-primary/80" />
-              {meta.readTime} read
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1">
+              <IconClock className="size-3.5 text-primary" />
+              <span>{meta.readTime} read</span>
             </span>
           )}
         </div>
@@ -110,3 +112,5 @@ export function WritingContent({
     </ReadingLayout>
   );
 }
+
+export default WritingContent;

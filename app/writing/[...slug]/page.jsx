@@ -1,6 +1,7 @@
 import { writingSource } from "@/lib/source";
 import { notFound } from "next/navigation";
-import { WritingContent } from "../_components/WritingContent";
+import WritingContent from "../_components/WritingContent";
+import { mdxCustomComponents } from "@/components/docs/mdx-custom-components";
 import {
   generateBlogPostingSchema,
   generateBreadcrumbSchema,
@@ -48,10 +49,9 @@ export default async function WritingPage({ params }) {
   const page = writingSource.getPage(slugParam);
 
   if (!page) notFound();
-
+  // Extracting all the sources in the memory and filtering similar posts
   const allPages = writingSource.getPages();
   const currentTags = new Set(page.data.tags || []);
-
   const similarPosts = allPages
     .filter((p) => p.slugs.join("/") !== slugStr)
     .map((p) => {
@@ -118,7 +118,7 @@ export default async function WritingPage({ params }) {
         toc={toc}
         similarPosts={similarPosts}
       >
-        <MDXContent />
+        <MDXContent components={mdxCustomComponents} />
       </WritingContent>
     </>
   );

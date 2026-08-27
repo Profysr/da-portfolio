@@ -35,6 +35,29 @@
   border: 1px solid var(--border) !important;
 }
 
+/* ── Article Body Reading Typography ── */
+.article-body {
+  max-width: 100%;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--foreground);
+}
+
+.article-body > * + * {
+  margin-top: 1.25rem;
+}
+
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  scroll-margin-top: 6rem;
+}
+
+.article-body pre {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
 /* ── BASE RESETS ──────────────────────────────────────────────────────── */
 html {
   font-family: var(--font-stack-sans);

@@ -22,15 +22,10 @@ export function ReadingLayout({
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Custom Hero Header Slot */}
-        {header && (
-          <>
-            <header className="max-w-4xl mb-10 sm:mb-12">{header}</header>
-            <div className="h-px bg-border/70 mb-10" />
-          </>
-        )}
+        {header && <div className="mb-10 sm:mb-12">{header}</div>}
 
         {/* 2-Column Responsive Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Content Column */}
           <div className="lg:col-span-8 xl:col-span-8 min-w-0 max-w-full">
             {/* Mobile TOC */}
@@ -50,7 +45,7 @@ export function ReadingLayout({
           </div>
 
           {/* Desktop Right Rail: Custom Sidebar Widgets + Table of Contents */}
-          <aside className="hidden lg:block lg:col-span-4 xl:col-span-4 pl-4 border-l border-border/40 space-y-6">
+          <aside className="hidden lg:block lg:col-span-4 xl:col-span-4 pl-4 border-l border-border space-y-6">
             {sidebar}
             <TableOfContents toc={toc} />
           </aside>
