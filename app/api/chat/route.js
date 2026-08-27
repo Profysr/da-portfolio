@@ -40,18 +40,21 @@ ${context}`;
  * Serializes vector retrieval metadata into JSON format for UI source chips.
  * @param {Array} matches
  * @returns {string}
+ * @deprecated Sources disabled per requirements - commented out
  */
 function buildSourcesHeader(matches) {
-  const sources =
-    matches
-      ?.map((m) => ({
-        title: m.metadata?.title,
-        heading: m.metadata?.heading,
-        url: m.metadata?.url,
-        category: m.metadata?.category,
-      }))
-      .slice(0, 3) || [];
-  return JSON.stringify(sources);
+  // Sources disabled per requirements - return empty array
+  // const sources =
+  //   matches
+  //     ?.map((m) => ({
+  //       title: m.metadata?.title,
+  //       heading: m.metadata?.heading,
+  //       url: m.metadata?.url,
+  //       category: m.metadata?.category,
+  //     }))
+  //     .slice(0, 3) || [];
+  // return JSON.stringify(sources);
+  return "[]";
 }
 
 /**
@@ -64,14 +67,13 @@ function getClientIp(req) {
 }
 
 /**
- * Executes model streaming and attaches X-Sources response headers.
+ * Executes model streaming.
  * @param {any} model
  * @param {Array} messages
  * @param {string} context
- * @param {string} sourcesHeader
  * @returns {Promise<Response>}
  */
-async function tryModelStream(model, messages, context, sourcesHeader) {
+async function tryModelStream(model, messages, context) {
   const result = streamText({
     model,
     system: getSystemPrompt(context),
@@ -79,12 +81,9 @@ async function tryModelStream(model, messages, context, sourcesHeader) {
     temperature: 0.7,
   });
 
-  const response = createTextStreamResponse({
+  return createTextStreamResponse({
     stream: toTextStream({ stream: result.stream }),
   });
-
-  response.headers.set("X-Sources", sourcesHeader);
-  return response;
 }
 
 // ============================================================================
@@ -154,7 +153,8 @@ export async function POST(req) {
       includeData: true,
     });
 
-    const sourcesHeader = buildSourcesHeader(matches);
+    // Sources disabled per requirements - X-Sources header not needed
+    // const sourcesHeader = buildSourcesHeader(matches);
     const context =
       matches
         ?.map(
@@ -187,7 +187,6 @@ export async function POST(req) {
         groq("openai/gpt-oss-120b"),
         recentMessages,
         context,
-        sourcesHeader,
       );
     } catch (groqErr) {
       console.warn(
@@ -204,7 +203,6 @@ export async function POST(req) {
         google("gemini-2.0-flash"),
         recentMessages,
         context,
-        sourcesHeader,
       );
     } catch (googleErr) {
       console.error("Google provider failed:", googleErr.message);
@@ -215,7 +213,7 @@ export async function POST(req) {
     // ------------------------------------------------------------------------
     return new Response("FALLBACK", {
       status: 503,
-      headers: { "X-Sources": "[]" },
+      // headers: { "X-Sources": "[]" }, // Sources disabled
     });
   } catch (err) {
     console.error("Chat route unhandled execution error:", err.message);

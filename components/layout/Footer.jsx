@@ -153,7 +153,7 @@ export const Footer = () => {
   return (
     <TooltipProvider delayDuration={0}>
       <Section noFade>
-        <footer className="w-full font-sans space-y-4 bg-surface">
+        <footer className="w-full font-sans space-y-4">
           {/* Unified Primary Card */}
           <div className="rounded-lg bg-surface border border-border p-6 sm:p-10 flex flex-col items-center text-center gap-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/10 text-primary text-xs font-medium">

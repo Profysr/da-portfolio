@@ -56,7 +56,7 @@ export function Message({ content, role, isStreaming }) {
   return (
     <div
       className={cn(
-        "group flex gap-2.5 w-full max-w-[85%] items-start animate-fade-in",
+        "group flex gap-1 w-full items-start animate-fade-in",
         isUser ? "flex-row-reverse ml-auto" : "flex-row mr-auto",
       )}
       role={isUser ? undefined : "log"}
@@ -66,10 +66,10 @@ export function Message({ content, role, isStreaming }) {
 
       <div
         className={cn(
-          "relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words transition-all shadow-xs",
+          "relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed wrap-break-word transition-all shadow-xs",
           isUser
             ? "bg-primary text-primary-foreground font-medium rounded-tr-xs"
-            : "bg-surface border border-border/60 text-foreground rounded-tl-xs",
+            : "bg-background border border-border text-foreground rounded-tl-xs",
         )}
       >
         {isUser ? (
@@ -147,19 +147,7 @@ function EnhancedMessage({ content, role, isStreaming, sources }) {
         role === "user" ? "justify-end" : "justify-start",
       )}
     >
-      <div
-        className={cn(
-          "relative max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed",
-          role === "user"
-            ? "bg-primary text-primary-foreground rounded-tr-sm"
-            : "bg-muted text-foreground rounded-tl-sm",
-        )}
-      >
-        <Message content={content} role={role} isStreaming={isStreaming} />
-        {/* {role === "assistant" && !isStreaming && (
-          <SourcesChips sources={sources} />
-        )} */}
-      </div>
+      <Message content={content} role={role} isStreaming={isStreaming} />
     </div>
   );
 }
