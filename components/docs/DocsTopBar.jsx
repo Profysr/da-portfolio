@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import {
-  IconArrowLeft,
   IconFolderCode,
   IconArticle,
 } from "@tabler/icons-react";
@@ -29,7 +28,7 @@ export function DocsTopBar({ type = "writing", title = "" }) {
   const ParentIcon = isProject ? IconFolderCode : IconArticle;
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-xl border-b border-border/80 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-background/50 backdrop-blur-xl border-b border-border transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
         {/* Left: Logo & Breadcrumbs */}
         <div className="flex items-center gap-3 min-w-0">
@@ -63,7 +62,7 @@ export function DocsTopBar({ type = "writing", title = "" }) {
                 <>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem className="min-w-0">
-                    <BreadcrumbPage className="truncate max-w-[140px] sm:max-w-[260px] md:max-w-[380px]">
+                    <BreadcrumbPage className="truncate max-w-35 sm:max-w-65 md:max-w-95">
                       {title}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
@@ -73,19 +72,8 @@ export function DocsTopBar({ type = "writing", title = "" }) {
           </Breadcrumb>
         </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <Link
-            href={parentHref}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/70 bg-surface text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all duration-200"
-          >
-            <IconArrowLeft className="size-3.5" />
-            <span className="hidden sm:inline">Back to {parentLabel}</span>
-            <span className="sm:hidden">Back</span>
-          </Link>
-
-          <div className="h-4 w-px bg-border/60 mx-0.5 hidden sm:block" />
-
+        {/* Right: Theme Switcher */}
+        <div className="flex items-center shrink-0">
           <ThemeSwitcher value={selectedTheme} onChange={(t) => setTheme(t)} />
         </div>
       </div>
