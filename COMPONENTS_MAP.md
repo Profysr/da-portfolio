@@ -118,7 +118,9 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Component | What it does | Score | Disposition |
 |-----------|-------------|-------|-------------|
 | Tabs.tsx | Tabbed switching with count chips · aria-selected + arrow-key nav | 9 | ✅ **P15 LIVE in Projects** (moved here from watermelon; Rule #14 refactored: token classes, demos commented, keyboard nav, filter tabs derive from TAG_META + live counts) |
-| Markdown.jsx | Unified markdown renderer (AI + Project + Writing layers) | 9 | ✅ **P17b LIVE** — Streamdown@2.5, Shiki highlighting, ChatLink internal/external, streamdown:incomplete-link fallback; accessible contrast for chat inline-code |
+| Markdown.jsx | AI chat markdown renderer · Streamdown + shared markdown-styles.js (chat scale) · ChatLink + inlineCode + img | Message.jsx → all AI messages | 9 | Same style engine as writing pages; only scale differs |
+| CodeBlock.jsx | MarkdownPre — extracts language from MDX className, rebuilds fenced string, feeds Streamdown static mode → Shiki highlighting + native copy/download buttons | mdx-custom-components.jsx `pre` override | 9 | ✅ **P17c LIVE**; supersedes deleted docs/CodeBlock.jsx; Streamdown handles buttons natively |
+| markdown-styles.js | ⚠️ `components/common/markdown-styles.js` — single source of truth for all markdown element styles (doc + chat scales); consumed by Markdown.jsx AND mdx-custom-components.jsx via `createMarkdownElements()` | Markdown.jsx · mdx-custom-components.jsx | — | 9 | Both AI messages and writing pages share identical base styles |
 | OptimizedImage.jsx | next/image wrapper · neutral blur · Skeleton fallback | 9 | ✅ **P07 LIVE** (moved ui→common P07b; IconPhotoOff fallback; Skeleton underlay) |
 | Skeleton.jsx | Shared pulse primitive · shape fallbacks | 9 | ✅ **P07 LIVE** |
 | ViewOnMap.tsx | Location map block · modal-portal to body | 8 | ✅ **P12bc INTEGRATED** in About CTA row (Rule #14 refactored: gold token gradient, IconIcon set, rounded-lg) |
@@ -136,15 +138,16 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 | Component | What it does | Used in | Score | Disposition |
 |-----------|-------------|---------|-------|-------------|
-| mdx-custom-components.jsx | Real MDX renderer map (live implementation) | mdx-components.jsx re-export | 9 | Keep; imports from here globally |
+| mdx-custom-components.jsx | MDX renderer map (simplified): headings w/ anchor links + img ZoomImage + Callout — all base elements pulled from shared markdown-styles.js so writing and chat render identically | `mdx-components.jsx` → all writing/project pages | — | 9 | Keep; only 3 custom overrides; Streamdown handles code blocks natively via MarkdownPre (common/CodeBlock.jsx) |
 | ~CodeBlock.jsx~ | Pre-wrapper w/ mac-dots header · NO highlighting | OLD mdx-components pre | — | **DELETED** (P17c user-authorized Rule #13 exception) — superseded by `common/CodeBlock.jsx` = Streamdown Shiki block. Zero live imports verified pre-delete. |
 | TableOfContents.jsx | IO scrollspy TOC · mobile collapse · back-to-top/share | ReadingLayout ×2 | 8 | Keep; token polish queued |
 | DocsTopBar.jsx | Reading chrome: logo/breadcrumb/back/theme | ReadingLayout | 8 | Keep (intentionally distinct from TopBar) |
 | SimilarContent.jsx | Related items grid · house-DNA card | ReadingLayout | 8 | ✅ P17e vibe upgrade (GlowFrame + ScrollReveal stagger); shadow-e2 |
 | ZoomImage.jsx | Lightbox zoom images | mdx-components img/Image | 7 | Keep; lightbox→ui/dialog swap = candidate; aspect-video fix queued |
 | Callout.jsx | Admonitions over ui/alert | mdx-components | 9 | Keep as-is |
-| DocsComponents.jsx | Steps/MDXTabs/Cards/Kbd/FileTree authoring widgets | **ZERO consumers** (verified across all MDX files) | UNUSED | **Quarantined P17c** — imports + map entries removed from mdx-custom-components.jsx, file kept Rule #13 |
+| DocsComponents.jsx | Steps/MDXTabs/Cards/Kbd/FileTree authoring widgets | — | — | UNUSED | **DELETED (2026-08-28)** — zero live imports verified across entire codebase; quarantined P17c; confirmed safe to remove |
 | ~ReadingProgressBar.jsx~ | Scroll-progress bar | ~~DocsTopBar~~ | — | **DELETED** (user decision P17c): banned scroll-listener + width animation; role replaced by TOC/scrollbar |
+| ~components/mdx-components.jsx~ | Stale duplicate 244-line MDX renderer (duplicated Heading/anchor + link + ZoomImage + Callout; imported `createMarkdownElements` from Markdown.jsx which no longer exports it; Alert/Accordion/Breadcrumb each imported twice) | Zero imports | — | **DELETED (2026-08-28)** — dead duplicate; never wired up; zero consumers; root `mdx-components.jsx` (8-line thin wrapper) is the active file |
 
 ---
 
@@ -221,4 +224,4 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
 | Marquees | FavoriteStack (zero marquee consumers, data source kept) · TechStack shade cards | Page budget ≤1 post-P14 |
 | Chat stacks | AssistantAi (UNUSED, kept) · ai-elements (DELETED 2026-08-26) → chatbot/* + common/Markdown | ✅ chatbot/* LIVE; AssistantAi swap completes at P18 |
-| mdx exports | mdx-components.jsx (root re-export) · mdx-custom-components.jsx (docs directory, live implementation) | ✅ Resolved: root file re-exports from docs/mdx-custom-components.jsx |
+| mdx exports | Root `mdx-components.jsx` (8-line thin wrapper → delegates to docs/mdx-custom-components) · `components/mdx-components.jsx` (244-line dead duplicate, **DELETED 2026-08-28**) · `components/docs/mdx-custom-components.jsx` (live map: 3 overrides — headings, links, images; base elements from shared markdown-styles.js) | ✅ Clean: root wrapper is canonical; dead duplicate removed; shared style engine via markdown-styles.js |

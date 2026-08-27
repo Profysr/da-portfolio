@@ -139,6 +139,7 @@ Special tokens:
 │   │                            ScrollRail, MagneticButton, dock, shimmer-button, etc.)
 │   ├── common/                 custom primitives: Tabs, Markdown, OptimizedImage, Skeleton,
 │   │                           CodeBlock, ViewOnMap, NumberSlider, ContentCarousel, lazy, ExtendedLink
+│   ├── common/markdown-styles.js   Shared style engine: `markdownScales.doc` + `markdownScales.chat` + `createMarkdownElements(scale)` — single source of truth for both reading pages and AI chat bubbles
 │   ├── chatbot/                Chatbot, Message, QuickActions, ChatInputForm, AutoResizeTextArea
 │   ├── lazy/                   next/dynamic registry (index.jsx) + Skeleton.jsx
 │   ├── docs/                   reading-experience layer: TableOfContents, DocsTopBar, SimilarContent,

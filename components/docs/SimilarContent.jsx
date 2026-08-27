@@ -18,7 +18,7 @@ export function SimilarContent({
   const viewAllHref = isProject ? "/#projects" : "/#writings";
 
   return (
-    <div className="mt-16 pt-10 border-t border-border/80 w-full">
+    <div className="mt-16 pt-10 border-t border-border w-full">
       <ContentCarousel
         badge={isProject ? "PROJECTS" : "WRITINGS"}
         title={sectionTitle}
