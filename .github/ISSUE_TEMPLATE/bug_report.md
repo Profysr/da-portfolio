@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report a problem with the portfolio site
 title: ''
 labels: ''
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what's broken or behaving incorrectly.
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -20,19 +20,14 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Screenshots or screen recording**
+If applicable, add screenshots or a short screen recording to help explain the problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Environment (please complete the following information):**
+ - OS: [e.g. Windows, macOS, Linux]
+ - Browser [e.g. Chrome, Firefox, Safari]
+ - Version [e.g. 122]
+ - Viewport [e.g. Desktop 1440px, Mobile 390px]
 
 **Additional context**
 Add any other context about the problem here.
