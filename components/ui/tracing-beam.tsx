@@ -25,9 +25,25 @@ export const TracingBeam = ({
   const [svgHeight, setSvgHeight] = useState(0);
 
   useEffect(() => {
-    if (contentRef.current) {
-      setSvgHeight(contentRef.current.offsetHeight);
-    }
+    if (!contentRef.current) return;
+
+    const updateHeight = () => {
+      if (contentRef.current) {
+        setSvgHeight(contentRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeight();
+    });
+
+    resizeObserver.observe(contentRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   const y1 = useSpring(
@@ -50,7 +66,7 @@ export const TracingBeam = ({
       ref={ref}
       className={cn("relative mx-auto h-full w-full", className)}
     >
-      <div className="absolute top-8 -left-11 md:-left-12 lg:-left-16">
+      <div className="hidden md:block absolute top-8 -left-8 md:-left-12 lg:-left-16 pointer-events-none">
         <motion.div
           transition={{
             duration: 0.2,
@@ -62,7 +78,7 @@ export const TracingBeam = ({
                 ? "none"
                 : "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
-          className="border-netural-200 ml-[30px] sm:ml-[31px] flex h-2.5 w-2.5 sm:h-2 sm:w-2 items-center justify-center rounded-full border shadow-sm"
+          className="border-neutral-200 ml-[30px] sm:ml-[31px] flex h-2.5 w-2.5 sm:h-2 sm:w-2 items-center justify-center rounded-full border shadow-sm"
         >
           <motion.div
             transition={{

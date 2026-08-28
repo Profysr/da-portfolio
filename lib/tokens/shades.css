@@ -1,0 +1,187 @@
+/* ── Shade card system ──────────────────────────────────────────────────
+ * Solid color tints with high-contrast paired text & luminous tinted borders.
+ * Light mode: rich chromatic tinted surfaces.
+ * Dark mode: deep vibrant jewel-toned washes with crisp text (AAA/AA contrast).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Blue */
+  --shade-blue-bg: #EEF6FF;
+  --shade-blue-text: #0C4A6E;
+  --shade-blue-border: rgba(14, 165, 233, 0.35);
+  --shade-blue-accent: #0284C7;
+
+  /* Gold / Amber */
+  --shade-gold-bg: #FEF8E7;
+  --shade-gold-text: #78350F;
+  --shade-gold-border: rgba(245, 158, 11, 0.35);
+  --shade-gold-accent: #D97706;
+
+  /* Green / Emerald */
+  --shade-green-bg: #F0FDF4;
+  --shade-green-text: #14532D;
+  --shade-green-border: rgba(34, 197, 94, 0.35);
+  --shade-green-accent: #16A34A;
+
+  /* Rose */
+  --shade-rose-bg: #FFF1F2;
+  --shade-rose-text: #881337;
+  --shade-rose-border: rgba(244, 63, 94, 0.35);
+  --shade-rose-accent: #E11D48;
+
+  /* Purple / Violet */
+  --shade-purple-bg: #FAF5FF;
+  --shade-purple-text: #581C87;
+  --shade-purple-border: rgba(168, 85, 247, 0.35);
+  --shade-purple-accent: #9333EA;
+
+  /* Cyan / Teal */
+  --shade-cyan-bg: #ECFEFF;
+  --shade-cyan-text: #164E63;
+  --shade-cyan-border: rgba(6, 182, 212, 0.35);
+  --shade-cyan-accent: #0891B2;
+
+  /* Orange */
+  --shade-orange-bg: #FFF7ED;
+  --shade-orange-text: #7C2D12;
+  --shade-orange-border: rgba(249, 115, 22, 0.35);
+  --shade-orange-accent: #EA580C;
+
+  --shade-canvas-bg: var(--surface);
+  --shade-canvas-text: var(--foreground);
+  --shade-canvas-border: var(--border);
+  --shade-canvas-accent: var(--primary);
+}
+
+.dark {
+  /* Blue */
+  --shade-blue-bg: rgba(14, 165, 233, 0.12);
+  --shade-blue-text: #E0F2FE;
+  --shade-blue-border: rgba(56, 189, 248, 0.32);
+  --shade-blue-accent: #38BDF8;
+
+  /* Gold / Amber */
+  --shade-gold-bg: rgba(245, 158, 11, 0.12);
+  --shade-gold-text: #FEF3C7;
+  --shade-gold-border: rgba(251, 191, 36, 0.32);
+  --shade-gold-accent: #FBBF24;
+
+  /* Green / Emerald */
+  --shade-green-bg: rgba(34, 197, 94, 0.12);
+  --shade-green-text: #DCFCE7;
+  --shade-green-border: rgba(74, 222, 128, 0.32);
+  --shade-green-accent: #4ADE80;
+
+  /* Rose */
+  --shade-rose-bg: rgba(244, 63, 94, 0.12);
+  --shade-rose-text: #FFE4E6;
+  --shade-rose-border: rgba(251, 113, 133, 0.32);
+  --shade-rose-accent: #FB7185;
+
+  /* Purple / Violet */
+  --shade-purple-bg: rgba(168, 85, 247, 0.12);
+  --shade-purple-text: #F3E8FF;
+  --shade-purple-border: rgba(192, 132, 252, 0.32);
+  --shade-purple-accent: #C084FC;
+
+  /* Cyan / Teal */
+  --shade-cyan-bg: rgba(6, 182, 212, 0.12);
+  --shade-cyan-text: #CFFAFE;
+  --shade-cyan-border: rgba(34, 211, 238, 0.32);
+  --shade-cyan-accent: #22D3EE;
+
+  /* Orange */
+  --shade-orange-bg: rgba(249, 115, 22, 0.12);
+  --shade-orange-text: #FFEDD5;
+  --shade-orange-border: rgba(251, 146, 60, 0.32);
+  --shade-orange-accent: #FB923C;
+
+  --shade-canvas-bg: var(--surface);
+  --shade-canvas-text: var(--foreground);
+  --shade-canvas-border: var(--border);
+  --shade-canvas-accent: var(--primary);
+}
+
+@theme inline {
+  --color-shade-blue-bg: var(--shade-blue-bg);
+  --color-shade-blue-text: var(--shade-blue-text);
+  --color-shade-blue-border: var(--shade-blue-border);
+  --color-shade-blue-accent: var(--shade-blue-accent);
+
+  --color-shade-gold-bg: var(--shade-gold-bg);
+  --color-shade-gold-text: var(--shade-gold-text);
+  --color-shade-gold-border: var(--shade-gold-border);
+  --color-shade-gold-accent: var(--shade-gold-accent);
+
+  --color-shade-green-bg: var(--shade-green-bg);
+  --color-shade-green-text: var(--shade-green-text);
+  --color-shade-green-border: var(--shade-green-border);
+  --color-shade-green-accent: var(--shade-green-accent);
+
+  --color-shade-rose-bg: var(--shade-rose-bg);
+  --color-shade-rose-text: var(--shade-rose-text);
+  --color-shade-rose-border: var(--shade-rose-border);
+  --color-shade-rose-accent: var(--shade-rose-accent);
+
+  --color-shade-purple-bg: var(--shade-purple-bg);
+  --color-shade-purple-text: var(--shade-purple-text);
+  --color-shade-purple-border: var(--shade-purple-border);
+  --color-shade-purple-accent: var(--shade-purple-accent);
+
+  --color-shade-cyan-bg: var(--shade-cyan-bg);
+  --color-shade-cyan-text: var(--shade-cyan-text);
+  --color-shade-cyan-border: var(--shade-cyan-border);
+  --color-shade-cyan-accent: var(--shade-cyan-accent);
+
+  --color-shade-orange-bg: var(--shade-orange-bg);
+  --color-shade-orange-text: var(--shade-orange-text);
+  --color-shade-orange-border: var(--shade-orange-border);
+  --color-shade-orange-accent: var(--shade-orange-accent);
+
+  --color-shade-canvas-bg: var(--shade-canvas-bg);
+  --color-shade-canvas-text: var(--shade-canvas-text);
+  --color-shade-canvas-border: var(--shade-canvas-border);
+  --color-shade-canvas-accent: var(--shade-canvas-accent);
+}
+
+/* Atomic shade-card utilities */
+.shade-card-blue {
+  background-color: var(--shade-blue-bg);
+  color: var(--shade-blue-text);
+  border-color: var(--shade-blue-border);
+}
+.shade-card-gold {
+  background-color: var(--shade-gold-bg);
+  color: var(--shade-gold-text);
+  border-color: var(--shade-gold-border);
+}
+.shade-card-green {
+  background-color: var(--shade-green-bg);
+  color: var(--shade-green-text);
+  border-color: var(--shade-green-border);
+}
+.shade-card-rose {
+  background-color: var(--shade-rose-bg);
+  color: var(--shade-rose-text);
+  border-color: var(--shade-rose-border);
+}
+.shade-card-purple {
+  background-color: var(--shade-purple-bg);
+  color: var(--shade-purple-text);
+  border-color: var(--shade-purple-border);
+}
+.shade-card-cyan {
+  background-color: var(--shade-cyan-bg);
+  color: var(--shade-cyan-text);
+  border-color: var(--shade-cyan-border);
+}
+.shade-card-orange {
+  background-color: var(--shade-orange-bg);
+  color: var(--shade-orange-text);
+  border-color: var(--shade-orange-border);
+}
+.shade-card-canvas {
+  background-color: var(--shade-canvas-bg);
+  color: var(--shade-canvas-text);
+  border-color: var(--shade-canvas-border);
+}

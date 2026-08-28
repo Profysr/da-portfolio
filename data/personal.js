@@ -1,12 +1,10 @@
 import {
+  IconClock,
+  IconFolderCode,
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
   IconMail,
-  IconClock,
-  IconFolderCode,
-  // IconActivity,
-  // IconRobot,
 } from "@tabler/icons-react";
 
 export const socials = [
@@ -17,30 +15,38 @@ export const socials = [
     label: "GitHub",
     handle: "@Profysr",
     aria: "github",
+    color: "#FFFFFF",
+    hoverColor: "#FFFFFF",
   },
   {
     platform: "linkedin",
     icon: IconBrandLinkedin,
-    url: "https://linkedin.com/in/",
+    url: "https://www.linkedin.com/in/bilalahmad072/",
     label: "LinkedIn",
     handle: "Bilal Ahmad",
     aria: "linkedin",
+    color: "#0A66C2",
+    hoverColor: "#004182",
   },
   {
     platform: "x",
     icon: IconBrandX,
-    url: "https://x.com/",
+    url: "https://x.com/_BilalAhme",
     label: "X (Twitter)",
-    handle: "@bilalahmad_dev",
+    handle: "@_BilalAhme",
     aria: "x",
+    color: "#FFFFFF",
+    hoverColor: "#FFFFFF",
   },
   {
     platform: "email",
     icon: IconMail,
-    url: "mailto:hello@da-portfolio.dev",
+    url: "mailto:bilal072ahmad@gmail.com",
     label: "Email",
-    handle: "hello@da-portfolio.dev",
+    handle: "bilal072ahmad@gmail.com",
     aria: "email",
+    color: "#EA4335",
+    hoverColor: "#D93025",
   },
 ];
 
@@ -55,7 +61,8 @@ export const personal = {
   location: "Pakistan",
   locationLabel: "Islamabad, PK → Worldwide",
   timezone: "GMT+5",
-  email: "hello@da-portfolio.dev",
+  githubUsername: "Profysr",
+  email: "bilal072ahmad@gmail.com",
   resumeUrl: "/Resume Bilal Ahmad.pdf",
   socials,
 };
@@ -71,8 +78,6 @@ export const about = {
       value: "2 Yrs 8 Mos",
       subtext: "Experience",
       icon: IconClock,
-      spanClass:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-2 md:col-start-9 md:row-start-1",
     },
     {
       id: "projects",
@@ -81,10 +86,8 @@ export const about = {
       subtext: "Delivered",
       icon: IconFolderCode,
       isCompact: true,
-      spanClass:
-        "col-span-12 sm:col-span-6 md:col-span-2 md:row-span-1 md:col-start-11 md:row-start-1",
     },
   ],
 };
 
-export const websiteDomain = "https://da-portfolio.dev";
+export const websiteDomain = "https://bilalahmad.dev";

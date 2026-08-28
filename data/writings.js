@@ -8,6 +8,8 @@ export const writings = [
     date: "2025-07-14",
     tags: ["Analytics", "Visualization"],
     readTime: "8 min",
+    image: "/writings/why-dashboards-lie.jpg",
+    category: "Data Visualization",
   },
   {
     id: "blog-2",
@@ -18,6 +20,8 @@ export const writings = [
     date: "2025-06-03",
     tags: ["Python", "ETL"],
     readTime: "12 min",
+    image: "/writings/repeatable-etl-pattern.jpg",
+    category: "Data Engineering",
   },
   {
     id: "blog-3",
@@ -28,5 +32,43 @@ export const writings = [
     date: "2025-04-22",
     tags: ["Career", "Open Source"],
     readTime: "6 min",
+    image: "/writings/git-contributions-as-portfolio.jpg",
+    category: "Career & Open Source",
+  },
+  {
+    id: "blog-4",
+    slug: "sql-query-optimization-patterns",
+    title: "SQL query optimization patterns for high-scale analytics",
+    excerpt:
+      "Index tuning, CTE materialization quirks, and query plan diagnosis for production workloads.",
+    date: "2025-03-11",
+    tags: ["SQL", "Performance"],
+    readTime: "10 min",
+    image: "/writings/sql-query-optimization-patterns.jpg",
+    category: "Database Engineering",
+  },
+  {
+    id: "blog-5",
+    slug: "real-time-data-pipelines-kafka",
+    title: "Event-driven analytics with Kafka & DuckDB",
+    excerpt:
+      "Architecting low-latency streaming aggregations without the operational overhead of heavy clusters.",
+    date: "2025-02-18",
+    tags: ["Streaming", "Architecture"],
+    readTime: "9 min",
+    image: "/writings/real-time-data-pipelines-kafka.jpg",
+    category: "Distributed Systems",
+  },
+  {
+    id: "blog-6",
+    slug: "metrics-that-actually-matter-saas",
+    title: "Metrics that actually drive decisions in B2B SaaS",
+    excerpt:
+      "Cutting through vanity KPIs to build instrumentation that executive leadership genuinely trusts.",
+    date: "2025-01-09",
+    tags: ["Metrics", "Strategy"],
+    readTime: "7 min",
+    image: "/writings/metrics-that-actually-matter-saas.jpg",
+    category: "Product Analytics",
   },
 ];

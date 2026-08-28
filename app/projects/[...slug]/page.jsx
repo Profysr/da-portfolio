@@ -1,7 +1,11 @@
 import { projectSource } from "@/lib/source";
 import { notFound } from "next/navigation";
-import { ProjectContent } from "../_components/ProjectContent";
-import { generateProjectSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
+import ProjectContent from "../_components/ProjectContent";
+import { mdxCustomComponents } from "@/components/docs/mdx-custom-components";
+import {
+  generateProjectSchema,
+  generateBreadcrumbSchema,
+} from "@/lib/structured-data";
 import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
 
@@ -11,7 +15,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const page = projectSource.getPage(slug);
+  const slugParam = Array.isArray(slug) ? slug : [slug];
+  const page = projectSource.getPage(slugParam);
 
   if (!page) {
     return { title: "Project Not Found" };
@@ -38,12 +43,14 @@ export async function generateMetadata({ params }) {
 }
 
 function parseChangelog(content) {
+  if (!content) return [];
   const changelogRegex = /## Changelog\s*\n([\s\S]*?)(?=\n## |\n# |$)/i;
   const match = content.match(changelogRegex);
   if (!match) return [];
 
   const changelogContent = match[1];
-  const versionRegex = /###\s+(v[\d.]+)\s*-\s*([\d-]+)\s*\n([\s\S]*?)(?=\n### |\n## |\n# |$)/g;
+  const versionRegex =
+    /###\s+(v[\d.]+)\s*-\s*([\d-]+)\s*\n([\s\S]*?)(?=\n### |\n## |\n# |$)/g;
   const entries = [];
 
   let versionMatch;
@@ -66,9 +73,45 @@ function parseChangelog(content) {
 
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
-  const page = projectSource.getPage(slug);
+  const slugParam = Array.isArray(slug) ? slug : [slug];
+  const slugStr = slugParam.join("/");
+  const page = projectSource.getPage(slugParam);
 
   if (!page) notFound();
+
+  const allProjects = projectSource.getPages();
+  const currentCategory = page.data.category;
+  const currentTech = new Set(page.data.tech || []);
+
+  const similarProjects = allProjects
+    .filter((p) => p.slugs.join("/") !== slugStr)
+    .map((p) => {
+      let score = 0;
+      if (p.data.category === currentCategory) score += 3;
+      if (p.data.industry === page.data.industry) score += 2;
+      const sharedTech = (p.data.tech || []).filter((t) =>
+        currentTech.has(t),
+      ).length;
+      score += sharedTech;
+
+      return {
+        slug: p.slugs.join("/"),
+        title: p.data.title,
+        description: p.data.description,
+        date: p.data.date,
+        category: p.data.category,
+        industry: page.data.industry,
+        access: p.data.access,
+        tech: p.data.tech || [],
+        thumbnail: p.data.thumbnail,
+        score,
+      };
+    })
+    .sort(
+      (a, b) =>
+        b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0),
+    )
+    .slice(0, 6);
 
   const meta = {
     title: page.data.title,
@@ -82,11 +125,13 @@ export default async function ProjectPage({ params }) {
     github: page.data.github,
     live: page.data.live,
     thumbnail: page.data.thumbnail,
+    slug: slugStr,
   };
 
   const MDXContent = page.data.body;
   const rawContent = page.data._meta?.source || "";
   const changelog = parseChangelog(rawContent);
+  const toc = page.data.toc || [];
 
   // Generate structured data
   const projectSchema = generateProjectSchema({
@@ -103,7 +148,7 @@ export default async function ProjectPage({ params }) {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: websiteDomain },
     { name: "Projects", url: `${websiteDomain}/#projects` },
-    { name: page.data.title, url: `${websiteDomain}/projects/${slug}` },
+    { name: page.data.title, url: `${websiteDomain}/projects/${slugStr}` },
   ]);
 
   return (
@@ -118,8 +163,13 @@ export default async function ProjectPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ProjectContent meta={meta} changelog={changelog}>
-        <MDXContent />
+      <ProjectContent
+        meta={meta}
+        changelog={changelog}
+        toc={toc}
+        similarProjects={similarProjects}
+      >
+        <MDXContent components={mdxCustomComponents} />
       </ProjectContent>
     </>
   );

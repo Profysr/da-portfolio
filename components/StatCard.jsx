@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { BentoCard } from "./ui/bento-grid";
-import { LazyNumberTicker } from "@/components/lazy";
+import { LazyNumberTicker } from "@/components/common/lazy";
 
 const NumberTicker = ({ value, ...props }) => (
   <Suspense
@@ -19,8 +19,13 @@ const NumberTicker = ({ value, ...props }) => (
 /* ─────────────────────────────────────────────────────────────
  *  Reusable Stat Card Component
  * ───────────────────────────────────────────────────────────── */
-export function StatCard({ title, value, subtext, icon: Icon, isCompact = false }) {
-  
+export function StatCard({
+  title,
+  value,
+  subtext,
+  icon: Icon,
+  isCompact = false,
+}) {
   // Helper to extract numeric values and prefix/suffix strings (e.g. "1,500+" -> 1500, "", "+")
   const parseValue = (val) => {
     if (typeof val === "number") return { num: val, prefix: "", suffix: "" };

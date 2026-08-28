@@ -40,7 +40,7 @@ function BottomDock({ isVisible, onAIClick }) {
             iconSize={DOCK_ICON_SIZE}
             iconMagnification={DOCK_MAGNIFICATION}
             iconDistance={DOCK_DISTANCE}
-            className="border border-border bg-background/50 backdrop-blur-2xl shadow-2xl rounded-lg"
+            className="border border-border bg-background/50 backdrop-blur-2xl shadow-e4 rounded-lg"
           >
             {/* Nav links */}
             {nav.map((item) => {
@@ -52,7 +52,7 @@ function BottomDock({ isVisible, onAIClick }) {
                       <a
                         href={`#${item.id}`}
                         aria-label={item.label}
-                        className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-white/10 text-zinc-300 hover:text-white transition-all"
+                          className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-all"
                       >
                         <Icon size={18} />
                       </a>
@@ -67,7 +67,7 @@ function BottomDock({ isVisible, onAIClick }) {
 
             {/* Vertical Divider */}
             <div
-              className="mx-1 h-5 w-px bg-white/15 self-center"
+              className="mx-1 h-5 w-px bg-border self-center"
               aria-hidden="true"
             />
 
@@ -79,9 +79,9 @@ function BottomDock({ isVisible, onAIClick }) {
                     type="button"
                     onClick={onAIClick}
                     aria-label="Open AI Recruiter Assistant"
-                    className="relative flex p-2 items-center justify-center rounded-full bg-[#d0bcff]/20"
+                    className="relative flex p-2 items-center justify-center rounded-full bg-primary/10"
                   >
-                    <IconSparkles className="text-[#d0bcff]" />
+                    <IconSparkles className="text-primary" />
 
                     {/* Adjusted Status Dot */}
                     <span className="absolute top-0 right-0.5 flex size-2">

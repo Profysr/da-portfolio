@@ -1,72 +1,53 @@
 "use client";
 
-import { useRef, useState, Suspense } from "react";
-import { LazyLightRays } from "@/components/lazy";
-import { BlurFade } from "@/components/ui/blur-fade";
-import { Layout } from "@/components/layout/Layout";
-import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
+import { useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { personal, socials } from "@/data/idx";
+import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
+import { personal, socials } from "@/data/idx.js";
+import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
+
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
-import { FavoriteStack } from "@/components/FavoriteStack";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { MagneticLink } from "@/components/ui/MagneticButton";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Section } from "@/components/layout/Section";
 
 /* ============================================================
- *  Animated Name & Headline Sub-component
+ *  Headline — watermark + kinetic typewriter roles
  * ============================================================ */
-export function Headline() {
-  const roles = [
-    "Software Engineer",
-    "Forward Deployed Engineer",
-    "Engineering Lead",
-  ];
+const ROLES = [
+  "Software Engineer",
+  "Forward Deployed Engineer",
+  "Engineering Lead",
+];
 
+function Headline() {
   return (
-    <Heading title="Developer">
-      <BlurFade
-        delay={0.05}
-        inView
-        className="w-full flex flex-col items-center justify-center gap-2"
-      >
-        <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-muted-foreground/80">
-          <span>HI, I'M</span>
-          <span className="font-semibold tracking-[0.25em] text-foreground">
-            {personal.name}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-center min-h-12 sm:min-h-16">
-          <TypingAnimation
-            words={roles}
-            loop={true}
-            typeSpeed={70}
-            deleteSpeed={40}
-            pauseDelay={1800}
-            startOnView={false}
-            className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-linear-to-b from-foreground via-foreground/90 to-foreground/50 bg-clip-text text-transparent text-center"
-          />
-        </div>
-
-        {/* Favorite Stack with Interactive Tool Icons */}
-        <FavoriteStack variant="compact" className="mt-1" />
-      </BlurFade>
+    <Heading title="Developer" variant="watermark">
+      <TypingAnimation
+        words={ROLES}
+        loop
+        typeSpeed={70}
+        deleteSpeed={40}
+        pauseDelay={1800}
+        startOnView={false}
+        className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground text-center"
+      />
     </Heading>
   );
 }
 
 /* ============================================================
- *  Call-To-Action & Social Links Sub-component
+ *  Actions — socials + single primary CTA (one cluster)
  * ============================================================ */
-function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
+function HeroActions() {
   const ctaRef = useRef(null);
+  const [wiggleIcon, setWiggleIcon] = useState(null);
 
   const handleCtaMove = (e) => {
     const el = ctaRef.current;
@@ -76,113 +57,111 @@ function HeroActions({ wiggleIcon, handleIconClick, scrollToProjects }) {
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
-  const getIconClass = (label) => {
-    const isWiggling = wiggleIcon === label.toLowerCase();
-    return `text-zinc-300 hover:text-white transition-all duration-300 ${
-      isWiggling ? "animate-wiggle scale-125 text-white" : "hover:scale-110"
-    }`;
+  const handleIconClick = (name) => {
+    setWiggleIcon(name.toLowerCase());
+    setTimeout(() => setWiggleIcon(null), 600);
   };
 
+  const getIconClass = (isWiggling) =>
+    `transition-all duration-300 ${isWiggling ? "animate-wiggle scale-125" : "hover:scale-110"}`;
+
   return (
-    <BlurFade delay={0.1} direction="down" inView>
-      <div className="z-20 flex flex-col sm:flex-row items-center justify-center gap-2">
-        {/* Social Icons Bar */}
-        <div className="flex items-center space-x-4 sm:space-x-5 pt-1">
-          {socials.map(({ platform, icon: Icon, label, url, aria }) => (
-            <Tooltip key={platform}>
-              <TooltipTrigger asChild>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={aria || label}
-                  onClick={() => handleIconClick(label.toLowerCase())}
-                  className="p-2 rounded-md hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
-                >
-                  <Icon
-                    size={20}
-                    stroke={1.7}
-                    className={getIconClass(label)}
-                  />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                {label}
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </div>
-
-        <span className="hidden sm:block h-6 w-px bg-zinc-700/80" aria-hidden />
-
-        <div className="flex items-center justify-center">
-          <ShimmerButton
-            ref={ctaRef}
-            onMouseMove={handleCtaMove}
-            onClick={scrollToProjects}
-            className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold shadow-lg"
-          >
-            <span>View my work</span>
-            <IconArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </ShimmerButton>
-        </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-3xl">
+      <div className="flex items-center gap-4 sm:gap-5">
+        {socials.map(({ platform, label, icon: Icon, url, aria }) => (
+          <Tooltip key={platform}>
+            <TooltipTrigger asChild>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={aria || label}
+                onClick={() => handleIconClick(label)}
+                className="p-2 rounded-md hover:bg-foreground/5 transition-colors"
+              >
+                <Icon
+                  className={cn(
+                    "h-5 w-5",
+                    getIconClass(wiggleIcon === label.toLowerCase()),
+                  )}
+                  strokeWidth={1.5}
+                />
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {label}
+            </TooltipContent>
+          </Tooltip>
+        ))}
       </div>
-    </BlurFade>
+
+      <span className="hidden sm:block h-6 w-0.5 bg-border" aria-hidden />
+
+      <MagneticLink
+        ref={ctaRef}
+        onMouseMove={handleCtaMove}
+        href="#projects"
+        variant="premium"
+        className="inline-flex items-center justify-center"
+        icon={<IconArrowRight />}
+        iconPosition="right"
+        magneticStrength={0.2}
+      >
+        <span>View my work</span>
+      </MagneticLink>
+    </div>
   );
 }
 
 /* ============================================================
- *  Main Hero Section Export
+ *  Hero — stack discipline: status · headline · subtext · CTA
  * ============================================================ */
 export default function Hero() {
-  const [wiggleIcon, setWiggleIcon] = useState(null);
-
-  const handleIconClick = (name) => {
-    setWiggleIcon(name);
-    setTimeout(() => setWiggleIcon(null), 600);
-  };
-
-  const scrollToProjects = () => {
-    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <Section
-      id="hero"
-      className="relative w-full overflow-hidden h-screen flex items-center justify-center"
-    >
-      <Suspense fallback={null}>
-        <LazyLightRays
-          count={10}
-          color="rgba(160, 210, 255, 0.25)"
-          blur={50}
-          speed={10}
-          className="opacity-80"
-        />
-      </Suspense>
-
-      <TooltipProvider delayDuration={0}>
-        <Layout className="relative z-10 flex flex-col items-center justify-center gap-6 sm:gap-8">
+    <Section id="hero">
+      <div className="flex w-full flex-col items-center justify-center gap-7 text-center pt-18 md:pt-32">
+        <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
+        </ScrollReveal>
+
+        <ScrollReveal variant="reveal" duration={0.8} className="w-full">
           <Headline />
-          <HeroActions
-            wiggleIcon={wiggleIcon}
-            handleIconClick={handleIconClick}
-            scrollToProjects={scrollToProjects}
-          />
-          <div
-            className="mt-2 md:mt-4 text-zinc-400 hover:text-zinc-200 transition-colors animate-bounce cursor-pointer "
-            onClick={() =>
-              document
-                .getElementById("about")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            aria-label="Scroll down"
-          >
-            <IconChevronDown size={22} stroke={1.5} />
-          </div>
-        </Layout>
-      </TooltipProvider>
+        </ScrollReveal>
+
+        <ScrollReveal variant="slide-up" duration={0.7} delay={0.15}>
+          <p className="max-w-xl text-balance text-base sm:text-lg text-muted-foreground">
+            {personal.tagline}
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal variant="slide-up" duration={0.7} delay={0.3}>
+          <HeroActions />
+        </ScrollReveal>
+
+        {/* Scroll-down indicator — fills the visual gap & guides user to next section */}
+        <div
+          onClick={() =>
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          aria-label="Scroll to About section"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) =>
+            e.key === "Enter" &&
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground/50 hover:text-muted-foreground transition-colors group"
+        >
+          <span className="text-[10px] font-mono tracking-[0.2em] uppercase opacity-70 group-hover:opacity-100 transition-opacity">
+            Scroll
+          </span>
+          <IconChevronDown size={24} strokeWidth={2.5} />
+        </div>
+      </div>
     </Section>
   );
 }

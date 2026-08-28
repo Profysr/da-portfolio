@@ -1,42 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "motion/react";
+import React from "react";
 import {
   IconSchool,
-  IconAward,
-  IconCertificate,
-  IconExternalLink,
   IconSparkles,
-  IconCheck,
+  IconArrowUpRight,
+  IconMapPin,
 } from "@tabler/icons-react";
 import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
-import { education, certificates, awards } from "@/data/idx";
-import { ScrollRail } from "@/components/ui/ScrollRail";
-import { ExpandableList } from "@/components/ui/expandable-list";
-import { TagFilter } from "@/components/TagFilter";
+import { education } from "@/data/idx";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { GlowFrame } from "@/components/ui/GlowFrame";
+import { cn } from "@/lib/utils";
 
-const TABS = [
-  { id: "all", label: "All Credentials" },
-  { id: "certs", label: "Certifications & Licenses", count: certificates.length },
-  { id: "edu", label: "Academic Education", count: education.length },
-  { id: "awards", label: "Honors & Awards", count: awards?.length || 0 },
-];
-
-// ----------------------------------------------------------------------
-// Reusable Card Sub-Components
-// ----------------------------------------------------------------------
-
+/* Skill badges row */
 function SkillBadges({ skills }) {
   if (!skills || skills.length === 0) return null;
   return (
-    <div className="flex flex-wrap gap-1 pt-0.5">
+    <div className="flex flex-wrap gap-1.5 pt-1">
       {skills.map((skill) => (
         <span
           key={skill}
-          className="inline-flex items-center rounded border border-border bg-surface-high/60 px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
+          className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-mono text-muted-foreground transition-colors hover:text-foreground hover:border-border/80"
         >
           {skill}
         </span>
@@ -45,291 +32,164 @@ function SkillBadges({ skills }) {
   );
 }
 
-function SectionHeaderTitle({ icon: Icon, title }) {
-  return (
-    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground pl-0.5 pt-2">
-      <Icon className="size-3.5 text-primary" />
-      <span>{title}</span>
-    </div>
-  );
-}
+/* Minimalist Education Card */
+function EducationCard({ edu, index, total }) {
+  const revealVariant = index % 2 === 0 ? "slide-right" : "slide-left";
 
-function CertificateCard({ cert, index }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.04 }}
-      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-sm flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group h-full"
+    <ScrollReveal
+      variant={revealVariant}
+      delay={index * 0.1}
+      duration={0.7}
+      once={false}
+      className="h-full"
     >
-      <div className="space-y-2.5">
-        <div className="flex items-start justify-between gap-2.5">
-          <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded border border-primary/20 bg-primary/10 flex items-center justify-center text-primary shrink-0">
-              <IconCertificate className="size-4" />
-            </div>
-            <div>
-              <h4 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                {cert.name}
-              </h4>
-              <p className="text-xs text-muted-foreground">{cert.issuingOrg}</p>
-            </div>
-          </div>
-          <span className="font-mono text-[11px] text-muted-foreground shrink-0 bg-surface-high/80 border border-border px-2 py-0.5 rounded">
-            {cert.issueDate}
-          </span>
-        </div>
-
-        {cert.credentialId && (
-          <div className="text-[11px] font-mono text-muted-foreground/70">
-            Credential ID: <span className="text-foreground/70">{cert.credentialId}</span>
-          </div>
-        )}
-
-        <SkillBadges skills={cert.skills} />
-      </div>
-
-      {cert.credentialUrl && cert.credentialUrl !== "#" && (
-        <div className="pt-2.5 border-t border-border flex items-center justify-between">
-          <Badge variant={"lightSuccess"}>
-            <IconCheck className="size-3" />
-            <span>Verified</span>
-          </Badge>
-          <a
-            href={cert.credentialUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline"
-          >
-            <span>Verify Credential</span>
-            <IconExternalLink className="size-3" />
-          </a>
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-function EducationCard({ edu, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.04 }}
-      className="rounded-md border border-border bg-surface p-4 sm:p-5 shadow-sm flex flex-col justify-between gap-3 hover:border-primary/40 transition-all group h-full"
-    >
-      <div className="space-y-2.5">
-        <div className="flex items-start justify-between gap-2.5">
-          <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded border border-border bg-surface-high/60 flex items-center justify-center text-primary shrink-0">
-              <IconSchool className="size-4" />
-            </div>
-            <div>
-              <h4 className="text-sm sm:text-base font-semibold text-foreground">
-                {edu.institution}
-              </h4>
-              <p className="text-xs text-primary font-medium">
-                {edu.degree}
-                {edu.fieldOfStudy ? ` • ${edu.fieldOfStudy}` : ""}
-              </p>
-            </div>
-          </div>
-          <span className="font-mono text-[11px] text-muted-foreground shrink-0 bg-surface-high/80 border border-border px-2 py-0.5 rounded">
-            {edu.startDate} — {edu.endDate}
-          </span>
-        </div>
-
-        {edu.grade && (
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary text-[11px] font-medium">
-            <IconSparkles className="size-3" />
-            <span>{edu.grade}</span>
-          </div>
-        )}
-
-        {edu.description && (
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {edu.description}
-          </p>
-        )}
-
-        <SkillBadges skills={edu.skills} />
-      </div>
-
-      {edu.url && edu.url !== "#" && (
-        <div className="pt-2.5 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-          <span>{edu.location}</span>
-          <a
-            href={edu.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
-          >
-            <span>Institution Site</span>
-            <IconExternalLink className="size-3" />
-          </a>
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-function AwardCard({ award, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.04 }}
-      className="rounded-md border border-border bg-surface p-4 shadow-sm space-y-1.5 hover:border-primary/40 transition-all h-full flex flex-col justify-between"
-    >
-      <div className="space-y-1.5">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="size-7 rounded bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
-              <IconAward className="size-3.5" />
-            </div>
-            <div>
-              <h4 className="text-xs sm:text-sm font-semibold text-foreground">
-                {award.title}
-              </h4>
-              <p className="text-[11px] text-muted-foreground">{award.issuer}</p>
-            </div>
-          </div>
-          <span className="font-mono text-[10px] text-muted-foreground bg-surface-high/80 border border-border px-1.5 py-0.5 rounded">
-            {award.date}
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground pl-9 leading-relaxed">
-          {award.description}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-// ----------------------------------------------------------------------
-// Category Block Sub-Components (Deduplicated Section Modules)
-// ----------------------------------------------------------------------
-
-function CertificatesSection({ showHeader = true }) {
-  return (
-    <div className="space-y-3">
-      {showHeader && (
-        <SectionHeaderTitle icon={IconCertificate} title="Industry Certifications" />
-      )}
-      <ExpandableList
-        items={certificates}
-        initialCount={4}
-        listClassName="!grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4"
-        showMoreLabel={(hiddenCount) =>
-          `Show ${hiddenCount} more ${hiddenCount === 1 ? "certification" : "certifications"}`
-        }
-        showLessLabel="Show fewer certifications"
-        renderItem={(cert, idx) => (
-          <CertificateCard key={cert.id || idx} cert={cert} index={idx} />
-        )}
-      />
-    </div>
-  );
-}
-
-function EducationSection({ showHeader = true }) {
-  return (
-    <div className="space-y-3">
-      {showHeader && (
-        <SectionHeaderTitle icon={IconSchool} title="Academic Education" />
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-        {education.map((edu, idx) => (
-          <EducationCard key={edu.id || idx} edu={edu} index={idx} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AwardsSection({ showHeader = true }) {
-  if (!awards || awards.length === 0) return null;
-  return (
-    <div className="space-y-3">
-      {showHeader && (
-        <SectionHeaderTitle icon={IconAward} title="Honors & Awards" />
-      )}
-      <ExpandableList
-        items={awards}
-        initialCount={4}
-        listClassName="!grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4"
-        showMoreLabel={(hiddenCount) =>
-          `Show ${hiddenCount} more ${hiddenCount === 1 ? "award" : "awards"}`
-        }
-        showLessLabel="Show fewer awards"
-        renderItem={(award, idx) => (
-          <AwardCard key={award.id || idx} award={award} index={idx} />
-        )}
-      />
-    </div>
-  );
-}
-
-// ----------------------------------------------------------------------
-// Main Credentials Component
-// ----------------------------------------------------------------------
-
-function Credentials() {
-  const [activeTab, setActiveTab] = useState("all");
-  const hasAwards = awards && awards.length > 0;
-
-  return (
-    <Section id="credentials" noFade className="py-10 md:py-16">
-      <div className="flex flex-col items-center gap-7">
-        {/* Header */}
-        <div className="flex flex-col items-center text-center gap-2.5">
-          <Badge variant="outline">CREDENTIALS & BACKGROUND</Badge>
-          <Heading
-            variant="gradient"
-            text="Education & Certifications"
-            className="text-3xl! sm:text-5xl!"
-          />
-          <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-            Verified industry certifications, academic degrees, and honors aligned with LinkedIn standards.
-          </p>
-        </div>
-
-        {/* Filter Tabs */}
-        <TagFilter items={TABS} activeValue={activeTab} onChange={setActiveTab} />
-
-        {/* Cards Content */}
-        <div className="w-full">
-          {activeTab === "all" ? (
-            <ScrollRail className="space-y-1">
-              {/* Node 1: Academic Education */}
-              <ScrollRail.Item index={0}>
-                <EducationSection showHeader />
-              </ScrollRail.Item>
-
-              {/* Node 0: Certifications */}
-              <ScrollRail.Item index={1}>
-                <CertificatesSection showHeader />
-              </ScrollRail.Item>
-
-
-              {/* Node 2: Honors & Awards */}
-              {hasAwards && (
-                <ScrollRail.Item index={2} isLast>
-                  <AwardsSection showHeader />
-                </ScrollRail.Item>
-              )}
-            </ScrollRail>
-          ) : (
-            <div>
-              {activeTab === "edu" && <EducationSection showHeader={false} />}
-              {activeTab === "certs" && <CertificatesSection showHeader={false} />}
-              {activeTab === "awards" && <AwardsSection showHeader={false} />}
-            </div>
+      <GlowFrame
+        interior
+        border
+        size={200}
+        interiorColor="color-mix(in srgb, var(--primary) 12%, transparent)"
+        proximity={60}
+        spread={25}
+        className="h-full"
+      >
+        <article
+          className={cn(
+            "group relative flex flex-col justify-between h-full",
+            "rounded-md border border-border bg-card/50 hover:bg-card",
+            "hover:border-border-strong hover:shadow-xl transition-all duration-300",
+            "select-none p-6 sm:p-7"
           )}
-        </div>
+        >
+          <div className="space-y-4">
+            {/* Top metadata rail */}
+            <div className="flex items-center justify-between text-xs font-mono text-muted-foreground/70 pb-1 border-b border-border">
+              <span className="tracking-wide uppercase">
+                {edu.startDate} — {edu.endDate}
+              </span>
+              {edu.grade && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-primary/30 bg-primary/10 text-primary text-[10px] font-medium tracking-wide">
+                  <IconSparkles className="size-3" />
+                  <span>{edu.grade}</span>
+                </span>
+              )}
+            </div>
+
+            {/* Institution & Degree */}
+            <div>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    {edu.institution}
+                  </h4>
+                  <p className="text-sm sm:text-base font-medium text-foreground/90 mt-1">
+                    {edu.degree}
+                    {edu.fieldOfStudy ? (
+                      <span className="text-muted-foreground font-normal">
+                        {" "}
+                        in {edu.fieldOfStudy}
+                      </span>
+                    ) : null}
+                  </p>
+                  {edu.minor && (
+                    <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                      Minor in {edu.minor}
+                    </p>
+                  )}
+                </div>
+
+                {edu.url && edu.url !== "#" && (
+                  <a
+                    href={edu.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Visit ${edu.institution}`}
+                    className="size-8 rounded-lg border border-border/40 bg-muted flex items-center justify-center text-muted-foreground group-hover:text-foreground group-hover:border-border/80 transition-colors shrink-0"
+                  >
+                    <IconArrowUpRight className="size-4" />
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            {edu.description && (
+              <p className="text-xs sm:text-sm text-muted-foreground/85 leading-relaxed">
+                {edu.description}
+              </p>
+            )}
+
+            {/* Skills / Focus areas */}
+            <div className="pt-1">
+              <span className="block text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/60 mb-2">
+                Focus & Methodologies
+              </span>
+              <SkillBadges skills={edu.skills} />
+            </div>
+          </div>
+
+          {/* Card Footer */}
+          <div className="pt-4 mt-6 border-t border-border/30 flex items-center justify-between text-xs font-mono text-muted-foreground/70">
+            <div className="flex items-center gap-1.5">
+              <IconMapPin className="size-3.5 text-primary" />
+              <span>{edu.location}</span>
+            </div>
+            {edu.activities && (
+              <span className="hidden sm:inline-block text-[11px] truncate max-w-[200px] text-muted-foreground/60">
+                {edu.activities}
+              </span>
+            )}
+          </div>
+        </article>
+      </GlowFrame>
+    </ScrollReveal>
+  );
+}
+
+/* Education section block */
+function EducationSection() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+      {education.map((edu, idx) => (
+        <EducationCard
+          key={edu.id || idx}
+          edu={edu}
+          index={idx}
+          total={education.length}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function Credentials() {
+  return (
+    <Section id="credentials" className="bg-surface">
+      <div className="flex flex-col items-center gap-8 md:gap-12 w-full">
+        {/* Header — reveal */}
+        <ScrollReveal variant="reveal" delay={0} duration={0.6} once={false}>
+          <div className="flex flex-col items-center text-center gap-2.5 px-4 sm:px-6">
+            <Badge
+              variant="outline"
+              className="tracking-[0.25em] text-[10px] bg-background/80 text-muted-foreground border-border/60 uppercase shadow-none px-3.5 py-1 font-mono rounded-full"
+            >
+              Academic Credentials
+            </Badge>
+            <Heading
+              variant="gradient"
+              text="Education & Degrees"
+              className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground"
+            />
+            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-relaxed">
+              Formal foundation in computer science, distributed systems, and
+              applied computational mathematics.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        {/* Education grid — diagonal reveals from top-left and top-right */}
+        <EducationSection />
       </div>
     </Section>
   );
 }
-
-export default Credentials;

@@ -1,134 +1,116 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import {
-  IconSparkles,
-  IconCpu,
-  IconServer,
-  IconBrandReact,
-  IconCloud,
-} from "@tabler/icons-react";
-import { Section } from "@/components/layout/Section";
-import { Layout } from "@/components/layout/Layout";
-import { Heading } from "@/components/ui/Heading";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/Heading";
+import { IconSparkles } from "@tabler/icons-react";
+import { TechPill } from "@/components/common/TechPill";
+import { Section } from "@/components/layout/Section";
+import { ScrollWrapper } from "@/components/ui/HorizontalScroll";
 import { SkillsAndTools } from "@/data/idx";
-import { FavoriteStack } from "@/components/FavoriteStack";
-import { CursorGlow } from "@/components/ui/cursor-glow";
-import { TechPill } from "@/components/TechPill";
-import { TagFilter } from "@/components/TagFilter";
+import { cn } from "@/lib/utils";
 
-const CATEGORY_ICONS = {
-  "Automations & AI": IconCpu,
-  "Engineering & Backend": IconServer,
-  "Platforms & Cloud": IconCloud,
-  "Conceptual & Design": IconBrandReact,
-};
-
-function TechStack() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const categories = ["All", ...SkillsAndTools.map((cat) => cat.category)];
-
-  const displayedCategories =
-    selectedCategory === "All"
-      ? SkillsAndTools
-      : SkillsAndTools.filter((cat) => cat.category === selectedCategory);
-
+export function TechHeader() {
   return (
-    <Section
-      id="stack"
-      noFade
-      className="py-10 md:py-16 overflow-hidden relative"
-    >
-      <Layout>
-        <div className="flex flex-col items-center gap-7">
-          {/* Section Header */}
-          <div className="flex flex-col items-center text-center gap-2.5">
-            <Badge variant="light">ARSENAL & TOOLS</Badge>
-            <Heading
-              variant="gradient"
-              text="Technologies & Stack"
-              className="text-3xl! sm:text-5xl!"
-            />
-            <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
-              Production tools, runtimes, and agentic orchestration frameworks I
-              use to build scalable systems.
-            </p>
-          </div>
-
-          {/* Daily Drivers Callout Strip Component */}
-          <FavoriteStack variant="detailed" />
-
-          {/* Category Filter Pills */}
-          <TagFilter
-            items={categories}
-            activeValue={selectedCategory}
-            onChange={setSelectedCategory}
-          />
-
-          {/* Categorized Tech Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 w-full">
-            <AnimatePresence mode="popLayout">
-              {displayedCategories.map((group, groupIdx) => {
-                const IconComponent =
-                  CATEGORY_ICONS[group.category] || IconSparkles;
-                return (
-                  <motion.div
-                    key={group.category}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.97 }}
-                    transition={{ duration: 0.25, delay: groupIdx * 0.04 }}
-                    className="relative rounded-md border border-border bg-surface p-4 sm:p-5 shadow-lg flex flex-col justify-between hover:border-primary/30 transition-all group"
-                  >
-                    {/* Pointer-following glow border */}
-                    <CursorGlow
-                      variant="border"
-                      disabled={false}
-                      proximity={80}
-                      spread={30}
-                      borderBlur={0}
-                      borderWidth={1}
-                    />
-                    <div>
-                      {/* Group Header */}
-                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-                        <div className="flex items-center gap-2">
-                          <div className="size-5 rounded border border-border bg-white/5 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
-                            <IconComponent className="size-4.5" />
-                          </div>
-                          <h4 className="text-sm sm:text-base font-semibold text-white">
-                            {group.category}
-                          </h4>
-                        </div>
-                        <span className="font-mono text-[11px] text-muted-foreground">
-                          {group.items.length} tools
-                        </span>
-                      </div>
-
-                      {/* Tech Chips */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.items.map((item) => (
-                          <TechPill
-                            key={item.name}
-                            name={item.name}
-                            subCategory={item.subCategory ?? undefined}
-                            size="md"
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-        </div>
-      </Layout>
-    </Section>
+    <div className="w-full flex flex-col items-center text-center gap-2 px-4 sm:px-6">
+      <Badge
+        variant="outline"
+        className="tracking-[0.25em] text-[10px] bg-background/80 text-muted-foreground border-border/60 uppercase shadow-none px-3 py-0.5 font-mono rounded-full"
+      >
+        Arsenal & Tools
+      </Badge>
+      <Heading
+        variant="gradient"
+        text="Technologies & Stack"
+        className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground"
+      />
+      <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-normal">
+        Production tools, runtimes, and agentic orchestration frameworks I use
+        to build scalable systems.
+      </p>
+    </div>
   );
 }
 
-export default TechStack;
+export function TechClusterCard({ group, index, totalGroups }) {
+  const Icon = group.Icon ?? IconSparkles;
+
+  return (
+    <div
+      className={cn(
+        "group relative shrink-0 flex flex-col justify-between",
+        "w-[320px] sm:w-[380px] md:w-[430px] lg:w-[480px]",
+        "rounded-xl border p-4 sm:p-5 md:p-6 transition-all duration-300 select-none overflow-hidden shadow-xs hover:shadow-md hover:scale-[1.01]",
+        group.shade ?? "shade-card-canvas"
+      )}
+    >
+      {/* Top subtle highlight line */}
+      <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-current/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-xl" />
+
+      {/* Card Content */}
+      <div className="flex flex-col h-full justify-between">
+        <div className="flex flex-col gap-2">
+          {/* Header row with index badge & Icon */}
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase">
+              {String(index + 1).padStart(2, "0")} / {String(totalGroups).padStart(2, "0")}
+            </span>
+            <div className="flex items-center justify-center size-8 sm:size-9 rounded-lg border border-current/20 bg-current/10 shrink-0">
+              <Icon className="size-4 sm:size-4.5" strokeWidth={1.75} />
+            </div>
+          </div>
+
+          {/* Category Title */}
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight">
+            {group.category}
+          </h3>
+
+          {/* Minimalist Tech Pills grid */}
+          <div className="flex flex-wrap gap-x-2 gap-y-1 w-full">
+            {group.items?.map((item) => (
+              <div key={item.name} className="stack-pill">
+                <TechPill
+                  name={item.name}
+                  size="responsive"
+                  subCategory={item.subCategory ?? undefined}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Minimalist Footer */}
+        <div className="pt-3 border-t border-current/15 flex items-center justify-between font-mono text-[10px] sm:text-xs tracking-widest uppercase opacity-75">
+          <span>{group.items?.length ?? 0} ITEMS</span>
+          <span className="size-1.5 rounded-full bg-current opacity-80" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function TechStack() {
+  return (
+    <Section
+      id="stack"
+      noFade={true}
+      innerClassName="max-w-none px-0 w-full"
+      className="p-0! bg-surface w-full overflow-visible!"
+    >
+      <ScrollWrapper
+        itemCount={SkillsAndTools.length}
+        scrollLengthVh={320}
+        header={<TechHeader />}
+      >
+        {SkillsAndTools.map((group, idx) => (
+          <TechClusterCard
+            key={group.category}
+            group={group}
+            index={idx}
+            totalGroups={SkillsAndTools.length}
+          />
+        ))}
+      </ScrollWrapper>
+    </Section>
+  );
+}

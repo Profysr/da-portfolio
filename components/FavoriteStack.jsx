@@ -1,28 +1,31 @@
 "use client";
 
 import React from "react";
-import {
-  IconSparkles,
-  IconCheck,
-} from "@tabler/icons-react";
+import { motion } from "motion/react";
+import { IconSparkles, IconCheck } from "@tabler/icons-react";
 import { Marquee } from "@/components/ui/marquee";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { favoriteStack } from "@/data/idx";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { TechPill } from "@/components/TechPill";
+import { TechPill } from "@/components/common/TechPill";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export function FavoriteStack({ variant = "compact", className = "" }) {
   const items = favoriteStack.items || [];
 
   if (variant === "compact") {
     return (
-      <div
+      <ScrollReveal
+        variant="slide-up"
+        delay={0}
+        duration={0.6}
+        once={false}
         className={cn(
           "relative flex items-center w-full max-w-xl overflow-hidden rounded-lg p-2 border border-border bg-surface/80 backdrop-blur-md shadow-xs",
           "before:absolute before:left-0 before:z-10 before:h-full before:w-10 before:bg-linear-to-r before:from-surface/90 before:to-transparent",
           "after:absolute after:right-0 after:z-10 after:h-full after:w-10 after:bg-linear-to-l after:from-surface/90 after:to-transparent",
-          className
+          className,
         )}
       >
         <Marquee
@@ -30,16 +33,26 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
           repeat={4}
           className="p-0 [--gap:0.75rem] [--duration:22s]"
         >
-          {items.map((item) => (
-            <TechPill
+          {items.map((item, index) => (
+            <motion.div
               key={item.name}
-              name={item.name}
-              subCategory={item.role ?? undefined}
-              size="sm"
-            />
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.06,
+                ease: [0.32, 0.72, 0, 1],
+              }}
+            >
+              <TechPill
+                name={item.name}
+                subCategory={item.role ?? undefined}
+                size="sm"
+              />
+            </motion.div>
           ))}
         </Marquee>
-      </div>
+      </ScrollReveal>
     );
   }
 
@@ -47,7 +60,7 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
     <div
       className={cn(
         "relative w-full sm:max-w-3xl rounded-md border border-primary/30 bg-surface p-4 sm:p-5 flex flex-col gap-3.5 shadow-lg overflow-hidden",
-        className
+        className,
       )}
     >
       <BorderBeam
@@ -78,16 +91,32 @@ export function FavoriteStack({ variant = "compact", className = "" }) {
         </Badge>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {items.map((item) => (
-          <TechPill
+      <ScrollReveal
+        variant="slide-up"
+        delay={0.2}
+        duration={0.6}
+        once={false}
+        className="flex flex-wrap gap-2"
+      >
+        {items.map((item, index) => (
+          <motion.div
             key={item.name}
-            name={item.name}
-            subCategory={item.role ?? undefined}
-            size="md"
-          />
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.05,
+              ease: [0.32, 0.72, 0, 1],
+            }}
+          >
+            <TechPill
+              name={item.name}
+              subCategory={item.role ?? undefined}
+              size="md"
+            />
+          </motion.div>
         ))}
-      </div>
+      </ScrollReveal>
     </div>
   );
 }

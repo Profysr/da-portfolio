@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 export interface JournalEntry {
   id: string | number;
@@ -225,13 +225,13 @@ export const JournalNavigation: React.FC<JournalNavigationProps> = ({
                   title: "left",
                   action: handlePrev,
                   disabled: currentIndex === 0,
-                  icon: <ChevronLeft size={20} strokeWidth={2.5} />,
+                  icon: <IconChevronLeft size={20} strokeWidth={2.5} />,
                 },
                 {
                   title: "right",
                   action: handleNext,
                   disabled: currentIndex === entries.length - 1,
-                  icon: <ChevronRight size={20} strokeWidth={2.5} />,
+                  icon: <IconChevronRight size={20} strokeWidth={2.5} />,
                 },
               ].map((btn) => (
                 <button

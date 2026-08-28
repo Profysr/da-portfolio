@@ -1,756 +1,535 @@
-# DA Portfolio — Roadmap
+# 📋 ROADMAP — 24-Phase Implementation Plan
 
-> **How to read this file:** Work through phases top to bottom. Each phase lists tasks and any ❓ questions that need answering before work begins. No code is written until the questions for that phase are answered.
-
----
-
-## Ground Rules
-
-1. **Pages** go in `app/` — Next.js App Router file-system routing (e.g. `app/page.tsx`, `app/writing/[slug]/page.tsx`).
-2. **Sections** live in `src/components/sections/<PageName>/` — e.g. `src/components/sections/HomePage/Hero.jsx`.
-3. **Reusable UI components** (not in `src/components/ui/`) go in `src/components/` — e.g. `src/components/layout/SectionWrapper.jsx`, `src/components/projects/ProjectCard.jsx`.
-4. **Never put static data inside a component.** If a component has hardcoded strings/arrays, move them to `src/data/idx.js` and import from there. If an existing component already has static data, refactor it out first.
-5. **Write TSX/JSX.** The data file (`idx.js`) is plain JS with JSDoc types. Components are `.tsx`/`.jsx`, hooks/utilities are `.ts`/`.js`.
-6. **Use `@tabler/icons-react` exclusively for icons.** No inline SVGs, no `lucide-react`.
-7. **Responsive by default.** Every section must work at 375 px (mobile) up to 1440 px (desktop). Use Tailwind breakpoints (`sm:`, `md:`, `lg:`). Test at key widths: 375, 768, 1024, 1440.
-8. **Ask before you act.** If anything is unclear, stop and ask. Confirm the plan for a phase before writing any code for it.
-9. **`stitch/` is inspiration, not a spec.** The design files (`DESIGN.md`, `code.html`) describe a vibe — dark cinematic, electric violet, glassmorphism — but you are free to adapt or skip anything that doesn't fit the actual content.
-10. **Server Components by default.** Only add `"use client"` when interactivity is required (state, effects, browser APIs). Prefer client islands for interactive parts within server components.
-11. **Static Generation preferred.** Use `generateStaticParams()` for dynamic routes. Target `output: 'export'` for static hosting unless SSR is required.
+**Companion docs:** `ARCHITECTURE.md` (sitemap · design · structure) · `COMPONENTS_MAP.md` (full audit)
+**Targets:** Lighthouse ≥95 all categories · <150KB/component · 0 axe violations · Top SEO ranking
 
 ---
 
-## Phase 0 — Housekeeping & Pre-flight ✅ (DONE)
+## 🚫 CORE RULES (Non-Negotiable)
 
-- [x] Remove `transition-link.tsx` (Next.js-only dependency)
-- [x] Remove `custom-cursor.tsx` (kept `smooth-cursor.tsx`)
-- [x] Remove `App.css` (Vite boilerplate)
-- [x] Refactor `command-palette.tsx` — remove `next-view-transitions`, `next-themes`, `cmdk`, `@tabler/icons-react` only, data-driven from props
-- [x] Replace all `lucide-react` icons with `@tabler/icons-react`
-- [x] Install missing Radix packages (`@radix-ui/react-slot`, `@radix-ui/react-tooltip`)
-- [x] Fix pre-existing TS errors (`blur-fade.tsx`, `border-beam.tsx`, `particles.tsx`)
-- [x] Create `CODEGUIDE.md` — component catalogue and file descriptions
-- [x] Create `src/data/idx.js` — single source of truth with placeholder data
-
-**Result:** Codebase compiles clean. All icons are tabler. Palette is data-driven.
-
----
-
-## Phase 1 — Layout Shell & Design System Foundation ✅ (DONE)
-
-**Decisions locked:**
-- Nav: **Dock + floating TopBar** (glass panel, `max-w-7xl` constrained)
-- Logo: **"DA"** text placeholder in TopBar (left side)
-- Light mode: **Dark-only**, no toggle
-- Command palette: ⌘K / Ctrl+K shortcut + button in TopBar; state owned inline in `App.tsx`; UI isolated in `CommandPaletteUI`
-- Icons: section/social icon components passed as JSX props from `idx.js` → `App.tsx` → palette (no internal icon maps in palette)
-- Dock visibility: **Context-based** — `DockVisibilityProvider` in `nav/`, any section can hide dock via `useDockHide()` hook
-- Footer: Data-driven from `idx.js → footer` config; wrapped in Section + Layout; theme tokens only
-
-### Tasks
-- [x] 1.1 Replace `index.css` theme tokens with the DESIGN.md palette
-  - Primary: Electric Violet `#d0bcff`
-  - Surfaces: `#131313` background, `#1c1b1b` surface-low, `#201f1f` surface, `#2a2a2a` surface-high
-  - Text: `#e5e2e1` foreground, `#cbc3d7` muted
-  - Border radius: sm `0.25rem`, md `0.5rem`, lg `0.75rem`, xl `1rem`, 2xl `1.5rem`
-- [x] 1.2 Light mode skipped — dark is the only theme
-- [x] 1.3 Create `src/components/layout/Layout.jsx` — `max-w-7xl` container, responsive padding
-- [x] 1.4 Create `src/components/layout/Section.jsx` — `py-20 sm:py-24 lg:py-28` wrapper with optional `BlurFade` reveal (default on, `noFade` prop to disable)
-- [x] 1.5 Create `src/components/layout/AppShell.tsx` — floating glass TopBar ("DA" logo left, CommandPaletteButton right) + bottom Dock nav with tooltips + hover backgrounds; palette state owned in AppShell
-- [x] 1.6 Create `src/components/layout/Footer.jsx` — two-section footer: hero CTA card + branding/copyright bar, dock-hide via `useDockHide`
-- [x] 1.7 Create `src/components/nav/DockVisibilityProvider.jsx` — context + `useDockHide()` hook + `AnimatedDock` wrapper for scroll-aware dock visibility
-- [x] 1.8 Update eslint config — include `.jsx` files in lint scope
-
-**Result:** Codebase compiles clean. Dark cinematic theme, floating TopBar + Dock with visibility context, command palette wired with keyboard + button, icons passed as props from `idx.js`.
+| # | Rule |
+|---|------|
+| 1 | **No custom SVGs** — download via URL or ask user. Library icon **components** (`@tabler/icons-react`, etc.) are sanctioned. Log source per asset |
+| 2 | **Formats & folders:** `.jsx` default everywhere. `components/ui/` = **library-added components only** (shadcn/registry drops; `.tsx` permitted there). Our shared primitives → `components/common/` (**`.jsx` mandatory once outside ui/**). `.ts` for lib/config/api routes; root `app/layout.tsx` stays `.tsx` |
+| 3 | **24 phases** — max **4 files per phase**, min 1 |
+| 4 | **Review gate** after EVERY phase — user approval required |
+| 5 | **Research-first** — Context7 MCP / skills validation logged per phase |
+| 6 | **Testing mandatory** — lint · typecheck · build · axe-core · bundle delta · reduced-motion |
+| 7 | **Component selection** — search codebase first; if >1 option → comparison table → USER PICKS |
+| 8 | **Git checkpoint** — clean tree before phase; commit approved work before next phase |
+| 9 | **Rollback** — unfixable failures → revert + report; never leave broken tree |
+| 10 | Sitemap & tokens approved BEFORE visual component work |
+| 11 | **No drive-by edits** — out-of-scope findings → "next-phase candidates" log only |
+| 12 | **UX MCP verification** on UI changes (`ux_analyze_accessibility`, `ux_check_contrast`) — results pasted in review request |
+| 13 | **NO COMPONENT DELETIONS** — mark `UNUSED`, remove imports, keep files on disk. *Exception (user-authorized 2026-08-23): spotlight family (cursor-glow, glowing-effect, spotlight, spotlight-glow, SpotlightCard) deleted after GlowFrame consolidation — verified zero external imports pre-delete* · *Exception (user-authorized 2026-08-26): components/ai-elements/ family (message, conversation, suggestion) deleted after chatbot/* shipped + unified Markdown formatter — verified zero live imports (only commented refs inside UNUSED AssistantAi.jsx) pre-delete* |
+| 14 | ⚠️ **WATERMELON / 21st REFACTOR GATE** — every component in `components/watermelon/` and `components/21st/` MUST be refactored BEFORE integration: (a) standardize CSS classes to our token system (`@theme` variables), (b) comment out demo/sample content, (c) only then wire into app sections. Never import them raw |
 
 ---
 
-## Phase 2 — Hero Section ✅ (DONE)
-
-**Goal:** First-screen impact — animated name, headline, CTA buttons, background effect.
-
-### Tasks
-- [x] 2.1 Create `src/sections/HomePage/Hero.jsx`
-- [x] 2.2 Wire up name reveal — "Bilal Ahmad" with dynamic roles via `TypingAnimation`
-- [x] 2.3 `LightRays` background effect — animated light rays from top of container
-- [x] 2.4 `ShimmerButton` CTA — "View my work" (scrolls to #projects) with `IconArrowRight`
-- [x] 2.5 Social links row — GitHub, LinkedIn, X with tabler icons + tooltips
-- [x] 2.6 Scroll-down indicator — animated chevron at the bottom
-
-**Result:** Hero section live. LightRays background, TypingAnimation cycling roles, ShimmerButton CTA, social icons, scroll indicator.
-
-### ❓ Questions (Phase 2) — Answered
-1. **Tagline:** Pitch set in `idx.js → personal.tagline`
-2. **CTA links:** `#projects` (scroll)
-3. **Background:** `LightRays` chosen and implemented
-4. **CTA button:** `ShimmerButton` (replaced `RainbowButton`)
-
----
-
-## Phase 3 — About Me + Stats + Skills ✅ (DONE)
-
-**Goal:** Who you are, where you are, social proof numbers, and skill grid.
-
-### Tasks
-- [x] 3.1 Create `src/sections/HomePage/About.jsx`
-- [x] 3.2 Layout: Globe card (left/5-col), bio sidebar (right/7-col), then Skills (7-col) + Stats (5-col) stacked below
-- [x] 3.3 Social links row — GitHub, LinkedIn, X using tabler icon buttons, pulled from `idx.js → personal.socials`
-- [x] 3.4 Stats column — animated `NumberTicker` cards pulling from `idx.js → about.stats`
-- [x] 3.5 Skills grid — BentoCard per category from `idx.js → SkillsAndTools`
-- [x] 3.6 Decorative accent — `Globe` with location badge + GMT live indicator
-
-**Result:** Section renders. Globe with live GMT time, bio with socials, skill bento cards, animated stat numbers.
-
-### ❓ Questions (Phase 3) — Pending
-1. **Avatar:** Do you have a photo/avatar image to use? If yes — path/URL? If no, initials placeholder is already in place.
-2. **Social links:** Any additional platforms beyond GitHub, LinkedIn, X? (Add to `idx.js → personal.socials`)
-3. **Stats values:** Are the placeholder numbers in `idx.js` roughly correct?
-
----
-
-## Phase 4 — "What I Build" — Consistency Heatmap + Stats ✅ (DONE)
-
-**Goal:** Show contribution rhythm and build velocity through a bento grid layout.
-
-### Tasks
-- [x] 4.1 `src/components/Heatmap.jsx` — deterministic 52×7 JSX grid using seeded PRNG (no API, deterministic across renders)
-- [x] 4.2 Activity card — heading, contribution count, heatmap cells with 5 intensity levels, "Less…More" legend
-- [x] 4.3 Stats column — 4 stacked BentoCards using `SpotlightGlow` + Card primitives
-- [x] 4.4 Section styling unified: Card + SpotlightGlow + BlurFade throughout
-- [x] 4.5 Future GitHub hook: component structure leaves clear integration point for real data
-
-**Result:** Heatmap + stat cards rendered. Deterministic pattern, 4 stat cards with icons from `idx.js → contributions`.
-
-### ❓ Questions (Phase 4)
-1. **Heading & copy:** Confirm "What I Build" + "A snapshot of build velocity and open-source output."
-2. **Stat card values:** 4,280+ hrs / 150 automations / 38 repos / 120K+ LOC — keep, or update?
-3. **Future integration:** Path clear for real GitHub data integration.
-
----
-
-## Phase 5 — Experience (Timeline) ✅ (DONE)
-
-**Goal:** Work history as a vertical expandable timeline.
-
-### Tasks
-- [x] 5.1 Create `src/sections/HomePage/Experience.jsx`
-- [x] 5.2 Expandable role cards — company header, role, date range, description paragraph
-- [x] 5.3 "Present" → highlighted `Badge` (green dot). Past roles → muted `Badge`.
-- [x] 5.4 Skill `Badge`s per role pulled from `idx.js → experience[].tech[]`
-- [x] 5.5 Section heading rendered via `GradientHeading` component
-- [x] 5.6 Framer Motion `AnimatePresence` height animation for expand/collapse
-
-> **Note:** Uses `motion` `AnimatePresence` for expand/collapse rather than `TracingBeam`. The implementation is functional; `TracingBeam` can be substituted in a future polish pass.
-
-**Result:** Section renders. Expandable role cards with company headers, tech badges, Present indicator.
-
-### ❓ Questions (Phase 5) — Answered
-1. **Chronological order:** Founder first (newest), then OSS contributor — confirmed.
-2. **More entries:** 2 entries current; add as needed in `idx.js`.
-3. **Tech badges:** All `tech[]` items shown per role.
-
----
-
-## Phase 6 — Education + Certificates ✅ (DONE)
-
-**Goal:** Academic credentials and professional certificates.
-
-### Tasks
-- [x] 6.1 `src/sections/HomePage/Education.jsx` — BentoCard grid, expand/collapse, theme tokens, data-driven from `idx.js → education`
-- [x] 6.2 `src/sections/HomePage/Certificates.jsx` — infinite marquee carousel using `Marquee` component, theme tokens, Layout wrapper
-- [x] 6.3 Education data shape updated — `image, company, role, date, location, skills[], href`
-- [x] 6.4 Certificates: `cert.name` (not `cert.title`), no `cert.image` field, valid Tailwind throughout
-
-### ❓ Questions (Phase 6) — Answered
-1. **Education layout:** Card grid (BentoGrid 2-col on desktop) — confirmed.
-2. **Certificates:** All four placeholders in `idx.js` kept. `Marquee` carousel with `pauseOnHover` — confirmed.
-3. **Certificate images:** No `image` field — renders `IconAward` always. Add later when you have badge images.
-
-### ❓ Questions (Phase 7) — Answered
-1. **Filter tabs:** Kept — All / Web / Automation / Open Source (data now has `category` field).
-2. **Project data:** Enriched to 4 entries with `subtitle, category, tags, isFeatured, githubUrl, liveUrl, image`.
-3. **Project images:** `image` field added to data — currently all `null`. Add real paths when screenshots are available.
-
----
-
-## Phase 7 — Projects ✅ (DONE)
-
-**Goal:** Showcase your best work with filtering.
-
-### Tasks (completed)
-- [x] 7.1 `src/sections/HomePage/Projects.jsx` — filterable BentoGrid with All/Web/Automation/Open Source tabs
-- [x] 7.2 `idx.js → projects[]` enriched — `subtitle, category, tags, isFeatured, githubUrl, liveUrl, image` fields added
-- [x] 7.3 Each card: project title, description, tech `Badge`s, GitHub/live link buttons via `BentoCard` API
-- [x] 7.4 Featured/star logic — `isFeatured` field drives `headerExtra` badge + `md:col-span-8` layout
-- [x] 7.5 Filter tabs working — `category` field drives tab filter
-- [x] 7.6 Empty state with reset button when filter returns no results
-- [x] 7.7 All hardcoded colors replaced with theme tokens
-- [x] 7.8 Filter tabs unified via `TagFilter` component (replaced inline pill pattern)
-
-### ❓ Questions — Answered
-1. **Filter tabs confirmed:** All / Web / Automation / Open Source — keep these or change?
-2. **Project data:** Expand as needed in `idx.js`.
-3. **Project images:** `image` field added to data — currently all `null`. Add real paths when screenshots are available.
-
----
-
-## Phase 8 — Activities & Writings ✅ (DONE)
-
-**Goal:** Combine Kanban Board (Current Activities + Vision) and Blog/Writings into one unified, data-driven section.
-
-> **Decision:** Rather than building a separate `KanbanBoard.jsx` (Phase 8) and `Blog.jsx` (Phase 9), both were merged into a single `src/sections/HomePage/Activities.jsx` component. The Kanban "columns" are now rendered as two distinct blocks:
-> - **Block 1: Side Projects & Open Source** — maps to "Current Activities" (Kanban duties)
-> - **Block 2: Writings & Community Contributions** — maps to Blog/Writings
->
-> This reduces component count and gives a cleaner, editorial layout with two-column grid rows (description left, list right) via `ActivityRow`.
-
-### Tasks
-- [x] 8.1 Create `src/sections/HomePage/Activities.jsx` — replaces both `KanbanBoard.jsx` and `Blog.jsx`
-- [x] 8.2 Two blocks: "Side projects and things I'm building" (Kanban/current-activities) | "Writings & community contributions" (Blog/writings)
-- [x] 8.3 Each block uses `ActivityRow` — title, description snippet, and "View" link badge with `IconArrowUpRight`
-- [x] 8.4 Data sourced from `idx.js → sideProjects[]` and `communityWritings[]`
-- [x] 8.5 Layout: two-column grid — left column holds section heading + description text, right column holds the row list with top border
-- [x] 8.6 Section heading rendered via standard HTML + section body in `Layout`
-
-### ❓ Questions (Phase 8) — Answered via merged approach
-1. **Combined section confirmed:** Activities + Writings merged into one `Activities.jsx`, not two separate sections.
-2. **Card structure:** Row-based list (not Kanban cards) chosen for readability and consistent spacing.
-3. **Data fields:** `title`, `description`, `link` per item; pulls from `idx.js`.
-
-## Phase 9 — Blog / Writings Section ✅ (DONE — merged into Phase 8 / Activities.jsx)
-
-**Goal:** Showcase thought leadership with post previews.
-
-> **Merged into Phase 8.** The "Blog / Writings" functionality is fully covered by Block 2 of `Activities.jsx` ("Writings & community contributions"). No separate `Blog.jsx` was created.
-
-### Tasks (completed via Activities.jsx Block 2)
-- [x] 9.1 `Activities.jsx` — Block 2 covers the writings section
-- [x] 9.2 Layout: vertical row list (description left, list right) via `ActivityRow`
-- [x] 9.3 Each row: title, excerpt (description), "View" action link — works as post previews
-- [x] 9.4 Data sourced from `idx.js → communityWritings[]` with `title, description, link`
-- [x] 9.5 No separate "Read all posts →" link needed — section is self-contained as part of combined two-block layout
-
-### ❓ Questions (Phase 9) — Answered
-1. **Layout:** Vertical row list inside a two-column grid — confirmed.
-2. **"Read all" link:** Not needed as separate element; blocks read as a continuous editorial section.
-3. **Post data:** 4 entries in `idx.js → communityWritings[]`. Expand as needed.
-
----
-
-## Phase 10 — Contact CTA + Status ✅ (DONE)
-
-**Goal:** Final conversion section — handled via the Footer.
-
-> Contact conversion is fully handled in `Footer.jsx` ("Let's Talk" mailto anchor + Resume download + social links). No standalone `Contact.jsx` was created — the footer CTA is the primary conversion point.
-
-### Tasks
-- [x] 10.1 Contact CTA integrated into `Footer.jsx` — "Let's Talk" mailto anchor + `IconDownload` Resume button
-- [x] 10.2 Social links bar inside footer top card (GitHub, LinkedIn, X, Email)
-- [x] 10.3 Standalone `Contact.jsx` deemed unnecessary — footer CTA is sufficient; marked as not needed
-
-### ❓ Questions (Phase 10) — Answered
-1. **Standalone Contact section:** Not needed — footer CTA handles conversion.
-2. **Form:** `mailto:` link sufficient for now; no HTML form required.
-
----
-
-## Phase 11 — Polish, Scroll Animations & Responsiveness
-
-**Goal:** Smooth feel everywhere, mobile-friendly, production-ready.
-
-### Tasks
-- [x] 11.1 `TagFilter` component created at `src/components/TagFilter.jsx` — unified pill/filter replacing inline patterns in TechStack, Credentials, and Projects sections
-- [x] 11.2 TechStack filter → migrated to `TagFilter` (string array items)
-- [x] 11.3 Credentials filter → migrated to `TagFilter` (object array with `count`)
-- [x] 11.4 Projects filter → migrated to `TagFilter` (string array items)
-- [ ] 11.5 Wrap remaining unwrapped sections in `BlurFade` for scroll-reveal entrance
-- [ ] 11.6 Add `Highlighter` annotations to key phrases — name, role, agency name
-- [ ] 11.7 Verify mobile layout at 375 px — all sections readable, no overflow, nav accessible
-- [ ] 11.8 Test `SmoothCursor` — verify it disables on touch devices (handled by media query)
-- [ ] 11.9 Lazy-load heavy components: `Globe`, `LightRays` via `React.lazy()` + `Suspense`
-- [ ] 11.10 `CommandPalette` integration — press ⌘K / Ctrl+K, verify search filters, nav scrolls to sections, social links open
-- [ ] 11.11 Add `prefers-reduced-motion` media query — disable animations for users who prefer it
-- [ ] 11.12 Create `SectionWrapper` component to eliminate boilerplate in sections
-- [ ] 11.13 Consolidate `SpotlightGlow` + `GlowingEffect` → single `CursorGlow` component
-- [ ] 11.14 Remove unused UI components (see Phase 19C for full list)
-
-### ❓ Questions
-1. **Reduced motion:** Should we respect `prefers-reduced-motion`? (Yes by default, confirming.)
-2. **Loading state:** Skeleton/spinner preference while lazy components load?
-
----
-
-## Phase 13 — Detail Pages: Data Layer ✅ (DONE)
-
-**Goal:** Prepare the data layer so detail pages have something to render. No UI changes yet.
-
-> **Context:** Activities.jsx currently uses static `SIDE_PROJECTS` and `COMMUNITY_WRITINGS` from `src/data/activities.ts`. We're splitting this into two reusable data sources: `projects.js` (expanded) and a renamed `writings.js` (was `blogs.js`). Each entry gains `slug` (URL) and `content` (markdown body). Side projects merge into `projects.js` with `isActivity: true`.
-
-### Tasks
-- [x] 13.1 Added `slug`, `contentPath` to all entries in `src/data/projects.js` (4 main projects + 4 side projects merged from `activities.ts`)
-- [x] 13.2 Added `isActivity: true, featured: false` to side-projects so they don't appear in homepage Projects grid but appear in Activities
-- [x] 13.3 Added optional `changelogPath` field to `clinical-rpa-core` project entry
-- [x] 13.4 Renamed `src/data/blogs.js` → `src/data/writings.js`; added `slug`, `contentPath` to each entry
-- [x] 13.5 Updated `src/data/idx.js` barrel: `export * from "./writings"` (was `./blogs`)
-- [x] 13.6 Deleted `src/data/activities.ts`
-- [x] 13.7 Updated import in `src/components/CommandPallete.jsx`: `blogs` → `writings`
-- [x] 13.8 Updated import in `src/lib/botApi.ts`: `blogs` → `writings`
-- [x] 13.9 Build passes; all imports resolve
-
-### Checkpoint
-8 projects + 3 writings with slug + contentPath verified before moving to Phase 14.
-
----
-
-## Phase 14 — ReadingLayout + Slug Lookup Helper ✅ (DONE)
-
-**Goal:** Build the minimal reading layout that wraps all detail pages. Verify in isolation before wiring real routes.
-
-### Tasks
-- [x] 14.1 **MOVED TO PHASE 19A.1** — Create `src/lib/content.js` with async data helpers
-- [x] 14.2 Create `src/components/layout/ReadingLayout.jsx` — minimal layout: back button (top-left), breadcrumbs (Writing/Title or Projects/Title), `<Outlet />` for page, full Footer at bottom
-- [x] 14.3 ReadingLayout verified in isolation (used by detail pages)
-
-### ❓ Questions (Phase 14) — Answered
-1. **Footer inclusion:** Yes — full Footer component (Let's Talk + socials + resume download) at the bottom of every detail page.
-2. **Breadcrumbs:** Show "Writing / {title}" or "Projects / {title}" depending on route.
-
-### Checkpoint
-ReadingLayout created and used by detail pages. Content helpers moved to Phase 19A.
-
----
-
-## Phase 15 — WritingDetail Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
-
-**Goal:** First end-to-end detail page. Validates the routing pattern + markdown rendering before adding the more complex ProjectDetail.
-
-> **Note:** Current implementation uses `react-router-dom` in `src/pages/WritingDetail.jsx`. Phase 19A migrates this to Next.js App Router at `app/writing/[slug]/page.tsx` with Server/Client Component split.
-
-### Tasks (Original Implementation — Complete)
-- [x] 15.1 Created `src/pages/WritingDetail.jsx` — uses `useParams()` → `getWritingBySlug()` → renders hero (title, date, tags, readTime), `Streamdown` for content, back button in body
-- [x] 15.2 404 fallback — if slug not found, render "Writing not found" inside ReadingLayout with back button (no redirect)
-- [x] 15.3 Added `<Route path="writing/:slug" element={<WritingDetail />} handle={{ breadcrumb: "Writing" }} />` inside ReadingLayout in `src/lib/router.jsx`
-- [x] 15.4 Linked Activities.jsx Block 2 rows to `/writing/:slug` (computed `link: /writing/${slug}` from writings data; no data file changes)
-- [x] 15.5 Build passes clean
-
-### Phase 19A Migration Tasks (New)
-- [ ] 19A.2 Migrate to `app/writing/[slug]/page.tsx` (Server Component with `generateStaticParams`)
-- [ ] 19A.2 Split into Server Component (data fetching) + Client Component (interactive UI)
-- [ ] 19A.5 Add `generateStaticParams()` for all writings
-- [ ] 19A.6 Remove `react-router-dom` imports
-
-### Checkpoint
-Writing detail page renders correctly with markdown, back button works from Activities → WritingDetail. **Migration to App Router pending (Phase 19A).**
-
----
-
-## Phase 16 — ProjectDetail Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
-
-**Goal:** Project detail page with tech chips, GitHub/Live buttons, optional "View Changelog" link.
-
-> **Note:** Current implementation uses `react-router-dom` in `src/pages/ProjectDetail.jsx`. Phase 19A migrates this to Next.js App Router at `app/projects/[slug]/page.tsx` with Server/Client Component split.
-
-### Tasks (Original Implementation — Complete)
-- [x] 16.1 Created `src/pages/ProjectDetail.jsx` — same pattern as WritingDetail plus: TechPill chips, GitHub/Live buttons (hidden when `#`), "View Changelog" link when `changelog` field exists
-- [x] 16.2 404 fallback identical to WritingDetail
-- [x] 16.3 Added `{ path: "projects/:slug", element: <ProjectDetail /> }` to `src/lib/router.jsx`
-- [x] 16.4 Activities.jsx Block 1 rows linked via computed `link: /projects/${slug}` (no data file changes)
-- [x] 16.5 Build passes clean
-
-### Phase 19A Migration Tasks (New)
-- [ ] 19A.3 Migrate to `app/projects/[slug]/page.tsx` (Server Component with `generateStaticParams`)
-- [ ] 19A.3 Split into Server Component (data fetching) + Client Component (interactive UI)
-- [ ] 19A.5 Add `generateStaticParams()` for all projects
-- [ ] 19A.6 Remove `react-router-dom` imports
-
-### Checkpoint
-ProjectDetail renders tech chips, action buttons, and markdown body. Back button works from Activities → ProjectDetail. **Migration to App Router pending (Phase 19A).**
-
----
-
-## Phase 17 — ProjectChangelog Page ✅ (DONE — MIGRATING TO APP ROUTER IN PHASE 19A)
-
-**Goal:** Timeline-style changelog view adapted from `changelog-template/app/page.tsx`. Vertical timeline with sticky dates + version bubbles + markdown content per entry.
-
-> **Note:** Current implementation uses `react-router-dom` in `src/pages/ProjectChangelog.jsx`. Phase 19A migrates this to Next.js App Router at `app/projects/[slug]/changelog/page.tsx` as a Server Component.
-
-### Tasks (Original Implementation — Complete)
-- [x] 17.1 `src/pages/ProjectChangelog.jsx` — timeline layout:
-  - Header: project title + back-to-project link (in body)
-  - Left column: sticky version bubble (e.g. "v0.3")
-  - Right column: date + `<Streamdown>` content per entry
-  - Vertical timeline line with primary-color dot per entry
-  - Markdown parsed via `parseChangelogEntries()` — splits on `## vX.Y — date` headings
-- [x] 17.2 404 fallback — if project doesn't exist OR has no `changelog` field, show "Not found" / "No changelog yet" with back button
-- [x] 17.3 Added `{ path: "projects/:slug/changelog", element: <ProjectChangelog /> }` to `src/lib/router.jsx` (before the `projects/:slug` catch-all)
-- [x] 17.4 Changelog data pre-existing in `clinical-rpa-core/changelog.md` (3 entries: v0.1, v0.2, v0.3 covering action registry, session timeout fix, docman + EMIS features)
-- [x] 17.5 "View Changelog" button in ProjectDetail links to `/projects/:slug/changelog` when `project.changelog` is truthy
-- [x] 17.6 Build passes clean
-
-### Phase 19A Migration Tasks (New)
-- [ ] 19A.4 Migrate to `app/projects/[slug]/changelog/page.tsx` (Server Component)
-- [ ] 19A.5 Add `generateStaticParams()` for all project changelogs
-- [ ] 19A.6 Remove `react-router-dom` imports
-
-### Checkpoint
-Changelog renders as vertical timeline with 3 version entries (v0.1 → v0.2 → v0.3) for Clinical RPA Core. **Migration to App Router pending (Phase 19A).**
-
----
-
-## Phase 18 — Polish, 404s, Scroll Restoration ✅ (DONE — SCROLLTO TOP NEEDS APP ROUTER UPDATE)
-
-**Goal:** Production-ready edge cases.
-
-> **Note:** Current `ScrollToTop` uses `react-router-dom`'s `useLocation()`. Phase 19A will need to update this to use Next.js App Router's `usePathname()` from `next/navigation`.
-
-### Tasks
-- [x] 18.1 Custom `src/components/NotFound.jsx` — reusable 404 with back button, used in WritingDetail + ProjectDetail + ProjectChangelog error states
-- [x] 18.2 `src/components/ScrollToTop.jsx` — scrolls to top on route change via `useLocation().pathname`; wired into both `AppShell` and `ReadingLayout`
-- [ ] 18.3 Manual: back button flows from homepage → Activities → WritingDetail / ProjectDetail / ProjectChangelog
-- [ ] 18.4 Manual: mobile responsive at 375 px — detail pages use `max-w-4xl mx-auto`, typography scales via `sm:` breakpoints
-- [x] 18.5 All routes render without console errors (verified in build)
-- [x] 18.6 Build passes clean (no TS errors, no broken imports)
-
-### Phase 19A Migration Tasks
-- [ ] Update `ScrollToTop` to use `usePathname()` from `next/navigation` instead of `useLocation()`
-
-### Checkpoint
-All 3 detail page types render. ScrollToTop active. NotFound available as shared component. **App Router migration pending.**
-
----
-
-## Phase 12 — Content Fill, SEO & Deploy
-
-**Goal:** Real content, final polish, production build.
-
-### Tasks
-- [ ] 12.1 **Fill in** `src/data/idx.js` — all real data (personal info, experience, projects, blogs, etc.)
-- [ ] 12.2 Replace placeholder images — avatar, project screenshots
-- [ ] 12.3 SEO — add `<title>`, `<meta name="description">`, Open Graph tags
-- [ ] 12.4 Favicon — add `favicon.ico` or SVG favicon to `public/`
-- [ ] 12.5 Run `npm run build` — zero TS errors, zero lint errors, clean bundle
-- [ ] 12.6 Deploy — Vercel recommended (zero-config Next.js), or Netlify, or GitHub Pages
-
-### ❓ Questions
-1. **Domain:** Do you have a custom domain? Which host?
-2. **Deploy target:** Vercel, Netlify, or GitHub Pages? (Vercel recommended)
-3. **Analytics:** Plausible / Google Analytics / none? (Plausible recommended.)
-
----
-
-## Phase 19 — Next.js 16 App Router Migration (NEW)
-
-**Goal:** Migrate from hybrid SPA routing to pure Next.js App Router with Server Components, Static Generation, and optimal performance.
-
-### Phase 19A — Critical Fixes (Blockers)
-- [ ] 19A.1 Create `src/lib/content.js` with `getWritingBySlug()`, `getProjectBySlug()` async helpers
-- [ ] 19A.2 Migrate `WritingDetail` → `app/writing/[slug]/page.tsx` (Server Component + Client Component split)
-- [ ] 19A.3 Migrate `ProjectDetail` → `app/projects/[slug]/page.tsx` (Server Component + Client Component split)
-- [ ] 19A.4 Migrate `ProjectChangelog` → `app/projects/[slug]/changelog/page.tsx` (Server Component)
-- [ ] 19A.5 Add `generateStaticParams()` for all dynamic routes (writings, projects, changelogs)
-- [ ] 19A.6 Remove `react-router-dom` dependency and all `useParams`/`useNavigate`/`Link` imports
-- [ ] 19A.7 Delete duplicate `src/sections/` directory (keep `src/components/sections/`)
-
-### Phase 19B — Server Component Conversion
-- [ ] 19B.1 Convert `Hero` → Server Component (remove `"use client"`, keep `LightRays`/`Particles` as client islands)
-- [ ] 19B.2 Convert `About` → Server Component (extract `LiveClock` + `HeatmapGrid` as client islands)
-- [ ] 19B.3 Convert `Experience` → Server Component (keep `ExpandableList` as client island)
-- [ ] 19B.4 Convert `Credentials` → Server Component (keep `TagFilter` as client island)
-- [ ] 19B.5 Convert `FAQ` → Server Component (keep `ExpandableList` as client island)
-- [ ] 19B.6 Keep `Projects`, `TechStack`, `Activities` as Client Components (interactive filters)
-- [ ] 19B.7 Update `app/page.tsx` to use Server Components where converted
-
-### Phase 19C — Component Consolidation & Simplification
-- [ ] 19C.1 Create `SectionWrapper` component to unify `<Section>` + `<Layout>` + `<BlurFade>` + `<LazyParticles>` pattern
-- [ ] 19C.2 Merge `SpotlightGlow` + `GlowingEffect` → single `CursorGlow` component
-- [ ] 19C.3 Remove unused UI components: `animated-beam`, `animated-circular-progress-bar`, `animated-shiny-text`, `aurora-text`, `background-gradient`, `border-beam`, `dotted-map`, `interface-craft-cards`, `kinetic-text`, `ripple`, `tracing-beam`, `terminal`, `spotlight` (SVG-based)
-- [ ] 19C.4 Consolidate `Heading` + `GradientHeading` → single `Heading` with `variant` prop
-- [ ] 19C.5 Simplify `TagFilter` API — remove accessor function props, use two specialized variants
-- [ ] 19C.6 Extract `AppShell` scroll logic to `useScrollVisibility` hook
-- [ ] 19C.7 Move `ProjectCard`, `ProjectBlueprintHero` to separate files under `components/projects/`
-
-### Phase 19D — Performance & Bundle Optimization
-- [ ] 19D.1 Remove unused dependencies: `approve`, `install-scripts`, `npm`, `radix-ui` (meta-package), `shadcn`, `@streamdown/cjk`, `@streamdown/mermaid`
-- [ ] 19D.2 Add `next/script` for any third-party scripts (analytics, etc.)
-- [ ] 19D.3 Optimize `Particles` — reduce count on mobile, consider Web Worker
-- [ ] 19D.4 Standardize all images to `next/image` with proper `sizes` and `priority`
-- [ ] 19D.5 Add `prefers-reduced-motion` media query to disable animations globally
-- [ ] 19D.6 Configure `next.config.ts` for `output: 'export'` if static hosting, or keep SSR for dynamic routes
-
-### Phase 19E — SEO, Accessibility & Polish
-- [ ] 19E.1 Add JSON-LD structured data (Person, WebSite, BlogPosting schemas)
-- [ ] 19E.2 Generate `sitemap.xml` and `robots.txt` via `next-sitemap` or custom script
-- [ ] 19E.3 Add `metadata` export to all dynamic routes (writing, projects)
-- [ ] 19E.4 Audit color contrast (WCAG AA) — especially `text-muted-foreground` on dark surfaces
-- [ ] 19E.5 Test keyboard navigation — Dock, CommandPalette, all interactive elements
-- [ ] 19E.6 Verify `prefers-reduced-motion` respected across all animations
-
-### ❓ Questions (Phase 19)
-1. **Static vs SSR:** Deploy as static export (`output: 'export'`) or keep SSR for dynamic routes? (Static recommended for portfolio)
-2. **Image domains:** Any additional remote image hosts beyond GitHub, Unsplash, Raw GitHub?
-3. **Analytics:** Plausible script — add via `next/script` in `layout.tsx`?
-4. **Content source:** Keep markdown files in `data/` or move to CMS (Contentlayer, Notion, etc.)?
-5. **AI Assistant:** Keep as-is, or move to separate `/assistant` route with its own layout?
-
----
-
-## Phase 20 — Headless MDX Content System (NEW)
-
-**Goal:** Replace `fumadocs-ui` with a fully custom, headless MDX pipeline using `fumadocs-core` + `fumadocs-mdx` (build/source layer only) + `rehype-pretty-code` + `shiki` for syntax highlighting. Migrate content from `data/*.js` → `content/*.mdx` with frontmatter. Build-time TOC extraction, SSG for all detail pages, AI-ready content index.
-
-**Context:** Fumadocs packages removed (Phase 0 cleanup done). `content/` folder exists with writings/projects/changelogs MDX. Current detail pages use `data/` JS files + `react-router-dom`. Phase 19 migrates routing; this phase migrates the content layer.
-
-### Phase 20A — Config & Build Setup
-- [ ] 20A.1 Create `source.config.ts` at root — `defineConfig` + `defineDocs` for 3 collections:
-  - `writings` → `content/writings` (schema: title, description, date, tags[], readTime?, thumbnail?)
-  - `projects` → `content/projects` (schema: title, description, date, category, industry?, access?, tech[], strategies[], changelog?, github?, live?, thumbnail?)
-  - `changelogs` → merged into projects MDX under `## Changelog` heading (see 20C)
-- [ ] 20A.2 Update `next.config.ts` — ensure `createMDX()` wrapper applied
-- [ ] 20A.3 Update `package.json` scripts:
-  ```json
-  "dev": "fumadocs-mdx && next dev",
-  "build": "fumadocs-mdx && next build",
-  "postinstall": "fumadocs-mdx"
-  ```
-- [ ] 20A.4 Install deps: `fumadocs-core`, `fumadocs-mdx`, `shiki`, `rehype-pretty-code`, `@tailwindcss/typography`
-
-### Phase 20B — MDX Pipeline & Components
-- [ ] 20B.1 Create `lib/mdx-plugins.ts` — rehype plugins:
-  - `rehype-pretty-code` config (theme: `github-light`/`github-dark`, keepBackground, onVisitLine, onVisitHighlightedLine)
-  - **Custom plugin: `extractHeadings`** — walks AST, builds TOC array (`{ level, text, slug }`), attaches to file data via `data.toc`
-  - **Custom plugin: `wrapChangelog`** — detects `## Changelog` heading, wraps subsequent `### vX.Y.Z` sections in `<details>` for collapsible rendering
-- [ ] 20B.2 Create `components/mdx-components.tsx` — all HTML elements + custom components:
-  - Base: h1-h6 (with `CopyHeader`), p, ul, ol, li, blockquote, code, pre, a, hr, strong, em, table, th, td
-  - Custom: `Badge`, `TechPill`, `ExtendedLink`, `ExternalLink`, `GitHubLink`, `LiveLink` (reuse existing from `components/`)
-  - `CodeBlock` wrapper for `pre`/`code` with copy button, filename, line numbers
-- [ ] 20B.3 Create `components/CodeBlock.tsx` — client component, uses `shiki` tokens from `rehype-pretty-code` output
-
-### Phase 20C — Content Migration & Structure
-- [ ] 20C.1 **Writings**: Verify existing `content/writings/*.mdx` have correct frontmatter (title, description, date, tags, readTime). Add `thumbnail` if needed.
-- [ ] 20C.2 **Projects**: Migrate each project to single MDX file with structure:
-  ```mdx
-  ---
-  title: "Project Title"
-  description: "..."
-  date: "2025-01-15"
-  category: "Web"
-  industry: "Healthcare"
-  access: "Private"
-  tech: ["React", "TypeScript", "Tailwind"]
-  strategies: ["Strategy 1", "Strategy 2"]
-  github: "https://github.com/..."
-  live: "https://..."
-  thumbnail: "/tools/..."
-  ---
-  
-  # Project Title
-  
-  Project description...
-  
-  ## Changelog
-  
-  ### v1.2.0 - 2025-01-15
-  - Feature X
-  
-  ### v1.1.0 - 2024-11-01
-  - Fix Y
-  ```
-- [ ] 20C.3 **Changelogs**: Delete `content/changelogs/` — merged into project MDX per above convention
-- [ ] 20C.4 Run `fumadocs-mdx` → generates `@/.source` virtual module with full TS types
-
-### Phase 20D — Typed Sources & Data Layer
-- [ ] 20D.1 Create `lib/source.ts` — exports typed loaders:
-  ```ts
-  import { loader } from "fumadocs-core/source";
-  import { createMDXSource } from "fumadocs-mdx";
-  import { docs: writings, meta: writingsMeta } from "@/.source";
-  // ... projects
-  
-  export const writingsSource = loader({ baseUrl: "/writings", source: createMDXSource(writings, writingsMeta) });
-  export const projectsSource = loader({ baseUrl: "/projects", source: createMDXSource(projects, projectsMeta) });
-  ```
-- [ ] 20D.2 Update `lib/content.js` (from Phase 19A) to use new sources instead of `data/` files
-- [ ] 20D.3 Delete `data/writings.js`, `data/projects.js`, `data/content.js` (replaced by MDX)
-
-### Phase 20E — Detail Pages (App Router + SSG)
-- [ ] 20E.1 `app/writing/[slug]/page.tsx` — Server Component:
-  - `generateStaticParams` → `writingsSource.generateParams()`
-  - `generateMetadata` → uses frontmatter + TOC for OG
-  - Fetches page + TOC, passes to Client Component
-- [ ] 20E.2 `app/writing/[slug]/WritingContent.tsx` — Client Component:
-  - Renders `<MDX components={mdxComponents} />` inside prose wrapper
-  - `TableOfContents` (desktop) + `MobileTableOfContents` (drawer)
-- [ ] 20E.3 `app/projects/[slug]/page.tsx` — Server Component:
-  - `generateStaticParams` → `projectsSource.generateParams()`
-  - Fetches project + TOC (changelog entries marked by plugin)
-- [ ] 20E.4 `app/projects/[slug]/ProjectContent.tsx` — Client Component:
-  - Hero: title, badges, description, action buttons (GitHub/Live)
-  - Sidebar: TechPill chips, strategies, **TOC with changelog dropdown**
-  - Main: MDX content with collapsible changelog sections
-- [ ] 20E.5 `app/projects/[slug]/changelog/page.tsx` — Optional standalone changelog page (or remove if inline)
-
-### Phase 20F — TOC Components
-- [ ] 20F.1 `components/TableOfContents.tsx` — receives `toc` prop (array from page data):
-  - Nested `<ul>` by heading level
-  - **Changelog grouping**: items with `data.changelog: true` render under collapsible `<details><summary>Changelog</summary>...</details>`
-  - Scroll-spy highlighting (IntersectionObserver)
-- [ ] 20F.2 `components/MobileTableOfContents.tsx` — Sheet/drawer variant, same data
-
-### Phase 20G — Listings & Homepage Integration
-- [ ] 20G.1 Update `app/(home)/page.tsx` sections:
-  - Writings block → `writingsSource.getPages()` sorted by date
-  - Projects block → `projectsSource.getPages()` filtered by category
-  - Activities block → merge both sources
-- [ ] 20G.2 Create `components/ReadMoreSection.tsx` — tag-based relevance (like blog-template)
-
-### Phase 20H — Styling & Tailwind Typography
-- [ ] 20H.1 Update `globals.css` — add `@plugin "@tailwindcss/typography";` + customize prose tokens
-- [ ] 20H.2 Configure `tailwind.config.ts` for typography plugin (prose-headings, prose-code, etc.)
-
-### Phase 20I — AI-Ready Content Index
-- [ ] 20I.1 Create `scripts/build-content-index.ts` — runs after `fumadocs-mdx`:
-  - Reads `@/.source` or all MDX files
-  - Outputs `public/content-index.json`:
-    ```json
-    [
-      { "type": "writing", "slug": "...", "title": "...", "description": "...", "tags": [], "content": "...", "headings": [...] },
-      { "type": "project", "slug": "...", "title": "...", "description": "...", "tech": [], "content": "...", "headings": [...] }
-    ]
-    ```
-- [ ] 20I.2 Add to `package.json`: `"postbuild": "tsx scripts/build-content-index.ts"`
-
-### Phase 20J — Cleanup & Verification
-- [ ] 20J.1 Verify all detail pages render correctly (SSG, metadata, TOC, changelog dropdown)
-- [ ] 20J.2 Verify syntax highlighting works in light/dark
-- [ ] 20J.3 Verify `npm run build` passes (no TS errors, all static params generated)
-- [ ] 20J.4 Delete unused `data/` files, old router pages, `react-router-dom`
-- [ ] 20J.5 Update `ROADMAP.md` — mark Phase 20 complete
-
----
-
-### ❓ Questions (Phase 20)
-1. **Code theme**: `github-light` / `github-dark` for shiki, or custom JSON theme?
-2. **TOC depth**: Include h4-h6 in TOC, or only h2-h3?
-3. **Changelog heading level**: Confirm `## Changelog` (h2) with `### vX.Y.Z` (h3) convention works for all projects
-4. **Content index**: JSON only (client search) is fine for now; embeddings later?
-5. **Date source**: Use frontmatter `date` only (not git `lastModified`)?
-
----
-
-## Quick-Reference: File Structure (actual, as of last update)
+## ✅ PHASE EXECUTION CHECKLIST (every phase)
 
 ```
-src/
-├── app/                              ← Next.js 16 App Router (NEW)
-│   ├── layout.tsx                    ← Root layout, fonts, TooltipProvider
-│   ├── page.tsx                      ← Homepage (Server Component)
-│   ├── globals.css                   ← Tailwind v4 + CSS variables
-│   ├── writing/
-│   │   └── [slug]/
-│   │       └── page.tsx              ← WritingDetail (Server + Client split)
-│   └── projects/
-│       └── [slug]/
-│           ├── page.tsx              ← ProjectDetail (Server + Client split)
-│           └── changelog/
-│               └── page.tsx          ← ProjectChangelog (Server Component)
-├── data/
-│   └── idx.js                        ← Single source of truth (all content)
-├── lib/
-│   ├── utils.ts                      ← cn() helper
-│   ├── download.ts                   ← Resume download helper
-│   ├── botApi.ts                     ← AI Assistant backend logic
-│   └── content.js                    ← Phase 19A ✅ (async data helpers for detail pages)
-├── components/
-│   ├── ui/                           ← DO NOT ADD FOLDERS — only .tsx files
-│   │   ├── TagFilter.jsx             ← Phase 11 ✅ (shared pill filter)
-│   │   ├── badge.tsx
-│   │   ├── bento-grid.tsx
-│   │   ├── blur-fade.tsx
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dock.tsx
-│   │   ├── glowing-effect.tsx        ← Merged: SpotlightGlow + GlowingEffect → CursorGlow
-│   │   ├── Heading.tsx               ← Consolidated: Heading + GradientHeading
-│   │   ├── light-rays.tsx
-│   │   ├── marquee.tsx
-│   │   ├── number-ticker.tsx
-│   │   ├── particles.tsx
-│   │   ├── pointer.tsx
-│   │   ├── shimmer-button.tsx
-│   │   ├── smooth-cursor.tsx
-│   │   ├── spotlight-glow.tsx        ← Renamed to CursorGlow (Phase 19C)
-│   │   ├── tooltip.tsx
-│   │   └── typing-animation.tsx
-│   ├── layout/
-│   │   ├── AppShell.tsx              ← Phase 1 ✅ (uses useScrollVisibility hook)
-│   │   ├── Section.jsx               ← Phase 1 ✅
-│   │   ├── Layout.jsx                ← Phase 1 ✅
-│   │   ├── Footer.jsx                ← Phase 1 ✅
-│   │   ├── ReadingLayout.jsx         ← Detail page layout (TopBar + Section + Footer)
-│   │   └── SectionWrapper.jsx        ← Phase 19C ✅ (unifies Section+Layout+BlurFade+Particles)
-│   ├── nav/
-│   │   └── DockVisibilityProvider.jsx ← Phase 1 ✅
-│   ├── sections/
-│   │   └── HomePage/
-│   │       ├── Hero.jsx              ← Phase 2 ✅ (Server Component + client islands)
-│   │       ├── About.jsx             ← Phase 3 ✅ (Server Component + client islands)
-│   │       ├── Contributions.jsx     ← Phase 4 ✅ (heatmap + stat cards)
-│   │       ├── TechStack.jsx         ← Phase 4 ✅ (Client: TagFilter)
-│   │       ├── Experience.jsx        ← Phase 5 ✅ (Server + ExpandableList client island)
-│   │       ├── Credentials.jsx       ← Phase 6 ✅ (Server + TagFilter client island)
-│   │       ├── Projects.jsx          ← Phase 7 ✅ (Client: filters + ExpandableList)
-│   │       ├── Activities.jsx        ← Phase 8+9 ✅ (Client: ActivityRow)
-│   │       └── FAQ.jsx               ← Bonus ✅ (Server + ExpandableList client island)
-│   ├── projects/                     ← Phase 19C ✅ (extracted from Projects.jsx)
-│   │   ├── ProjectCard.jsx
-│   │   └── ProjectBlueprintHero.jsx
-│   ├── CommandPallete.jsx            ← Phase 1 ✅
-│   ├── AvatarStatus.jsx              ← Shared
-│   ├── ContactCard.jsx               ← Shared
-│   ├── Heatmap.jsx                   ← Phase 4 ✅
-│   ├── StatCard.jsx                  ← Shared
-│   ├── TechCard.jsx                  ← Shared
-│   ├── AssistantAi.jsx               ← AI Assistant Drawer
-│   ├── PageLoader.jsx                ← Shared skeleton
-│   ├── PageError.jsx                 ← Shared error state
-│   ├── NotFound.jsx                  ← Shared 404
-│   ├── lazy.jsx                      ← Lazy component exports
-│   ├── ExtendedLink.jsx              ← External link wrapper
-│   ├── TechPill.jsx                  ← Tech badge
-│   ├── FavoriteStack.jsx             ← Hero tech stack
-│   └── ScrollToTop.jsx               ← Route change scroll restoration
-├── hooks/
-│   ├── useGitHubStats.js             ← GitHub API integration
-│   └── useScrollVisibility.ts        ← Phase 19C ✅ (extracted from AppShell)
-└── sections/                         ← DEPRECATED — delete (duplicate of components/sections/)
+PRE   git status clean · re-read docs · Context7 queries logged · skills consulted ·
+      existing-component check · options compared (user picks if >1)
+BUILD ≤4 files · format rules · no drive-by edits
+TEST  lint · typecheck · build · axe · bundle delta · ux-mcp · reduced-motion
+LOG   append phase entry (template at bottom of this file)
+GATE  request review → WAIT → commit checkpoint on approval
+FAIL  cannot fix in-phase → revert + report
 ```
 
 ---
 
-## Questions Summary
+# WEEK 1 — FOUNDATION & TOKENS
 
-| # | Question | Phase | Your Answer |
-|---|---|---|
-| 1 | Nav: Dock / top bar / both / neither? | 1 | Dock + floating TopBar (glass, max-w-7xl) |
-| 2 | Logo text (initials / "DA" / something else)? | 1 | "DA" text in TopBar left |
-| 3 | Light mode toggle or dark-only? | 1 | Dark-only, no toggle |
-| 4 | Tagline / one-line pitch? | 2 | ✅ Settled in `idx.js → personal.tagline` |
-| 5 | Hero background: LightRays / Gradient / Shader? | 2 | ✅ `LightRays` chosen and implemented |
-| 6 | CTA button: ShimmerButton or RainbowButton? | 2 | ✅ `ShimmerButton` (replaced RainbowButton) |
-| 7 | Avatar photo or initials placeholder? | 3 | ❓ |
-| 8 | Are placeholder stats/skills roughly correct? | 3 | ❓ |
-| 9 | GitHub heatmap: simulated or real API? | 4 | ❓ |
-| 10 | Consistency card 2 theme? | 4 | ❓ |
-| 11 | Experience: TracingBeam or Framer Motion? | 5 | ✅ Framer Motion `AnimatePresence` used; TracingBeam deferred to polish pass |
-| 12 | Tech badges: all `tech[]` or top 3 per role? | 5 | ✅ All shown |
-| 13 | Project filter tabs: yes or flat grid? | 7 | ✅ Kept — All / Web / Automation / Open Source via `TagFilter` |
-| 14 | Kanban: separate board or merged into Activities? | 8 | ✅ Merged — no standalone KanbanBoard.jsx; Activities.jsx covers both Kanban + Writings |
-| 15 | Standalone Contact.jsx needed or footer CTA sufficient? | 10 | ✅ Footer CTA sufficient — no standalone Contact.jsx needed |
-| 16 | Deploy target: Vercel / Netlify / GitHub Pages? | 12 | ❓ |
-| 17 | Analytics: Plausible / GA / none? | 12 | ❓ |
-| 18 | Reduced motion: respect `prefers-reduced-motion`? | 11 | ❓ |
-| 19 | Static vs SSR: Deploy as static export or keep SSR? | 19 | ❓ |
-| 20 | Image domains: Additional remote hosts beyond GitHub/Unsplash? | 19 | ❓ |
-| 21 | Analytics: Plausible via `next/script` in layout? | 19 | ❓ |
-| 22 | Content source: Keep markdown in `data/` or move to CMS? | 19 | ❓ |
-| 23 | AI Assistant: Keep in Dock or move to `/assistant` route? | 19 | ❓ |
+## Phase 1 — Documentation Baseline ✅
+**Files:** `ROADMAP.md`, `ARCHITECTURE.md`, `COMPONENTS_MAP.md`
+- [ ] All three docs written and approved
+- [ ] Context7 research baseline logged (see Research Log below)
+
+## Phase 2 — Design Token Research & Selection
+**Files:** 0–1 (research + optional notes file)
+- Activate skills: `design-system`, `design-taste-frontend`, `high-end-visual-design`, `ui-ux pro max`
+- Generate palette proposals (gold accent scale 50–950), type scale, shadow elevation set
+- **Deliverable:** options table → USER PICKS final tokens
+
+### Sub-phases:
+- 2a. Color scale research + contrast pre-check
+- 2b. Typography scale proposal (fluid clamp values)
+- 2c. Shadow/radius/transitions proposal
+
+## Phase 3 — Token System Files
+**Files (4):** `lib/design-tokens/colors.ts` · `typography.ts` · `spacing.ts` (+shadows+radius combined) · `theme-mapping.ts`
+- Three-layer architecture (primitive → semantic → component)
+- **Semantic layer uses shadcn-compatible variable names** (`--background`, `--foreground`, `--primary`, `--primary-foreground`, `--secondary`, `--muted`, `--muted-foreground`, `--accent`, `--destructive`, `--border`, `--input`, `--ring`, `--card`, `--popover`, `--radius`) — all existing shadcn/ui + custom components keep resolving with zero rename churn
+- Light/dark value pairs exported
+- `theme-mapping.ts` translates tokens into **Tailwind v4 namespace variables**: `--color-*`, `--spacing-*`, `--font-*` — these are what get declared inside `@theme`
+
+## Phase 4 — globals.css `@theme` Wiring
+**Files (1):** `app/globals.css`
+- Inject mapped tokens **directly into the `@theme` block** using Tailwind v4 namespaces: `--color-*`, `--spacing-*`, `--font-*`. In v4, plain `:root` declarations do NOT generate utility classes (`bg-canvas`, `text-accent`) — `@theme` is the utility-generation API. *Ref: Context7 `/tailwindlabs/tailwindcss.com` → theme.mdx*
+- Register shadcn semantic variables inside `@theme` as well; dark values are re-declared under a `.dark` selector override (next-themes class strategy), so every shadcn/ui component swaps themes without code changes
+- Remove duplicate `prefers-color-scheme` block (next-themes owns mode switching)
+- Custom named tokens (e.g. `--color-canvas`, `--color-accent-gold`) also live in `@theme` → auto-generate `bg-canvas`, `text-accent-gold` utilities
+- Validate contrast via `ux_check_contrast` on key pairs
+- Verify: built CSS output contains generated utilities (`bg-primary`, `text-muted-foreground`)
+
+## Phase 5 — Fonts & Providers
+**Files (2):** `lib/fonts.ts` · `app/providers.jsx`
+- Poppins: trim weights to actually-used set, latin subset, swap display
+- Geist Mono: no preload (below fold usage)
+- next-themes ThemeProvider (`attribute="class"`, system default, disableTransitionOnChange)
+
+## Phase 6 — Root Layout Integration
+**Files (2):** `app/layout.tsx` · `components/analytics/WebVitals.jsx`
+- Providers wrap, Analytics + SpeedInsights mount
+- WebVitals component (useReportWebVitals → trackEvent)
+- Viewport: dual themeColor (light/dark media queries)
+- Keep existing metadata + JSON-LD structure
+
+---
+
+# WEEK 2 — PERFORMANCE & ANIMATIONS
+
+> **Amendment (user directive):** Lazy-import registry MOVED from Phase 7 → **Phase 22**. Rationale: build sections first, discover which components actually ship, then register loaders for real usage only — no speculative entries. OptimizedImage stays early (consumed during section rebuilds).
+
+## Phase 7 — OptimizedImage + Skeleton
+**Files (2):** `components/common/OptimizedImage.jsx` · `components/common/Skeleton.jsx`
+- Blur placeholder (auto SVG dataURL), priority→fetchPriority high, sizes defaults
+- Error state fallback, fade-in on load
+- Skeleton = shared pulse primitive (reused by registry in P22)
+
+### Sub-phases:
+- 7a. Component build
+- 7b. Swap `<img>` usages found during section phases (tracked list)
+
+## Phase 8 — AmbientBackground Global Layer
+**Files (2):** `app/globals.css` (keyframes append) · `components/animations/AmbientBackground.jsx` (path is historical per Phase 08 copy — `components/animations/` directory does not exist on disk; file was later marked UNUSED)
+- CSS-only orbs (blob keyframes) + fixed grain overlay
+- Retires Particles/LightRays usage page-wide (imports removed, files kept)
+- Variants: orb/grid · intensities: subtle/medium/strong
+
+## Phase 9 — Scroll Animation Primitives
+**Files (2):** `components/ui/ScrollReveal.tsx` (unified ScrollReveal + StaggeredReveal + ScrollRevealText; lives here, not components/animations/) · `globals.css`
+- IntersectionObserver + CSS animations (zero JS anim overhead)
+- prefers-reduced-motion → static render
+- Absorbs StaggeredList role
+
+## Phase 10 — useGSAP Hook (Option B outcome)
+**Files (1):** `hooks/useGSAP.js`
+- ✅ RESOLVED per user Option B + usage evidence: `dock.tsx` declared dock winner (live in BottomDock) · `MagneticDock.tsx` marked UNUSED (12KB, zero consumers — file kept) · NO new Magnetic wrapper (MagneticButton/MagneticLink already sole-live pattern; indirection rejected under simplification directive)
+- useGSAP hook: gsap.context lifecycle + ctx.revert · reduced-motion early-return · re-exports gsap/ScrollTrigger (single registration point) · usePrefersReducedMotion via useSyncExternalStore
+- **NOTE:** `components/animations/useGSAP.js` path is stale. File lives at `hooks/useGSAP.js`.
+
+## Phase 11 — HERO REBUILD ⭐
+**Files (2):** `app/(home)/_components/Hero.jsx` · hero floating pill layer (inline in Hero.jsx)
+- ❌ Remove LightRays + old `components/lazy.jsx` consumer migration (file stays, marked UNUSED)
+- Stack discipline: avatar-status → kinetic headline (typewriter) → ≤20-word subtext → single CTA + socials
+- Entry: staggered blur-fade-up 800ms `cubic-bezier(0.32,0.72,0,1)`
+- FavoriteStack compact-marquee role retired here (data source reused)
+- ⚠️ `HeroPills.jsx` was introduced and then **DELETED in Phase 11b** (user verdict: rejected visually; zero residual imports verified post-delete)
+
+---
+
+# WEEK 3 — SECTIONS & CHATBOT
+
+## Phase 12 — About Section
+**Files (2):** `About.jsx` · portrait wrapper
+- Editorial Split: massive statement left, DoubleBezel portrait right
+- NumberTicker stats row
+- Handoff pairing with Hero exit
+
+## Phase 13 — TechStack Horizontal Scroller ⭐
+**Files (5):** `TechStack.jsx` + `HorizontalScroll.tsx` (engine, lives at `components/ui/HorizontalScroll.tsx`; exports `ScrollWrapper`) · `shades.css` (user-created) · `globals.css` · `watermelon/Tabs.tsx` refactor
+- GSAP dual-dimensional horizontal pan (vertical scroll drives rail right→left, scrub bidirectional, pin, end+=1400)
+- **Solid different-shade background per card** (token tint steps from user `shades.css`: blue/gold/green/rose/canvas)
+- ✅ CONFIRMED: watermelon `Tabs.tsx` refactored (Rule #14: hsl→shadow-e1 tokens, demos commented, arrow-key aria nav, count chips) then MOVED to `components/common/Tabs.tsx` (currently zero consumers — future Writings filter candidate per P17)
+- ⚠️ Rule #14 apples: Tabs.tsx must be refactored BEFORE any integration
+
+## Phase 14 — Experience Scroll Stories (A/B Evaluation)
+**Files (4):** `Experience.jsx` · `components/Timeline.tsx` (live refactor — NOT `components/21st/Timeline.tsx`; that path does not exist on disk; file is at root `components/`) · `components/StackedCards.jsx` (root, NOT `components/animations/`) · GSAPScrollRail disposition
+- **Build BOTH, keep the winner** (user directive):
+  - 15a. Option A: sticky-stack (pin top-top, scale 0.92/op 0.55 handoff) → review
+  - 15b. Option B: `21st/Timeline.tsx` story renderer (refactored per Rule #14: token-standardized classes, demos commented out) → review
+- Compare live on real data; user verdict recorded in phase log; loser marked UNUSED (file kept)
+
+## Phase 15 — Projects Bento Rebuild ⭐
+**Files (3):** new `ProjectCard.jsx` (PricingCard-inspired minimal aesthetic) · rebuilt bento layout · `Projects.jsx` feed update
+- True asymmetric bento (current ProjectsBento is NOT the actual one — rebuild)
+- **Iterate ALL 8 MDX projects including in-progress** (status badge: Live / In Progress)
+- BorderBeam hover, stagger entrance, OptimizedImage thumbnails
+
+## Phase 16 — Writings Redesign + Credentials Focus
+**Files (3):** `Activities.jsx` → writings-only redesign · `Credentials.jsx` education-only · data file comment-out
+- Activity section becomes **Writings**: 3 MDX articles on tracing-beam spine
+- JournalNavigation (watermelon) integration candidate
+- Credentials: **education entries ONLY**; certificates + awards commented out in data (preserved)
+
+## Phase 17 — Lightweight Chatbot Components
+**Files (3):** `components/chatbot/Chatbot.jsx` · `Message.jsx` · `QuickActions.jsx`
+- Custom streaming UI (no `ai` SDK dependency)
+- Quick-action chips: Projects / Experience / Stack / Contact
+- ARIA live regions, focus management, keyboard navigable
+- AssistantAi imports retired (file kept, marked UNUSED)
+
+---
+
+# WEEK 4 — API, SEO, QUALITY, DEPLOY
+
+## Phase 18 — Chatbot API & Wiring
+**Files (3):** `app/api/chat/route.ts` (Edge runtime) · `BottomDock.jsx` wiring · `package.json` (drop `ai` dep, −70KB)
+- Curated responses + character-stream simulation
+- Chatbot mounted via P22 registry 
+
+## Phase 19 — SEO Metadata System
+**Files (3):** `lib/seo.ts` · `lib/structured-data.ts` enhance · project detail page metadata
+- Metadata factory (canonical, OG, Twitter, robots per route)
+- Article + SoftwareApplication + BreadcrumbList JSON-LD
+
+## Phase 20 — OG Images, Listings, Navigation
+**Files (3):** `app/og/route.jsx` · listing pages polish · NavLink rollout (replaces ExtendedLink usage)
+- Dynamic OG generation (1200×630, three templates)
+- TagFilter a11y pass, static generation verification
+- Footer contact candidates: ComposeEmail + ViewOnMap (watermelon) — user decides fit
+
+## Phase 21 — Accessibility Sweep
+**Files:** 0 audit + ≤4 fix files
+- axe-core CLI full scan + manual keyboard/SR passes
+- Fix flagged issues within file budget; overflow → next-phase log
+
+## Phase 22 — Dynamic Import Registry (usage-driven) ⭐
+**Files (2):** `components/lazy/index.jsx` · retire old `components/lazy.jsx`
+- **Built AFTER the site exists** (user directive): audit final section/component usage → register ONLY real survivors via `next/dynamic`
+- ssr:false for GSAP/canvas/chatbot/palette-class islands; ssr:true where SEO-relevant
+- Skeleton fallbacks per shape (from P7)
+- Old `lazy.jsx` consumers migrated; file marked UNUSED
+
+## Phase 23 — Bundle Budgets & Dep Pruning
+**Files (2):** `next.config.js` · `package.json`
+- Performance budgets (150KB/component), optimizePackageImports for icon packs
+- Verify removed deps: ai SDK; audit icon library usage concentration
+- Consumes P22 registry results
+
+## Phase 24 — CI Pipeline & Final Regression
+**Files (2):** `lighthouserc.json` · `.github/workflows/ci.yml`
+- Thresholds: perf ≥0.95, a11y ≥0.95, SEO ≥0.95, LCP <2.5s, CLS <0.1
+- Full regression matrix → deploy checklist → monitoring sign-off
+
+---
+
+## 📝 PHASE LOG TEMPLATE
+
+```markdown
+## Phase [N] — [date]
+**Files:** created/modified/deleted list
+**Research:** [Context7 query → finding] · [skill → guidance]
+**Reason:** metric-backed justification
+**Tests:** lint ✅ · tsc ✅ · build ✅ · bundle [x]KB · axe [n] · ux-mcp results
+**Review:** PENDING / APPROVED / CHANGES REQUESTED
+```
+
+---
+
+## 📚 RESEARCH BASELINE (Phase 1 — executed via Context7 `/vercel/next.js`)
+
+| Query | Key Finding Applied In |
+|-------|----------------------|
+| App Router folder structure | ARCHITECTURE.md structure section |
+| dynamic imports / next/dynamic | Phase 22 registry (ssr control per component class) |
+| Image optimization props | Phase 7 OptimizedImage defaults |
+| Link prefetch strategies | Phase 20 NavLink (intent-based prefetch) |
+| Font optimization | Phase 5 fonts.ts (subsets, preload policy) |
+| SEO metadata / JSON-LD | Phase 20 factory schemas |
+| Vercel Analytics / Web Vitals | Phase 6 WebVitals component |
+| Tailwind v4 PostCSS setup | Already correct (`@tailwindcss/postcss`) — verified |
+
+### Phase 2 research additions
+| Source | Finding |
+|--------|---------|
+| Context7 `/tailwindlabs/tailwindcss.com` → theme.mdx | `@theme` = utility-generation API; plain `:root` vars don't generate utilities |
+| Context7 `/tailwindlabs/tailwindcss.com` → colors.mdx | **`@theme inline`** required when tokens reference other CSS vars (`--color-canvas: var(--acme-canvas)`) — prevents scope-resolution failures; this is the shadcn-on-v4 pattern |
+| Skill: `design-system` → tailwind-integration.md | shadcn semantic var names confirmed (`--background`…`--radius`); HSL-channel pattern is v3 — we adapt to v4 hex/oklch + `@theme inline` mapping |
+| Skill: `high-end-visual-design` | Editorial Luxury archetype; motion beziers; DoubleBezel concentric formula (adapted to low radius per taste) |
+
+---
+
+## 📒 PHASE LOG
+
+```
+Phase 01 ✅ APPROVED 2026-08-23 — ROADMAP/ARCHITECTURE/COMPONENTS_MAP written; taste profile added to ARCHITECTURE.md; Rules #14 + @theme amendments applied.
+Phase 02 ✅ APPROVED 2026-08-23 — Option A Gold Monochrome+ · radius DEFAULT 4px · flex-gap-over-padding · shadows/motion approved · spotlight family → consolidate into ONE upgraded GlowFrame wrapper (not new CSS) · dark mode auto+toggle w/ gold primary confirmed.
+Phase 03 🔄 BUILT — lib/tokens/{colors,typography,spacing,theme-mapping}.ts written. Contrast fixes: primary-foreground cream→ink (1.9:1→10.33:1 AA), dark purple primary→gold (12.06:1), muted-fg #787774→#6E6D69 (4.33→5.01:1). tsc EXIT:0. Awaiting review.
+Phase 03b 🔄 BUILT — GlowFrame consolidation (user-directed): components/ui/GlowFrame.tsx created (interior light glow + border seam-leak ported from cursor-glow, single wrapper, element-local tracking). Migrations: bento-grid.tsx + TechStack.jsx → GlowFrame. DELETED 5 superseded files (user override logged in Rule #13). Purple hover-shadow in bento → gold-tint (brand fix, disclosed). Stale-import grep: 0 · tsc EXIT:0. Awaiting review.
+Phase 04 🔄 BUILT — globals.css wired via @theme inline: all semantic colors/pastels/sidebar/chart mapped to utilities · radius scale (DEFAULT 4px) · font stacks renamed --font-stack-* to avoid self-reference (typography.ts synced; Geist Mono var deferred to P5) · shadows e1-e5 + easings + spotlight + section-rhythm namespaces added · @custom-variant dark registered · duplicate prefers-color-scheme block REMOVED. Fixes: CSS comment containing */ broke parse. Verified in build output: bg-primary/text-muted-foreground/rounded-lg utilities ✓, hex tokens ✓, :where(.dark variant ✓, pastel/ease/shadow utilities absent-on-demand (unused) ✓. tsc EXIT:0 · BUILD EXIT:0 (19 pages). ⚠️ Known gap until P5: OS-dark users see light theme (media-query removed, provider not yet mounted). Awaiting review.
+Phase 04b 🔄 BUILT (user-directed amendment) — TS token layer replaced by self-contained CSS files per user's architecture call: lib/tokens/{colors,typography,spacing,effects}.css (each owns raw vars + its @theme inline namespace); globals.css now imports them; DELETED colors.ts/typography.ts/spacing.ts/theme-mapping.ts (zero code consumers verified pre-delete — kills the TS→CSS drift risk). Output parity re-verified post-migration (hex/dark-variant/bg-primary/font-stack all present). tsc EXIT:0 · BUILD EXIT:0. ARCHITECTURE token table + folder structure synced. Awaiting review.
+Phase 05 🔄 BUILT — Fonts & Providers: lib/fonts.ts created (Poppins latin, weights TRIMMED 7→5 via usage audit [300/900 unused → dropped], preload=true · Geist_Mono variable font, preload=false below-fold) · app/providers.jsx created (next-themes attribute="class", defaultTheme="system", enableSystem, disableTransitionOnChange) · layout.tsx swapped inline config→lib/fonts import, added geistMono.variable + suppressHydrationWarning (REQUIRED per Context7 /pacocoursey/next-themes — anti-flash script mutates DOM pre-hydration) · typography.css mono stack now consumes var(--font-geist-mono). Verified: 21 @font-face emitted in dedicated chunk, --font-geist-mono in output. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0. ⚠️ Providers NOT yet mounted — dark mode activates at Phase 6 mount. Awaiting review.
+Phase 06 ✅ RESEARCHED+BUILT — Root layout integration (user-directed research-first): Context7 confirmed useReportWebVitals (next/web-vitals) is current built-in API BUT @vercel/speed-insights ALREADY collects ALL Core Web Vitals via its web-vitals pipeline → planned custom WebVitals.jsx DROPPED as redundant duplicate-beacon code (zero new files/deps; both packages pre-existing ^2.x). layout.tsx: Providers mounted (dark mode LIVE) · <Analytics /> + <SpeedInsights /> mounted after children · viewport upgraded dual themeColor light #FDFBF7 / dark #141414 + colorScheme "light dark". Verified: tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0 · both theme-color metas in HTML · insights scripts baked into lazy client chunk (2d-jvapg16f_m.js → /_vercel/* at runtime). WEEK 1 COMPLETE.
+Phase 06b 🔄 BUILT — Theme testing kit (user-directed): user-supplied ThemeSwitcher adopted → components/ui/theme-switcher.tsx (.tsx ui-zone; lucide→Tabler per icon policy [IconDeviceDesktop/IconSun/IconMoon]; @radix-ui/react-use-controllable-state swapped→inline controlled-state [dep-risk]; mounted-gate→useSyncExternalStore [passes strict lint]; motion layoutId pill preserved; role=radiogroup/radio + aria-checked; placeholder reserves layout pre-mount) · TopBar.jsx wired controlled via resolvedTheme→setTheme (localStorage['theme'] persists light/dark/system) + 'use client' added + logo text-white→text-foreground disclosed fix · DELETED interim components/layout/ThemeToggle.jsx (same-session artifact superseded before review). tsc/LINT/BUILD all EXIT:0.
+Phase 06c 🔧 FIXED — User-reported: buttons animate but theme never changes. ROOT CAUSE: my typed refactor dropped controlled `value`/`onChange` props from ThemeSwitcherProps → TopBar's onChange(setTheme) silently ignored, pill ran on internal state only, next-themes.setTheme never called. FIX: restored controllable-state contract (isControlled = value!==undefined; theme = value ?? internal; setTheme forwards to onChange always). No CSS/token changes needed — .dark overrides were correct and waiting. tsc/LINT/BUILD EXIT:0.
+Phase 06d 🔧 FIXED — Two user reports: (1) System click highlighted Moon not Monitor — stored choice was correct ("system"→resolved dark ✓) but switcher received resolvedTheme which erases system-vs-manual distinction → TopBar now feeds `theme==='system' ? 'system' : resolved…` so 🖥️ highlights when OS-following; (2) pill animation laggy — spring{type,duration:0.5} floaty + ring/box-shadow repaint per FLIP frame + no GPU hint → retuned stiffness:500/damping:40 (crisp, no overshoot), dropped ring, added transform-gpu. tsc/LINT/BUILD EXIT:0.
+Phase 06e 🔄 BUILT — User-supplied logo public/bilal.svg integrated dual-mode: SVG is monochrome white-only → rendered via CSS mask technique (.logo-mark utility in globals.css: mask url + -webkit-mask prefix) tinted bg-foreground → auto-inverts light/dark via tokens, single asset source, no path duplication. TopBar: <Image>+personal.logo conditional replaced by mask span (h-6 aspect-[551/313] from viewBox), unused Image import removed, aria-label improved. LINT/BUILD EXIT:0.
+Phase 06f 🔄 BUILT (user-directed, supersedes 06e mask approach) — user reformatted bilal.svg to structured paths → scripts/generate-logo.cjs created (reads public/bilal.svg → rewrites all non-currentColor fills to currentColor → emits components/layout/Logo.jsx inline component; rerunnable for future SVG revisions) · TopBar mask span → <Logo className="block h-6 w-auto text-foreground" /> · .logo-mark utility removed from globals.css. Logo.jsx = server-safe pure render, aria-hidden (link carries aria-label). LINT/BUILD EXIT:0.
+Phase 06g 🔄 BUILT — User delivered currentColor-native SVG (v3): public/bilal.svg synced · Logo.jsx rewritten to user's exact signature (named export, aria-label="Bilal Ahmad" on svg — TopBar link label removed to avoid double announcement; fillRule camelCase; type annotation adapted to .jsx zone per Rule #2) · generator script DELETED per user (obsolete now that user supplies currentColor SVGs directly; also resolves eslint react-hooks plugin crash on .cjs) · logo sized h-6→h-7 (+20% ≈28.8px→h-7=28px). tsc/LINT/BUILD EXIT:0.
+Phase 06h 🔧 FIXED — Two dev-runtime reports: (1) "Element type invalid / got undefined" in TopBar = stale Turbopack .next/dev cache after repeated export-shape flips on Logo.jsx (prod build proved graph valid) → remedy issued: stop server + Remove-Item .next\dev + restart. (2) Hydration diff warning on <html> (className+color-scheme dark added client-side) = next-themes anti-flash script mutating pre-hydration — suppressHydrationWarning had been accidentally lost from layout.tsx in a later edit → restored per Context7 /pacocoursey/next-themes mandate ("must add to <html> element"). Private-window irrelevant (empty storage → system theme → same mutation path). tsc/LINT/BUILD EXIT:0.
+Phase 07-AMENDMENT ✅ APPROVED — User directive: lazy registry moved P07→P22 (usage-driven: build site first, register real survivors only). Plan renumbered 1–24 cleanly; OptimizedImage promoted to P07. COMPONENTS_MAP/ARCHITECTURE/baseline cross-refs synced.
+Phase 07 🔄 BUILT — OptimizedImage + Skeleton: components/ui/Skeleton.jsx (shared pulse primitive) · components/ui/OptimizedImage.jsx (thin next/image wrapper: neutral blur dataURL default · fade-in 500ms ease-out-expo on load · error fallback w/ role=img+alt preserved · priority→fetchPriority high + native preload · sizes default responsive trio · quality 85 · forwardRef; verified ease-out-expo utility generated in build CSS). Consumers arrive P11 Hero + section rebuilds (7b swap list). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 07b 🔄 BUILT — Rule compliance + folder taxonomy (user directives): (1) ui/ = library-added only → user moved OptimizedImage/Skeleton to components/common/ (custom primitives home; GlowFrame/theme-switcher still pending move → will convert .tsx→.jsx on move per Rule #2); (2) hand-drawn fallback svg REPLACED by @tabler IconPhotoOff (library icons sanctioned); (3) NEUTRAL_BLUR base64 svg ELIMINATED entirely → placeholder="empty" + Skeleton underlay until load (fixes dark-mode light-flash bug from hardcoded #F7F6F3; container span contract, zero svg authored). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 08 🔄 BUILT — AmbientBackground global layer: components/animations/AmbientBackground.jsx (variant orb[3 token-tinted blurred orbs: gold primary 13% + pastel blue/green — multi-hue per taste] | grid[token border lines, radial mask] · intensity subtle/medium/strong via wrapper opacity · aria-hidden) + GrainOverlay export READY but grain texture pending user asset public/noise.png (Rule #1 — cannot author noise tile) · globals.css appended .ambient-orb{a,b,c} drift keyframes (26/32/38s ease-smooth alternate, blur 120px, GPU transform-only) + reduced-motion kill · MOUNTED in HomeLayout root (first child) · Footer.jsx +relative z-10 z-guard so statics never sink under layer. DISCLOSED: Footer purple glow shadow rgba(208,188,255,.25) spotted → logged P21 sweep candidate. Particles/LightRays import retirement tracked per-section (Hero P11 etc.), files untouched. Verified classes+keyframes in build CSS. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 08b 🔧 FIXED — User report: orbs invisible both modes. ROOT CAUSE: double-dim math — pastel-BG tokens are near-cream (≈zero delta vs page bg) × wrapper opacity-40 ⇒ gold landed ~5% effective alpha. FIX: sample saturated TEXT-hue tokens instead (pastel-blue/green-text auto-swap dark variants), raise cores (primary 34% / blue 22% / green 18%), softness via radial-gradient closest-side fade (also removes costly 120px blur filter — skill perf guideline), intensity rebalanced subtle .7/medium .85/strong 1. Verified radial+mix values in build CSS. LINT EXIT:0 · BUILD EXIT:0.
+Phase 08 ⛔ DEPRECATED (user decision) — AmbientBackground removed from runtime after visible-invisibility battle + user's simplification directive ("plain solid backgrounds; stop overusing relative/z/overflow-hidden"). ROLLED BACK: HomeLayout import+mount removed · Footer z-guard reverted (user had already simplified the line) · globals.css ambient block stripped (71 lines). FILE KEPT per Rule #13: components/animations/AmbientBackground.jsx marked UNUSED for future revisit. Build incident during rollback: PS5.1 Set-Content added UTF-8 BOM + stale Turbopack cache → parse error on compiled chunk as source; fixed by BOM strip ([IO.File]::WriteAllText UTF8Encoding(false)) + full .next purge. LESSON LOGGED: never rewrite tracked source via Set-Content; use Write/Edit tooling. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 09 🔄 BUILT — Reveal system upgrade-in-place (Rule #7 discovery: ui/ScrollReveal.tsx ALREADY exported ScrollReveal/StaggeredReveal/ScrollRevealText feeding Hero+FavoriteStack+EditorialHeading → rewrote internals, preserved public API incl seconds-based props & 8 variants): motion/react dependency REMOVED from file (IO flips data-visible; CSS keyframes reveal-in driven by --rv-x/y/s/rx/blur/delay/dur custom props; StaggeredReveal = .reveal-item children w/ computed delay; ScrollRevealText = .sr-part per word/line/char with calc(i*stagger)) · reduced-motion handled purely in CSS !important override (JS branch dropped — also silences setState-in-effect lint) · polymorphic Tag ref via React.ElementType cast (TS union-ref fix) · globals.css appended reveal system block. CLEANUP LEDGER (user directive): Footer purple shadow already cleaned BY USER ✓; 1 residual purple ref logged at components/ContactCard.jsx:77 → P21 sweep. QUEUED P09b: OptimizedImage grid-stack de-positioning (drop relative/overflow/absolute in non-fill), GlowFrame trim (isolate/z-[2] removal), theme-switcher placeholder width tokenization. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 09b ✅ BUILT — Cleanup sweep executed: (1) OptimizedImage wrapper de-positioned via CSS grid stacking ([grid-area:1/1] on Skeleton/error/Image) — relative+overflow-hidden+absolute-skeleton GONE in non-fill mode (fill keeps absolute: next/image framework requirement); (2) GlowFrame USER-UPGRADED version respected (proximity activation + --active opacity pattern superior) — surgical trims only: isolate removed, z-[2]/z-[3] dropped (DOM-order sandwich preserved: bg z-0 < overlays < content z-10); (3) theme-switcher placeholder h-10 w-[4.75rem]→h-8 w-22 (matches live control 88px, v4 dynamic spacing). NOTE: user rewrote GlowFrame independently — proximity window/body listeners are their deliberate perf tradeoff, left untouched. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 10 ✅ BUILT (Option B) — user picked evidence-based skip: dock.tsx wins by default (live+integrated in BottomDock), MagneticDock.tsx marked UNUSED (zero consumers verified via grep, 12KB kept on disk), NO Magnetic wrapper created (MagneticLink already the live pattern; simplification directive over original consolidation plan). DELIVERED components/animations/useGSAP.js: gsap.context + ctx.revert cleanup, reduced-motion early-return, re-exports gsap/ScrollTrigger as single registration point, + usePrefersReducedMotion (useSyncExternalStore media-query reactive). Consumers queued: P13 TechStack pan · P14 Experience stories. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 11 ⭐ 🔄 BUILT — HERO REBUILD: NEW components/HeroPills.jsx (5 curated favoriteStack pills at %-positions × 3 depth tiers [opacity .9/.7/.5], scroll parallax useScroll+useTransform −140px×depth over first 35%, per-pill idle float loop, hidden <lg decorative-only aria-hidden, reduced-motion→static via useReducedMotion) · Hero.jsx rewritten to stack discipline: AvatarStatus(status chip) → watermark Heading+TypingAnimation(kinetic headline) → personal.tagline subtext(6 words≤20 ✓) → single CTA cluster(socials+MagneticLink); entry=staggered reveal variant 600/800ms; min-h-[100dvh] pt-28; REMOVED LightRays+Suspense, FavoriteStack-marquee role, chevron cue; old components/lazy.jsx consumers NOW ZERO (Hero was last). BUG JOURNEY: platform.icon destructuring miss (string prop-access→undefined) diagnosed via dev-overlay "render method of HeroActions" pointer + probe bisect A/B; USER fixed with icon:Icon alias; my Probe B had also silently unmounted <HeroPills/> — remounted post-fix; Set-Content BOM avoided via Write tooling. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 11b ✅ FINALIZED (user verdict) — HeroPills REJECTED visually → user finalized Hero themselves (restructured wrapper, pt-18/md:pt-24, min-h-dvh, TooltipProvider wrapper dropped [global root Provider covers tooltips]) · HeroPills.jsx DELETED (same-session artifact, user-authorized; zero residual refs verified) · orphaned import + unused TooltipProvider import cleaned · FINAL STACK: status chip → kinetic typewriter headline → tagline → socials+MagneticLink CTA on plain solid bg. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 12 🔄 BUILT — About editorial-split recomposition: statement = bio first sentence as display type (text-3xl→[2.75rem] semibold tracking-tight) · supporting sentence muted · stat trio (Experience/Repos-live/Contributions-live) as inline icon+value+label w/ StaggeredReveal fade · CTA row (Resume token-button + location·clock line) · RIGHT DoubleBezel portrait (AvatarStatus + locationLabel, rounded-lg concentric) · GitHub Rhythm band (bordered card: 360 icon header + @badge + HeatmapGrid). REMOVED: LazyParticles bg (+Suspense), Pakistan map card, StatCard×2, Connect&Collaborate/ContactCard block (retires to P20 footer candidates), NumberTicker skipped (string values — logged decision). OLD-LAZY MIGRATED: About's common/lazy import GONE (remaining consumers: Projects/ContactCard/StatCard). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 12b 🔄 BUILT — Watermelon integration (user directive): Rule#14 refactor first — NumberSlider.tsx rewritten as generic bare control (Calories/kCal demo domain stripped, rainbow hex gradients→gold token gradient primary-hover→primary, 60vh demo card→bare label+digits+track, shadow arbitrary→shadow-inset-highlight, size-13→h/w-10) · ViewOnMap.tsx trims (lucide X/Loader2/Map→IconX/IconLoader2/IconMap strokeWidth 1.5, rounded-2xl→rounded-lg, shadow-2xl→shadow-e5). INTEGRATED: ViewOnMap trigger joins About CTA row · NumberSlider = REAL control driving GitHub heatmap week range (Range 12–52wks step2, default 30, state in About → HeatmapGrid weeks) mounted in band header under @badge — no fake data. watermelon/ interpreted as user-owned .tsx zone (Rule #2 exception documented). tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 12c ✅ MICRO — Base heading scale reduced per user: h1 clamp(2.5,6vw,5)→(2.25,5vw,4) · h2 (2,4vw,3.5)→(1.75,3.5vw,2.75) · h3 (1.5,3vw,2.5)→(1.375,2.5vw,2) — matches originally-proposed token fluid scale. Verified in build CSS. BUILD EXIT:0.
+Phase 12d 🔄 BUILT — Four user directives: (1) REVERSE ANIMATIONS: reveal system converted keyframes→TRANSITIONS (base = from-state via --rv vars; data-visible swaps to identity) → naturally reversible; About reveals set once={false} (exit-reverse on scroll-out); sr-part stagger via inline transitionDelay. (2) ViewOnMap modal misposition FIXED — reveal transform created containing block breaking position:fixed → modal PORTALED to document.body (mounted gate via useSyncExternalStore). (3) CLOCK timezone UTC→Asia/Karachi label PKT (personal.timezone "GMT+5" not IANA). (4) NumberSlider gradient warning — background moved to static style, only width animates (non-interpolable gradient fix). BONUS: user deleted bezel portrait themselves → About single-column max-w-3xl; stats upgraded with NumberTicker (Repos/Contributions numeric+suffix; Experience stays composite text); slider range 24–44wks + DEBOUNCED commit (350ms — instant UI, deferred heatmap update kills request churn); HeatmapGrid re-stagger wave on range change (revealed reset via rAF pattern, lint-safe) + cells pop-in scale-50→100. tsc EXIT:0 · LINT EXIT:0 · BUILD EXIT:0.
+Phase 13 ✅ APPROVED — TechStack dual-dimensional GSAP pan (user-refined through 3 directive rounds): (1) watermelon Tabs.tsx Rule#14 refactor FIRST (openslate→shadow-e1 tokens, `DEFAULT_TABS` demo commented out, tabs prop REQUIRED, arrow-key + aria-selected semantics, count chip) then MOVED to `components/common/Tabs.tsx` (currently zero consumers — future Writings filter per P17); (2) user created `lib/tokens/shades.css` (5 shade pairs blue/gold/green/rose/canvas, @theme inline, atomic .shade-card-* classes) — globals.css wired @import, contrast verified 4.62–8.68:1 AA; (3) `components/ui/HorizontalScroll.tsx` (ScrollWrapper) REPAIRED (4 bugs: ctx-cleanup no-op, unmount killed global ScrollTriggers, children prop dead via items-guard, motion layout vs GSAP x conflict) + ENHANCED (native overflow-x:auto fallback for reduced-motion/no-JS, container-based pan distance, ariaLabel, progress hairline); (4) TechStack rebuilt: no FavoriteStack (zero consumers → UNUSED candidate, file kept), no tabs; dual-dimensional GSAP pin-scrub; premium editorial cards on user shade classes + GlowFrame hover. Files: HorizontalScroll.tsx + shades.css (user) + globals.css + TechStack.jsx. Tests: tsc 0 · lint 30 pre-existing warnings/0 errors · build 0 (19 pages) · ux-mcp 0 issues @ AA. ✅ APPROVED. 2026-08-24 (user: "move to next phase"). POST-APPROVAL: user independently rewrote TechStack.jsx + GSAPHorizontalScroll.tsx (velocitySkew, topContent, onTweenReady, distanceMultiplier, containerAnimation pill reveals) — captured in P14 entry.
+Phase 14 🔄 IN PROGRESS — 14-prep cleanup sweep (user-directed, scope: Experience+TechStack+About+Hero+TopBar+BottomDock): (1) Experience.jsx — light-mode fixes (text-white/zinc-300/zinc-400/white-overlays → foreground/muted-foreground tokens; bg-surface-high→surface-muted [token never existed — silent no-bg bug]; shadow-lg+shadow-primary/5→shadow-e2; dropped no-op ExpandableList [2 items, initialCount=2 shows all]; Section relative removed). (2) TechStack.jsx (user had rewritten w/ velocitySkew+topContent+containerAnimation pill reveals — respected) — removed broken absolute -z-10 radial-gradient layer [anchored to page root, not section; P08 plain-solid directive], hover:shadow-md→shadow-e2. (3) About.jsx — dead font-poppins utility removed [never existed; body already Poppins], statement p→h2 + GitHub Rhythm h4→h3 [heading hierarchy; explicit text classes = zero visual delta], clock pill rounded-full→rounded-md [taste: no pills] + shadow-sm→shadow-e1, backdrop-blur-sm dropped [no-op inline]. (4) Hero.jsx — mojibake comments fixed, 2× cruft relative removed, space-x→gap per P02 convention. (5) TopBar.jsx — bg-surface-high/60→bg-surface-muted/60 [same nonexistent-token bug], shadow-lg→shadow-e2, nested backdrop-blur-md dropped. (6) BottomDock.jsx — LIGHT-MODE BROKEN nav links fixed (text-zinc-300 hover:text-white bg-white/10 → muted-foreground/foreground/10 tokens), divider bg-white/15→bg-border, BANNED PURPLE #d0bcff AI trigger → bg-primary/15 text-primary, shadow-2xl→shadow-e4. P21 CANDIDATES LOGGED (Rule #11, untouched): bento-grid.tsx text-white · expandable-list.tsx zinc/white · modal.tsx white-family · tracing-beam.tsx hardcoded hex · shimmer-button/InterfaceCraftCards/background-gradient/animated-beam defaults. StackedCards.jsx created (14a mechanism, CSS-sticky deck + GSAP scrub scale 0.92/op 0.55, reversible, reduced-motion-safe). Tests: tsc 0 · lint 0 errors (30 pre-existing) · build 0 (19 pages). A/B implementations (14a Experience rewrite + 14b Timeline refactor) NEXT.
+Phase 14 ✅ BUILT — Experience scroll stories (user verdict: A/B CANCELLED — Timeline chosen directly; StackedCards.jsx BUILT but USER-RESERVED for a future section, zero consumers today, file kept per Rule#13): (1) 21st/Timeline.tsx Rule#14 REFACTOR: framer-motion→motion/react · Aceternity demo header REMOVED · white/black/neutral/purple-blue→tokens (bg-background dot ring, surface-muted node, muted-ghost era titles, border track gradient, primary-gold spine gradient) · spine draw height→**scaleY** (transform-only, zero per-frame reflow — pattern adopted from GSAPScrollRail audit) · one-shot measure→ResizeObserver (fixes stale-height bug) · reduced-motion → spine fully drawn · z-40 sticky dropped via DOM-order sandwich (spine renders before entries) · sticky top-40→top-28 (TopBar-aware) · pt-40→pt-10 (taste rhythm) · unused useMotionValueEvent import dropped. (2) Experience.jsx rewired onto Timeline: ScrollRail import GONE (component stays LIVE via Credentials), ExperienceCard isLit prop dropped → static token border + hover, data mapped {title: company, content: card}; user's role-indexing extension (index/showIndex on RoleCard) preserved untouched. (3) Dispositions: GSAPScrollRail.tsx → UNUSED (zero consumers, superseded — file kept); ScrollRail.jsx height→scaleY conversion logged as P21 sweep candidate; COMPONENTS_MAP synced (Experience row, Timeline row, rails cluster, StackedCards reserved entry). Tests: tsc 0 · lint 28 warnings/0 errors (−2 vs baseline) · build 0 (19 pages). NEXT: Projects bento rebuild (P15) — pending review gate.
+⚠️ STANDING DIRECTIVE (user, 2026-08-25): run lint / tsc / build ONLY when the user explicitly asks — do not auto-run test commands after edits.
+Phase 14 POST-BUILD REFINEMENTS (user-directed rounds, all approved): title→ReactNode (company link + locationType badge chip + location) · CompanyHeader REMOVED entirely (logo/icon/external-link header gone; link lives on era-label name) · Present badge moved company→RoleCard (isCurrent = !role.endDate) · period/duration → startDate/endDate ISO YYYY-MM (MMM YYYY display via formatDate; durations computable later; user-confirmed Mar 2026 RPA→Lead transition; botApi.ts consumer synced w/ local formatPeriod) · dot-glow BUG FIXED: useInView viewport-band desynced from beam → glow now driven by the SAME scrollYProgress as the spine (measured per-dot thresholds, rAF-deferred initial sync, lint-safe) · card gap pt-10/14→pt-6/8 · >50-char company names downshift era type + wrap-break-word safety net · mobile rail compacted (spine left-5, dot wrapper left-0, content pl-11; md+ untouched) · TechPill icon-only pills get wider 3:2 box (ICON_ONLY_CLASSES — hideName logos no longer letterboxed; user's attr-bump intent honored via matching wrap) · CATEGORY_META dissolved into SkillsAndTools objects (Icon+shade inline, user directive — single source of truth) · shade-orange tokens added (6.23:1 / 8.11:1 AA ✓). ✅ PHASE 14 COMPLETED 2026-08-25 (user: "mark the phase 14 completed").
+Phase 15 🔄 BUILT — Projects bento rebuild: (1) data/projects.js restructured — status ("live"/"in-progress") + features[] on all 8, activity projects normalized (category→tags, tech added, tag/isActivity kept for Activities consumer), TAG_META export = single source of truth for tag display meta (user directive: add tags in one place), contributions object DELETED (95% dead — only githubUsername consumed; moved to personal.githubUsername, About fallback rewired, heading/subheading/stats/spanClass zero consumers verified). (2) ProjectCard.jsx NEW — PricingCard DNA (outer p-1.5 inset + media panel), OptimizedImage thumbnail (first P7 consumer) / terminalSnippet / category-icon fallbacks, multi-tag chips from TAG_META (dynamic getTagConfig), collapsible FeaturesList (aria-expanded, AnimatePresence height), StatusBadge (Live emerald ping / In Progress amber), strategy chips, tech pills, footer Source/Private+Live, BorderBeam gold paused-until-hover (animation-play-state gating — no idle battery ×8). (3) Projects.jsx — true asymmetric bento lg:grid-cols-4 (hero 2×2 + 2×1 + 1×1s), ScrollReveal stagger reversible, LazyParticles+Suspense+ExpandableList REMOVED (all 8 visible; deprecated pattern retired; old-lazy consumers now ContactCard/StatCard only), hardcoded colors→tokens, TagFilter→ContinuousTabs (user moved Tabs to components/common/Tabs.tsx; tabs derive from TAG_META + live counts; grid carries dynamic tabpanel-{activeTab} id so aria-controls resolves — TagFilter file KEPT, Credentials still consumes). PRERENDER BUG FIXED: stale config={config} prop passed to MediaPanel after tags refactor (ReferenceError config is not defined at build). Tests pending user request (standing directive). ✅ APPROVED 2026-08-26 (review gate).
+Phase 16 ✅ COMPLETED BY USER — Writings redesign + Credentials education-only shipped outside phase flow (user sessions; MDX detail-layer rewrite + components/docs/* + ui accordion/alert/breadcrumb landed alongside).
+Phase 17 🔄 IN PROGRESS (user-led) — Chatbot frontend completed: Chatbot.jsx, Message.jsx, QuickActions.jsx (Phase 17); ChatInputForm.jsx + AutoResizeTextArea.jsx (Phase 17b, P18 integration); embeddings backend committed by user. API + BottomDock wiring = P18 integration underway.
+Phase 17b 🔄 BUILT — Unified Markdown Formatter (user-directed mid-P18: one renderer for AI Assistant + ProjectContent + WritingContent): components/common/Markdown.jsx NEW — two-scale single source (`markdownScales.doc|chat`: p/ul/ol/li/blockquote/code/strong/em/hr/table/th/td class strings), `createMarkdownElements(scale)` factory + `<Markdown>` wrapper on streamdown@2.5 [plugins={code}, shikiTheme github-light/github-dark, components map incl. h1-h6 downshift, ChatLink w/ internal-next/link + external-rel hardening + streamdown:incomplete-link muted fallback, inlineCode virtual component] + @source dist lines in globals.css for v4 processing. Message.jsx regex renderMarkdown DELETED → <Markdown>{content}</Markdown> (user msgs stay pre-wrap). mdx-components.jsx base elements now spread ...docBase (classes verbatim-identical = zero visual delta; headings/pre/img/a/MDX-extras untouched). FIX vs legacy: chat inline-code dropped inherited text-primary tint (new light primary #EAB308 on surface-muted fails AA ~1.7:1) → text-foreground parity with doc scale (≈16:1 / dark ≈14:1 ✓). Research: Context7 /vercel/streamdown → components prop · inlineCode virtual · shikiTheme pair · @source v4 lines. P21 CANDIDATES (Rule #11): ARCHITECTURE.md token table stale vs live palette (light primary #EAB308/surface-muted #F1F5F9 — user-retuned); docs stale-note only, no code impact. Tests pending user request (standing directive). NEXT: resume P18 chatbot API/integration — pending review gate.
+Phase 17c 🔄 BUILT — Docs-layer rationalization post-Streamdown (full audit: 8 docs/* files + 3 ui primitives; user verdicts per component): (1) CODE FENCES → components/common/CodeBlock.jsx NEW [MarkdownPre: extracts language/raw text from compiled <code class=language-x> child, re-fences, renders <Streamdown mode="static" plugins={code} shikiTheme github-light/dark>] — real Shiki highlighting arrives on pages for the first time; mdx-components pre rewired; OLD docs/CodeBlock.jsx DELETED (zero refs verified pre-delete). Token theming via globals.css [data-streamdown] overrides — attr names verified against dist (code-block/-header/-actions exist; -features does not); --radius-lg 8px + --shadow-e1 confirmed live tokens. (2) ReadingProgressBar.jsx DELETED by USER mid-phase (banned scroll-listener + width anim) + self-unmounted from DocsTopBar. (3) DocsComponents.jsx QUARANTINED UNUSED: Steps/MDXTabs/Cards/Kbd/FileTree had ZERO consumers across all 14 MDX files (grep-verified); imports+map entries removed from mdx-components.jsx, file kept per Rule #13. (4) KEPT as-is: TableOfContents (IO scrollspy solid), DocsTopBar, SimilarContent, Callout, ui/accordion·alert·breadcrumb. QUEUED 17d (user-approved scope): token polish TableOfContents/SimilarContent/ZoomImage/alert.tsx + ZoomImage aspect-video fix; lightbox→ui/dialog swap = separate candidate. ⚠️ User editing in parallel during phase — DocsTopBar state shifted mid-build (handled). Tests pending user request (standing directive). Pending review gate.
+Phase 17d 🔄 BUILT — Token polish pass on surviving docs-layer components (user-approved scope): (1) ui/alert.tsx info/success/warning variants: hardcoded blue/emerald/amber Tailwind families → pastel token pairs (border+text = pastel-*-text, bg = pastel-*-bg; auto light/dark swap, zero dark: duplicates) — contrast verified: warning 6.37:1 · info 6.59:1 AA ✓ [green family pre-validated P13 range]; destructive already tokenized, untouched. (2) TableOfContents.jsx desktop card shadow-sm→shadow-e1. (3) SimilarContent.jsx hover:shadow-md→hover:shadow-e2. (4) ZoomImage.jsx — aspect-video FORCED CROP removed → natural w-full h-auto flow (non-16:9 images no longer letterboxed); caption rounded-full pill→rounded-lg (taste: no pills); shadows lg/2xl/sm/md→e2/e5/e1/e2. Rationale ledger delivered to user pre-build (why each custom component exists / what it gives). Lightbox→ui/dialog focus-trap swap remains logged candidate. Tests pending user request (standing directive). Pending review gate.
+Phase 17e 🔄 BUILT — SimilarContent vibe upgrade to house DNA (user: "doesn't match the vibe"): rewritten to the Writings/TechStack card treatment — ScrollReveal slide-up stagger (index*80ms, once={false} reversible) wrapping GlowFrame per card (size 240, proximity 60, spread 25, gold interior color-mix primary 14%) wrapping single whole-card Link (aria-label, focus-visible ring, rounded-lg border bg-card p-1.5 inset panel = ProjectCard DNA); inset aspect-16/9 media w/ group-hover scale-[1.04]; meta row mono dot+category/date; hover shadow-xs→e2; Read arrow translate micro-motion; header reveal + View all arrow nudge; decorative imgs alt="" (link label carries meaning), icons aria-hidden. Dropped Badge import → lighter MetaChip (Writings-style). ux-mcp: 0 axe issues @ AA. Tests pending user request (standing directive). Pending review gate.
+
+Phase 17f ✅ CLEANUP — Removed dead MDX custom component bloat: (1) `components/common/markdown-styles.js` NEW — single source of truth for all markdown element styles (two scales: `doc` for reading pages, `chat` for AI messages); consumed by `Markdown.jsx` and `mdx-custom-components.jsx` via `createMarkdownElements(scale)` — AI messages and writing pages now render with identical paragraph/list/blockquote/code/table styles. (2) `mdx-custom-components.jsx` SIMPLIFIED — removed all dead imports (Steps, Step, MDXTabs, MDXTab, Cards, DocCard, Kbd, FileTree, TreeItem — zero consumers across all 14 MDX files); kept only 3 real overrides (headings with anchor links, internal/external links, ZoomImage wrapper) + Callout map; body elements delegated to shared `createMarkdownElements("doc")`; `pre` override changed to use existing `MarkdownPre` from `common/CodeBlock.jsx` (rebuilds fenced string → Streamdown static mode → Shiki + native copy/download buttons — was wrapping Streamdown output in another Streamdown instance, causing the "Element type is invalid" build crash). (3) `components/docs/DocsComponents.jsx` DELETED — zero live imports verified; quarantined P17c decision executed. (4) `WritingContent.jsx` restored named export `{ WritingContent }` (second agent had accidentally converted to default-only, breaking `import { WritingContent }` in writing/[...slug]/page.jsx). Files: markdown-styles.js · mdx-custom-components.jsx · WritingContent.jsx · DELETE DocsComponents.jsx. tsc 0 · build 0 (23 pages). ✅ APPROVED.
+
+Phase 18 ✅ COMPLETED 2026-08-27 — Chatbot API + BottomDock wiring + build-index rewrite + validation/rate-limit architecture:
+- **Refactored to modular architecture**: `lib/chat-guard.js` (Zod validation, input normalization, prompt injection guard via `<user_query>` XML boundary), `lib/rate-limit.js` (Upstash Redis sliding-window rate limit 5 req/min + credit system hook for authenticated users).
+- **app/api/chat/route.js**: Groq `openai/gpt-oss-120b` primary → Google `gemini-2.0-flash` fallback → 503 FALLBACK; multi-turn (last 6 msgs); Upstash Vector `query({ data })` (model-based index); `X-Sources` header; prompt injection guard with `<user_query>` XML boundary; proper streaming via `createTextStreamResponse` + `toTextStream`.
+- **Rate limiting**: Upstash Redis sliding window (5 req/min per IP, analytics enabled), guest IP fallback, credit system hook for authenticated users (20 daily credits default, `deductUserCredit` hook post-response).
+- **Validation layer**: `lib/chat-guard.js` — Zod schema validation, input normalization (control char stripping, trimming), prompt injection guard with `<user_query>` XML boundary tags, structured error responses.
+- **Frontend**: `ChatInputForm.jsx` — client-side length validation (1000 chars), real-time character counter, inline error banner with `IconAlertCircle`, live character counter, submit gating, constraints footer (Prompt Protection Active).
+- **Indexing**: `scripts/build-index.js` — fumadocs sources + all structured data (experience, skills, credentials, projects, writings, botKnowledge); stable IDs; `index.reset()`; `upsert-data` (raw text, model-based index `openai/text-embedding-3-small` 1536-dim); anchor links for home sections (`#about`, `#experience`, `#skills`, `#credentials`).
+- **Environment**: Added `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` for rate limiting; `GROQ_API_KEY`, `GEMINI_API_KEY`; fixed `.env.example`.
+- **Cleanup**: Removed `lib/embeddings.ts`, `lib/fumadocs-chunker.ts`, `lib/validation.ts`, `lib/validation-client.js`, `vectra` dep.
+- **Quality gates**: tsc ✅ · LINT ✅ · BUILD ✅ (23 pages).
+
+---
+
+## 🤖 REPLICATION GUIDE: Add AI Chatbot to Your Fork
+
+Follow these exact steps to wire the same RAG chatbot into your portfolio fork.
+
+### Prerequisites
+- Node.js 20+, pnpm/npm
+- GitHub account (for repo + Actions later)
+- 15 minutes
+
+---
+
+### Step 1: Upstash Vector Index (2 min)
+
+1. Go to **console.upstash.com** → **Vector** → **Create Index**
+2. Name: `yourname-portfolio-rag`
+3. **Embedding Model**: `openai/text-embedding-3-small` (1536-dim) — *critical: this enables `query({ data })`*
+4. **Distance Metric**: Cosine
+5. **Plan**: Free (10K queries/day, 1 GB)
+6. Copy `UPSTASH_VECTOR_REST_URL` and `UPSTASH_VECTOR_REST_TOKEN`
+
+---
+
+### Step 2: API Keys (3 min)
+
+| Key | Where to Get | Env Var |
+|-----|--------------|---------|
+| **Groq** | console.groq.com → API Keys | `GROQ_API_KEY` |
+| **Google AI Studio** | aistudio.google.com → Get API Key | `GEMINI_API_KEY` |
+| **Upstash** | From Step 1 | `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN` |
+
+Add to your `.env` (copy `.env.example` → `.env` and fill in):
+
+```bash
+UPSTASH_VECTOR_REST_URL=https://your-index.upstash.io
+UPSTASH_VECTOR_REST_TOKEN=your-token
+GEMINI_API_KEY=your-gemini-key
+GROQ_API_KEY=your-groq-key
+```
+
+---
+
+### Step 3: Install Dependency (1 min)
+
+```bash
+npm install @ai-sdk/groq
+```
+
+(Already in `package.json` if you pulled latest)
+
+---
+
+### Step 4: Verify Files Exist
+
+Ensure these are in your fork (they should be after pulling):
+
+| File | Purpose |
+|------|---------|
+| `scripts/build-index.js` | Indexes all content into Upstash |
+| `app/api/chat/route.ts` | RAG endpoint with Groq→Google fallback |
+| `components/chatbot/Chatbot.jsx` | Streaming UI with canned fallback |
+| `components/chatbot/Message.jsx` | Markdown renderer (Streamdown) |
+| `components/chatbot/QuickActions.jsx` | Prompt chips |
+| `data/botContent.js` | 54 curated knowledge strings — **edit this for your bio** |
+| `.env.example` | Template for env vars |
+
+---
+
+### Step 5: Customize Your Knowledge Base (5 min)
+
+**Edit `data/botContent.js`** — this is what the LLM sees as "ground truth":
+
+```js
+export const botKnowledge = [
+  `Your Name is a Role based in City, Country. Email: you@domain.com.`,
+  `Your tagline: "What you do." You specialize in X, Y, Z.`,
+  `Current role: Title at Company (Date–present). Description. Stack: Tech.`,
+  `Previous role: Title at Company (Date–Date). Description.`,
+  `Core Stack: Language1, Language2, Framework1, Framework2.`,
+  `Project: Name — Description. Tech: Stack. Live: URL.`,
+  `Article: "Title" — Summary. Tags: Tag1, Tag2.`,
+  `Availability: Open to Role types. Remote/Hybrid. Contact: email.`,
+];
+```
+
+**Also update structured data files if needed:**
+- `data/experience.js` — your roles
+- `data/projects.js` — your projects
+- `data/writings.js` — your articles
+- `data/skills.js` — your stack groups
+- `data/credentials.js` — education, awards, certificates
+
+---
+
+### Step 6: Build the Index (1 min)
+
+```bash
+node --env-file=.env scripts/build-index.js
+```
+
+Output should show:
+```
+🔄 Resetting index...
+✅ Index reset.
+Indexing 140+ chunks into Upstash Vector...
+[100/141] batch upserted
+[141/141] batch upserted
+✅ All chunks indexed.
+```
+
+---
+
+### Step 7: Run Dev & Test (2 min)
+
+```bash
+npm run dev
+```
+
+1. Open `http://localhost:3000`
+2. Click the **sparkles icon** in the BottomDock (bottom-right)
+3. Ask: *"What projects have you built?"* or *"What's your tech stack?"*
+4. Verify:
+   - Streaming response appears
+   - Source chips render below answer (clickable links to your pages)
+   - QuickAction chips work
+
+---
+
+### Step 8: (Optional) GitHub Actions for Auto-Reindex
+
+Create `.github/workflows/index-vectors.yml`:
+
+```yaml
+name: Index Vectors
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'content/**'
+      - 'data/**'
+      - 'scripts/build-index.js'
+  workflow_dispatch:
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: node --env-file=.env scripts/build-index.js
+        env:
+          UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
+          UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+```
+
+Add the three secrets in **GitHub → Settings → Secrets → Actions**.
+
+---
+
+### Free-tier → Premium Upgrade Path
+
+| Trigger | Action | Cost |
+|---------|--------|------|
+| Hitting Groq free limits (30 RPM / 14.4K RPD) | Add `$10` to OpenRouter → 1K free req/day forever | $10 one-time |
+| Need privacy (recruiter chats not training data) | Enable billing on Google AI Studio → Paid Tier 1 | ~$1–2/mo |
+| Higher embedding quality | Migrate to `gemini-embedding-001@1536` + re-index | Free (same Upstash index dims) |
+
+---
+
+### Architecture Summary (for your docs)
+
+| Layer | Implementation |
+|-------|---------------|
+| **Primary LLM** | Groq `llama-3.3-70b-versatile` (~500 tok/s, free tier) |
+| **Fallback LLM** | Google `gemini-2.5-flash` (free tier, GA ≥May 2027) |
+| **Last Resort** | Canned `RESPONSES` in Chatbot.jsx (never shows error) |
+| **Vector Store** | Upstash Vector (model-based: `openai/text-embedding-3-small`, 1536-dim) |
+| **Embeddings** | Upstash built-in (`upsert-data` / `query-data`) — zero external API |
+| **Indexer** | `scripts/build-index.js` — fumadocs + all structured data; stable IDs; `reset()` + batched `upsert-data` |
+| **Retrieval** | `index.query({ data: userQuery, topK: 3 })` — no embedding call |
+| **Prompt** | Active page context (`currentPath`) + global RAG; last 6 messages |
+| **Streaming** | Vercel AI SDK `streamText` → `toTextStreamResponse()`; sources via `X-Sources` header |
+| **Client** | Custom fetch + ReadableStream; canned fallback on any error |
+
+---
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| "Missing UPSTASH_VECTOR_REST_URL" | Check `.env` exists and vars are spelled exactly |
+| "FALLBACK" every request | Groq key invalid or rate-limited; check console for fallback logs |
+| Sources show "No specific vector context" | Re-run `build-index.js`; verify index has data in Upstash console |
+| Build fails on `Activity` | Ensure `Heatmap.jsx` imports `IconActivity` from `@tabler/icons-react` |
+| TypeScript errors on `route.ts` | Run `npx tsc --noEmit` — fix any `any[]` → `CoreMessage[]` if needed |
+
+---
+
+### Files to Commit
+
+```
+scripts/build-index.js
+app/api/chat/route.ts
+components/chatbot/Chatbot.jsx
+components/chatbot/Message.jsx
+components/chatbot/QuickActions.jsx
+data/botContent.js          # ← YOUR CUSTOM CONTENT
+.env.example
+package.json                # @ai-sdk/groq added
+.github/workflows/index-vectors.yml  # optional
+```
+
+**Do NOT commit:** `.env` (contains secrets), `node_modules`, `.next`
+
+---
+
+Now anyone forking this repo has a production-ready, free-tier RAG chatbot they can customize in 15 minutes. ```

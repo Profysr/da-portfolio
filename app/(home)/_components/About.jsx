@@ -1,37 +1,31 @@
 "use client";
 
-import { personal, about, contributions } from "@/data/idx";
+import { personal, about } from "@/data/idx";
 import { Section } from "@/components/layout/Section";
-import { BlurFade } from "@/components/ui/blur-fade";
-import { BentoCard } from "@/components/ui/bento-grid";
-import { AvatarStatus } from "@/components/AvatarStatus";
-import { LazyParticles } from "@/components/lazy";
+import { ScrollReveal, StaggeredReveal } from "@/components/ui/ScrollReveal";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import {
   IconMapPin,
-  IconWorld,
   IconDownload,
   Icon360View,
   IconClock,
   IconGitBranch,
+  IconBrandGithub,
 } from "@tabler/icons-react";
-import { ContactCard } from "@/components/ContactCard";
-import { StatCard } from "@/components/StatCard";
 import { HeatmapGrid } from "@/components/Heatmap";
+import { ViewOnMap } from "@/components/common/ViewOnMap";
+import { NumberSlider } from "@/components/common/NumberSlider";
 import { downloadResume } from "@/lib/download";
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-
-// __ Live GMT / Local Clock Component _________________________________
-export function LiveClock({ timeZone = "UTC", label = "GMT" }) {
+/* ── Live PKT clock ─────────────────────────────────────────────────── */
+function LiveClock({ timeZone = "Asia/Karachi", label = "PKT" }) {
   const [time, setTime] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      // Formats to HH:MM:SS AM/PM based on desired timezone
       const formatted = now.toLocaleTimeString("en-US", {
         timeZone,
         hour: "2-digit",
@@ -42,193 +36,186 @@ export function LiveClock({ timeZone = "UTC", label = "GMT" }) {
       setTime(formatted);
     };
 
-    updateTime(); // Initial run on mount
+    updateTime();
     const timer = setInterval(updateTime, 1000);
-
     return () => clearInterval(timer);
   }, [timeZone]);
 
   return (
-    <span className="font-mono text-muted-foreground font-medium">
-      {time ? `${time} ${label}` : "Loading..."}
+    <span className="text-sm font-medium tracking-wide text-foreground">
+      {time ? `${time} ${label}` : "--:--:--"}
     </span>
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
- *  Unified About & Contributions Bento Grid
- * ───────────────────────────────────────────────────────────── */
+/* ── Editorial About ────────────────────────────────────────────────── */
 export default function About() {
   const { stats } = useGitHubStats();
+  const [sliderWeeks, setSliderWeeks] = useState(30);
+  const [heatmapWeeks, setHeatmapWeeks] = useState(30);
 
-  const bentoItems = [
-    // 1. About Me Bio Card
+  /* Debounce: slider moves freely; API-consuming heatmap updates 350ms after rest */
+  useEffect(() => {
+    const timer = setTimeout(() => setHeatmapWeeks(sliderWeeks), 350);
+    return () => clearTimeout(timer);
+  }, [sliderWeeks]);
+
+  const [statement, ...supportingParts] = personal.bio.split(". ");
+  const supporting = supportingParts.join(". ");
+
+  const experienceStat = about.stats[0] ?? {};
+  const repoCount = stats?.publicRepos ?? 61;
+  const contributionCount = stats?.totalContributions ?? 829;
+
+  const statsData = [
     {
-      id: "about-me",
-      className:
-        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-1 md:row-start-1",
-      delay: 0.05,
-      content: (
-        <BentoCard className="h-full">
-          <div className="flex flex-col gap-3 py-2">
-            <AvatarStatus />
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {personal.bio}
-            </p>
-          </div>
-
-          <div className="pt-2.5 border-t border-white/10 flex items-center justify-between mt-auto">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <IconMapPin className="h-3 w-3 text-primary/70" />
-              <span className="text-[11px] font-mono">{personal.location}</span>
-            </div>
-            {personal.resumeUrl && (
-              <button
-                type="button"
-                onClick={() => downloadResume(personal.resumeUrl)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/15 bg-white/4 text-xs font-medium text-white hover:border-primary/50 hover:bg-primary/10 transition-all"
-              >
-                <IconDownload className="h-3.5 w-3.5 text-primary" />
-                Resume
-              </button>
-            )}
-          </div>
-        </BentoCard>
-      ),
+      id: "experience",
+      icon: IconClock,
+      value: experienceStat.value || "2 Yrs 8 Mos",
+      title: experienceStat.title || "In Industry",
+      isTicker: false,
     },
-
-    // 2. Interactive Globe Card
     {
-      id: "location-globe",
-      className:
-        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-5 md:row-start-1",
-      delay: 0.08,
-      content: (
-        <BentoCard
-          title="Location & Presence"
-          subtitle={personal.locationLabel}
-          Icon={IconMapPin}
-          badge={personal.timezone}
-          className="h-full min-h-60"
-        >
-          <div className="relative flex-1 my-1 min-h-36 flex items-center justify-center overflow-hidden">
-            <Image
-              src="/pakistan.svg"
-              alt="Pakistan map"
-              width={300}
-              height={200}
-              className="w-full h-auto max-h-52 object-contain"
-            />
-          </div>
-          <div className="flex items-center justify-end gap-1 pt-2 border-t border-white/10 text-xs">
-            <IconClock className="h-3.5 w-3.5 text-primary" />
-            <LiveClock timeZone="UTC" label="GMT" />
-          </div>
-        </BentoCard>
-      ),
+      id: "repos",
+      icon: IconGitBranch,
+      value: repoCount,
+      title: "Public Repos",
+      isTicker: true,
     },
-
     {
-      id: "stat-industry",
-      className:
-        "col-span-6 md:col-span-2 md:row-span-3 md:col-start-9 md:row-start-1",
-      delay: 0.14,
-      content: (
-        <StatCard
-          title="Experience"
-          value={about.stats[0]?.value || "2.8+ Yrs"}
-          subtext="In Industry"
-          icon={about.stats[0]?.icon || IconClock}
-          className="h-full"
-        />
-      ),
-    },
-
-    // 6. Stat Card 2: Hours / Commits (Moved UP to top right)
-    {
-      id: "stat-projects",
-      className:
-        "col-span-6 md:col-span-2 md:row-span-3 md:col-start-11 md:row-start-1",
-      delay: 0.16,
-      content: (
-        <StatCard
-          title="Projects Built"
-          value={
-            stats?.publicRepos ? `${stats.publicRepos}+ Repos` : about.stats[1]?.value || "20+"
-          }
-          subtext={stats?.totalStars ? `${stats.totalStars} Stars` : "Public Repos"}
-          icon={IconGitBranch}
-          className="h-full"
-        />
-      ),
-    },
-
-    // 4. GitHub Heatmap Card (Merged into About)
-    {
-      id: "github-heatmap",
-      className:
-        "col-span-12 md:col-span-8 md:row-span-3 md:col-start-1 md:row-start-5",
-      delay: 0.12,
-      content: (
-        <BentoCard
-          title="GitHub Rhythm & Velocity"
-          subtitle="Real-time commits, open-source PRs, and build cadence"
-          Icon={Icon360View}
-          badge={`@${stats?.username || contributions.githubUsername}`}
-          className="h-full justify-between"
-        >
-          <div className="flex-1 flex items-center justify-center my-auto py-2 overflow-x-auto">
-            <HeatmapGrid
-              weeks={contributions.heatmapWeeks || 30}
-              githubUsername={stats?.username || contributions.githubUsername || "Profysr"}
-              realContributionCalendar={stats?.contributionCalendar}
-              overrideTotal={stats?.totalContributions}
-            />
-          </div>
-        </BentoCard>
-      ),
-    },
-
-    // 3. Connect & Collaborate Card
-    {
-      id: "connect-card",
-      className:
-        "col-span-12 md:col-span-4 md:row-span-4 md:col-start-9 md:row-start-4",
-      delay: 0.1,
-      content: (
-        <BentoCard
-          title="Connect & Collaborate"
-          subtitle="Direct network links"
-          Icon={IconWorld}
-          className="h-full min-h-60"
-        >
-          <ContactCard />
-        </BentoCard>
-      ),
+      id: "contributions",
+      icon: Icon360View,
+      value: contributionCount,
+      title: "Contributions",
+      isTicker: true,
     },
   ];
 
   return (
-    <Section id="about" className="relative py-12 md:py-16" noFade>
-      <Suspense fallback={null}>
-        <LazyParticles
-          className="absolute inset-0"
-        />
-      </Suspense>
+    <Section id="about" noFade>
+      <div className="flex flex-col gap-6">
+        <ScrollReveal variant="reveal" duration={0.8} once={false}>
+          <h2 className="text-3xl font-semibold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]">
+            {statement}.
+          </h2>
+        </ScrollReveal>
 
-      {/* Unified 12-Column Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 md:grid-rows-7 gap-1 sm:gap-2">
-        {bentoItems.map((item) => (
-          <BlurFade
-            key={item.id}
-            inView
-            delay={item.delay}
-            className={cn(item.className, "bg-surface/50")}
-          >
-            {item.content}
-          </BlurFade>
-        ))}
+        {supporting && (
+          <ScrollReveal variant="fade" duration={0.7} delay={0.1} once={false}>
+            <p className="leading-relaxed text-muted-foreground">
+              {supporting}.
+            </p>
+          </ScrollReveal>
+        )}
+
+        <StaggeredReveal
+          variant="fade"
+          staggerDelay={0.08}
+          delay={0.15}
+          once={false}
+          className="flex flex-wrap gap-x-10 gap-y-4"
+        >
+          {statsData.map(({ id, icon: Icon, value, title, isTicker }) => (
+            <div key={id} className="flex items-start gap-2.5">
+              <Icon
+                className="mt-1 h-4 w-4 text-primary"
+                strokeWidth={1.5}
+                aria-hidden="true"
+              />
+              <div>
+                <p className="text-2xl font-bold tracking-tight">
+                  {isTicker ? <NumberTicker value={value} /> : value}
+                </p>
+                <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  {title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </StaggeredReveal>
+
+        <ScrollReveal
+          variant="fade"
+          duration={0.7}
+          delay={0.25}
+          once={false}
+          className="flex flex-wrap items-center gap-4"
+        >
+          {personal.resumeUrl && (
+            <button
+              type="button"
+              onClick={() => downloadResume(personal.resumeUrl)}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium transition-all hover:border-primary/40 hover:text-primary active:scale-95"
+            >
+              <IconDownload className="h-4 w-4" strokeWidth={1.5} />
+              Resume
+            </button>
+          )}
+          <ViewOnMap />
+
+          {/* Live Clock */}
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <IconMapPin className="h-4 w-4 text-primary" strokeWidth={1.5} />
+              <span>{personal.location}</span>
+            </div>
+
+            {/* Enhanced Live Clock Pill */}
+            <div className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-muted/50 px-3 py-1 shadow-e1">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              </span>
+              <LiveClock timeZone="Asia/Karachi" label="PKT" />
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
+
+      {/* GitHub rhythm band */}
+      <ScrollReveal
+        variant="reveal"
+        duration={0.8}
+        delay={0.1}
+        once={false}
+        className="mt-12"
+      >
+        <div className="rounded-lg border border-border bg-surface">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3">
+            <div className="flex items-center gap-2">
+              <span className="flex size-10 items-center justify-center rounded-md bg-background">
+                <IconBrandGithub className="h-4.5 w-4.5" strokeWidth={1.5} />
+              </span>
+              <div>
+                <h4 className="text-base font-semibold">GitHub Rhythm</h4>
+                <p className="text-xs text-muted-foreground">
+                  Commits, open-source PRs, and build cadence
+                </p>
+              </div>
+            </div>
+            <NumberSlider
+              label="Range"
+              unit="wks"
+              min={24}
+              max={44}
+              step={2}
+              value={sliderWeeks}
+              onChange={setSliderWeeks}
+              layout="row"
+              className="w-60"
+            />
+          </div>
+          <div className="overflow-x-auto px-5 py-5">
+            <HeatmapGrid
+              key={heatmapWeeks}
+              weeks={heatmapWeeks}
+              githubUsername={stats?.username || personal.githubUsername}
+              realContributionCalendar={stats?.contributionCalendar}
+              overrideTotal={stats?.totalContributions}
+            />
+          </div>
+        </div>
+      </ScrollReveal>
     </Section>
   );
 }

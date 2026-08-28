@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { Footer } from "./Footer";
-import { AssistantAi } from "@/components/AssistantAi";
+import { Chatbot } from "@/components/chatbot/Chatbot";
 import BottomDock from "@/components/layout/BottomDock"
 import TopBar from "@/components/layout/TopBar";
 
@@ -42,7 +42,7 @@ function HomeLayout({ children }) {
   }, [lastScrollY]);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-clip">
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
@@ -54,7 +54,7 @@ function HomeLayout({ children }) {
         isVisible={isNavVisible}
         onAIClick={() => setIsAIOpen(true)}
       />
-      <AssistantAi open={isAIOpen} onOpenChange={setIsAIOpen} />
+      <Chatbot open={isAIOpen} onClose={() => setIsAIOpen(false)} />
       <Footer />
     </div>
   );

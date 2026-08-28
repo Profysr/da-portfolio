@@ -1,24 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { Providers } from "@/app/providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   generatePersonSchema,
   generateWebSiteSchema,
 } from "@/lib/structured-data";
 import { websiteDomain } from "@/data/personal";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-  preload: true,
-});
+import { geistMono, poppins } from "@/lib/fonts";
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FDFBF7" },
+    { media: "(prefers-color-scheme: dark)", color: "#141414" },
+  ],
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -85,11 +83,21 @@ export const metadata: Metadata = {
     creator: "@profysr",
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favico/favicon.ico", sizes: "any" },
+      { url: "/favico/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favico/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favico/favicon.ico",
+    apple: [
+      {
+        url: "/favico/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
-  manifest: "/site.webmanifest",
+  manifest: "/favico/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -101,7 +109,12 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased dark`} data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${poppins.variable} ${geistMono.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           id="json-ld-person"
@@ -124,11 +137,15 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <TooltipProvider>
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
-        </TooltipProvider>
+        <Providers>
+          <TooltipProvider>
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+          </TooltipProvider>
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

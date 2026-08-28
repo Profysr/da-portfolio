@@ -29,7 +29,8 @@ export const aiBotData = {
 };
 
 // Bot training corpus — plain markdown strings derived directly from idx data.
-// This is what the LLM backend will use as context to answer questions. Extend this array whenever you add new entries to idx (new project, blog, role, etc.).
+// This is what the LLM backend will use as context to answer questions.
+// Extend this array whenever you add new entries to idx (new project, blog, role, etc.).
 export const botKnowledge = [
   // ── Personal ──────────────────────────────────────────────────────────
   `Bilal Ahmad is a Forward Deployed & Software Engineer based in Islamabad, Pakistan (GMT+5). Email: hello@da-portfolio.dev.`,
@@ -86,3 +87,73 @@ export const botKnowledge = [
   `Direct contact email: hello@da-portfolio.dev.`,
   `ATS Resume available via download button in the portfolio header.`,
 ];
+
+// Canned fallback responses (used when API fails) — keyword-matched
+export const cannedResponses = {
+  projects: `I've built 8 projects spanning open source, healthcare automation, and developer tooling:
+
+▸ **Data Pipeline Toolkit** — Open Source ETL CLI with AST-driven job inference, async worker pools, multi-tenant schema isolation (Python, Docker, ClickHouse)
+
+▸ **RPA Clinical Automation Suite** — Private NHS integration with SystmOne, EMIS, Docman; OCR extraction, queue-based retries, HIPAA/GDPR compliant (Power Automate, Python, AutoHotkey)
+
+▸ **Agency Portfolio Platform** — WebGL globe (cobe), deterministic contribution heatmap, edge-cached static export <100ms TTFB (React, Motion, Tailwind)
+
+▸ **Da Profiler** (in progress) — Python REST API profiler & N+1 query workbench with CLI + JSON reporting
+
+▸ **JCN Engine** (in progress) — Multi-tenant SaaS project management with RBAC, team workspaces, subscription scaffolding (TypeScript, PostgreSQL)
+
+▸ **Clinical RPA Core** (in progress) — Reusable automation hooks for SystmOne & EMIS, local-first credential handling
+
+▸ **Agentic CLI Coder** (in progress) — Terminal refactoring agent powered by local LLMs, repo-aware context indexing`,
+
+  experience: `**Current:** Software Development Lead @ Kynoby (Mar 2026–present)
+Leading engineering team, architecting healthcare integrations, driving technical direction across automation platforms. Stack: React, Next.js, Django, PostgreSQL, Redis, Celery, Docker.
+
+**Previous:** Senior Frontend Developer @ Simplamo (Oct 2022–Jan 2026)
+Led frontend architecture, built component libraries, optimized application performance. React Native, Next.js, Tailwind CSS, Agile.`,
+
+  stack: `**Core Languages:** TypeScript, Python, JavaScript
+**Frontend:** React, Next.js, Motion, Tailwind CSS, shadcn/ui (Radix)
+**Backend:** Node.js, Django, PostgreSQL, Redis, Celery, ClickHouse
+**Infra:** Docker, AWS/GCP, GitHub Actions
+**Data/ML:** SQL, ETL pipelines, AST parsing, local LLMs
+**Tools:** VS Code, Git, Linear, Figma`,
+
+  contact: `**Email:** bilal@profysr.dev
+**GitHub:** github.com/Profysr
+**LinkedIn:** linkedin.com/in/bilalahmad
+**Location:** London, UK (Remote)
+**Open to:** Senior/Lead roles, healthcare tech, developer tooling, open source collaboration`,
+};
+
+export function matchCannedResponse(input) {
+  const lower = input.toLowerCase();
+  if (
+    lower.includes("project") ||
+    lower.includes("built") ||
+    lower.includes("portfolio")
+  )
+    return cannedResponses.projects;
+  if (
+    lower.includes("experience") ||
+    lower.includes("work") ||
+    lower.includes("job") ||
+    lower.includes("career")
+  )
+    return cannedResponses.experience;
+  if (
+    lower.includes("stack") ||
+    lower.includes("tech") ||
+    lower.includes("technology") ||
+    lower.includes("language")
+  )
+    return cannedResponses.stack;
+  if (
+    lower.includes("contact") ||
+    lower.includes("email") ||
+    lower.includes("reach") ||
+    lower.includes("hire")
+  )
+    return cannedResponses.contact;
+  return `I can help with:\n▸ **Projects** — 8 engineering projects\n▸ **Experience** — Kynoby, Simplamo\n▸ **Tech Stack** — TypeScript, React, Python, PostgreSQL\n▸ **Contact** — bilal@profysr.dev\n\nWhat would you like to know?`;
+}

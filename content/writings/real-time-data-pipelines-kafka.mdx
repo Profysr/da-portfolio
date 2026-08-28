@@ -1,0 +1,18 @@
+---
+title: "Event-Driven Analytics with Kafka & DuckDB"
+description: "Architecting low-latency streaming aggregations without the operational overhead of heavy clusters."
+date: "2025-02-18"
+tags: ["Streaming", "Architecture"]
+readTime: "9 min"
+thumbnail: "/tools/analytics-dashboard.svg"
+---
+
+## Stream Processing Reimagined
+
+Traditional stream-processing setups often demand heavy cluster orchestration. By coupling lightweight event streams in Kafka with DuckDB micro-batches, developers can achieve sub-second analytical reporting.
+
+## Architectural Flow
+
+1. **Ingestion**: Event publishers send structured JSON/Avro payloads to Kafka topics.
+2. **Buffer Window**: In-memory micro-batch buffering batches records across short time intervals.
+3. **Analytical Aggregation**: DuckDB runs fast vectorized scans to output real-time metric counters.
