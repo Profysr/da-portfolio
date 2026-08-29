@@ -32,7 +32,7 @@ export function ReadingLayout({
             </div>
 
             {/* Desktop Right Rail: Custom Sidebar Widgets + Static TOC */}
-            <aside className="hidden lg:block lg:col-span-4 xl:col-span-4 pl-4 border-l border-border space-y-6 h-full sticky top-0">
+            <aside className="hidden lg:block lg:col-span-4 xl:col-span-4 pl-4 border-l border-border space-y-6 h-[calc(100vh-200px)] sticky top-24 overflow-y-auto">
               {sidebar}
               <DesktopToc />
             </aside>
