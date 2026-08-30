@@ -88,7 +88,7 @@ const FooterNavStrip = () => {
                 <ExtendedLink
                   href={url}
                   aria-label={label}
-                  className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+                  className="p-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
                 >
                   <Icon size={16} stroke={1.8} />
                 </ExtendedLink>
@@ -109,7 +109,7 @@ const FooterNavStrip = () => {
               type="button"
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="p-1.5 rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors active:scale-95"
+              className="p-3 rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors active:scale-95"
             >
               <IconArrowUp size={16} stroke={1.8} />
             </button>
@@ -134,12 +134,12 @@ const BottomMetadata = () => (
     </p>
 
     {/* Center: Powered By / Built By Attribution */}
-    <p className="text-[11px] text-muted-foreground/80">
+    <p className="text-xs text-muted-foreground/80">
       Built with <span className="text-foreground font-bold">Magic UI</span>
     </p>
 
     {/* Right: Operational Status */}
-    <div className="flex items-center gap-2 text-[11px]">
+    <div className="flex items-center gap-2 text-xs">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
       <span>Systems Operational ({personal.timezone || "UTC"})</span>
     </div>

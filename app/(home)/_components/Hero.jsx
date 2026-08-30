@@ -77,7 +77,7 @@ function HeroActions() {
                 rel="noopener noreferrer"
                 aria-label={aria || label}
                 onClick={() => handleIconClick(label)}
-                className="p-2 rounded-md hover:bg-foreground/5 transition-colors"
+                className="p-3 rounded-md hover:bg-foreground/5 transition-colors"
               >
                 <Icon
                   className={cn(
