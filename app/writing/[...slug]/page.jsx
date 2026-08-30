@@ -8,6 +8,7 @@ import {
 import { createMetadata } from "@/lib/seo";
 import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
+import { getMDXComponents } from "@/mdx-components";
 
 export async function generateStaticParams() {
   return writingSource.generateParams();
@@ -111,7 +112,7 @@ export default async function WritingPage({ params }) {
         toc={toc}
         similarPosts={similarPosts}
       >
-        <MDXContent />
+        <MDXContent components={getMDXComponents()} />
       </WritingContent>
     </>
   );

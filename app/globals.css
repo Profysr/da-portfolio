@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -15,47 +17,9 @@
 /* Streamdown (chat markdown renderer) — expose internal classes to Tailwind v4 */
 @source "../node_modules/streamdown/dist/*.js";
 @source "../node_modules/@streamdown/code/dist/*.js";
-/* Streamdown code blocks — brand token alignment (pages via .markdown-code, chat global) */
-/* [data-streamdown="code-block"] {
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  background-color: var(--surface);
-  box-shadow: var(--shadow-e1);
-} */
 
-/* [data-streamdown="code-block"] pre {
-  background-color: transparent;
-  color: var(--foreground);
-}
-
-[data-streamdown="code-block-header"],
-[data-streamdown="code-block-actions"] {
-  background-color: color-mix(in oklab, var(--surface-muted) 80%, transparent) !important;
-  border: 1px solid var(--border) !important;
-} */
-
-/* ── Article Body Reading Typography ── */
-/* .article-body {
-  max-width: 100%;
-  font-size: 1rem;
-  line-height: 1.75;
-  color: var(--foreground);
-}
-
-.article-body > * + * {
-  margin-top: 1.25rem;
-}
-
-.article-body h2,
-.article-body h3,
-.article-body h4 {
-  scroll-margin-top: 6rem;
-}
-
-.article-body pre {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-} */
+/* fumadocs-ui — expose component classes to Tailwind v4 */
+@source "../node_modules/fumadocs-ui/dist/**/*.js";
 
 /* ── BASE RESETS ──────────────────────────────────────────────────────── */
 html {

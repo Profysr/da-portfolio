@@ -8,6 +8,7 @@ import {
 import { createMetadata } from "@/lib/seo";
 import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
+import { getMDXComponents } from "@/mdx-components";
 
 export async function generateStaticParams() {
   return projectSource.generateParams();
@@ -173,7 +174,7 @@ access: page.data.access,
         toc={toc}
         similarProjects={similarProjects}
       >
-        <MDXContent />
+        <MDXContent components={getMDXComponents()} />
       </ProjectContent>
     </>
   );

@@ -72,7 +72,7 @@ export const writings = [
     category: "Product Analytics",
   },
   {
-    id: "blog-6",
+    id: "blog-7",
     slug: "build-a-rag-chatbot-with-nextjs",
     title:
       "Building a RAG Chatbot with Next.js, the AI SDK, Groq, and Upstash Vector",
