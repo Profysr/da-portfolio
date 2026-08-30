@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import { nav, socials, personal, footer } from "@/data/idx";
 import { Heading } from "@/components/ui/Heading";
-import { downloadResume } from "@/lib/download";
+import { downloadResume } from "@/utils/download";
 import { ExtendedLink } from "@/components/common/ExtendedLink";
 // import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
 

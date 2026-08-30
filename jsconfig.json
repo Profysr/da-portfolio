@@ -13,6 +13,10 @@
     "data",
     "lib",
     "hooks",
-    "content"
+    "content",
+    "validator/chat-guard.js",
+    "validator/rate-limit.js",
+    "utils/download.ts",
+    "utils/fonts.ts"
   ]
 }

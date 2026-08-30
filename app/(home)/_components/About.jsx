@@ -15,7 +15,7 @@ import {
 import { HeatmapGrid } from "@/components/Heatmap";
 import { ViewOnMap } from "@/components/common/ViewOnMap";
 import { NumberSlider } from "@/components/common/NumberSlider";
-import { downloadResume } from "@/lib/download";
+import { downloadResume } from "@/utils/download";
 import { useState, useEffect } from "react";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 

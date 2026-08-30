@@ -9,7 +9,7 @@ import {
   generateWebSiteSchema,
 } from "@/lib/structured-data";
 import { websiteDomain } from "@/data/personal";
-import { geistMono, poppins } from "@/lib/fonts";
+import { geistMono, poppins } from "@/utils/fonts";
 
 export const viewport: Viewport = {
   themeColor: [

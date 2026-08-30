@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
+import { useChat } from "@ai-sdk/react";
 import {
   Drawer,
   DrawerPortal,
@@ -11,17 +12,8 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { IconSparkles } from "@tabler/icons-react";
-import { ChatMessagesContainer } from "./Message"
+import { ChatMessagesContainer } from "./Message";
 import { ChatInputForm } from "./ChatInputForm";
-
-let msgIdCounter = 0;
-function uniqueId() {
-  return `${Date.now()}-${++msgIdCounter}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-// ============================================================================
-// COMPONENT: ChatHeader
-// ============================================================================
 
 function ChatHeader() {
   return (
@@ -39,96 +31,36 @@ function ChatHeader() {
   );
 }
 
-// ============================================================================
-// COMPONENT: Chatbot
-// Main container managing stream payloads and application state.
-// ============================================================================
 export function Chatbot({ open, onClose }) {
-  const [messages, setMessages] = useState([]);
+  // 1. Manage input state locally since useChat no longer does
   const [input, setInput] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
 
-  // Stream processing implementation
-  const processRealStream = useCallback(
-    async (userText, currentPath) => {
-      setIsStreaming(true);
-      const msgId = uniqueId();
-
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "", id: msgId, sources: [] },
-      ]);
-
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            // Send user messages only (prevents empty assistant array index mismatch)
-            messages: [...messages, { role: "user", content: userText }],
-            currentPath,
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-
-        const sourcesHeader = res.headers.get("X-Sources");
-        let sources = [];
-        try {
-          sources = sourcesHeader ? JSON.parse(sourcesHeader) : [];
-        } catch {
-          sources = [];
-        }
-
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let fullText = "";
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          fullText += chunk;
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === msgId ? { ...m, content: fullText, sources } : m,
-            ),
-          );
-        }
-      } catch (err) {
-        console.error("Chat error:", err);
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === msgId
-              ? {
-                  ...m,
-                  content:
-                    "Sorry, I ran into an issue connecting to the assistant server.",
-                  sources: [],
-                }
-              : m,
-          ),
-        );
-      } finally {
-        setIsStreaming(false);
-      }
+  // 2. Destructure the updated useChat return values
+  const { messages, status, sendMessage } = useChat({
+    api: "/api/chat",
+    body: {
+      currentPath:
+        typeof window !== "undefined" ? window.location.pathname : "/",
     },
-    [messages],
-  );
+    onError: (err) => console.error("Chat error:", err),
+  });
 
-  const handleSend = (text) => {
-    if (!text.trim() || isStreaming) return;
-    const userText = text.trim();
+  const isStreaming = status === "streaming" || status === "submitted";
+
+  // 3. Replace `append` with `sendMessage({ text: ... })`
+  const handleQuickAction = async (promptText) => {
     setInput("");
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", content: userText, id: uniqueId() },
-    ]);
-    const currentPath =
-      typeof window !== "undefined" ? window.location.pathname : "/";
-    processRealStream(userText, currentPath);
+    await sendMessage({
+      text: promptText,
+    });
+  };
+
+  // 4. Create a submission wrapper for your ChatInputForm
+  const handleChatSubmit = async (cleanedText) => {
+    setInput("");
+    await sendMessage({
+      text: cleanedText,
+    });
   };
 
   return (
@@ -139,7 +71,7 @@ export function Chatbot({ open, onClose }) {
     >
       <DrawerPortal>
         <DrawerOverlay className="bg-background/50 backdrop-blur-sm" />
-        <DrawerContent className="w-full mx-auto max-w-2xl bg-surface rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
+        <DrawerContent className="w-full mx-auto max-w-3xl bg-surface rounded-t-2xl border-t border-border focus:outline-none flex flex-col h-[85dvh]">
           <ChatHeader />
           <ChatMessagesContainer
             messages={messages}
@@ -148,11 +80,11 @@ export function Chatbot({ open, onClose }) {
           <ChatInputForm
             input={input}
             setInput={setInput}
-            onSubmit={handleSend}
+            onSubmit={handleChatSubmit} // Passes to your new wrapper function
             isStreaming={isStreaming}
             isOpen={open}
             showQuickActions={!isStreaming}
-            onQuickAction={handleSend}
+            onQuickAction={handleQuickAction}
           />
         </DrawerContent>
       </DrawerPortal>

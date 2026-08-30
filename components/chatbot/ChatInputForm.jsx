@@ -12,7 +12,7 @@ import {
 import { DrawerFooter } from "@/components/ui/drawer";
 import { QuickActions } from "./QuickActions";
 import { AutoResizeTextArea } from "./AutoResizeTextArea";
-import { CHAT_CONSTRAINTS, normalizeInput } from "@/lib/chat-guard";
+import { CHAT_CONSTRAINTS, normalizeInput } from "@/validator/chat-guard";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 // Handles user input formatting, character bounds, credit tracking, and submission.
 // ============================================================================
 export function ChatInputForm({
-  input,
+  input = "",
   setInput,
   onSubmit,
   isStreaming,

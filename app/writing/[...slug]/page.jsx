@@ -1,11 +1,11 @@
 import { writingSource } from "@/lib/source";
 import { notFound } from "next/navigation";
 import WritingContent from "../_components/WritingContent";
-import { mdxCustomComponents } from "@/components/docs/mdx-custom-components";
 import {
   generateBlogPostingSchema,
   generateBreadcrumbSchema,
 } from "@/lib/structured-data";
+import { createMetadata } from "@/lib/seo";
 import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
 
@@ -22,24 +22,17 @@ export async function generateMetadata({ params }) {
     return { title: "Writing Not Found" };
   }
 
-  return {
+  const slugStr = slugParam.join("/");
+
+  return createMetadata({
     title: page.data.title,
     description: page.data.description,
-    openGraph: {
-      title: page.data.title,
-      description: page.data.description,
-      type: "article",
-      publishedTime: page.data.date,
-      tags: page.data.tags || [],
-      images: page.data.thumbnail ? [page.data.thumbnail] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: page.data.title,
-      description: page.data.description,
-      images: page.data.thumbnail ? [page.data.thumbnail] : [],
-    },
-  };
+    path: `/writing/${slugStr}`,
+    type: "article",
+    publishedTime: page.data.date,
+    tags: page.data.tags || [],
+    images: page.data.thumbnail ? [page.data.thumbnail] : undefined,
+  });
 }
 
 export default async function WritingPage({ params }) {
@@ -118,7 +111,7 @@ export default async function WritingPage({ params }) {
         toc={toc}
         similarPosts={similarPosts}
       >
-        <MDXContent components={mdxCustomComponents} />
+        <MDXContent />
       </WritingContent>
     </>
   );

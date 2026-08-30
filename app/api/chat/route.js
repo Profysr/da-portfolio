@@ -2,8 +2,8 @@ import { streamText, createTextStreamResponse, toTextStream } from "ai";
 import { google } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import { Index } from "@upstash/vector";
-import { validateAndCleanRequest, wrapPromptBoundary } from "@/lib/chat-guard";
-import { checkQuota, deductUserCredit } from "@/lib/rate-limit";
+import { validateAndCleanRequest, wrapPromptBoundary } from "@/validator/chat-guard";
+import { checkQuota, deductUserCredit } from "@/validator/rate-limit";
 
 export const maxDuration = 30;
 // ============================================================================

@@ -1,11 +1,11 @@
 import { projectSource } from "@/lib/source";
 import { notFound } from "next/navigation";
 import ProjectContent from "../_components/ProjectContent";
-import { mdxCustomComponents } from "@/components/docs/mdx-custom-components";
 import {
   generateProjectSchema,
   generateBreadcrumbSchema,
 } from "@/lib/structured-data";
+import { createMetadata } from "@/lib/seo";
 import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
 
@@ -13,6 +13,11 @@ export async function generateStaticParams() {
   return projectSource.generateParams();
 }
 
+/**
+ * Project detail metadata — uses factory for complete OG+Twitter+cannonical.
+ * Type "article" enables publishedTime/authors/tags for AEO/GEO.
+ * Image fallback: frontmatter thumbnail → default site banner (handled by factory).
+ */
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const slugParam = Array.isArray(slug) ? slug : [slug];
@@ -22,26 +27,23 @@ export async function generateMetadata({ params }) {
     return { title: "Project Not Found" };
   }
 
-  return {
+  const slugStr = slugParam.join("/");
+
+  return createMetadata({
     title: page.data.title,
     description: page.data.description,
-    openGraph: {
-      title: page.data.title,
-      description: page.data.description,
-      type: "article",
-      publishedTime: page.data.date,
-      tags: page.data.category ? [page.data.category] : [],
-      images: page.data.thumbnail ? [page.data.thumbnail] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: page.data.title,
-      description: page.data.description,
-      images: page.data.thumbnail ? [page.data.thumbnail] : [],
-    },
-  };
+    path: `/projects/${slugStr}`,
+    type: "article",
+    publishedTime: page.data.date,
+    tags: page.data.category ? [page.data.category] : [],
+    images: page.data.thumbnail ? [page.data.thumbnail] : undefined,
+  });
 }
 
+/**
+ * Parses MDX changelog sections (## Changelog → ### vX.Y.Z - DATE).
+ * Returns structured version entries for UI rendering.
+ */
 function parseChangelog(content) {
   if (!content) return [];
   const changelogRegex = /## Changelog\s*\n([\s\S]*?)(?=\n## |\n# |$)/i;
@@ -101,7 +103,7 @@ export default async function ProjectPage({ params }) {
         date: p.data.date,
         category: p.data.category,
         industry: page.data.industry,
-        access: p.data.access,
+access: page.data.access,
         tech: p.data.tech || [],
         thumbnail: p.data.thumbnail,
         score,
@@ -133,7 +135,8 @@ export default async function ProjectPage({ params }) {
   const changelog = parseChangelog(rawContent);
   const toc = page.data.toc || [];
 
-  // Generate structured data
+  // Generate structured data — SoftwareApplication + BreadcrumbList
+  // author/publisher cross-ref Person @id for GEO/LLMO entity graph
   const projectSchema = generateProjectSchema({
     title: page.data.title,
     description: page.data.description,
@@ -143,6 +146,7 @@ export default async function ProjectPage({ params }) {
     strategies: page.data.strategies,
     github: page.data.github,
     live: page.data.live,
+    thumbnail: page.data.thumbnail,
   });
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -169,7 +173,7 @@ export default async function ProjectPage({ params }) {
         toc={toc}
         similarProjects={similarProjects}
       >
-        <MDXContent components={mdxCustomComponents} />
+        <MDXContent />
       </ProjectContent>
     </>
   );
