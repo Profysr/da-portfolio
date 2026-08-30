@@ -1,32 +1,36 @@
-export const aiBotData = {
-  quickPrompts: [
-    {
-      id: "pitch",
-      icon: "⚡",
-      label: "15-Second Executive Pitch",
-    },
-    {
-      id: "stack",
-      icon: "🛠️",
-      label: "Core Stack & MCP Pipelines",
-    },
-    {
-      id: "achievements",
-      icon: "📈",
-      label: "Key Impact & Metrics @ Kynoby",
-    },
-    {
-      id: "education",
-      icon: "🎓",
-      label: "Academic Background & Certifications",
-    },
-    {
-      id: "contact",
-      icon: "🤝",
-      label: "Availability & Work Preference",
-    },
-  ],
-};
+import {
+  IconCode,
+  IconBriefcase,
+  IconStack,
+  IconMail,
+} from "@tabler/icons-react";
+
+export const QUICK_ACTIONS = [
+  {
+    id: "projects",
+    label: "Projects",
+    icon: IconCode,
+    query: "What projects have you built?",
+  },
+  {
+    id: "experience",
+    label: "Experience",
+    icon: IconBriefcase,
+    query: "Tell me about your work experience",
+  },
+  {
+    id: "stack",
+    label: "Tech Stack",
+    icon: IconStack,
+    query: "What's your tech stack?",
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    icon: IconMail,
+    query: "How can I contact you?",
+  },
+];
 
 // Bot training corpus — plain markdown strings derived directly from idx data.
 // This is what the LLM backend will use as context to answer questions.

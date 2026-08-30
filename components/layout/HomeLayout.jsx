@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { Footer } from "./Footer";
-import { Chatbot } from "@/components/chatbot/Chatbot";
+import { AIAssistant } from "@/components/chatbot/AIAssistant";
 import BottomDock from "@/components/layout/BottomDock"
 import TopBar from "@/components/layout/TopBar";
 
@@ -54,7 +54,7 @@ function HomeLayout({ children }) {
         isVisible={isNavVisible}
         onAIClick={() => setIsAIOpen(true)}
       />
-      <Chatbot open={isAIOpen} onClose={() => setIsAIOpen(false)} />
+      <AIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />
       <Footer />
     </div>
   );
