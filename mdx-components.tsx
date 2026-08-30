@@ -5,11 +5,11 @@ import type { MDXComponents } from "mdx/types";
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
-    pre: ({ ref: _ref, ...props }) => (
-      <CodeBlock {...props}>
-        <Pre>{props.children}</Pre>
-      </CodeBlock>
-    ),
+    // pre: ({ ref: _ref, ...props }) => (
+    //   <CodeBlock {...props}>
+    //     <Pre>{props.children}</Pre>
+    //   </CodeBlock>
+    // ),
     ...components,
   };
 }

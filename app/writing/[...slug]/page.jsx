@@ -10,20 +10,109 @@ import Script from "next/script";
 import { websiteDomain } from "@/data/personal";
 import { getMDXComponents } from "@/mdx-components";
 
+// --- Helper Functions & Modular Logic ---
+
+function resolveSlug(paramsSlug) {
+  const slugParam = Array.isArray(paramsSlug) ? paramsSlug : [paramsSlug];
+  return {
+    slugParam,
+    slugStr: slugParam.join("/"),
+  };
+}
+
+/**
+ * Finds similar posts efficiently without sorting/filtering the entire dataset if exact/strong matches exist.
+ */
+function getSimilarPosts(
+  allPages,
+  currentSlugStr,
+  currentTagsArray = [],
+  limit = 3,
+) {
+  if (!currentTagsArray.length) return [];
+
+  const currentTags = new Set(currentTagsArray);
+  const candidates = [];
+
+  for (const p of allPages) {
+    const pageSlugStr = p.slugs.join("/");
+
+    // Skip current post
+    if (pageSlugStr === currentSlugStr) continue;
+
+    const tags = p.data.tags || [];
+    let sharedCount = 0;
+
+    for (const tag of tags) {
+      if (currentTags.has(tag)) {
+        sharedCount++;
+      }
+    }
+
+    if (sharedCount > 0) {
+      candidates.push({
+        slug: pageSlugStr,
+        title: p.data.title,
+        description: p.data.description,
+        date: p.data.date,
+        readTime: p.data.readTime,
+        tags,
+        thumbnail: p.data.thumbnail,
+        score: sharedCount,
+      });
+    }
+
+    // Early exit optimization:
+    // If we already collected candidates with max possible tag overlap, stop scanning the remaining dataset.
+    if (
+      candidates.length >= limit &&
+      candidates.every((c) => c.score === currentTags.size)
+    ) {
+      break;
+    }
+  }
+
+  // Sort matched candidates by score, then recency, and return top items
+  return candidates
+    .sort(
+      (a, b) =>
+        b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0),
+    )
+    .slice(0, limit);
+}
+
+function generateSchemas(pageData, slugStr) {
+  const blogPostingSchema = generateBlogPostingSchema({
+    title: pageData.title,
+    description: pageData.description,
+    date: pageData.date,
+    thumbnail: pageData.thumbnail,
+    tags: pageData.tags,
+    slug: slugStr,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: websiteDomain },
+    { name: "Writing", url: `${websiteDomain}/#writings` },
+    { name: pageData.title, url: `${websiteDomain}/writing/${slugStr}` },
+  ]);
+
+  return { blogPostingSchema, breadcrumbSchema };
+}
+
+// --- Next.js Route Exports ---
 export async function generateStaticParams() {
   return writingSource.generateParams();
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const slugParam = Array.isArray(slug) ? slug : [slug];
+  const { slugParam, slugStr } = resolveSlug(slug);
   const page = writingSource.getPage(slugParam);
 
   if (!page) {
     return { title: "Writing Not Found" };
   }
-
-  const slugStr = slugParam.join("/");
 
   return createMetadata({
     title: page.data.title,
@@ -38,33 +127,18 @@ export async function generateMetadata({ params }) {
 
 export default async function WritingPage({ params }) {
   const { slug } = await params;
-  const slugParam = Array.isArray(slug) ? slug : [slug];
-  const slugStr = slugParam.join("/");
+  const { slugParam, slugStr } = resolveSlug(slug);
   const page = writingSource.getPage(slugParam);
 
   if (!page) notFound();
-  // Extracting all the sources in the memory and filtering similar posts
+
   const allPages = writingSource.getPages();
-  const currentTags = new Set(page.data.tags || []);
-  const similarPosts = allPages
-    .filter((p) => p.slugs.join("/") !== slugStr)
-    .map((p) => {
-      const sharedCount = (p.data.tags || []).filter((t) =>
-        currentTags.has(t)
-      ).length;
-      return {
-        slug: p.slugs.join("/"),
-        title: p.data.title,
-        description: p.data.description,
-        date: p.data.date,
-        readTime: p.data.readTime,
-        tags: p.data.tags || [],
-        thumbnail: p.data.thumbnail,
-        score: sharedCount,
-      };
-    })
-    .sort((a, b) => b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0))
-    .slice(0, 3);
+  const similarPosts = getSimilarPosts(
+    allPages,
+    slugStr,
+    page.data.tags || [],
+    4,
+  );
 
   const meta = {
     title: page.data.title,
@@ -76,24 +150,12 @@ export default async function WritingPage({ params }) {
     slug: slugStr,
   };
 
+  const { blogPostingSchema, breadcrumbSchema } = generateSchemas(
+    page.data,
+    slugStr,
+  );
   const MDXContent = page.data.body;
   const toc = page.data.toc || [];
-
-  // Generate structured data
-  const blogPostingSchema = generateBlogPostingSchema({
-    title: page.data.title,
-    description: page.data.description,
-    date: page.data.date,
-    thumbnail: page.data.thumbnail,
-    tags: page.data.tags,
-    slug: slugStr,
-  });
-
-  const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: "Home", url: websiteDomain },
-    { name: "Writing", url: `${websiteDomain}/#writings` },
-    { name: page.data.title, url: `${websiteDomain}/writing/${slugStr}` },
-  ]);
 
   return (
     <>
@@ -107,11 +169,7 @@ export default async function WritingPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <WritingContent
-        meta={meta}
-        toc={toc}
-        similarPosts={similarPosts}
-      >
+      <WritingContent meta={meta} toc={toc} similarPosts={similarPosts}>
         <MDXContent components={getMDXComponents()} />
       </WritingContent>
     </>

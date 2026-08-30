@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Heading } from "@/components/ui/Heading";
 import { TechPill } from "@/components/common/TechPill";
 import {
   Accordion,
@@ -25,14 +24,6 @@ const ProjectContent = ({
   similarProjects = [],
   children,
 }) => {
-  const formattedDate = meta?.date
-    ? new Date(meta.date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : null;
-
   const hasGithub = meta.github && meta.github !== "#";
   const hasLive = meta.live && meta.live !== "#";
 
@@ -42,115 +33,6 @@ const ProjectContent = ({
       : meta.access === "Hosted"
         ? "default"
         : "secondary";
-
-  const header = (
-    <div>
-      {/* Metadata Badges */}
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        {meta.category && (
-          <Badge
-            variant="outline"
-            className="text-[11px] uppercase font-mono tracking-wider px-2.5 py-0.5"
-          >
-            {meta.category}
-          </Badge>
-        )}
-        {meta.industry && (
-          <Badge variant="secondary" className="text-[11px] px-2.5 py-0.5">
-            {meta.industry}
-          </Badge>
-        )}
-        {meta.access && (
-          <Badge
-            variant={accessVariant}
-            className="text-[11px] px-2.5 py-0.5 font-mono"
-          >
-            {meta.access}
-          </Badge>
-        )}
-      </div>
-
-      {/* Title */}
-      <Heading
-        variant="gradient"
-        as="h1"
-        className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight"
-      >
-        {meta.title}
-      </Heading>
-
-      {/* Description */}
-      {meta.description && (
-        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6 font-normal max-w-3xl">
-          {meta.description}
-        </p>
-      )}
-
-      {/* Quick Actions (Live Demo & Source Code) */}
-      {(hasGithub || hasLive) && (
-        <div className="flex flex-wrap items-center gap-3 mb-8">
-          {hasLive && (
-            <Link
-              href={meta.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm no-underline group hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <IconRocket className="size-4" />
-              <span>Live Demo</span>
-              <IconExternalLink className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-          )}
-
-          {hasGithub && (
-            <Link
-              href={meta.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border border-border/80 bg-surface text-foreground hover:border-primary/50 hover:bg-surface-hover hover:text-primary no-underline group hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <IconBrandGithub className="size-4" />
-              <span>Source Code</span>
-            </Link>
-          )}
-        </div>
-      )}
-
-      {/* Strategies & Key Patterns */}
-      {meta.strategies?.length > 0 && (
-        <div className="mb-6">
-          <p className="text-[11px] uppercase font-mono tracking-wider text-muted-foreground mb-2.5 font-medium">
-            Key Strategies & Architecture
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {meta.strategies.map((strat) => (
-              <span
-                key={strat}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-surface border border-border/70 px-2.5 py-1 text-xs font-medium text-foreground"
-              >
-                <span className="size-1.5 rounded-full bg-primary" />
-                {strat}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tech Stack */}
-      {meta.tech?.length > 0 && (
-        <div>
-          <p className="text-[11px] uppercase font-mono tracking-wider text-muted-foreground mb-2.5 font-medium">
-            Technologies Used
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {meta.tech.map((tag) => (
-              <TechPill key={tag} name={tag} size="sm" />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
 
   const sidebar = (
     <div className="rounded-xl border border-border/80 bg-surface/40 backdrop-blur-sm p-4 shadow-sm">
@@ -176,10 +58,16 @@ const ProjectContent = ({
             <dd className="font-semibold text-foreground">{meta.access}</dd>
           </div>
         )}
-        {formattedDate && (
+        {meta.date && (
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">Published</dt>
-            <dd className="font-medium text-foreground">{formattedDate}</dd>
+            <dd className="font-medium text-foreground">
+              {new Date(meta.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </dd>
           </div>
         )}
       </dl>
@@ -189,18 +77,80 @@ const ProjectContent = ({
   return (
     <ReadingLayout
       type="project"
-      title={meta?.title}
-      header={header}
+      meta={meta}
       sidebar={sidebar}
       toc={toc}
       similarItems={similarProjects}
       currentSlug={meta?.slug}
     >
+      {/* Quick Actions */}
+      {(hasGithub || hasLive) && (
+        <div className="flex flex-wrap items-center gap-3 mb-8 not-prose">
+          {hasLive && (
+            <Link
+              href={meta.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm no-underline group hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <IconRocket className="size-4" />
+              <span>Live Demo</span>
+              <IconExternalLink className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+          )}
+          {hasGithub && (
+            <Link
+              href={meta.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border border-border/80 bg-surface text-foreground hover:border-primary/50 hover:bg-surface-hover hover:text-primary no-underline group hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <IconBrandGithub className="size-4" />
+              <span>Source Code</span>
+            </Link>
+          )}
+        </div>
+      )}
+
+      {/* Strategies */}
+      {meta.strategies?.length > 0 && (
+        <div className="mb-6 not-prose">
+          <p className="text-[11px] uppercase font-mono tracking-wider text-muted-foreground mb-2.5 font-medium">
+            Key Strategies & Architecture
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {meta.strategies.map((strat) => (
+              <span
+                key={strat}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-surface border border-border/70 px-2.5 py-1 text-xs font-medium text-foreground"
+              >
+                <span className="size-1.5 rounded-full bg-primary" />
+                {strat}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tech Stack */}
+      {meta.tech?.length > 0 && (
+        <div className="not-prose">
+          <p className="text-[11px] uppercase font-mono tracking-wider text-muted-foreground mb-2.5 font-medium">
+            Technologies Used
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {meta.tech.map((tag) => (
+              <TechPill key={tag} name={tag} size="sm" />
+            ))}
+          </div>
+        </div>
+      )}
+
       {children}
 
-      {/* Interactive Changelog Section using shadcn Accordion */}
+      {/* Changelog */}
       {changelog && changelog.length > 0 && (
-        <section className="mt-14 pt-8 border-t border-border/80">
+        <section className="mt-14 pt-8 border-t border-border/80 not-prose">
           <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-foreground">
             <IconFileText className="size-5 text-primary" />
             <span>Release Changelog</span>
@@ -248,4 +198,4 @@ const ProjectContent = ({
   );
 };
 
-export default ProjectContent
+export default ProjectContent;
