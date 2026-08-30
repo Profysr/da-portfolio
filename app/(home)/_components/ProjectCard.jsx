@@ -170,7 +170,7 @@ function CardFooter({ project }) {
       <div className="ml-auto flex items-center gap-2">
         <ExtendedLink
           href={`/projects/${project.slug}`}
-          className="inline-flex items-center gap-1.5 rounded border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+          className="inline-flex items-center gap-1.5 rounded border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary-text transition-colors hover:bg-primary/20"
         >
           <IconBook className="size-3.5" />
           <span>Read Docs</span>

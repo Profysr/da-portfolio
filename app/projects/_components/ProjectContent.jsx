@@ -64,7 +64,7 @@ const ProjectContent = ({
 
   const sidebar = (
     <div className="rounded-md border border-primary/20 bg-surface p-4">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-primary pb-3 mb-3 border-b border-primary/20">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-primary-text pb-3 mb-3 border-b border-primary/20">
         Project Summary
       </h3>
       <dl className="space-y-3 text-xs">
@@ -162,7 +162,7 @@ const ProjectContent = ({
                 <AccordionItem key={entry.version} value={entry.version}>
                   <AccordionTrigger className="hover:no-underline py-2 sm:py-3">
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-primary/10 text-primary text-[10px] sm:text-xs font-mono font-bold">
+                      <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-primary/10 text-primary-text text-[10px] sm:text-xs font-mono font-bold">
                         {entry.version}
                       </span>
                       <span className="text-muted-foreground text-[10px] sm:text-xs md:text-sm">

@@ -37,7 +37,7 @@ export const ProjectsEmptyState = ({ onReset }) => {
         <button
           type="button"
           onClick={onReset}
-          className="mt-1 text-xs font-medium text-primary hover:underline"
+          className="mt-1 text-xs font-medium text-primary-text hover:underline"
         >
           Reset Filter
         </button>

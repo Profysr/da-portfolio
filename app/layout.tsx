@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Bilal Ahmad",
   },
   description:
-    "I'm a Forward Deployed Engineer & Full Stack Developer from Past Experience, building and Integrating full-stack AI systems, clinical RPA automation for NHS, and open-source developer tooling.",
+    "I'm a Forward Deployed Engineer & Full Stack Developer from Past Experience, building and Integrating full-stack AI systems, clinical RPA automation for, and open-source developer tooling.",
   keywords: [
     "Software Engineer",
     "Forward Deployed Engineer",
