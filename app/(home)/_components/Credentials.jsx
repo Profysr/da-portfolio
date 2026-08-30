@@ -79,9 +79,9 @@ function EducationCard({ edu, index, total }) {
             <div>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
                     {edu.institution}
-                  </h4>
+                  </h3>
                   <p className="text-sm sm:text-base font-medium text-foreground/90 mt-1">
                     {edu.degree}
                     {edu.fieldOfStudy ? (
@@ -178,6 +178,7 @@ export default function Credentials() {
             <Heading
               variant="gradient"
               text="Education & Degrees"
+              as="h2"
               className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground"
             />
             <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-relaxed">

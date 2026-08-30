@@ -46,9 +46,9 @@ function HomeLayout({ children }) {
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
-      <main className="relative z-10 w-full flex-1">
+      <div className="relative z-10 w-full flex-1">
         <Suspense fallback={null}>{children}</Suspense>
-      </main>
+      </div>
 
       <BottomDock
         isVisible={isNavVisible}

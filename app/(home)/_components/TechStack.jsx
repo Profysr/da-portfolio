@@ -22,6 +22,7 @@ export function TechHeader() {
       <Heading
         variant="gradient"
         text="Technologies & Stack"
+        as="h2"
         className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground"
       />
       <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-normal">

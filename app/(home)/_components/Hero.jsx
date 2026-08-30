@@ -154,9 +154,9 @@ export default function Hero() {
               .getElementById("about")
               ?.scrollIntoView({ behavior: "smooth" })
           }
-          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground/50 hover:text-muted-foreground transition-colors group"
+          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors group"
         >
-          <span className="text-[10px] font-mono tracking-[0.2em] uppercase opacity-70 group-hover:opacity-100 transition-opacity">
+          <span className="text-[10px] font-mono tracking-[0.2em] uppercase group-hover:text-foreground transition-colors">
             Scroll
           </span>
           <IconChevronDown size={24} strokeWidth={2.5} />

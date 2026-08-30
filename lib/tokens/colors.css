@@ -17,9 +17,9 @@
   --secondary: #F1F5F9;
   --secondary-foreground: #0F172A;
 
-  /* Muted */
+  /* Muted — #334155 ensures /80 opacity variant still meets 4.5:1 AA on #F4F4F6 */
   --muted: #F1F5F9;
-  --muted-foreground: #475569;
+  --muted-foreground: #334155;
 
   --accent: #1E293B;
   --accent-foreground: #FFFFFF;

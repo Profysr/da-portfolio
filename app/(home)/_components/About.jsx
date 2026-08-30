@@ -187,7 +187,7 @@ export default function About() {
                 <IconBrandGithub className="h-4.5 w-4.5" strokeWidth={1.5} />
               </span>
               <div>
-                <h4 className="text-base font-semibold">GitHub Rhythm</h4>
+                <h3 className="text-base font-semibold">GitHub Rhythm</h3>
                 <p className="text-xs text-muted-foreground">
                   Commits, open-source PRs, and build cadence
                 </p>

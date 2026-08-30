@@ -119,12 +119,12 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             </div>
-            <span className="opacity-60 text-xs sm:text-sm">
+            <span className="text-muted-foreground text-xs sm:text-sm">
               {String(itemCount).padStart(2, "0")}
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-2 text-[11px] tracking-widest uppercase opacity-70">
+          <div className="hidden sm:flex items-center gap-2 text-[11px] tracking-widest uppercase text-muted-foreground">
             <span>Scroll down to navigate stack</span>
             <span className="inline-block animate-bounce text-foreground">↓</span>
           </div>

@@ -208,9 +208,9 @@ function ProjectCard({ project }) {
         </div>
 
         <div className="space-y-1.5">
-          <h4 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
+          <h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
             {project.title}
-          </h4>
+          </h3>
           <p className="text-xs leading-relaxed text-muted-foreground line-clamp-3">
             {project.description}
           </p>

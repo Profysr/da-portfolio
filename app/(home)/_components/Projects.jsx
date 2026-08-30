@@ -93,6 +93,7 @@ const Projects = () => {
           <Heading
             variant="gradient"
             text="Featured Engineering Projects"
+            as="h2"
             className="text-3xl! sm:text-5xl!"
           />
           <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">

@@ -154,7 +154,7 @@ function ActivityAndWritings() {
         {/* Section header */}
         <div className="flex flex-col items-center text-center gap-2.5">
           <Badge variant="light">BUILDING & WRITING</Badge>
-          <Heading variant="gradient" text="Activity & Contributions" />
+          <Heading variant="gradient" text="Activity & Contributions" as="h2" />
           <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">
             Open experiments, developer tools, and essays on engineering
             patterns I've shipped or published.

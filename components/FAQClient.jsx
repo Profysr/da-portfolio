@@ -100,6 +100,7 @@ export default function FAQClient() {
             <Heading
               variant="gradient"
               text={FrequentQuestions.heading}
+              as="h2"
               className="text-2xl! sm:text-3xl! text-center! lg:text-left!"
             />
 

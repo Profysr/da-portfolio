@@ -20,7 +20,7 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
       />
-      <main className="w-full flex flex-col">
+      <div className="w-full flex flex-col">
         <Hero />
         <About />
         <TechStack />
@@ -29,7 +29,7 @@ export default function HomePage() {
         <Credentials />
         <Writings />
         <FAQ />
-      </main>
+      </div>
     </HomeLayout>
   );
 }
