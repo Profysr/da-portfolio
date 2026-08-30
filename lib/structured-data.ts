@@ -181,12 +181,6 @@ export function generateProjectSchema(project: ProjectSchemaInput) {
     applicationCategory: project.category,
     operatingSystem: "Cloud",
     image: project.thumbnail ? absoluteUrl(project.thumbnail) : undefined,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-    },
     author: {
       "@type": "Person",
       "@id": PERSON_ID,

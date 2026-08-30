@@ -13,7 +13,7 @@ import { socials, websiteDomain } from "@/data/personal";
 
 const SITE_NAME = "Bilal Ahmad";
 
-/** Default share card. User-supplied banner lands at public/og-image.png (1200×630). */
+/** Default share card — static fallback if dynamic OG route is unreachable. */
 const DEFAULT_OG_IMAGE = "/og-image.png";
 
 const twitterCreator =

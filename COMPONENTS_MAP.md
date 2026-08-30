@@ -128,7 +128,8 @@ button · button-group · card · badge · input · input-group · textarea · l
 | CodeBlock.jsx | Streamdown static-mode Shiki block (mac-dots header + copy btn) | 9 | ✅ **P17c LIVE** in mdx-components pre — supersedes deleted docs/CodeBlock.jsx |
 | ContentCarousel.jsx | Embla-carousel shell (scroll-reveal wrapped) | 8 | ✅ **LIVE** — used by Writings.jsx and SimilarContent.jsx |
 | lazy.jsx | React.lazy registry | 3→UNUSED | Superseded by `components/lazy/index.jsx` next/dynamic P22 (file kept Rule #13) |
-| ExtendedLink.jsx | Custom link wrapper | 3→UNUSED | Replaced by NavLinkP21 (file kept Rule #13) |
+| NavLink.jsx | `next/link` wrapper · active state via `usePathname()` · prefetch intent · forwardRef | 9 | ✅ **P20 CREATED** — replaces ExtendedLink; consumer migration deferred to P21 |
+| ExtendedLink.jsx | Custom link wrapper | 3→UNUSED | ✅ **P20 MARKED UNUSED** — replaced by NavLink.jsx (file kept Rule #13; consumers migrate P21) |
 
 ---
 

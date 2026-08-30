@@ -1,3 +1,5 @@
+// UNUSED — replaced by NavLink (components/common/NavLink.jsx) in Phase 20.
+// Consumer migration deferred to Phase 21. File kept per Rule #13.
 "use client";
 
 import { forwardRef } from "react";
