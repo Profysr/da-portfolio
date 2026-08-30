@@ -13,6 +13,70 @@ Along the way we'll answer the question that trips up almost everyone building t
 
 ---
 
+## Getting started from scratch
+
+If you're building this for the first time, here's the full setup path before any code.
+
+### Step 1: Create a Next.js project
+
+```bash
+npx create-next-app@latest my-portfolio-chat --typescript --app --tailwind
+cd my-portfolio-chat
+```
+
+Select the defaults when prompted. The App Router is required for route handlers.
+
+### Step 2: Install dependencies
+
+```bash
+npm install ai @ai-sdk/groq @upstash/vector zod
+```
+
+| Package | What it does |
+|---|---|
+| `ai` | Vercel AI SDK — unified interface for calling LLM providers |
+| `@ai-sdk/groq` | Groq adapter — fast inference with OpenAI-compatible models |
+| `@upstash/vector` | Upstash Vector client — serverless vector DB with built-in embeddings |
+| `zod` | Schema validation — sanitizes incoming requests before they touch the model |
+
+### Step 3: Create an Upstash Vector index
+
+1. Go to [console.upstash.com](https://console.upstash.com) and sign up (free tier works)
+2. Click **Vector** in the sidebar → **Create Index**
+3. Name it something like `portfolio-knowledge`
+4. Pick a region close to your Vercel deployment
+5. Leave dimensions at the default (Upstash handles embedding dimensions for you)
+6. Once created, copy the **REST URL** and **REST Token**
+
+### Step 4: Set up environment variables
+
+Create `.env.local` at your project root:
+
+```bash
+UPSTASH_VECTOR_REST_URL=https://your-index-url.upstash.io
+UPSTASH_VECTOR_REST_TOKEN=your-rest-token
+GROQ_API_KEY=your-groq-api-key
+```
+
+Get a Groq API key at [console.groq.com](https://console.groq.com) — it's free for development use.
+
+### Step 5: Create the project structure
+
+```
+app/
+  api/
+    chat/
+      route.ts          # The backend endpoint
+components/
+  AIAssistant.tsx        # The chat drawer UI
+lib/
+  chat-guard.ts          # Input validation & sanitization
+```
+
+That's the skeleton. The rest of this post fills in each file.
+
+---
+
 ## What we're building
 
 A chat drawer that:
@@ -23,32 +87,6 @@ A chat drawer that:
 4. Returns a clean, markdown-formatted answer grounded *only* in that context
 
 No hallucinated job titles. No made-up projects. If the answer isn't in your data, the bot says so.
-
----
-
-## The stack
-
-| Piece | Tool | Why |
-|---|---|---|
-| Framework | Next.js (App Router) | Route handlers give us a clean `POST /api/chat` endpoint |
-| LLM provider | Groq (`@ai-sdk/groq`) | Fast inference, OpenAI-compatible model (`openai/gpt-oss-120b`) |
-| Orchestration | Vercel AI SDK (`ai`) | Unified interface for calling any model provider |
-| Vector DB | Upstash Vector (`@upstash/vector`) | Serverless, simple REST API, built-in embeddings |
-| Validation | Zod | Type-safe request validation and sanitization |
-
-Install the core packages:
-
-```bash
-npm install ai @ai-sdk/groq @upstash/vector zod
-```
-
-You'll also need two environment variables in `.env.local`:
-
-```bash
-UPSTASH_VECTOR_REST_URL=your-upstash-url
-UPSTASH_VECTOR_REST_TOKEN=your-upstash-token
-GROQ_API_KEY=your-groq-key
-```
 
 ---
 

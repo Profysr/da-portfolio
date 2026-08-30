@@ -106,4 +106,19 @@ export const writings = [
     thumbnail: null,
     category: "Career & Open Source",
   },
+  {
+    id: "blog-8",
+    slug: "fumadocs-migration-lessons",
+    title: "Migrating to fumadocs-mdx: Lessons, Mistakes, and a Cleaner Content Pipeline",
+    excerpt:
+      "How we replaced a custom MDX rendering system with fumadocs-mdx and fumadocs-ui — the mistakes we made, the gotchas we hit, and the patterns that actually work.",
+    description:
+      "How we replaced a custom MDX rendering system with fumadocs-mdx and fumadocs-ui — the mistakes we made, the gotchas we hit, and the patterns that actually work.",
+    date: "2026-08-30",
+    tags: ["Next.js", "fumadocs", "MDX", "Content Engineering"],
+    readTime: "10 min",
+    image: null,
+    thumbnail: null,
+    category: "Content Engineering",
+  },
 ];
