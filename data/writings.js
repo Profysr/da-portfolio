@@ -71,4 +71,17 @@ export const writings = [
     image: "/writings/metrics-that-actually-matter-saas.jpg",
     category: "Product Analytics",
   },
+  {
+    id: "blog-6",
+    slug: "build-a-rag-chatbot-with-nextjs",
+    title:
+      "Building a RAG Chatbot with Next.js, the AI SDK, Groq, and Upstash Vector",
+    excerpt:
+      "A beginner-friendly walkthrough of building a portfolio chatbot from scratch — including the tradeoffs between streamText and generateText, and why we picked the one we did.",
+    date: "2026-01-08",
+    tags: ["nextjs", "ai-sdk", "groq", "upstash", "rag", "chatbot", "AI"],
+    readTime: "12 min",
+    image: null,
+    category: "Career & Open Source",
+  },
 ];
