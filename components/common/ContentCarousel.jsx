@@ -110,9 +110,9 @@ export function CarouselCard({ item, index, type = "writing" }) {
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
             ) : (
-              <div className="flex size-full items-center justify-center bg-surface-muted">
+              <div className="flex items-center justify-center bg-surface-muted">
                 <IconBook
-                  className="size-10 text-muted-foreground/30"
+                  className="size-10 text-muted-foreground"
                   strokeWidth={1.5}
                   aria-hidden
                 />

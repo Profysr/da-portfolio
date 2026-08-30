@@ -29,24 +29,17 @@ function getSimilarPosts(
   currentTagsArray = [],
   limit = 3,
 ) {
-  if (!currentTagsArray.length) return [];
-
   const currentTags = new Set(currentTagsArray);
   const candidates = [];
 
   for (const p of allPages) {
     const pageSlugStr = p.slugs.join("/");
-
-    // Skip current post
     if (pageSlugStr === currentSlugStr) continue;
 
     const tags = p.data.tags || [];
     let sharedCount = 0;
-
     for (const tag of tags) {
-      if (currentTags.has(tag)) {
-        sharedCount++;
-      }
+      if (currentTags.has(tag)) sharedCount++;
     }
 
     if (sharedCount > 0) {
@@ -61,23 +54,32 @@ function getSimilarPosts(
         score: sharedCount,
       });
     }
-
-    // Early exit optimization:
-    // If we already collected candidates with max possible tag overlap, stop scanning the remaining dataset.
-    if (
-      candidates.length >= limit &&
-      candidates.every((c) => c.score === currentTags.size)
-    ) {
-      break;
-    }
   }
 
-  // Sort matched candidates by score, then recency, and return top items
-  return candidates
-    .sort(
-      (a, b) =>
-        b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0),
-    )
+  // If we have tag matches, return them sorted
+  if (candidates.length > 0) {
+    return candidates
+      .sort(
+        (a, b) =>
+          b.score - a.score || new Date(b.date || 0) - new Date(a.date || 0),
+      )
+      .slice(0, limit);
+  }
+
+  // Fallback: show most recent posts
+  return allPages
+    .filter((p) => p.slugs.join("/") !== currentSlugStr)
+    .map((p) => ({
+      slug: p.slugs.join("/"),
+      title: p.data.title,
+      description: p.data.description,
+      date: p.data.date,
+      readTime: p.data.readTime,
+      tags: p.data.tags || [],
+      thumbnail: p.data.thumbnail,
+      score: 0,
+    }))
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
     .slice(0, limit);
 }
 

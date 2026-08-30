@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   IconBrandGithub,
+  IconBook,
   IconCheck,
   IconChevronDown,
   IconExternalLink,
@@ -143,7 +144,7 @@ function MediaPanel({ project }) {
   );
 }
 
-/* Footer links — Source / Private · Live Demo */
+/* Footer links — Source / Private · Read Docs · Live Demo */
 function CardFooter({ project }) {
   const github = project.github || (project.isExternal ? project.link : "#");
   const live = project.live;
@@ -166,15 +167,25 @@ function CardFooter({ project }) {
         </span>
       )}
 
-      {hasLive && (
+      <div className="ml-auto flex items-center gap-2">
         <ExtendedLink
-          href={live}
-          className="ml-auto inline-flex items-center gap-1.5 rounded bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          href={`/projects/${project.slug}`}
+          className="inline-flex items-center gap-1.5 rounded border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
         >
-          <span>Live Demo</span>
-          <IconExternalLink className="size-3.5" />
+          <IconBook className="size-3.5" />
+          <span>Read Docs</span>
         </ExtendedLink>
-      )}
+
+        {hasLive && (
+          <ExtendedLink
+            href={live}
+            className="inline-flex items-center gap-1.5 rounded bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <span>Live Demo</span>
+            <IconExternalLink className="size-3.5" />
+          </ExtendedLink>
+        )}
+      </div>
     </div>
   );
 }
