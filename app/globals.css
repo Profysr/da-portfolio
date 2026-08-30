@@ -15,16 +15,15 @@
 /* Streamdown (chat markdown renderer) — expose internal classes to Tailwind v4 */
 @source "../node_modules/streamdown/dist/*.js";
 @source "../node_modules/@streamdown/code/dist/*.js";
-
 /* Streamdown code blocks — brand token alignment (pages via .markdown-code, chat global) */
-[data-streamdown="code-block"] {
+/* [data-streamdown="code-block"] {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background-color: var(--surface);
   box-shadow: var(--shadow-e1);
-}
+} */
 
-[data-streamdown="code-block"] pre {
+/* [data-streamdown="code-block"] pre {
   background-color: transparent;
   color: var(--foreground);
 }
@@ -33,7 +32,7 @@
 [data-streamdown="code-block-actions"] {
   background-color: color-mix(in oklab, var(--surface-muted) 80%, transparent) !important;
   border: 1px solid var(--border) !important;
-}
+} */
 
 /* ── Article Body Reading Typography ── */
 .article-body {
