@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     description:
       "Portfolio of Bilal Ahmad: Forward Deployed Engineer, Engineering Lead, and Full-Stack AI Developer.",
     images: [`/og-image.png`],
-    creator: "@profysr",
+    creator: "@_BilalAhme",
   },
   icons: {
     icon: [

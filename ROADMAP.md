@@ -312,15 +312,16 @@ Phase 18 ✅ COMPLETED 2026-08-27 — Chatbot API + BottomDock wiring + build-in
 - **Cleanup**: Removed `lib/embeddings.ts`, `lib/fumadocs-chunker.ts`, `lib/validation.ts`, `lib/validation-client.js`, `vectra` dep.
 - **Quality gates**: tsc ✅ · LINT ✅ · BUILD ✅ (23 pages).
 
-Phase 19 🔄 BUILT — SEO/AEO/GEO/LLMO Metadata Factory (core):
+Phase 19 ✅ APPROVED 2026-08-31 — SEO/AEO/GEO/LLMO Metadata Factory (core):
 - **lib/seo.ts** (NEW): metadata factory (`createMetadata`) — single source of truth; emits complete OG+Twitter objects per page (defends Next.js full-replace semantics); canonical per route; article OG fields (publishedTime, modifiedTime, authors, tags); image fallback chain (frontmatter thumbnail → default banner).
 - **lib/structured-data.ts** (RENAME + ENHANCE from .js): dead window ternaries removed; SearchAction dropped (Google deprecated); Person schema: @id anchor, image, alternateName, dynamic worksFor/jobTitle from experience data, dual alumniOf (COMSATS + UMass); WebSite: @id + publisher @id ref; BlogPosting retained (valid Article subtype); Project schema: author/publisher @id refs + image; ProfilePage schema added (home entity grounding); Breadcrumb unchanged; all generators typed.
 - **app/projects/[...slug]/page.jsx**: inline generateMetadata → factory (canonical, OG article, tags, image fallback); project schema gets thumbnail.
 - **app/writing/[...slug]/page.jsx**: same factory adoption; blog schema gets thumbnail.
-- **Bug fixes disclosed (not in budget, logged next-phase):** B1 `/og-image.png` 404 in layout (user creates banner at public/og-image.png); B2 sitemap double-prefix URLs (`/projects//projects/slug`); layout twitter.creator stale "@profysr" → "@_BilalAhme".
+- **app/(home)/page.tsx**: ProfilePage JSON-LD schema added (LLMO entity grounding).
+- **Bug fixes:** B1 OG image `public/og-image.png` created by user ✓; B2 sitemap double-prefix verified correct (no bug); B3 layout twitter.creator `@profysr` → `@_BilalAhme` fixed.
 - **Research:** Context7 `/vercel/next.js` → metadata full-replace internals; llms.txt v2 spec (Lighthouse audits); Google ProfilePage schema; Person entity @id cross-referencing.
 - **Decision log:** D1 keep BlogPosting; D2 dynamic worksFor; D3 rename .ts; D4 allow AI bots; D5 user creates OG banner; D6 .md mirrors later; D7 split 19/19b.
-- **Quality gates:** tsc/LINT/BUILD pending user request (standing directive). Awaiting review.
+- **Quality gates:** tsc ✅ · LINT ✅ · BUILD ✅ (26 pages).
 
 ---
 
