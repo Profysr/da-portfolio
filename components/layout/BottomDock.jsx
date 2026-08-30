@@ -13,7 +13,7 @@ import { nav } from "@/data/idx.js";
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const DOCK_ICON_SIZE = 40;
+const DOCK_ICON_SIZE = 44;
 const DOCK_MAGNIFICATION = 48;
 const DOCK_DISTANCE = 96;
 
