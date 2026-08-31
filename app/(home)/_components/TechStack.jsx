@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/Heading";
 import { IconSparkles } from "@tabler/icons-react";

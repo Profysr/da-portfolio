@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { Section } from "@/components/layout/Section";
 import { LazyContentCarousel } from "@/components/lazy";
 import { writings } from "@/data/idx";

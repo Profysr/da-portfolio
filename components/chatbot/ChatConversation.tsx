@@ -12,7 +12,6 @@ import {
   MessageContent,
   MessageResponse,
 } from "@/components/ai-elements/message";
-Shimmer;
 import { IconSparkles } from "@tabler/icons-react";
 import { Shimmer } from "../ui/shimmer";
 

@@ -83,8 +83,6 @@ const Projects = () => {
       : p.tags?.some((tag) => tag.toLowerCase() === activeTab.toLowerCase()),
   );
 
-  const HAS_MORE_THAN_6 = filtered.length > 6;
-
   return (
     <Section id="projects" noFade>
       <div className="flex flex-col items-center gap-7">

@@ -676,7 +676,17 @@ Phase 23 ✅ COMPLETED 2026-08-31 — Bundle Budgets & Dep Pruning:
 - **Kept (verified active)**: `ai` (type imports in ai-elements), `@radix-ui/react-use-controllable-state` (reasoning.tsx), `@streamdown/*` (Markdown/reasoning), `use-stick-to-bottom` (conversation.tsx).
 - **Files:** `next.config.ts` · `package.json` · 6 icon swap files.
 
+Phase 23b ✅ COMPLETED 2026-08-31 — Bundle Analyzer + verify gate (extension):
+- **Bundle analytics (per user: "Add @next/bundle-analyzer now")** — installed `@next/bundle-analyzer`, wrapped `next.config.ts` + wired `analyze` script. **BUILD PROVED IT DEAD**: @next/bundle-analyzer is webpack-only; this project uses `--turbopack` for both dev and build (Next 16 default) → "not compatible with Turbopack builds, no report generated", even with `next build --webpack` path. **SWITCHED (user-approved)** to Next 16's native Turbopack analyzer `next experimental-analyze` — zero new deps. `@next/bundle-analyzer` **uninstalled**; `next.config.ts` reverted to clean original (no wrapper); `analyze` script = `fumadocs-mdx && next experimental-analyze --output` → verified: writes `.next/diagnostics/analyze/` in 12s, no build needed. Stale `ANALYZE` env var removed from `.env.example`.
+- **`npm run lint` was BROKEN (pre-existing)** — script was `next lint`, but **Next 16 removed `next lint`** (ESLint configs now run via flat-config `eslint` directly). Previously lint phase logs showed `LINT ✅` while `npm run lint` silently errored. FIXED: `lint` → `eslint .` · `lint:fix` → `eslint . --fix`. This only makes tracking honest — it surfaced pre-existing issues, none introduced by P23.
+- **Dependency live-ness verified (ROADMAP "verify removed deps: ai SDK" is STALE)**: `ai` (generateText/ModelMessage/UIMessage) ×3 files, `@ai-sdk/groq` (groq) ×1, `@upstash/vector` (Index) ×2 (chat route + build-index) — all live, correctly kept. Zero `framer-motion` imports remain (only non-source references: `data/skills.js` string names + package-lock transitive). Icon concentration 100% @tabler/icons-react (40 files), zero lucide.
+- **Quality gates**: tsc 0 · BUILD 0 (27 routes) · `analyze` (native Turbopack) runs clean.
+- **NEXT-PHASE CANDIDATES (Rule #11, untouched)**: (1) `components/ui/shimmer.tsx:46-56` — `react-hooks/static-components` ERROR (blocking lint; false-positive since module-level `motionComponentCache` memoizes the `motion.create()` component, so it is NOT recreated per render — rule doesn't understand the cache pattern; also stale `.next` lint cache vs source); (2) 25 pre-existing lint warnings (unused vars, set-state-in-effect, no-img-element ×1, no-explicit-any ×1, no-unused-expressions ×1, no-location-assign ×1) spread across app/components — baseline before P23, awaiting a dedicated lint-cleanup phase.
+
 ---
+
+
+
 
 ## 🤖 REPLICATION GUIDE: Add AI Chatbot to Your Fork
 

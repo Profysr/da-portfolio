@@ -2,7 +2,6 @@
 
 import { Section } from "@/components/layout/Section";
 import { Skeleton, SkeletonShapes } from "@/components/common/Skeleton";
-import { cn } from "@/lib/utils";
 
 export default function Loading() {
   return (

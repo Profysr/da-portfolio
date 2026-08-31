@@ -19,8 +19,6 @@ import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/utils/download";
 import { NavLink } from "@/components/common/NavLink";
 import { AnimatedShinyText } from "../ui/animated-shiny-text";
-import { GlowEffect } from "../common/top-glow";
-// import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
 
 /* ─────────────────────────────────────────────────────────────
  *  1. Hero Actions (Contact + Resume + Map)
@@ -48,9 +46,6 @@ const FooterActions = () => (
         <span>Resume</span>
       </button>
     )}
-
-    {/* Interactive Map Trigger */}
-    {/* <ViewOnMap address={personal.location || "Boston Public Garden"} /> */}
   </div>
 );
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import * as Base from "fumadocs-core/toc";
 import { IconList, IconCalendar, IconClock, IconTag } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
