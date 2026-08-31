@@ -17,7 +17,7 @@ import {
 import { nav, socials, personal, footer } from "@/data/idx";
 import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/utils/download";
-import { ExtendedLink } from "@/components/common/ExtendedLink";
+import { NavLink } from "@/components/common/NavLink";
 import { AnimatedShinyText } from "../ui/animated-shiny-text";
 import { GlowEffect } from "../common/top-glow";
 // import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
@@ -28,14 +28,14 @@ import { GlowEffect } from "../common/top-glow";
 const FooterActions = () => (
   <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
     {/* Main Contact CTA */}
-    <ExtendedLink
+    <NavLink
       href={personal.email ? `mailto:${personal.email}` : "#"}
       newTab={false}
       className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-transform active:scale-95"
     >
       <span>{footer?.ctaLabel || "Let's Talk"}</span>
       <IconArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-    </ExtendedLink>
+    </NavLink>
 
     {/* Resume Download */}
     {(personal.resumeUrl || footer?.resumePath) && (
@@ -70,14 +70,14 @@ const FooterNavStrip = () => {
         aria-label="Footer Navigation"
       >
         {nav.map((item) => (
-          <ExtendedLink
+          <NavLink
             key={item.id}
             href={`#${item.id}`}
             newTab={false}
             className="px-2.5 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-surface transition-colors font-medium"
           >
             {item.label}
-          </ExtendedLink>
+          </NavLink>
         ))}
       </nav>
 
@@ -87,13 +87,13 @@ const FooterNavStrip = () => {
           {socials.map(({ platform, icon: Icon, label, url }) => (
             <Tooltip key={platform}>
               <TooltipTrigger asChild>
-                <ExtendedLink
+                <NavLink
                   href={url}
                   aria-label={label}
                   className="p-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
                 >
                   <Icon size={16} stroke={1.8} />
-                </ExtendedLink>
+                </NavLink>
               </TooltipTrigger>
               <TooltipContent side="top" className="text-xs">
                 {label}
