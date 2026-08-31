@@ -55,7 +55,7 @@ function HomeLayout({ children }) {
         isVisible={isNavVisible}
         onAIClick={() => setIsAIOpen(true)}
       />
-      <LazyAIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />
+      {isAIOpen && <LazyAIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />}
       <Footer />
     </div>
   );
