@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { IconDownload } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { personal } from "@/data/idx.js";
@@ -12,7 +13,13 @@ import { Logo } from "@/components/layout/Logo";
 /* ------------------------------------------------------------------ */
 function TopBar({ isVisible }) {
   const { resolvedTheme, setTheme } = useTheme();
-  const currentTheme = resolvedTheme === "dark" ? "dark" : "light";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 
   return (
     <header
@@ -25,10 +32,12 @@ function TopBar({ isVisible }) {
           <Logo className="h-8 w-auto text-foreground" />
         </a>
         <div className="flex items-center gap-3">
-          <AnimatedThemeToggler
-            theme={currentTheme}
-            onThemeChange={(t) => setTheme(t)}
-          />
+          {mounted && (
+            <AnimatedThemeToggler
+              theme={currentTheme}
+              onThemeChange={(t) => setTheme(t)}
+            />
+          )}
           {personal.resumeUrl && (
             <button
               type="button"
