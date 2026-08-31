@@ -8,7 +8,6 @@ import { memo, useMemo } from "react";
 
 type MotionHTMLProps = MotionProps & Record<string, unknown>;
 
-// Cache motion components at module level to avoid creating during render
 const motionComponentCache = new Map<
   keyof JSX.IntrinsicElements,
   React.ComponentType<MotionHTMLProps>
@@ -29,6 +28,10 @@ export interface TextShimmerProps {
   className?: string;
   duration?: number;
   spread?: number;
+  /** Primary text color when not shimmering (Default: muted white) */
+  baseColor?: string;
+  /** High contrast highlight color that passes over the text (Default: full white) */
+  shimmerColor?: string;
 }
 
 const ShimmerComponent = ({
@@ -37,30 +40,37 @@ const ShimmerComponent = ({
   className,
   duration = 2,
   spread = 2,
+  baseColor = "rgba(255, 255, 255, 0.45)",
+  shimmerColor = "#ffffff",
 }: TextShimmerProps) => {
   const MotionComponent = getMotionComponent(
-    Component as keyof JSX.IntrinsicElements
+    Component as keyof JSX.IntrinsicElements,
   );
 
   const dynamicSpread = useMemo(
-    () => (children?.length ?? 0) * spread,
-    [children, spread]
+    () => Math.max(children?.length ?? 0, 10) * spread,
+    [children, spread],
   );
 
   return (
     <MotionComponent
-      animate={{ backgroundPosition: "0% center" }}
+      animate={{ backgroundPosition: "-200% 0" }}
+      initial={{ backgroundPosition: "200% 0" }}
       className={cn(
-        "relative inline-block bg-[length:250%_100%,auto] bg-clip-text text-transparent",
-        "[--bg:linear-gradient(90deg,#0000_calc(50%-var(--spread)),var(--color-background),#0000_calc(50%+var(--spread)))] [background-repeat:no-repeat,padding-box]",
-        className
+        "relative inline-block bg-clip-text text-transparent [background-size:200%_100%]",
+        className,
       )}
-      initial={{ backgroundPosition: "100% center" }}
       style={
         {
           "--spread": `${dynamicSpread}px`,
-          backgroundImage:
-            "var(--bg), linear-gradient(var(--color-muted-foreground), var(--color-muted-foreground))",
+          backgroundImage: `linear-gradient(
+            90deg, 
+            ${baseColor} 0%, 
+            ${baseColor} calc(50% - var(--spread)), 
+            ${shimmerColor} 50%, 
+            ${baseColor} calc(50% + var(--spread)), 
+            ${baseColor} 100%
+          )`,
         } as CSSProperties
       }
       transition={{

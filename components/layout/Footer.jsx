@@ -18,6 +18,7 @@ import { nav, socials, personal, footer } from "@/data/idx";
 import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/utils/download";
 import { ExtendedLink } from "@/components/common/ExtendedLink";
+import { AnimatedShinyText } from "../ui/animated-shiny-text";
 // import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
 
 /* ─────────────────────────────────────────────────────────────
@@ -157,8 +158,13 @@ export const Footer = () => {
           {/* Unified Primary Card */}
           <div className="rounded-lg bg-surface border border-border p-6 sm:p-10 flex flex-col items-center text-center gap-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-surface-muted text-xs font-medium">
-              <IconSparkles className="h-3.5 w-3.5" />
-              <span>{footer?.badge || "Get in Touch"}</span>
+              <IconSparkles className="h-3.5 w-3.5 text-primary" />
+              <AnimatedShinyText
+                shimmerWidth={120}
+                className="text-xs font-medium text-muted-foreground/50"
+              >
+                {footer?.badge || "Get in Touch"}
+              </AnimatedShinyText>
             </div>
 
             <div className="space-y-2 max-w-xl">

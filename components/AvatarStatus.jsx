@@ -82,7 +82,7 @@ export function AvatarStatus() {
           </div>
         ) : (
           /* --- LOADED STATE --- */
-          <AnimatedShinyText className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out hover:text-foreground hover:duration-300">
+          <div className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
             <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
               <span
                 className={cn(
@@ -97,11 +97,11 @@ export function AvatarStatus() {
                 )}
               />
             </span>
-            <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
+            <AnimatedShinyText className="inline-flex gap-0.5 items-center text-xs sm:text-sm capitalize text-muted-foreground/50">
               {status}
-            </span>
-            <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-          </AnimatedShinyText>
+              <IconArrowRight className="size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+            </AnimatedShinyText>
+          </div>
         )}
       </div>
     </div>

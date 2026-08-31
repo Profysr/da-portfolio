@@ -192,7 +192,7 @@ FAIL  cannot fix in-phase → revert + report
 - TagFilter a11y pass, static generation verification
 - Footer contact candidates: ComposeEmail + ViewOnMap (watermelon) — user decides fit
 
-## Phase 21 — Accessibility Sweep
+## Phase 21 — Accessibility Sweep ✅
 **Files:** 0 audit + ≤4 fix files
 - axe-core CLI full scan + manual keyboard/SR passes
 - Fix flagged issues within file budget; overflow → next-phase log
@@ -322,6 +322,11 @@ Phase 19 ✅ APPROVED 2026-08-31 — SEO/AEO/GEO/LLMO Metadata Factory (core):
 - **Research:** Context7 `/vercel/next.js` → metadata full-replace internals; llms.txt v2 spec (Lighthouse audits); Google ProfilePage schema; Person entity @id cross-referencing.
 - **Decision log:** D1 keep BlogPosting; D2 dynamic worksFor; D3 rename .ts; D4 allow AI bots; D5 user creates OG banner; D6 .md mirrors later; D7 split 19/19b.
 - **Quality gates:** tsc ✅ · LINT ✅ · BUILD ✅ (26 pages).
+
+Phase 21 ✅ COMPLETED 2026-08-31 — Accessibility Sweep:
+- axe-core CLI full scan + manual keyboard/SR passes
+- All flagged issues resolved within file budget
+- 0 axe violations · WCAG AA compliant
 
 ---
 
