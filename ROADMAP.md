@@ -198,11 +198,344 @@ FAIL  cannot fix in-phase → revert + report
 - Fix flagged issues within file budget; overflow → next-phase log
 
 ## Phase 22 — Dynamic Import Registry (usage-driven) ⭐
-**Files (2):** `components/lazy/index.jsx` · retire old `components/lazy.jsx`
-- **Built AFTER the site exists** (user directive): audit final section/component usage → register ONLY real survivors via `next/dynamic`
-- ssr:false for GSAP/canvas/chatbot/palette-class islands; ssr:true where SEO-relevant
-- Skeleton fallbacks per shape (from P7)
-- Old `lazy.jsx` consumers migrated; file marked UNUSED
+**Files (3):** `components/lazy/index.jsx` · `components/common/Skeleton.jsx` (enhance) · retire old `components/common/lazy.jsx`
+
+### 🎯 Objective
+Build a **production-grade `next/dynamic` registry** *after the site exists* — audit actual usage, register ONLY real survivors. Replace the legacy `React.lazy` system in `components/common/lazy.jsx` with a proper registry that supports:
+- Per-component `ssr` control (false for heavy client islands, true for SEO-relevant)
+- Premium skeleton fallbacks matching final component shape
+- Loading state choreography that feels as premium as the site itself
+
+---
+
+### 📦 COMPONENT AUDIT — What Gets Dynamic Imported (and why)
+
+| Component | Current Location | Bundle Impact | SSR? | Reason for Dynamic Import |
+|-----------|------------------|---------------|------|---------------------------|
+| **AIAssistant** (live) | `components/chatbot/AIAssistant.tsx` | ~45KB (ai-elements + drawer + motion) | **false** | Active chatbot (HomeLayout → BottomDock trigger); heavy ai-elements bundle; only opens on dock click; zero SEO value |
+| **CommandPallete** | `components/CommandPallete.jsx` | ~12KB (cmdk + motion) | **false** | ⌘K-only; never SSR; user-triggered |
+| **Heatmap** | `components/Heatmap.jsx` | ~8KB (cached API + canvas) | **false** | GitHub API call; client-only rendering; lazy + cached |
+| **ContentCarousel** | `components/common/ContentCarousel.jsx` | ~15KB (embla-carousel) | **true** | Used in Writings + SimilarContent; SEO-relevant content inside |
+| **ViewOnMap** | `components/common/ViewOnMap.tsx` | ~10KB (modal + map) | **false** | Portal modal; user-triggered; no SEO |
+| **NumberSlider** | `components/common/NumberSlider.tsx` | ~5KB | **true** | Used in About (controls Heatmap); inline, SEO-neutral but lightweight |
+| **ContactCard** | `components/ContactCard.jsx` | ~18KB (animated-beam + tooltips) | **false** | Heavy animated beams; footer area; not critical path |
+| **StatCard** (with NumberTicker) | `components/StatCard.jsx` | ~6KB (number-ticker) | **true** | Used in bento listings; lightweight; SSR-friendly |
+| **ProjectCard** | `app/(home)/_components/ProjectCard.jsx` | ~8KB (BorderBeam + OptimizedImage) | **true** | 8× on home + listings; SSR for SEO; BorderBeam paused-until-hover |
+| **Tabs** (filter) | `components/common/Tabs.tsx` | ~4KB | **true** | Used in Projects + Credentials; lightweight; SSR |
+| **ScrollRail** | `components/ui/ScrollRail.jsx` | ~6KB | **true** | Credentials only; transform-only spine; SSR-safe |
+| **HorizontalScroll** (engine) | `components/ui/HorizontalScroll.tsx` | ~12KB (GSAP) | **false** | TechStack only; GSAP pin-scrub; client-only |
+| **Timeline** | `components/Timeline.tsx` | ~10KB (motion/react) | **true** | Experience section; SSR-safe (reduced-motion static) |
+
+> **NOT dynamic (stay static import):**
+> - Hero, About, TechStack, Experience, Projects, Credentials, Writings, FAQ — all home sections (SSR, above-fold or critical)
+> - TopBar, BottomDock, Footer, HomeLayout — layout chrome (SSR)
+> - OptimizedImage, Skeleton, Markdown, CodeBlock — primitives (tiny, reused everywhere)
+> - All shadcn/ui primitives — tree-shaken, negligible
+
+---
+
+### 🎨 PREMIUM LOADING STATE STRATEGY
+
+**Principle:** Every dynamic import must have a fallback that feels *intentional*, not like a "loading spinner." The fallback should mirror the **final component's visual shape, size, and motion language** — so the transition is invisible.
+
+#### 1. Skeleton Shapes (from P7 `components/common/Skeleton.jsx`)
+Extend the shared pulse primitive with **component-specific shapes**:
+
+```jsx
+// components/common/Skeleton.jsx — ADD these named exports
+export const SkeletonShapes = {
+  // Card-shaped (ProjectCard, StatCard, SimilarContent)
+  card: () => <Skeleton className="rounded-lg border border-border bg-muted h-64 w-full" />,
+  cardCompact: () => <Skeleton className="rounded-lg border border-border bg-muted h-40 w-full" />,
+  
+  // Horizontal scroller card (TechStack)
+  techCard: () => <Skeleton className="rounded-lg border border-border bg-muted h-48 w-72 shrink-0" />,
+  
+  // Chat drawer (AIAssistant)
+  chatDrawer: () => (
+    <div className="flex flex-col h-[90dvh] w-full max-w-3xl">
+      <Skeleton className="h-16 w-48 rounded-md bg-muted" />
+      <Skeleton className="flex-1 h-8 w-full bg-muted/50" />
+      <Skeleton className="h-12 w-3/4 bg-muted" />
+    </div>
+  ),
+  
+  // Command palette
+  commandPalette: () => (
+    <div className="rounded-lg border border-border bg-card p-4 w-96">
+      <Skeleton className="h-8 w-24 rounded-md bg-muted mb-4" />
+      <div className="space-y-2">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="h-10 w-full rounded-md bg-muted" />
+        ))}
+      </div>
+    </div>
+  ),
+  
+  // Heatmap grid
+  heatmap: () => (
+    <div className="grid grid-cols-52 gap-1" aria-hidden="true">
+      {[...Array(52 * 7)].map((_, i) => (
+        <Skeleton key={i} className="size-3 rounded-[2px] bg-muted" />
+      ))}
+    </div>
+  ),
+  
+  // ViewOnMap modal
+  mapModal: () => (
+    <div className="fixed inset-0 flex items-center justify-center z-50" aria-hidden="true">
+      <div className="bg-card rounded-xl border border-border p-6 w-96 h-80">
+        <Skeleton className="h-full w-full rounded-lg bg-muted" />
+      </div>
+    </div>
+  ),
+  
+  // Generic section block (fallback)
+  section: () => <Skeleton className="h-32 w-full bg-muted/50 rounded-lg" />,
+};
+```
+
+#### 2. Loading Choreography (matching site's motion language)
+
+| Component | Entry Animation | Fallback → Content Transition |
+|-----------|----------------|-------------------------------|
+| **AIAssistant** | Drawer slide-up (0.3s, `[0.16,1,0.3,1]`) | Skeleton pulses once → cross-fade 200ms `ease-out` |
+| **CommandPallete** | Scale 0.95→1 + fade (150ms) | Skeleton holds → content pops in (no layout shift) |
+| **Heatmap** | Stagger wave (cells pop-in scale 0.5→1, 30ms stagger) | Grid skeleton → live cells animate in |
+| **ContentCarousel** | ScrollReveal slide-up (stagger 80ms) | Card skeletons → images fade-in (500ms ease-out-expo) |
+| **ContactCard** | Beams draw (3s) | Skeleton beams (static lines) → animated beams take over |
+| **ProjectCard** | BorderBeam paused-until-hover | Skeleton card → image fade-in + BorderBeam armed |
+
+#### 3. Global Loading Fallback (`app/loading.jsx` upgrade)
+
+Replace the bare spinner with a **section-aware skeleton** that mirrors the home page structure:
+
+```jsx
+// app/loading.jsx — PREMIUM UPGRADE
+import { Section } from "@/components/layout/Section";
+import { Skeleton, SkeletonShapes } from "@/components/common/Skeleton";
+import { cn } from "@/lib/utils";
+
+export default function Loading() {
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Hero skeleton */}
+      <Section className="min-h-[100dvh] flex items-center justify-center pt-28">
+        <div className="w-full max-w-4xl px-6 space-y-6">
+          <Skeleton className="h-10 w-24 rounded-full bg-primary/20" />
+          <Skeleton className="h-12 w-3/4 bg-muted" />
+          <Skeleton className="h-6 w-1/2 bg-muted/50" />
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-36 rounded-lg bg-muted" />
+            <Skeleton className="h-10 w-36 rounded-lg bg-muted" />
+          </div>
+          <div className="flex gap-2">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-10 w-10 rounded-xl bg-muted" />
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* About skeleton */}
+      <Section className="py-16">
+        <div className="max-w-3xl mx-auto px-6 space-y-8">
+          <Skeleton className="h-8 w-1/3 bg-muted" />
+          <Skeleton className="h-6 w-full bg-muted/50" />
+          <div className="grid grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <SkeletonShapes.cardCompact key={i} />
+            ))}
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-40 rounded-lg bg-muted" />
+            <Skeleton className="h-10 w-32 rounded-lg bg-muted/50" />
+          </div>
+        </div>
+      </Section>
+
+      {/* TechStack skeleton — horizontal scroller */}
+      <Section className="py-16">
+        <div className="max-w-6xl mx-auto px-6">
+          <Skeleton className="h-8 w-24 bg-muted mb-6" />
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x snap-mandatory">
+            {[...Array(5)].map((_, i) => (
+              <SkeletonShapes.techCard key={i} className="snap-start" />
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* Experience skeleton — timeline */}
+      <Section className="py-16">
+        <div className="max-w-3xl mx-auto px-6">
+          <Skeleton className="h-8 w-32 bg-muted mb-8" />
+          <div className="relative pl-6 border-l border-border/50">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="relative pb-10 before:absolute before:left-[-6px] before:top-0 before:size-3 before:rounded-full before:bg-primary">
+                <Skeleton className="h-6 w-1/2 bg-muted mb-2" />
+                <Skeleton className="h-16 w-full bg-muted/50 rounded-lg" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* Projects skeleton — bento grid */}
+      <Section className="py-16">
+        <div className="max-w-6xl mx-auto px-6">
+          <Skeleton className="h-8 w-32 bg-muted mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Hero 2x2 */}
+            <Skeleton className="lg:col-span-2 lg:row-span-2 h-80 rounded-lg border border-border bg-muted" />
+            {/* 2x1 */}
+            <Skeleton className="lg:col-span-2 h-40 rounded-lg border border-border bg-muted" />
+            {/* 1x1 x2 */}
+            <SkeletonShapes.cardCompact />
+            <SkeletonShapes.cardCompact />
+          </div>
+        </div>
+      </Section>
+
+      {/* Credentials + Writings + FAQ skeleton */}
+      <Section className="py-16">
+        <div className="max-w-3xl mx-auto px-6 space-y-12">
+          <div>
+            <Skeleton className="h-8 w-32 bg-muted mb-6" />
+            <div className="flex flex-wrap gap-3">
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} className="h-10 w-28 rounded-lg bg-muted" />
+              ))}
+            </div>
+          </div>
+          <div>
+            <Skeleton className="h-8 w-24 bg-muted mb-6" />
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonShapes.cardCompact key={i} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <Skeleton className="h-8 w-20 bg-muted mb-6" />
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full rounded-lg border border-border bg-muted/50" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+    </div>
+  );
+}
+```
+
+---
+
+### 🔧 IMPLEMENTATION PLAN
+
+#### Step 1: Create `components/lazy/index.jsx` (the registry)
+```tsx
+// components/lazy/index.jsx
+"use client";
+
+import { dynamic } from "next/dynamic";
+import { Skeleton, SkeletonShapes } from "@/components/common/Skeleton";
+
+// Heavy client islands (ssr: false)
+export const LazyAIAssistant = dynamic(
+  () => import("@/components/chatbot/AIAssistant").then((m) => ({ default: m.AIAssistant })),
+  { ssr: false, loading: SkeletonShapes.chatDrawer }
+);
+
+export const LazyCommandPallete = dynamic(
+  () => import("@/components/CommandPallete").then((m) => ({ default: m.CommandPallete })),
+  { ssr: false, loading: SkeletonShapes.commandPalette }
+);
+
+export const LazyHeatmap = dynamic(
+  () => import("@/components/Heatmap").then((m) => ({ default: m.Heatmap })),
+  { ssr: false, loading: SkeletonShapes.heatmap }
+);
+
+export const LazyContactCard = dynamic(
+  () => import("@/components/ContactCard").then((m) => ({ default: m.ContactCard })),
+  { ssr: false, loading: SkeletonShapes.card }
+);
+
+export const LazyHorizontalScroll = dynamic(
+  () => import("@/components/ui/HorizontalScroll").then((m) => ({ default: m.ScrollWrapper })),
+  { ssr: false, loading: () => <Skeleton className="h-48 w-full bg-muted" /> }
+);
+
+// Lightweight / SSR-friendly (ssr: true)
+export const LazyContentCarousel = dynamic(
+  () => import("@/components/common/ContentCarousel").then((m) => ({ default: m.ContentCarousel })),
+  { ssr: true, loading: SkeletonShapes.card }
+);
+
+export const LazyViewOnMap = dynamic(
+  () => import("@/components/common/ViewOnMap").then((m) => ({ default: m.ViewOnMap })),
+  { ssr: false, loading: SkeletonShapes.mapModal }
+);
+
+export const LazyNumberSlider = dynamic(
+  () => import("@/components/common/NumberSlider").then((m) => ({ default: m.NumberSlider })),
+  { ssr: true, loading: () => <Skeleton className="h-10 w-full bg-muted rounded-lg" /> }
+);
+
+export const LazyProjectCard = dynamic(
+  () => import("@/app/(home)/_components/ProjectCard").then((m) => ({ default: m.ProjectCard })),
+  { ssr: true, loading: SkeletonShapes.card }
+);
+
+export const LazyTabs = dynamic(
+  () => import("@/components/common/Tabs").then((m) => ({ default: m.Tabs })),
+  { ssr: true, loading: () => <Skeleton className="h-10 w-full bg-muted flex gap-2" /> }
+);
+
+export const LazyScrollRail = dynamic(
+  () => import("@/components/ui/ScrollRail").then((m) => ({ default: m.ScrollRail })),
+  { ssr: true, loading: () => <Skeleton className="h-64 w-full bg-muted" /> }
+);
+
+export const LazyTimeline = dynamic(
+  () => import("@/components/Timeline").then((m) => ({ default: m.Timeline })),
+  { ssr: true, loading: () => <Skeleton className="h-64 w-full bg-muted" /> }
+);
+```
+
+#### Step 2: Enhance `components/common/Skeleton.jsx` with `SkeletonShapes`
+
+#### Step 3: Migrate consumers
+- `ContactCard.jsx` → import `LazyAnimatedBeam` from new registry (or inline the beam since it's ContactCard-specific)
+- `StatCard.jsx` → import `LazyNumberTicker` from new registry (or inline NumberTicker — it's tiny)
+- `BottomDock.jsx` → swap `AIAssistant` import to `LazyAIAssistant`
+- `HomeLayout.jsx` or page → swap `CommandPallete` to `LazyCommandPallete`
+- `About.jsx` → `NumberSlider` already static (keep), `ViewOnMap` → `LazyViewOnMap`
+- `Writings.jsx` + `SimilarContent.jsx` → `ContentCarousel` → `LazyContentCarousel`
+- `TechStack.jsx` → `HorizontalScroll` → `LazyHorizontalScroll`
+- `Experience.jsx` → `Timeline` → `LazyTimeline`
+- `Credentials.jsx` → `ScrollRail` → `LazyScrollRail`
+- `Projects.jsx` → `ProjectCard` → `LazyProjectCard`
+
+#### Step 4: Retire `components/common/lazy.jsx` — mark UNUSED, remove imports
+
+#### Step 5: Upgrade `app/loading.jsx` to premium section-aware skeleton (above)
+
+---
+
+### ✅ ACCEPTANCE CRITERIA
+- [ ] `components/lazy/index.jsx` exports all 11 dynamic components with correct `ssr` flags
+- [ ] `SkeletonShapes` covers all 7 shapes above with zero layout shift on swap
+- [ ] All 10 consumer sites migrated; zero imports from old `components/common/lazy.jsx`
+- [ ] `app/loading.jsx` renders full-page skeleton matching home section structure
+- [ ] Build passes: `tsc` ✅ · `lint` ✅ · `build` ✅ · bundle delta ≤5KB per dynamic chunk
+- [ ] Reduced-motion: all skeleton animations respect `prefers-reduced-motion`
+- [ ] Lighthouse: no CLS from skeleton→content swaps; LCP unchanged
+
+---
 
 ## Phase 23 — Bundle Budgets & Dep Pruning
 **Files (2):** `next.config.js` · `package.json`

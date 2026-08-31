@@ -109,6 +109,22 @@ Files previously misplaced to `components/animations/` in older docs live here. 
 | particles.tsx | Replaced by CSS-only approach; superseded by plain-solid directive; file kept |
 | ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED permanently |
 | modal.tsx | dialog.tsx + drawer.tsx cover all overlay needs — verify usage first (zero consumers believed) |
+| animated-beam.tsx | Used only by ContactCard via old lazy.jsx — **P22 migrate to next/dynamic or inline** |
+| animated-shiny-text.tsx | Max once (badge accent); verify live use — candidate UNUSED |
+| GSAPScrollRail.tsx | Zero consumers; superseded by Timeline spine (P14) — file kept |
+| CurtainReveal.tsx | Route-transition candidate — future decision; zero consumers |
+| bento-grid.tsx | Reference base for P15 rebuild (rebuilt true asymmetric; file kept) |
+
+### LEGACY LAZY SYSTEM (to be replaced by P22 `components/lazy/index.jsx`)
+
+| Component | Current Status | P22 Action |
+|-----------|----------------|------------|
+| components/common/lazy.jsx | Old React.lazy registry — 2 consumers (ContactCard, StatCard) | **RETIRE** — replace with `next/dynamic` registry; migrate consumers |
+| LazyLightRays | In lazy.jsx — light-rays.tsx is UNUSED | Drop from registry |
+| LazyParticles | In lazy.jsx — particles.tsx is UNUSED | Drop from registry |
+| LazyAnimatedBeam | In lazy.jsx — used by ContactCard | Migrate ContactCard to next/dynamic |
+| LazyNumberTicker | In lazy.jsx — used by StatCard | Migrate StatCard to next/dynamic |
+| LazyAnimatedShinyText | In lazy.jsx — animated-shiny-text.tsx candidate UNUSED | Drop from registry |
 
 ### shadcn primitives (all kept, token-migrated Phase 3–4)
 
@@ -155,17 +171,29 @@ button · button-group · card · badge · input · input-group · textarea · l
 
 ---
 
-## components/chatbot/ — LIVE (P17/P18)
+## components/chatbot/ — LIVE (AIAssistant) + NEW (P17/18 planned)
+
+> **Current (live):** `AIAssistant.tsx` uses `components/ai-elements/*` — active in HomeLayout via BottomDock trigger. `QuickActions.jsx` shared by legacy + new system. **Planned (new):** `Chatbot.jsx`, `Message.jsx`, `QuickActions.jsx` (P17), `ChatInputForm.jsx`, `AutoResizeTextArea.jsx` (P17b/P18) — not yet built. BottomDock.jsx wires to AIAssistant via `onAIClick`/`setIsAIOpen` in HomeLayout.
 
 | Component | What it does | Score | Disposition |
 |-----------|-------------|-------|-------------|
-| Chatbot.jsx | Custom streaming UI · focus trap · no ai SDK | 9 | ✅ **P17/P18 LIVE** in BottomDock |
-| Message.jsx | Message bubble · Markdown rendering · streamdown | 9 | ✅ **P17b LIVE** — regex renderMarkdown replaced by `<Markdown>` |
-| QuickActions.jsx | Quick-action chips (Projects/Experience/Stack/Contact) | 9 | ✅ **P17 LIVE** |
-| ChatInputForm.jsx | Client-side validation · character counter · rate-limit display · submit gating | 9 | ✅ **P17b/P18 LIVE** — Zod guard + credit system wired |
-| AutoResizeTextArea.jsx | Auto-growing textarea | 9 | ✅ **P17 LIVE** — imported by ChatInputForm |
+| AIAssistant.tsx | Live drawer-based chat using ai-elements | 7 | **ACTIVE** — used by HomeLayout; **P22 dynamic import** (heavy ~45KB island) |
+| QuickActions.jsx | Quick-action chips (Projects/Experience/Stack/Contact) | 9 | Shared by legacy + new; keep |
 
 ---
+
+## components/ai-elements/ — LIVE (used by AIAssistant.tsx)
+
+| Component | What it does | Score | Disposition |
+|-----------|-------------|-------|-------------|
+| conversation.tsx | Conversation shell + scroll button | 7 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| message.tsx | Message bubble + branch rendering | 7 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| prompt-input.tsx | Input textarea + submit + tools | 7 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| shimmer.tsx | Loading shimmer for "thinking" state | 7 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| sources.tsx | Source citations display | 6 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| suggestion.tsx | Follow-up suggestions | 6 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| reasoning.tsx | Reasoning display | 5 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
+| attachments.tsx | File attachment handling | 5 | **LIVE** in AIAssistant; **P22 dynamic import candidate** |
 
 ## Root `components/`
 
@@ -227,7 +255,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Overlays | dialog · drawer · modal | modal → UNUSED candidate |
 | Headings | Heading.tsx · EditorialHeading.tsx · TextMaskReveal.tsx | Consolidate roles P13+ |
 | Marquees | FavoriteStack (zero marquee consumers, data source kept) · TechStack shade cards | Page budget ≤1 post-P14 |
-| Chat stacks | AssistantAi (UNUSED, kept) · ai-elements (DELETED 2026-08-26) → chatbot/* + common/Markdown | ✅ chatbot/* LIVE; AssistantAi swap completes at P18 |
+| Chat stacks | ai-elements/* (LIVE via AIAssistant) + NEW chatbot/* (P17/18 planned) | P22: AIAssistant → dynamic import; new Chatbot.jsx swap at P18 |
 | mdx exports | Root `mdx-components.jsx` (8-line thin wrapper → delegates to docs/mdx-custom-components) · `components/mdx-components.jsx` (244-line dead duplicate, **DELETED 2026-08-28**) · `components/docs/mdx-custom-components.jsx` (live map: 3 overrides — headings, links, images; base elements from shared markdown-styles.js) | ✅ Clean: root wrapper is canonical; dead duplicate removed; shared style engine via markdown-styles.js |
 | CTA buttons | MagneticButton/MagneticLink → ShimmerLink (shimmer-button.tsx) | ✅ RESOLVED: MagneticLink zero consumers; ShimmerLink live in Hero |
 | Theme toggles | ThemeSwitcher → AnimatedThemeToggler (animated-theme-toggler.tsx) | ✅ RESOLVED in TopBar; ThemeSwitcher still live in DocsTopBar |
