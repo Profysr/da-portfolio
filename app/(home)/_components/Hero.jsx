@@ -10,7 +10,7 @@ import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import { personal, socials } from "@/data/idx.js";
 import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
-
+import { HeroConstellation } from "@/components/ui/hero-constellation";
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { ShimmerLink } from "@/components/ui/shimmer-button";
@@ -105,7 +105,8 @@ function HeroActions() {
  * ============================================================ */
 export default function Hero() {
   return (
-    <Section id="hero">
+    <Section id="hero" className="relative">
+      <HeroConstellation desktopDots={300} mobileDots={75} />
       <div className="flex w-full flex-col items-center justify-center gap-7 text-center pt-18 md:pt-32">
         <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
