@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   // ── Bundle optimizations (Phase 23) ─────────────────────────────────────
-  // Tree-shake icon/component libraries at the package level so only the imported symbols end up in the bundle (instead of the full library).
   experimental: {
     optimizePackageImports: [
       "@tabler/icons-react",
@@ -14,11 +13,6 @@ const nextConfig: NextConfig = {
       "fumadocs-core",
     ],
   },
-
-  // ── Modern JS target (Phase 24) ──────────────────────────────────────────
-  // Avoid transpiling for legacy browsers — saves ~13 KiB and reduces parse/compile time.
-  // Targets ES2017 (supported by all modern browsers since 2018).
-  transpilePackages: [],
 
   // ── Image domains ────────────────────────────────────────────────────────
   images: {
