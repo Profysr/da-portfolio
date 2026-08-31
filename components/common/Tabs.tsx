@@ -4,11 +4,14 @@ import {
   useEffect,
   useState,
   useRef,
+  useSyncExternalStore,
   type FC,
   type KeyboardEvent,
 } from "react";
 import { motion, LayoutGroup } from "motion/react";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+
+const emptySubscribe = () => () => {};
 
 interface TabItem {
   id: string;
@@ -37,17 +40,17 @@ export const ContinuousTabs: FC<ContinuousTabsProps> = ({
   const [active, setActive] = useState<string>(
     defaultActiveId ?? tabs[0]?.id ?? "",
   );
-  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const startSentinelRef = useRef<HTMLDivElement>(null);
   const endSentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // IntersectionObserver guarantees overflow detection on load and resize
   useEffect(() => {

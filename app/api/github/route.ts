@@ -122,10 +122,12 @@ export async function GET() {
         "Access-Control-Allow-Methods": "GET, OPTIONS",
       },
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error("Error fetching GitHub statistics:", err);
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch GitHub data";
     return NextResponse.json(
-      { error: "Failed to fetch GitHub data", message: err.message },
+      { error: "Failed to fetch GitHub data", message },
       { status: 500 }
     );
   }

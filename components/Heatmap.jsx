@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -227,18 +227,11 @@ function HeatmapGrid({
   realContributionCalendar = null,
   overrideTotal = null,
 }) {
-  const [revealed, setRevealed] = useState(true);
   const { isRealtime, weeksData, totalContributions } = useContributionData(
     realContributionCalendar,
     weeks,
     overrideTotal,
   );
-
-  /* Brief stagger on week change without stripping level colors */
-  useEffect(() => {
-    if (!isRealtime) return undefined;
-    setRevealed(true);
-  }, [isRealtime, weeks]);
 
   return (
     <div
@@ -251,7 +244,7 @@ function HeatmapGrid({
       />
 
       {isRealtime ? (
-        <HeatmapGridContent weeksData={weeksData} revealed={revealed} />
+        <HeatmapGridContent weeksData={weeksData} revealed={true} />
       ) : (
         <HeatmapEmptyState />
       )}

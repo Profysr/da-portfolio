@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { IconDownload } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { personal } from "@/data/idx.js";
@@ -8,16 +8,18 @@ import { downloadResume } from "@/utils/download";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Logo } from "@/components/layout/Logo";
 
+const emptySubscribe = () => () => {};
+
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
 /* ------------------------------------------------------------------ */
 function TopBar({ isVisible }) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const currentTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 

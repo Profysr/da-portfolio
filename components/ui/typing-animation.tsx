@@ -103,12 +103,16 @@ export function TypingAnimation({
     [words, children]
   )
 
-  useEffect(() => {
+  const [prevAnimationSourceKey, setPrevAnimationSourceKey] = useState(
+    animationSourceKey
+  )
+  if (prevAnimationSourceKey !== animationSourceKey) {
+    setPrevAnimationSourceKey(animationSourceKey)
     setDisplayedText("")
     setCurrentWordIndex(0)
     setCurrentCharIndex(0)
     setPhase("typing")
-  }, [animationSourceKey])
+  }
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | null = null
