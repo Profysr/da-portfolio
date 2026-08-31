@@ -50,6 +50,8 @@ export const socials = [
   },
 ];
 
+export const ROLES = ["Software Engineer", "Forward Deployed", "Full Stack Eng"];
+
 export const personal = {
   name: "Bilal Ahmad",
   tagline: "Forward Deployed & Software Engineer",

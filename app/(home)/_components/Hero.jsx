@@ -7,24 +7,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
-import { personal, socials } from "@/data/idx.js";
+import { personal, ROLES, socials } from "@/data/idx.js";
 import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
 import { HeroConstellation } from "@/components/ui/hero-constellation";
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { ShimmerLink } from "@/components/ui/shimmer-button";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Section } from "@/components/layout/Section";
 
 /* ============================================================
  *  Headline — watermark + kinetic typewriter roles
  * ============================================================ */
-const ROLES = [
-  "Software Engineer",
-  "Forward Deployed Engineer",
-  "Engineering Lead",
-];
-
 function Headline() {
   return (
     <Heading title="Developer" variant="watermark">
@@ -101,22 +96,29 @@ function HeroActions() {
 
 /* ============================================================
  *  Hero — stack discipline: status · headline · subtext · CTA
- *  CSS animations replace ScrollReveal for instant LCP
  * ============================================================ */
 export default function Hero() {
   return (
     <Section id="hero" className="relative">
       <HeroConstellation desktopDots={300} mobileDots={75} />
       <div className="flex w-full flex-col items-center justify-center gap-7 text-center pt-18 md:pt-32">
-        <AvatarStatus className="animate-[fade-in_0.6s_ease-out_0.1s_forwards]" />
+        <ScrollReveal variant="fade" duration={0.6}>
+          <AvatarStatus />
+        </ScrollReveal>
 
-        <Headline className="w-full animate-[fade-in_0.8s_ease-out_0.2s_forwards]" />
+        <ScrollReveal variant="reveal" duration={0.8} className="w-full">
+          <Headline />
+        </ScrollReveal>
 
-        <p className="max-w-xl text-balance text-base sm:text-lg text-muted-foreground animate-[slide-up_0.7s_ease-out_0.3s_forwards]">
-          Hi, I'm <span className="font-bold text-foreground font-sans">{personal.name}</span>
-        </p>
+        <ScrollReveal variant="slide-up" duration={0.7} delay={0.15}>
+          <p className="max-w-xl text-balance text-base sm:text-lg text-muted-foreground">
+            {personal.tagline}
+          </p>
+        </ScrollReveal>
 
-        <HeroActions className="animate-[slide-up_0.7s_ease-out_0.4s_forwards]" />
+        <ScrollReveal variant="slide-up" duration={0.7} delay={0.3}>
+          <HeroActions />
+        </ScrollReveal>
 
         {/* Scroll-down indicator — fills the visual gap & guides user to next section */}
         <div

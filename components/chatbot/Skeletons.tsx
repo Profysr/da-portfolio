@@ -1,7 +1,6 @@
 "use client";
 
 import { Skeleton } from "@/components/common/Skeleton";
-import { cn } from "@/lib/utils";
 
 export function ConversationSkeleton() {
   return (
