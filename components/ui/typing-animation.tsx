@@ -55,6 +55,7 @@ interface TypingAnimationProps extends Omit<MotionProps, "children"> {
   showCursor?: boolean
   blinkCursor?: boolean
   cursorStyle?: "line" | "block" | "underscore"
+  immediateFirstWord?: boolean
 }
 
 export function TypingAnimation({
@@ -72,6 +73,7 @@ export function TypingAnimation({
   showCursor = true,
   blinkCursor = true,
   cursorStyle = "line",
+  immediateFirstWord = true,
   ...props
 }: TypingAnimationProps) {
   const MotionComponent = motionElements[
@@ -114,10 +116,24 @@ export function TypingAnimation({
     setPhase("typing")
   }
 
+  // Initialize with first word immediately if immediateFirstWord is true
+  // This ensures LCP element has content immediately
+  const [isInitialized, setIsInitialized] = useState(false)
+  useEffect(() => {
+    if (immediateFirstWord && wordsToAnimate.length > 0 && !isInitialized) {
+      setDisplayedText(wordsToAnimate[0])
+      setCurrentCharIndex(wordsToAnimate[0].length)
+      if (hasMultipleWords || loop) {
+        setPhase("pause")
+      }
+      setIsInitialized(true)
+    }
+  }, [immediateFirstWord, wordsToAnimate, hasMultipleWords, loop, isInitialized])
+
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | null = null
 
-    if (shouldStart && wordsToAnimate.length > 0) {
+    if (shouldStart && wordsToAnimate.length > 0 && isInitialized) {
       const timeoutDelay =
         delay > 0 && displayedText === ""
           ? delay
@@ -187,6 +203,7 @@ export function TypingAnimation({
     deletingSpeed,
     pauseDelay,
     delay,
+    isInitialized,
   ])
 
   const currentWordGraphemes = Array.from(
