@@ -7,7 +7,7 @@ import { z } from "zod";
 export const CHAT_CONSTRAINTS = {
   MIN_LENGTH: 1,
   MAX_LENGTH: 1000,
-  MAX_HISTORY_MESSAGES: 10,
+  MAX_FREE_CREDITS: 5,
 };
 
 // Plain chat message shape — no `useChat`/`UIMessage.parts` involved anymore,

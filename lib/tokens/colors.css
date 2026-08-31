@@ -2,7 +2,7 @@
 
 :root {
   /* Surfaces */
-  --background: #F4F4F6;
+  --background: #f4f4f4;
   --foreground: #111827;
 
   --surface: #FFFFFF;
@@ -13,13 +13,14 @@
   --primary: #EAB308;
   --primary-foreground: #0F172A;
   --primary-hover: #CA8A04;
+  --primary-text: #92400E;
 
   --secondary: #F1F5F9;
   --secondary-foreground: #0F172A;
 
-  /* Muted */
+  /* Muted — #334155 ensures /80 opacity variant still meets 4.5:1 AA on #F4F4F6 */
   --muted: #F1F5F9;
-  --muted-foreground: #475569;
+  --muted-foreground: #334155;
 
   --accent: #1E293B;
   --accent-foreground: #FFFFFF;
@@ -28,10 +29,10 @@
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
 
-  --border: #E2E8F0;
+  --border: #dcdcdc;
   --border-strong: #CBD5E1;
   --input: #E2E8F0;
-  --ring: #EAB308;
+  --ring: #334155;
 
   --card: #FFFFFF;
   --card-foreground: #0F172A;
@@ -56,7 +57,7 @@
   --sidebar-accent: #F1F5F9;
   --sidebar-accent-foreground: #0F172A;
   --sidebar-border: #E2E8F0;
-  --sidebar-ring: #EAB308;
+  --sidebar-ring: #334155;
 
   --chart-1: #0F172A;
   --chart-2: #475569;
@@ -67,7 +68,7 @@
 
 /* Dark overrides — next-themes class strategy (.dark on <html>) */
 .dark {
-  --background: #161616;
+  --background: #151515;
   --foreground: #F8FAFC;
 
   --surface: #141417;
@@ -78,6 +79,7 @@
   --primary: #FACC15;
   --primary-foreground: #0C0C0E;
   --primary-hover: #FDE047;
+  --primary-text: #FDE68A;
 
   --secondary: #18181D;
   --secondary-foreground: #F8FAFC;
@@ -95,7 +97,7 @@
   --border: #27272F;
   --border-strong: #3F3F4E;
   --input: #27272F;
-  --ring: #FACC15;
+  --ring: #94A3B8;
 
   --card: #141417;
   --card-foreground: #F8FAFC;
@@ -118,7 +120,7 @@
   --sidebar-accent: #18181D;
   --sidebar-accent-foreground: #F8FAFC;
   --sidebar-border: #27272F;
-  --sidebar-ring: #FACC15;
+  --sidebar-ring: #94A3B8;
 
   --chart-1: #FACC15;
   --chart-2: #94A3B8;
@@ -136,6 +138,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-text: var(--primary-text);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

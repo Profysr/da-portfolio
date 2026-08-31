@@ -47,7 +47,7 @@ function FrontmatterHeader({ meta, actions }) {
       {meta?.tags && meta.tags.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {meta.tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="gap-1 sm:gap-1.5 text-primary text-[10px] sm:text-xs">
+            <Badge key={tag} variant="secondary" className="gap-1 sm:gap-1.5 text-primary-text text-[10px] sm:text-xs">
               <IconTag className="size-2.5 sm:size-3" />
               {tag}
             </Badge>

@@ -168,5 +168,3 @@ const AnimatedText = ({
     </div>
   );
 };
-
-export default NumberSlider;

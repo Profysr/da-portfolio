@@ -1,4 +1,4 @@
-# Bilal Ahmad — Data Engineer Portfolio
+# Bilal Ahmad — Software Engineer Portfolio
 
 > Engineer portfolio for recruiters, technical leads, and collaborators — editorial-luxury language, GSAP motion-first, WCAG AA.
 

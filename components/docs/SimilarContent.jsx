@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { ContentCarousel } from "@/components/common/ContentCarousel";
+import React, { Suspense } from "react";
+import { LazyContentCarousel } from "@/components/lazy";
 
 export function SimilarContent({
   items = [],
@@ -19,7 +19,7 @@ export function SimilarContent({
 
   return (
     <div className="pt-10 w-full">
-      <ContentCarousel
+      <LazyContentCarousel
         badge={isProject ? "PROJECTS" : "WRITINGS"}
         title={sectionTitle}
         subtitle={sectionSubtitle}

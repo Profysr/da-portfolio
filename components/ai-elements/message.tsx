@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { code } from "@streamdown/code";
 import type { UIMessage } from "ai";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import type { ComponentProps, HTMLAttributes, ReactElement } from "react";
 import {
   createContext,
@@ -267,7 +267,7 @@ export const MessageBranchPrevious = ({
       variant="ghost"
       {...props}
     >
-      {children ?? <ChevronLeftIcon size={14} />}
+      {children ?? <IconChevronLeft className="size-3.5" />}
     </Button>
   );
 };
@@ -290,7 +290,7 @@ export const MessageBranchNext = ({
       variant="ghost"
       {...props}
     >
-      {children ?? <ChevronRightIcon size={14} />}
+      {children ?? <IconChevronRight className="size-3.5" />}
     </Button>
   );
 };

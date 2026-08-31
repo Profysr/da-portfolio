@@ -11,28 +11,19 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { IconSparkles } from "@tabler/icons-react";
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import {
-  Message,
-  MessageBranch,
-  MessageBranchContent,
-  MessageContent,
-  MessageResponse,
-} from "@/components/ai-elements/message";
-import {
-  PromptInput,
-  PromptInputBody,
-  PromptInputFooter,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputTools,
-} from "@/components/ai-elements/prompt-input";
-import { Shimmer } from "@/components/ai-elements/shimmer";
-import { QuickActions } from "@/components/chatbot/QuickActions";
+import dynamic from "next/dynamic";
+import { ConversationSkeleton, PromptSkeleton } from "./Skeletons";
+
+const LazyChatConversation = dynamic(
+  () =>
+    import("./ChatConversation").then((m) => ({ default: m.ChatConversation })),
+  { ssr: true, loading: () => <ConversationSkeleton /> },
+);
+
+const LazyChatPrompt = dynamic(
+  () => import("./ChatPrompt").then((m) => ({ default: m.ChatPrompt })),
+  { ssr: true, loading: () => <PromptSkeleton /> },
+);
 
 /** Mirrors the plain { role, content } shape /api/chat now expects. */
 type ChatMessage = {
@@ -116,84 +107,17 @@ export function AIAssistant({
           </DrawerHeader>
 
           <div className="flex-1 overflow-hidden flex flex-col">
-            <Conversation>
-              <ConversationContent>
-                {messages.length === 0 && !isLoading ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center space-y-2 opacity-80 pt-10">
-                    <IconSparkles className="size-10 text-muted-foreground/50 mb-2" />
-                    <p className="text-sm font-semibold text-foreground">
-                      Ask me about Bilal's work
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Projects, experience, tech stack, or contact info
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {messages.map((msg, i) => (
-                      <MessageBranch defaultBranch={0} key={i}>
-                        <MessageBranchContent>
-                          <Message from={msg.role} className="gap-3">
-                            <MessageContent>
-                              <MessageResponse>{msg.content}</MessageResponse>
-                            </MessageContent>
-                          </Message>
-                        </MessageBranchContent>
-                      </MessageBranch>
-                    ))}
-                    {isLoading && (
-                      <MessageBranch defaultBranch={0} key="loading">
-                        <MessageBranchContent>
-                          <Message from="assistant" className="gap-3">
-                            <MessageContent>
-                              <Shimmer
-                                as="span"
-                                className="text-sm text-muted-foreground"
-                                duration={2}
-                              >
-                                Thinking...
-                              </Shimmer>
-                            </MessageContent>
-                          </Message>
-                        </MessageBranchContent>
-                      </MessageBranch>
-                    )}
-                    {error && (
-                      <p className="text-xs text-destructive px-1">{error}</p>
-                    )}
-                  </>
-                )}
-                <ConversationScrollButton />
-              </ConversationContent>
-            </Conversation>
+            <LazyChatConversation
+              messages={messages}
+              isLoading={isLoading}
+              error={error}
+            />
 
-            <div className="border-t border-border p-2 bg-surface/50">
-              {messages.length === 0 && !isLoading && (
-                <QuickActions onActionClick={handleSend} disabled={isLoading} />
-              )}
-
-              <PromptInput
-                onSubmit={(message) => handleSend(message.text)}
-                className="w-full"
-              >
-                <PromptInputBody>
-                  <PromptInputTextarea
-                    placeholder={
-                      isLoading
-                        ? "Assistant is responding..."
-                        : "Reply to assistant..."
-                    }
-                    disabled={isLoading}
-                  />
-                </PromptInputBody>
-                <PromptInputFooter>
-                  <PromptInputTools />
-                  <PromptInputSubmit
-                    status={isLoading ? "submitted" : "ready"}
-                  />
-                </PromptInputFooter>
-              </PromptInput>
-            </div>
+            <LazyChatPrompt
+              messages={messages}
+              isLoading={isLoading}
+              onSend={handleSend}
+            />
           </div>
         </DrawerContent>
       </DrawerPortal>

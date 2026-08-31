@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Bilal Ahmad",
   },
   description:
-    "Portfolio of Bilal Ahmad: Forward Deployed Engineer, Engineering Lead, and Full-Stack AI Developer.",
+    "I'm a Forward Deployed Engineer & Full Stack Developer from Past Experience, building and Integrating full-stack AI systems, clinical RPA automation for, and open-source developer tooling.",
   keywords: [
     "Software Engineer",
     "Forward Deployed Engineer",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     siteName: "Bilal Ahmad",
     title: "Bilal Ahmad — Software & Forward Deployed Engineer",
     description:
-      "Portfolio of Bilal Ahmad: Forward Deployed Engineer, Engineering Lead, and Full-Stack AI Developer.",
+      "Forward Deployed Engineer & Engineering Lead building full-stack AI systems, clinical RPA automation, and open-source developer tooling.",
     images: [
       {
         url: `/og-image.png`,
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bilal Ahmad — Software & Forward Deployed Engineer",
     description:
-      "Portfolio of Bilal Ahmad: Forward Deployed Engineer, Engineering Lead, and Full-Stack AI Developer.",
+      "Forward Deployed Engineer & Engineering Lead building full-stack AI systems, clinical RPA automation, and open-source developer tooling.",
     images: [`/og-image.png`],
     creator: "@_BilalAhme",
   },
