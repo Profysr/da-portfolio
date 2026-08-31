@@ -47,6 +47,9 @@ next-env.d.ts
 ANALYSIS.md
 skills-lock.json
 
+# Lighthouse HTML reports (generated audit artifacts)
+*-report.html
+
 # Open Code Helpers
 s-lock
 opencode*

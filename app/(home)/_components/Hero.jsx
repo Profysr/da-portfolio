@@ -89,7 +89,7 @@ function HeroActions() {
       <span className="hidden sm:block h-6 w-0.5 bg-border" aria-hidden />
 
       <ShimmerLink
-        href="#projects"
+        href="#experience"
         icon={<IconArrowRight size={18} />}
         iconPosition="right"
         className="inline-flex items-center justify-center"

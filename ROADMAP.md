@@ -683,7 +683,19 @@ Phase 23b ✅ COMPLETED 2026-08-31 — Bundle Analyzer + verify gate (extension)
 - **Quality gates**: tsc 0 · BUILD 0 (27 routes) · `analyze` (native Turbopack) runs clean.
 - **NEXT-PHASE CANDIDATES (Rule #11, untouched)**: (1) `components/ui/shimmer.tsx:46-56` — `react-hooks/static-components` ERROR (blocking lint; false-positive since module-level `motionComponentCache` memoizes the `motion.create()` component, so it is NOT recreated per render — rule doesn't understand the cache pattern; also stale `.next` lint cache vs source); (2) 25 pre-existing lint warnings (unused vars, set-state-in-effect, no-img-element ×1, no-explicit-any ×1, no-unused-expressions ×1, no-location-assign ×1) spread across app/components — baseline before P23, awaiting a dedicated lint-cleanup phase.
 
+Phase 23c ✅ COMPLETED 2026-08-31 — Lint cleanup (5 requested) + pre-existing build regression fixed:
+- **Targeted the 5 listed lint issues** (user-scoped; remaining candidates left per Rule #11):
+  1. `app/api/github/route.ts:125` — `catch (err: any)` → `catch (err: unknown)` + `instanceof Error` message extraction (kills `no-explicit-any`; type-safe).
+  2. `components/Heatmap.jsx:240` — removed dead `revealed` state + `useEffect` (state was only ever set `true`, never `false` → no-op; `set-state-in-effect` gone). NOTE: this deletion was a behavioral-assumption call, disclosed and accepted; pure render-adjust would also have satisfied the rule but left a never-used state.
+  3. `components/common/Tabs.tsx:49` — mounted-gate `useEffect(setIsMounted)` → `useSyncExternalStore(emptySubscribe, ()=>true, ()=>false)`, matching existing `theme-switcher.tsx` + `ViewOnMap.tsx` pattern.
+  4. `components/layout/TopBar.jsx:19` — same mounted-gate → `useSyncExternalStore` conversion.
+  5. `components/ui/typing-animation.tsx:107` — state reset on `animationSourceKey` change moved OUT of `useEffect` into React's documented **"adjust state during render"** pattern (`prevAnimationSourceKey` state hold + compare in render body) — preserves exact reset-on-words-change, no cascading render.
+- **Pre-existing BUILD REGRESSION fixed (critical)**: `ca24165` had deleted `components/CommandPallete.jsx` (unused component) but left a top-level `dynamic(() => import("@/components/CommandPallete"))` entry at `components/lazy/index.jsx:12`. `components/lazy/index.jsx` IS imported by 6 live app components, so Turbopack resolved the deleted module → **whole build failed**. FIX: removed the dead `LazyCommandPallete` registry stub (zero live consumers verified; no runtime render of CommandPallete). MDX article reference is a fenced code sample (not in module graph). Build restored: 27 routes.
+- **Quality gates**: tsc 0 · lint 0 on all touched files · BUILD 0.
+- **REMAINING (pre-existing, deferred per user scope)**: `shimmer.tsx:56` static-components false-positive + 3 warnings (Credentials `total`, TechPill `<img>`, SimilarContent `currentSlug`) — logged P24/pending-decision candidates.
+
 ---
+
 
 
 
