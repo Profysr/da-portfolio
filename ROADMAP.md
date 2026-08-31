@@ -197,7 +197,7 @@ FAIL  cannot fix in-phase → revert + report
 - axe-core CLI full scan + manual keyboard/SR passes
 - Fix flagged issues within file budget; overflow → next-phase log
 
-## Phase 22 — Dynamic Import Registry (usage-driven) ⭐
+## Phase 22 — Dynamic Import Registry (usage-driven) ✅ ⭐
 **Files (3):** `components/lazy/index.jsx` · `components/common/Skeleton.jsx` (enhance) · retire old `components/common/lazy.jsx`
 
 ### 🎯 Objective
@@ -660,6 +660,15 @@ Phase 21 ✅ COMPLETED 2026-08-31 — Accessibility Sweep:
 - axe-core CLI full scan + manual keyboard/SR passes
 - All flagged issues resolved within file budget
 - 0 axe violations · WCAG AA compliant
+
+Phase 22 ✅ COMPLETED 2026-08-31 — Prompt Input upgrade (usage-driven chatbot UI polish, in-scope with P22 chatbot/registry work):
+- **Border fix**: Dropped `InputGroupAddon` block-end pattern (caused `dark:bg-input/30` contrast line between transparent textarea and tinted addon row). Replaced with a plain `<form>` container owning the border — textarea and footer share the same transparent background, zero phantom dividing line.
+- **Character counter**: Controlled `<textarea>` state; `charCount / MAX_CHARS` (500) display in footer right-side. Color progression: muted/50 → amber at 80% → destructive red over limit. Submit gated when over limit.
+- **Credits pill**: Left-side footer `⚡ 10 / 10 credits` pill. Accepts optional `credits` prop. Color states: neutral → amber (≤3) → red (0). Textarea + submit disabled at 0 credits.
+- **Files:** `components/chatbot/ChatPrompt.tsx` rewritten.
+- **Quality gates:** tsc ✅ · BUILD ✅ (26 pages).
+
+Phase 23 🔄 IN PROGRESS — Bundle Budgets & Dep Pruning
 
 ---
 
