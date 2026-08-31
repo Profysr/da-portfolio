@@ -5,7 +5,7 @@ import { Footer } from "./Footer";
 import { AIAssistant } from "@/components/chatbot/AIAssistant";
 import BottomDock from "@/components/layout/BottomDock";
 import TopBar from "@/components/layout/TopBar";
-import { TopGlow } from "../common/top-glow";
+import { GlowEffect } from "../common/top-glow";
 
 /* ------------------------------------------------------------------ */
 /*  HomeLayout — Master Application Shell with Continuous Dual-Tone Layout */
@@ -45,7 +45,7 @@ function HomeLayout({ children }) {
   return (
     <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-clip">
       {/* Top Sunshine Lightning Glow Effect */}
-      <TopGlow />
+      <GlowEffect position="top" />
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}

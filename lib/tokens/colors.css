@@ -29,10 +29,10 @@
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
 
-  --border: #E2E8F0;
+  --border: #dcdcdc;
   --border-strong: #CBD5E1;
   --input: #E2E8F0;
-  --ring: #EAB308;
+  --ring: #334155;
 
   --card: #FFFFFF;
   --card-foreground: #0F172A;
@@ -57,7 +57,7 @@
   --sidebar-accent: #F1F5F9;
   --sidebar-accent-foreground: #0F172A;
   --sidebar-border: #E2E8F0;
-  --sidebar-ring: #EAB308;
+  --sidebar-ring: #334155;
 
   --chart-1: #0F172A;
   --chart-2: #475569;
@@ -97,7 +97,7 @@
   --border: #27272F;
   --border-strong: #3F3F4E;
   --input: #27272F;
-  --ring: #FACC15;
+  --ring: #94A3B8;
 
   --card: #141417;
   --card-foreground: #F8FAFC;
@@ -120,7 +120,7 @@
   --sidebar-accent: #18181D;
   --sidebar-accent-foreground: #F8FAFC;
   --sidebar-border: #27272F;
-  --sidebar-ring: #FACC15;
+  --sidebar-ring: #94A3B8;
 
   --chart-1: #FACC15;
   --chart-2: #94A3B8;

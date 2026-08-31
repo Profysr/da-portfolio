@@ -4,16 +4,15 @@ import { IconDownload } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { personal } from "@/data/idx.js";
 import { downloadResume } from "@/utils/download";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Logo } from "@/components/layout/Logo";
 
 /* ------------------------------------------------------------------ */
 /*  TopBar — fixed, full-width, with Logo and ATS Resume Download CTA */
 /* ------------------------------------------------------------------ */
 function TopBar({ isVisible }) {
-  const { theme, resolvedTheme, setTheme } = useTheme();
-  const selectedTheme =
-    theme === "system" ? "system" : resolvedTheme === "dark" ? "dark" : "light";
+  const { resolvedTheme, setTheme } = useTheme();
+  const currentTheme = resolvedTheme === "dark" ? "dark" : "light";
 
   return (
     <header
@@ -26,7 +25,10 @@ function TopBar({ isVisible }) {
           <Logo className="h-8 w-auto text-foreground" />
         </a>
         <div className="flex items-center gap-3">
-          <ThemeSwitcher value={selectedTheme} onChange={(t) => setTheme(t)} />
+          <AnimatedThemeToggler
+            theme={currentTheme}
+            onThemeChange={(t) => setTheme(t)}
+          />
           {personal.resumeUrl && (
             <button
               type="button"
