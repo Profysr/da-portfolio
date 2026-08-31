@@ -40,7 +40,7 @@ function EducationCard({ edu, index, total }) {
       variant={revealVariant}
       delay={index * 0.1}
       duration={0.7}
-      once={false}
+      once={true}
       className="h-full"
     >
       <GlowFrame
@@ -166,7 +166,7 @@ export default function Credentials() {
     <Section id="credentials" className="bg-surface">
       <div className="flex flex-col items-center gap-8 md:gap-12 w-full">
         {/* Header — reveal */}
-        <ScrollReveal variant="reveal" delay={0} duration={0.6} once={false}>
+        <ScrollReveal variant="reveal" delay={0} duration={0.6} once={true}>
           <div className="flex flex-col items-center text-center gap-2.5 px-4 sm:px-6">
             <Badge
               variant="outline"

@@ -93,14 +93,14 @@ export default function About() {
   return (
     <Section id="about" noFade>
       <div className="flex flex-col gap-6">
-        <ScrollReveal variant="reveal" duration={0.8} once={false}>
+        <ScrollReveal variant="reveal" duration={0.8} once={true}>
           <h2 className="text-3xl font-semibold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]">
             {statement}.
           </h2>
         </ScrollReveal>
 
         {supporting && (
-          <ScrollReveal variant="fade" duration={0.7} delay={0.1} once={false}>
+          <ScrollReveal variant="fade" duration={0.7} delay={0.1} once={true}>
             <p className="leading-relaxed text-muted-foreground">
               {supporting}.
             </p>
@@ -111,7 +111,7 @@ export default function About() {
           variant="fade"
           staggerDelay={0.08}
           delay={0.15}
-          once={false}
+          once={true}
           className="flex flex-wrap gap-x-10 gap-y-4"
         >
           {statsData.map(({ id, icon: Icon, value, title, isTicker }) => (
@@ -137,7 +137,7 @@ export default function About() {
           variant="fade"
           duration={0.7}
           delay={0.25}
-          once={false}
+          once={true}
           className="flex flex-wrap items-center gap-4"
         >
           {personal.resumeUrl && (
@@ -177,7 +177,7 @@ export default function About() {
         variant="reveal"
         duration={0.8}
         delay={0.1}
-        once={false}
+        once={true}
         className="mt-12"
       >
         <div className="rounded-lg border border-border bg-surface">
