@@ -46,12 +46,12 @@ export function AvatarStatus() {
   // Always start in the syncing state on page mount/reload
   const [isSyncing, setIsSyncing] = useState(true);
 
+  // Run the syncing animation for 5 seconds on every reload
   useEffect(() => {
-    // Run the syncing animation for 5 seconds on every reload
     const timer = setTimeout(() => {
       setIsSyncing(false);
       setStatusInfo(getStatus());
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -71,10 +71,10 @@ export function AvatarStatus() {
       />
 
       {/* Status Badge */}
-      <div className="group inline-flex items-center justify-center rounded-md border transition-all duration-300 ease-out">
+      <div className="group inline-flex items-center justify-center rounded-2xl border transition-all duration-300 ease-out">
         {isSyncing ? (
           /* --- SYNCING STATE --- */
-          <div className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
+          <div className="inline-flex items-center justify-center gap-2 px-4 py-1 transition ease-out">
             <IconLoader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
             <span className="text-xs sm:text-sm font-semibold tracking-wide capitalize text-muted-foreground/80">
               Syncing...
@@ -82,7 +82,7 @@ export function AvatarStatus() {
           </div>
         ) : (
           /* --- LOADED STATE --- */
-          <div className="inline-flex items-center justify-center gap-2 px-2.5 py-1 transition ease-out">
+          <div className="inline-flex items-center justify-center gap-2 px-4 py-1 transition ease-out">
             <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
               <span
                 className={cn(
