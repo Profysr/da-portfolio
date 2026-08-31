@@ -6,6 +6,7 @@
     "build:index": "node scripts/build-index.js",
     "dev": "next dev --turbopack",
     "build": "fumadocs-mdx && next build",
+    "analyze": "ANALYZE=true fumadocs-mdx && next build",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "lint": "next lint",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@next/bundle-analyzer": "^16.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
