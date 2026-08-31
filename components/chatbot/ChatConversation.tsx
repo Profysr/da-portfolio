@@ -13,7 +13,8 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import { IconSparkles } from "@tabler/icons-react";
-import { Shimmer } from "../ui/shimmer";
+import { AnimatedShinyText } from "../ui/animated-shiny-text";
+import { Spinner } from "../ui/spinner";
 
 export interface MessageItem {
   role: "user" | "assistant";
@@ -63,13 +64,15 @@ export function ChatConversation({
                 <MessageBranchContent>
                   <Message from="assistant" className="gap-3">
                     <MessageContent>
-                      <Shimmer
-                        as="span"
-                        className="text-sm text-muted-foreground"
-                        duration={2}
-                      >
-                        Thinking...
-                      </Shimmer>
+                      <div className="inline-flex items-center gap-2.5 rounded-full border bg-muted/50 px-3.5 py-1.5">
+                        <Spinner className="size-4 text-muted-foreground" />
+                        <AnimatedShinyText
+                          shimmerWidth={60}
+                          className="text-sm text-muted-foreground"
+                        >
+                          Thinking...
+                        </AnimatedShinyText>
+                      </div>
                     </MessageContent>
                   </Message>
                 </MessageBranchContent>

@@ -26,7 +26,7 @@ export const ShimmerButton = React.forwardRef<
     {
       shimmerColor = "#ffffff",
       shimmerSize = "0.05em",
-      shimmerDuration = "3s",
+      shimmerDuration = "1.5s",
       borderRadius = "100px",
       background = "rgba(0, 0, 0, 1)",
       icon,
@@ -114,7 +114,7 @@ export const ShimmerLink = React.forwardRef<
     {
       shimmerColor = "#ffffff",
       shimmerSize = "0.05em",
-      shimmerDuration = "3s",
+      shimmerDuration = "1.5s",
       borderRadius = "100px",
       background = "rgba(0, 0, 0, 1)",
       icon,
