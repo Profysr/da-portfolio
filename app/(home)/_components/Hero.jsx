@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
-import { personal, socials } from "@/data/idx.js";
+import { personal, ROLES, socials } from "@/data/idx.js";
 import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
 import { HeroConstellation } from "@/components/ui/hero-constellation";
@@ -20,12 +20,6 @@ import { Section } from "@/components/layout/Section";
 /* ============================================================
  *  Headline — watermark + kinetic typewriter roles
  * ============================================================ */
-const ROLES = [
-  "Software Engineer",
-  "Forward Deployed Engineer",
-  "Engineering Lead",
-];
-
 function Headline() {
   return (
     <Heading title="Developer" variant="watermark">
@@ -34,8 +28,9 @@ function Headline() {
         loop
         typeSpeed={70}
         deleteSpeed={40}
-        pauseDelay={1800}
+        pauseDelay={1500}
         startOnView={false}
+        showCursor={false}
         className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground text-center"
       />
     </Heading>
@@ -89,7 +84,7 @@ function HeroActions() {
       <span className="hidden sm:block h-6 w-0.5 bg-border" aria-hidden />
 
       <ShimmerLink
-        href="#projects"
+        href="#experience"
         icon={<IconArrowRight size={18} />}
         iconPosition="right"
         className="inline-flex items-center justify-center"
@@ -117,8 +112,8 @@ export default function Hero() {
         </ScrollReveal>
 
         <ScrollReveal variant="slide-up" duration={0.7} delay={0.15}>
-          <p className="max-w-xl text-balance text-base sm:text-lg text-muted-foreground">
-            {personal.tagline}
+          <p className="max-w-xl text-balance text-base text-muted-foreground">
+            Hi, I'm <span className="text-lg font-bold tracking-wide text-foreground">{personal.name}</span>
           </p>
         </ScrollReveal>
 

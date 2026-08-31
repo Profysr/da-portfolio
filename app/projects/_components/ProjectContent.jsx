@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { TechPill } from "@/components/common/TechPill";
 import {
   Accordion,
@@ -27,12 +26,12 @@ const ProjectContent = ({
   const hasGithub = meta.github && meta.github !== "#";
   const hasLive = meta.live && meta.live !== "#";
 
-  const accessVariant =
-    meta.access === "Open Source"
-      ? "outline"
-      : meta.access === "Hosted"
-        ? "default"
-        : "secondary";
+  // const accessVariant =
+  //   meta.access === "Open Source"
+  //     ? "outline"
+  //     : meta.access === "Hosted"
+  //       ? "default"
+  //       : "secondary";
 
   const actions = (hasGithub || hasLive) && (
     <div className="flex items-center gap-2 sm:gap-3">

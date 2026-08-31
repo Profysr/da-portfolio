@@ -50,6 +50,8 @@ export const socials = [
   },
 ];
 
+export const ROLES = ["Software Engineer", "Forward Deployed", "Full Stack"];
+
 export const personal = {
   name: "Bilal Ahmad",
   tagline: "Forward Deployed & Software Engineer",
@@ -90,4 +92,4 @@ export const about = {
   ],
 };
 
-export const websiteDomain = "https://bilalahmad.dev";
+export const websiteDomain = "https://profysr.vercel.app/";

@@ -9,11 +9,6 @@ export const LazyAIAssistant = dynamic(
   { ssr: false, loading: () => <SkeletonShapes.chatDrawer /> }
 );
 
-export const LazyCommandPallete = dynamic(
-  () => import("@/components/CommandPallete"),
-  { ssr: false, loading: () => <SkeletonShapes.commandPalette /> }
-);
-
 export const LazyHeatmap = dynamic(
   () => import("@/components/Heatmap"),
   { ssr: false, loading: () => <SkeletonShapes.heatmap /> }

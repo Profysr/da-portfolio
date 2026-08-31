@@ -69,18 +69,18 @@ export default function FAQClient() {
     setOpenId((prev) => (prev === id ? null : id));
   };
 
-  const hasMoreQuestions = FrequentQuestions.items.length > INITIAL_FAQ_COUNT;
+  // const hasMoreQuestions = FrequentQuestions.items.length > INITIAL_FAQ_COUNT;
 
-  const renderFAQList = () =>
-    FrequentQuestions.items.map((item) => (
-      <FAQAccordionItem
-        key={item.id}
-        question={item.question}
-        answer={item.answer}
-        isOpen={openId === item.id}
-        onToggle={() => handleToggle(item.id)}
-      />
-    ));
+  // const renderFAQList = () =>
+  //   FrequentQuestions.items.map((item) => (
+  //     <FAQAccordionItem
+  //       key={item.id}
+  //       question={item.question}
+  //       answer={item.answer}
+  //       isOpen={openId === item.id}
+  //       onToggle={() => handleToggle(item.id)}
+  //     />
+  //   ));
 
   return (
     <Section id="faq" noFade className="py-6 sm:py-12">

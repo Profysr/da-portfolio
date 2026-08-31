@@ -6,11 +6,11 @@
     "build:index": "node scripts/build-index.js",
     "dev": "next dev --turbopack",
     "build": "fumadocs-mdx && next build",
-    "analyze": "ANALYZE=true fumadocs-mdx && next build",
+    "analyze": "fumadocs-mdx && next experimental-analyze --output",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.33",
@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@next/bundle-analyzer": "^16.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -54,9 +53,5 @@
     "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "allowScripts": {
-    "esbuild@0.28.2": true,
-    "unrs-resolver@1.12.2": true
   }
 }

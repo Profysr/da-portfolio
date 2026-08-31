@@ -2,7 +2,6 @@
 
 import React from "react";
 import {
-  IconSchool,
   IconSparkles,
   IconArrowUpRight,
   IconMapPin,

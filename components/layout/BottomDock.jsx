@@ -30,7 +30,7 @@ function BottomDock({ isVisible, onAIClick }) {
         scale: isVisible ? 1 : 0.95,
       }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
+      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
     >
       <div
         className={isVisible ? "pointer-events-auto" : "pointer-events-none"}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { LazyContentCarousel } from "@/components/lazy";
 
 export function SimilarContent({

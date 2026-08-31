@@ -19,8 +19,6 @@ import { Heading } from "@/components/ui/Heading";
 import { downloadResume } from "@/utils/download";
 import { NavLink } from "@/components/common/NavLink";
 import { AnimatedShinyText } from "../ui/animated-shiny-text";
-import { GlowEffect } from "../common/top-glow";
-// import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
 
 /* ─────────────────────────────────────────────────────────────
  *  1. Hero Actions (Contact + Resume + Map)
@@ -48,9 +46,6 @@ const FooterActions = () => (
         <span>Resume</span>
       </button>
     )}
-
-    {/* Interactive Map Trigger */}
-    {/* <ViewOnMap address={personal.location || "Boston Public Garden"} /> */}
   </div>
 );
 
@@ -63,7 +58,7 @@ const FooterNavStrip = () => {
   };
 
   return (
-    <div className="w-full rounded-md bg-background border border-border py-3 px-4 sm:px-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+    <div className="w-full rounded-md bg-background border border-border py-3 px-2 sm:px-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
       {/* Left: Quick Nav Links */}
       <nav
         className="flex items-center gap-1 flex-wrap justify-center"
@@ -74,7 +69,7 @@ const FooterNavStrip = () => {
             key={item.id}
             href={`#${item.id}`}
             newTab={false}
-            className="px-2.5 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-surface transition-colors font-medium"
+            className="px-2.5 py-1 rounded text-foreground hover:text-primary hover:bg-surface transition-colors font-medium"
           >
             {item.label}
           </NavLink>
@@ -90,7 +85,7 @@ const FooterNavStrip = () => {
                 <NavLink
                   href={url}
                   aria-label={label}
-                  className="p-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+                  className="p-3 rounded-md text-foreground hover:text-primary hover:bg-surface transition-colors"
                 >
                   <Icon size={16} stroke={1.8} />
                 </NavLink>
@@ -111,7 +106,7 @@ const FooterNavStrip = () => {
               type="button"
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="p-3 rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors active:scale-95"
+              className="p-3 rounded-md border border-border bg-surface text-foreground hover:text-primary hover:border-primary/40 transition-colors active:scale-95"
             >
               <IconArrowUp size={16} stroke={1.8} />
             </button>
@@ -158,7 +153,7 @@ export const Footer = () => {
         {/* <GlowEffect position="bottom" height="400px" /> */}
         <footer className="relative w-full font-sans space-y-4">
           {/* Unified Primary Card */}
-          <div className="rounded-lg bg-surface-muted backdrop-blur-md border border-border p-6 sm:p-10 flex flex-col items-center text-center gap-6">
+          <div className="rounded-lg bg-surface backdrop-blur-md border border-border p-2 sm:p-10 flex flex-col items-center text-center gap-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-surface-muted text-xs font-medium">
               <IconSparkles className="h-3.5 w-3.5 text-primary" />
               <AnimatedShinyText
