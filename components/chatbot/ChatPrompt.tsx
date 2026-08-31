@@ -53,8 +53,8 @@ function AutoResizeTextarea({
       className={cn(
         "w-full resize-none bg-transparent px-3 py-2.5",
         "text-sm placeholder:text-muted-foreground",
-        "outline-none focus:outline-none",
-        "min-h-[2.5rem] max-h-48 overflow-y-auto",
+        "border-none outline-none focus:outline-none",
+        "min-h-10 max-h-48 overflow-y-auto",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
@@ -154,7 +154,6 @@ export interface ChatPromptProps {
   messages: MessageItem[];
   isLoading: boolean;
   onSend: (message: string) => void;
-  /** Remaining credits. Defaults to TOTAL_CREDITS when not provided. */
   credits?: number;
 }
 
