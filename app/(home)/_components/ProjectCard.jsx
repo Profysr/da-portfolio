@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   IconBrandGithub,
+  IconBook,
   IconCheck,
   IconChevronDown,
   IconExternalLink,
@@ -11,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import OptimizedImage from "@/components/common/OptimizedImage";
 import { TechPill } from "@/components/common/TechPill";
-import { ExtendedLink } from "@/components/common/ExtendedLink";
+import { NavLink } from "@/components/common/NavLink";
 import { TAG_META } from "@/data/idx";
 import { cn } from "@/lib/utils";
 
@@ -143,7 +144,7 @@ function MediaPanel({ project }) {
   );
 }
 
-/* Footer links — Source / Private · Live Demo */
+/* Footer links — Source / Private · Read Docs · Live Demo */
 function CardFooter({ project }) {
   const github = project.github || (project.isExternal ? project.link : "#");
   const live = project.live;
@@ -153,28 +154,38 @@ function CardFooter({ project }) {
   return (
     <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
       {hasGithub ? (
-        <ExtendedLink
+        <NavLink
           href={github}
           className="inline-flex items-center gap-1.5 rounded border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
         >
           <IconBrandGithub className="size-3.5" />
           <span>Source</span>
-        </ExtendedLink>
+        </NavLink>
       ) : (
         <span className="inline-flex items-center gap-1.5 rounded border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <IconLock className="size-3" /> Private Repository
         </span>
       )}
 
-      {hasLive && (
-        <ExtendedLink
-          href={live}
-          className="ml-auto inline-flex items-center gap-1.5 rounded bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
+      <div className="ml-auto flex items-center gap-2">
+        <NavLink
+          href={`/projects/${project.slug}`}
+          className="inline-flex items-center gap-1.5 rounded border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary-text transition-colors hover:bg-primary/20"
         >
-          <span>Live Demo</span>
-          <IconExternalLink className="size-3.5" />
-        </ExtendedLink>
-      )}
+          <IconBook className="size-3.5" />
+          <span>Read Docs</span>
+        </NavLink>
+
+        {hasLive && (
+          <NavLink
+            href={live}
+            className="inline-flex items-center gap-1.5 rounded bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <span>Live Demo</span>
+            <IconExternalLink className="size-3.5" />
+          </NavLink>
+        )}
+      </div>
     </div>
   );
 }
@@ -197,9 +208,9 @@ function ProjectCard({ project }) {
         </div>
 
         <div className="space-y-1.5">
-          <h4 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
+          <h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary">
             {project.title}
-          </h4>
+          </h3>
           <p className="text-xs leading-relaxed text-muted-foreground line-clamp-3">
             {project.description}
           </p>

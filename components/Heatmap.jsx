@@ -220,7 +220,7 @@ function HeatmapLegend({ weeks }) {
 }
 
 // Main Container Component
-export function HeatmapGrid({
+function HeatmapGrid({
   weeks = 32,
   githubUsername = "Profysr",
   className = "",

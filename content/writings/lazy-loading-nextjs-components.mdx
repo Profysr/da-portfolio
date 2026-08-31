@@ -1,0 +1,490 @@
+---
+title: "Lazy Loading Components in Next.js — Complete Guide"
+slug: "lazy-loading-nextjs-components"
+date: "2026-08-31"
+category: "Engineering"
+tags: ["Next.js", "Performance", "React", "Optimization", "App Router"]
+description: "Everything you need to know about lazy loading in Next.js App Router: when to do it, how to measure impact, zero-CLS skeleton patterns, and the decision matrix we use in production."
+---
+
+## Why This Exists
+
+Most "lazy loading" tutorials show you `dynamic(() => import(...))` and stop there. They don't tell you:
+
+- How to **decide which components** actually deserve it
+- What **`ssr: true` vs `ssr: false`** means for your build pipeline
+- How to **prevent layout shift** when the chunk arrives
+- Why your **static build fails** with "Element type is invalid"
+- How to **measure** whether it actually helped
+
+This guide covers all of it — from identification to production measurement.
+
+---
+
+## 1. The Decision Matrix: Should This Component Be Lazy?
+
+Before you reach for `next/dynamic`, answer these four questions:
+
+| Question | Yes → Lazy Candidate | No → Keep Static |
+|----------|---------------------|------------------|
+| **Bundle impact** | 50KB+ gzipped (check via `next-bundle-analyzer`) | `<20KB` or already tree-shaken |
+| **Interaction trigger** | Only renders after user action (click, scroll, hover) | Visible above fold or in initial SSR |
+| **Client-only APIs** | Uses `window`, `canvas`, WebGL, GSAP, `IntersectionObserver` | Pure React + CSS |
+| **SEO relevance** | Zero (modal, drawer, palette, heavy chart) | Content Google should index |
+
+**Rule of thumb:** If it's in the initial viewport *and* contains indexable content → **don't lazy load**. The SSR payload is cheaper than the hydration + chunk fetch waterfall.
+
+### Real Examples from This Portfolio
+
+| Component | Size | Trigger | Decision |
+|-----------|------|---------|----------|
+| `AIAssistant` (chat drawer) | ~45KB | Dock click | ✅ Lazy |
+| `CommandPalette` | ~18KB | ⌘K | ✅ Lazy |
+| `HorizontalScroll` (GSAP engine) | ~12KB | TechStack section | ✅ Lazy |
+| `Timeline` (motion/react) | ~10KB | Experience section | ✅ Lazy |
+| `ProjectCard` | ~8KB | Projects grid (8×) | ✅ Lazy |
+| `Hero`, `About`, `TechStack` headers | `<5KB` each | Above fold | ❌ Static |
+| `Button`, `Card`, `Badge` | `<1KB` | Everywhere | ❌ Static (tree-shaken) |
+
+---
+
+## 2. Measuring Bundle Impact Before You Lazy
+
+### Tool: `@next/bundle-analyzer`
+
+```bash
+# Install
+npm i -D @next/bundle-analyzer
+
+# next.config.js
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+module.exports = withBundleAnalyzer({ /* your config */ })
+```
+
+```bash
+# Run
+ANALYZE=true npm run build
+```
+
+Opens an interactive treemap at `http://localhost:8888`. Look for:
+- Large leaf nodes not shared across pages
+- Duplicate dependencies across chunks
+- Components only used on one route
+
+### Tool: Chrome DevTools Coverage Tab
+
+1. Open DevTools → **Coverage** (Cmd+Shift+P → "Show Coverage")
+2. Reload page, interact with feature
+3. Filter by component filename
+4. **Red = unused bytes** — if a component shows 80%+ red on pages where it's not rendered → lazy candidate
+
+### Quick Heuristic
+
+```
+Component gzipped size > 15KB AND used on < 3 routes → lazy load
+Component gzipped size < 5KB → never lazy load (overhead > savings)
+```
+
+---
+
+## 3. `next/dynamic` Patterns — The Complete API
+
+### Basic Import
+
+```tsx
+import dynamic from 'next/dynamic'
+
+const HeavyChart = dynamic(() => import('@/components/HeavyChart'))
+```
+
+### With Loading Fallback (Recommended)
+
+```tsx
+const HeavyChart = dynamic(
+  () => import('@/components/HeavyChart'),
+  { loading: () => <ChartSkeleton /> }
+)
+```
+
+### SSR Control
+
+```tsx
+// SSR: true (default) — renders on server, hydrates on client
+// Use for: SEO-relevant content, above-fold, shared layout components
+const WithSSR = dynamic(() => import('@/components/WithSSR'), { ssr: true })
+
+// SSR: false — client-only, no server render
+// Use for: window/canvas/GSAP, libraries that crash in Node
+const ClientOnly = dynamic(() => import('@/components/ClientOnly'), { ssr: false })
+```
+
+### Named vs Default Exports
+
+```tsx
+// Default export
+const DefaultComp = dynamic(() => import('@/components/DefaultComp'))
+
+// Named export — must wrap
+const NamedComp = dynamic(
+  () => import('@/components/NamedComp').then(m => ({ default: m.NamedExport }))
+)
+```
+
+### Per-Component Loading UI
+
+```tsx
+const LazyComponent = dynamic(
+  () => import('@/components/Heavy'),
+  {
+    ssr: true,
+    loading: () => <CustomSkeleton matchingFinalDimensions />,
+  }
+)
+```
+
+---
+
+## 4. The SSR Decision: `ssr: true` vs `ssr: false`
+
+This is the most misunderstood setting. Here's the decision framework:
+
+### When `ssr: true` (Default — Use This 90% of the Time)
+
+| Scenario | Why |
+|----------|-----|
+| Component contains SEO content (text, links, structured data) | Must be in initial HTML for crawlers |
+| Component is in initial viewport | Avoids hydration flash / CLS |
+| Component is below fold but has no browser-only APIs | Streaming SSR handles it; chunk still splits |
+| Component uses `motion/react`, `IntersectionObserver` *in effects only* | Safe — only runs after hydration |
+| You want static generation to work | `ssr: false` breaks `next build` for prerendered pages |
+
+**Key insight:** `ssr: true` still **code-splits** — the component goes into a separate chunk. The server renders it, sends HTML, then client hydrates. You get both SEO *and* bundle splitting.
+
+### When `ssr: false` (Rare — Only When Required)
+
+| Scenario | Why |
+|----------|-----|
+| Module scope accesses `window`, `document`, `navigator` | Crashes Node during SSR |
+| Uses `<canvas>` / WebGL / Three.js / GSAP `ScrollTrigger` at module level | Requires browser APIs |
+| Library explicitly says "client-only" (e.g., some chart libs) | No SSR support |
+
+**Warning:** With `ssr: false` on statically generated pages (`output: 'export'` or `getStaticProps`), the component evaluates at build time in Node → **build fails**. Only use `ssr: false` when the component genuinely cannot run on the server.
+
+### Decision Flowchart
+
+```
+Component needs lazy loading?
+  │
+  ├─► Accesses window/document/canvas at module scope? ──YES──► ssr: false
+  │
+  ├─► Uses GSAP ScrollTrigger / Three.js / WebGL at module scope? ──YES──► ssr: false
+  │
+  ├─► Contains SEO content (text Google should index)? ──YES──► ssr: true
+  │
+  ├─► In initial viewport / above fold? ──YES──► ssr: true
+  │
+  ├─► Uses motion/react / IntersectionObserver ONLY in useEffect? ──YES──► ssr: true
+  │
+  └─► Below fold, no SEO, no browser-only APIs? ──YES──► ssr: true (default)
+```
+
+### Our Portfolio's SSR Decisions
+
+| Component | SSR | Reason |
+|-----------|-----|--------|
+| `AIAssistant` (chat drawer) | `false` | Heavy, interaction-triggered, zero SEO |
+| `CommandPalette` | `false` | ⌘K-only, never in SSR tree |
+| `Heatmap` | `false` | Canvas + GitHub API call |
+| `HorizontalScroll` (GSAP engine) | `false` | GSAP `ScrollTrigger` at module level |
+| `Timeline` | `true` | `motion/react` only in effects; SEO content |
+| `ProjectCard` | `true` | SEO content (project data), below fold |
+| `ContentCarousel` | `true` | SEO content (writings), below fold |
+| `ViewOnMap` | `true` | Portal modal, no browser APIs at module level |
+
+---
+
+## 5. Zero-CLS Skeleton Patterns
+
+The biggest UX failure: component loads → layout shifts → user clicks wrong thing.
+
+### The Fix: Skeleton Matches Final Dimensions Exactly
+
+```tsx
+// components/common/Skeleton.tsx
+export const SkeletonShapes = {
+  // Card-shaped (ProjectCard, StatCard)
+  card: () => (
+    <Skeleton className="rounded-lg border border-border bg-muted h-64 w-full" />
+  ),
+
+  // Horizontal scroller card (TechStack)
+  techCard: () => (
+    <Skeleton className="rounded-lg border border-border bg-muted h-48 w-72 shrink-0" />
+  ),
+
+  // Chat drawer (AIAssistant)
+  chatDrawer: () => (
+    <div className="flex flex-col h-[90dvh] w-full max-w-3xl">
+      <Skeleton className="h-16 w-48 rounded-md bg-muted" />
+      <Skeleton className="flex-1 h-8 w-full bg-muted/50" />
+      <Skeleton className="h-12 w-3/4 bg-muted" />
+    </div>
+  ),
+
+  // Command palette
+  commandPalette: () => (
+    <div className="rounded-lg border border-border bg-card p-4 w-96">
+      <Skeleton className="h-8 w-24 rounded-md bg-muted mb-4" />
+      <div className="space-y-2">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="h-10 w-full rounded-md bg-muted" />
+        ))}
+      </div>
+    </div>
+  ),
+
+  // Heatmap grid
+  heatmap: () => (
+    <div className="grid grid-cols-52 gap-1" aria-hidden="true">
+      {[...Array(52 * 7)].map((_, i) => (
+        <Skeleton key={i} className="size-3 rounded-[2px] bg-muted" />
+      ))}
+    </div>
+  ),
+
+  // Modal (ViewOnMap)
+  mapModal: () => (
+    <div className="fixed inset-0 flex items-center justify-center z-50" aria-hidden="true">
+      <div className="bg-card rounded-xl border border-border p-6 w-96 h-80">
+        <Skeleton className="h-full w-full rounded-lg bg-muted" />
+      </div>
+    </div>
+  ),
+}
+```
+
+### Usage
+
+```tsx
+const LazyComponent = dynamic(
+  () => import('@/components/Heavy'),
+  { ssr: true, loading: SkeletonShapes.card }
+)
+```
+
+**Key principle:** The skeleton must occupy the *exact same space* (width, height, aspect-ratio, grid tracks) as the hydrated component. No `min-height` guesses — use the real dimensions.
+
+---
+
+## 6. Where to Put Suspense Boundaries
+
+### Option A: Let `next/dynamic` Handle It (Recommended)
+
+```tsx
+// No Suspense needed — loading prop renders automatically
+<LazyComponent />
+```
+
+### Option B: Shared Suspense for Multiple Lazy Components
+
+```tsx
+<Suspense fallback={<SectionSkeleton />}>
+  <LazyTimeline />
+  <LazyHeatmap />
+  <LazyProjectCard />
+</Suspense>
+```
+
+**When to use B:** Multiple lazy components in one visual section that should appear together. Otherwise A is simpler and more granular.
+
+### What NOT To Do
+
+```tsx
+// ❌ Double Suspense — inner loading never shows
+<Suspense fallback={<GlobalSpinner />}>
+  <LazyComponent /> {/* has its own loading prop */}
+</Suspense>
+
+// ❌ Suspense wrapping entire page — defeats granular loading
+<Suspense fallback={<FullPageSpinner />}>
+  <PageContent />
+</Suspense>
+```
+
+---
+
+## 7. Common Pitfalls & Fixes
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `TypeError: (0, c.dynamic) is not a function` | Using `import { dynamic }` instead of `import dynamic` | `import dynamic from 'next/dynamic'` |
+| `Element type is invalid: undefined` | `ssr: false` on statically generated page | Change to `ssr: true` |
+| Hydration mismatch | Skeleton dimensions ≠ component dimensions | Match exact width/height/aspect-ratio |
+| Chunk loads but nothing renders | Named export accessed as default | `.then(m => ({ default: m.NamedExport }))` |
+| Double fetch on navigation | Component imported both statically and dynamically | Remove static import |
+| Build passes but dev crashes | `window` access in module scope | Move to `useEffect` or use `ssr: false` |
+| Layout shift on load | Skeleton uses `min-height`, component has fixed height | Use fixed dimensions on both |
+
+---
+
+## 8. The Decision Flowchart (Copy-Paste This)
+
+```
+START: Component identified as candidate
+  |
+  +-- Gzipped size < 5KB? --YES--> KEEP STATIC (stop)
+  |
+  +-- Used above fold / in initial viewport? --YES--> KEEP STATIC (stop)
+  |
+  +-- Contains SEO content? --YES--> KEEP STATIC (stop)
+  |
+  +-- Uses window/canvas/GSAP/motion-react? --YES--> ssr: false (verify build)
+  |
+  +-- Triggered by user interaction? --YES--> LAZY LOAD
+  |
+  +-- Below fold, heavy, no SEO? --YES--> LAZY LOAD (ssr: true)
+```
+
+---
+
+## 9. Production Checklist
+
+Before merging a lazy load PR:
+
+- [ ] `ANALYZE=true npm run build` — chunk created, size reasonable
+- [ ] `npm run build` — no static generation errors
+- [ ] Dev server: component loads on trigger, skeleton shows first
+- [ ] DevTools Performance: no layout shift (CLS = 0)
+- [ ] Lighthouse: LCP unchanged, TBT improved
+- [ ] Reduced motion: skeleton respects `prefers-reduced-motion`
+- [ ] Accessibility: skeleton has `aria-hidden="true"`, no focus traps
+- [ ] Error boundary: chunk failure shows graceful fallback (Next.js handles this)
+
+---
+
+## 10. Advanced: Preloading Strategies
+
+### Prefetch on Hover (for near-certain interactions)
+
+```tsx
+// In trigger component
+const LazyHeavy = dynamic(() => import('@/components/Heavy'), { ssr: true })
+
+function Trigger() {
+  const [preload, setPreload] = useState(false)
+
+  return (
+    <>
+      <button
+        onMouseEnter={() => setPreload(true)}
+        onClick={() => setShowHeavy(true)}
+      >
+        Open Heavy Thing
+      </button>
+      {preload && <LazyHeavy />}
+    </>
+  )
+}
+```
+
+### Route-Level Prefetch (Next.js does this automatically)
+
+`<Link prefetch={true}>` (default) prefetches the *page* JS, not individual component chunks. For component-level prefetch, use the hover pattern above.
+
+---
+
+## 11. Measuring Real Impact
+
+### Bundle Delta
+
+```bash
+# Before
+npm run build 2>&1 | grep "First Load JS"
+
+# After
+npm run build 2>&1 | grep "First Load JS"
+```
+
+Target: **< 5KB increase per dynamic chunk** (the chunk itself), **> 20KB reduction in main bundle**.
+
+### Core Web Vitals
+
+| Metric | Target | Tool |
+|--------|--------|------|
+| LCP | < 2.5s | Lighthouse, CrUX |
+| CLS | < 0.1 | Lighthouse, web-vitals |
+| TBT | < 200ms | Lighthouse |
+| INP | < 200ms | CrUX, web-vitals |
+
+### Real-User Monitoring
+
+```tsx
+// lib/web-vitals.ts
+import { onCLS, onLCP, onINP } from 'web-vitals'
+
+export function reportWebVitals(metric) {
+  fetch('/api/analytics', {
+    method: 'POST',
+    body: JSON.stringify(metric),
+  })
+}
+```
+
+Track per-route: did the lazy-loaded page improve vs baseline?
+
+---
+
+## 12. Summary: The Production Rules We Follow
+
+1. **Audit first** — bundle analyzer + coverage tab before any code change
+2. **Default to `ssr: true`** — only `false` for genuine browser-API crashes
+3. **Skeleton = final dimensions** — zero CLS, not "close enough"
+4. **One component per dynamic import** — no barrel files, no re-exports
+5. **Named exports wrapped** — `.then(m => ({ default: m.ExportName }))`
+6. **Deprecate old `React.lazy`** — `next/dynamic` handles SSR, preloading, errors
+7. **Measure after** — bundle delta + Lighthouse + RUM
+8. **Document the decision** — why this component, why this SSR setting
+
+---
+
+## Appendix: Our Phase 22 Registry (Reference)
+
+```tsx
+// components/lazy/index.jsx
+export const LazyAIAssistant = dynamic(
+  () => import('@/components/chatbot/AIAssistant'),
+  { ssr: false, loading: () => <SkeletonShapes.chatDrawer /> }
+)
+
+export const LazyCommandPallete = dynamic(
+  () => import('@/components/CommandPallete').then(m => ({ default: m.default })),
+  { ssr: false, loading: () => <SkeletonShapes.commandPalette /> }
+)
+
+export const LazyHorizontalScroll = dynamic(
+  () => import('@/components/ui/HorizontalScroll'),
+  { ssr: false, loading: () => <Skeleton className="h-48 w-full bg-muted" /> }
+)
+
+export const LazyTimeline = dynamic(
+  () => import('@/components/Timeline'),
+  { ssr: true, loading: () => <Skeleton className="h-64 w-full bg-muted" /> }
+)
+
+export const LazyProjectCard = dynamic(
+  () => import('@/app/(home)/_components/ProjectCard'),
+  { ssr: true, loading: () => <SkeletonShapes.card /> }
+)
+// ... 7 more
+```
+
+---
+
+## Further Reading
+
+- [Next.js `next/dynamic` docs](https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading)
+- [web.dev: Reduce JavaScript payloads](https://web.dev/reduce-javascript-payloads/)
+- [Chrome DevTools Coverage](https://developer.chrome.com/docs/devtools/coverage/)
+- [CLS Debugging](https://web.dev/debug-layout-shift/)

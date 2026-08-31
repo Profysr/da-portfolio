@@ -45,7 +45,7 @@ export default function NotFound() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-border">
-          <p className="text-xs text-muted-foreground/60 mb-4">Quick links</p>
+          <p className="text-xs text-muted-foreground mb-4">Quick links</p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {nav.map((item) => (
               <Link

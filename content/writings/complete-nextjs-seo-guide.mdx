@@ -1,0 +1,1219 @@
+---
+title: "The Complete Next.js SEO Guide — From Zero to Production"
+description: "A comprehensive, code-first walkthrough of every SEO type, implementation pattern, and refinement strategy for Next.js App Router. Covers metadata, structured data, sitemaps, Open Graph, performance, and monitoring."
+date: "2026-08-31"
+tags: ["nextjs", "seo", "performance", "structured-data", "open-graph", "web-development"]
+readTime: "35 min"
+---
+
+# The Complete Next.js SEO Guide — From Zero to Production
+
+Search Engine Optimization is not a single thing you do. It is a system of five distinct disciplines — on-page, technical, off-page, content, and local — that compound into discoverability. Most developers treat SEO as "add some meta tags and hope Google finds you." That is leaving ranking on the table.
+
+This guide walks through every SEO type from beginner to advanced, with production-ready code for Next.js App Router. Each section is self-contained so you can skip to what you need, but the progression is deliberate: fundamentals first, advanced patterns last.
+
+---
+
+## Part 1 — The Five Pillars of SEO
+
+Before touching code, understand what you are optimizing for. Search engines evaluate pages across five categories.
+
+### 1. On-Page SEO
+
+What appears **inside** your HTML. Title tags, meta descriptions, heading hierarchy, internal links, keyword placement, and content structure. This is the layer you have the most direct control over.
+
+**What matters:**
+- Unique `<title>` per page (50–60 characters)
+- Unique meta description per page (120–160 characters)
+- One `<h1>` per page, logical heading cascade (h1 → h2 → h3)
+- Internal links between related pages
+- Descriptive alt text on images
+- Keywords in the first 100 words of body content
+
+### 2. Technical SEO
+
+How crawlers **access and parse** your site. Crawlability, indexability, site speed, mobile responsiveness, structured data, sitemaps, and robots directives. If on-page SEO is the content, technical SEO is the infrastructure.
+
+**What matters:**
+- Clean URL structure (`/projects/my-app` not `/projects?id=42`)
+- XML sitemap with accurate `lastModified` dates
+- `robots.txt` that allows crawling where it matters
+- Canonical URLs to prevent duplicate content
+- Structured data (JSON-LD) for rich results
+- Core Web Vitals within Google thresholds (LCP < 2.5s, CLS < 0.1, INP < 200ms)
+
+### 3. Off-Page SEO
+
+What happens **outside** your site that signals authority. Backlinks from other sites, social signals, brand mentions, and domain reputation. You cannot fully control this, but you can create link-worthy content and maintain consistent brand signals.
+
+**What matters:**
+- Backlinks from high-authority, relevant domains
+- Consistent `sameAs` social profile links in structured data
+- Open Graph + Twitter Card metadata for social sharing
+- Content worth linking to (original research, tools, guides)
+
+### 4. Content SEO
+
+The **quality and structure** of what you publish. Depth, freshness, E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness), and search intent matching. Google's Helpful Content Update means content must be genuinely useful, not keyword-stuffed.
+
+**What matters:**
+- Answer the searcher's intent completely
+- Update content periodically (freshness signals)
+- Use structured content (headings, lists, tables, code blocks)
+- Include author attribution and publish dates
+- Link to authoritative sources
+
+### 5. Local SEO
+
+Geographic visibility for location-based businesses. Google Business Profile, NAP consistency (Name, Address, Phone), local structured data, and reviews. Less relevant for remote-first developers, but critical if you serve a specific region.
+
+**What matters:**
+- `LocalBusiness` or `Person` schema with `address` and `geo`
+- Consistent NAP across all profiles
+- Google Business Profile with accurate categories
+- Location-specific landing pages (if applicable)
+
+---
+
+## Part 2 — Next.js App Router Metadata Fundamentals
+
+Next.js App Router provides a file-based metadata API that eliminates most manual `<head>` management. This section covers the basics.
+
+### Static Metadata
+
+The simplest approach. Export a `metadata` object from any `layout.js` or `page.js` file. This works for pages where the content does not change.
+
+```jsx
+// app/about/page.jsx
+export const metadata = {
+  title: "About Me",
+  description: "Software engineer building scalable systems.",
+};
+
+export default function AboutPage() {
+  return <section>...</section>;
+}
+```
+
+Next.js merges this with the parent layout's metadata. The `title` field follows a template pattern defined in the root layout.
+
+### The Root Layout Title Template
+
+Set a global title template in `app/layout.jsx` so child pages only need to provide their unique portion.
+
+```jsx
+// app/layout.jsx
+export const metadata = {
+  title: {
+    default: "My Site — Developer Portfolio",
+    template: "%s | My Site",
+  },
+};
+```
+
+A child page with `title: "About"` renders as **"About | My Site"**. The home page uses the `default` value.
+
+### Dynamic Metadata with generateMetadata
+
+For pages where metadata depends on route params, database queries, or external data, export an async `generateMetadata` function. Next.js calls this at request time (or build time for static routes) and memoizes the result.
+
+```jsx
+// app/projects/[slug]/page.jsx
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  if (!project) {
+    return { title: "Project Not Found" };
+  }
+
+  return {
+    title: project.title,
+    description: project.description,
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      images: [project.thumbnail],
+    },
+  };
+}
+```
+
+**Key rule:** Next.js does a **full replace** of `openGraph` and `twitter` objects from child segments — there is no deep merge with the layout. Every page that sets `openGraph` must emit the complete object, not just the fields it wants to override.
+
+### The alternates Field
+
+Define canonical URLs and language alternates. This is how you tell search engines which version of a page is the "real" one.
+
+```jsx
+export const metadata = {
+  alternates: {
+    canonical: "https://mysite.com/projects/my-app",
+    languages: {
+      "en-US": "https://mysite.com/en/projects/my-app",
+      "es-ES": "https://mysite.com/es/projects/my-app",
+    },
+  },
+};
+```
+
+For a simple single-language site, just set the canonical.
+
+### robots.txt
+
+Next.js generates `robots.txt` from a file convention. Create `app/robots.js` (or `.ts`) and export a default function.
+
+```jsx
+// app/robots.js
+export default function robots() {
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/api/", "/admin/", "/private/"],
+    },
+    sitemap: "https://mysite.com/sitemap.xml",
+  };
+}
+```
+
+### XML Sitemap
+
+Create `app/sitemap.js` (or `.ts`) and export an array of URLs. This is a server-only file.
+
+```jsx
+// app/sitemap.js
+import { getProjects } from "@/lib/projects";
+
+export default async function sitemap() {
+  const projects = await getProjects();
+
+  const projectUrls = projects.map((project) => ({
+    url: `https://mysite.com/projects/${project.slug}`,
+    lastModified: new Date(project.updatedAt),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [
+    {
+      url: "https://mysite.com",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+    ...projectUrls,
+  ];
+}
+```
+
+---
+
+## Part 3 — Structured Data & JSON-LD
+
+Structured data is how you tell search engines **what your content is** — not just what it says. A page with proper structured data can earn rich results: star ratings in search results, FAQ dropdowns, knowledge panel cards, and more.
+
+### What is JSON-LD?
+
+JSON-LD (JavaScript Object Notation for Linked Data) is the format Google recommends. It lives in a `<script type="application/ld+json">` tag and describes entities using schema.org vocabulary.
+
+### Implementing JSON-LD in Next.js
+
+Use the `next/script` component or a raw `<script>` tag. The key is escaping `<` characters to prevent XSS.
+
+```jsx
+// app/projects/[slug]/page.jsx
+import Script from "next/script";
+
+export default async function ProjectPage({ params }) {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: project.description,
+    author: {
+      "@type": "Person",
+      name: "Your Name",
+    },
+    url: project.liveUrl,
+    applicationCategory: "DeveloperApplication",
+  };
+
+  return (
+    <>
+      <Script
+        id="json-ld-project"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+### Essential Schema Types
+
+**Person** — For portfolio sites, personal brands, and author pages.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Your Name",
+  "url": "https://yoursite.com",
+  "image": "https://yoursite.com/avatar.jpg",
+  "sameAs": [
+    "https://github.com/yourusername",
+    "https://linkedin.com/in/yourusername"
+  ],
+  "jobTitle": "Software Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Company Name"
+  }
+}
+```
+
+**Article / BlogPosting** — For blog posts and technical articles.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Your Article Title",
+  "description": "Article summary",
+  "image": "https://yoursite.com/article-image.jpg",
+  "datePublished": "2026-01-15",
+  "dateModified": "2026-01-20",
+  "author": {
+    "@type": "Person",
+    "name": "Your Name"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Your Name"
+  }
+}
+```
+
+**SoftwareApplication** — For project pages showcasing apps or tools.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Project Name",
+  "description": "What it does",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cloud",
+  "url": "https://live-url.com",
+  "codeRepository": "https://github.com/you/repo",
+  "author": {
+    "@type": "Person",
+    "name": "Your Name"
+  }
+}
+```
+
+**BreadcrumbList** — For site hierarchy signals. Google shows breadcrumbs in search results.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://yoursite.com" },
+    { "@type": "ListItem", "position": 2, "name": "Projects", "item": "https://yoursite.com/projects" },
+    { "@type": "ListItem", "position": 3, "name": "My App" }
+  ]
+}
+```
+
+**FAQPage** — For FAQ sections. Google can display these as expandable dropdowns in search results.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What do you do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "I build scalable software systems..."
+      }
+    }
+  ]
+}
+```
+
+### Entity Grounding for LLMO
+
+Large Language Model Optimization (LLMO) is the next frontier. Your structured data should establish clear entity relationships so AI systems can cite you accurately.
+
+**Entity @id pattern:** Assign stable `@id` values to your core entities (Person, WebSite) and cross-reference them across all schemas.
+
+```json
+// Person schema (root-level, every page)
+{ "@id": "https://yoursite.com/#person" }
+
+// WebSite schema (root-level)
+{ "publisher": { "@id": "https://yoursite.com/#person" } }
+
+// BlogPosting schema (article pages)
+{ "author": { "@id": "https://yoursite.com/#person" } }
+```
+
+This creates a linked knowledge graph that search engines and AI systems can traverse.
+
+---
+
+## Part 4 — Open Graph & Social Sharing
+
+When someone shares your page on Twitter, LinkedIn, Facebook, or Slack, the preview card is generated from Open Graph and Twitter Card metadata. Getting this right means more clicks from social traffic.
+
+### Open Graph Basics
+
+```jsx
+export const metadata = {
+  openGraph: {
+    type: "website",
+    url: "https://yoursite.com",
+    siteName: "Your Site Name",
+    title: "Your Site Title",
+    description: "What your site is about",
+    locale: "en_US",
+    images: [
+      {
+        url: "https://yoursite.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Descriptive alt text",
+      },
+    ],
+  },
+};
+```
+
+**Critical details:**
+- Image URLs must be **absolute** (include `https://`)
+- Image dimensions: **1200×630** is the standard for most platforms
+- The `alt` text is required for accessibility and social platforms
+- `type: "article"` enables `publishedTime`, `authors`, and `tags` fields
+
+### Twitter Cards
+
+```jsx
+export const metadata = {
+  twitter: {
+    card: "summary_large_image",
+    title: "Your Page Title",
+    description: "Your page description",
+    images: ["https://yoursite.com/og-image.png"],
+    creator: "@yourhandle",
+    site: "@yoursitehandle",
+  },
+};
+```
+
+### Article-Specific OG Fields
+
+For blog posts, articles, and time-sensitive content:
+
+```jsx
+export async function generateMetadata({ params }) {
+  const post = await getPost(params.slug);
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      type: "article",
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+      authors: ["Your Name"],
+      tags: post.tags,
+      images: [post.thumbnail],
+    },
+  };
+}
+```
+
+### Dynamic OG Image Generation
+
+Next.js can generate OG images dynamically using the `next/og` package. This eliminates the need to create static images for every page.
+
+```jsx
+// app/api/og/route.jsx
+import { ImageResponse } from "next/og";
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const title = searchParams.get("title") ?? "Default Title";
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: "#141414",
+          padding: "80px",
+        }}
+      >
+        <div style={{ fontSize: 64, color: "white", fontWeight: "bold" }}>
+          {title}
+        </div>
+      </div>
+    ),
+    { width: 1200, height: 630 }
+  );
+}
+```
+
+Then reference it in your metadata:
+
+```jsx
+openGraph: {
+  images: [`https://yoursite.com/api/og?title=${encodeURIComponent(post.title)}`],
+}
+```
+
+---
+
+## Part 5 — Image & Performance SEO
+
+Google uses Core Web Vitals as a ranking signal. A beautiful site that loads slowly will rank below a mediocre site that loads fast. This section covers the performance-specific SEO patterns for Next.js.
+
+### Image Optimization
+
+Next.js provides the `next/image` component with built-in optimization. Use it everywhere.
+
+```jsx
+import Image from "next/image";
+
+<Image
+  src="/photo.jpg"
+  alt="Descriptive alt text"
+  width={800}
+  height={600}
+  priority={true}        // LCP image: preload
+  sizes="(max-width: 768px) 100vw, 800px"
+  quality={85}
+  placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,..."
+/>
+```
+
+**When to use `priority`:**
+- Above-the-fold images (hero, first visible image)
+- Largest Contentful Paint (LCP) candidate
+- This sets `fetchPriority="high"` and preloads the image
+
+**When to use `placeholder="blur"`:**
+- Lazy-loaded images below the fold
+- Provides a visual placeholder while loading
+- Use a tiny base64 blur or the `blurhash` library
+
+### Lazy Loading Strategy
+
+```jsx
+// Good: Lazy load below-fold images
+<Image src="/project-thumb.jpg" alt="..." width={400} height={300} />
+
+// Good: Prioritize LCP image
+<Image src="/hero.jpg" alt="..." width={1200} height={600} priority />
+```
+
+### Script Loading Strategy
+
+Third-party scripts kill performance. Load them strategically.
+
+```jsx
+import Script from "next/script";
+
+// Analytics: load after page is interactive
+<Script
+  src="https://analytics.example.com/script.js"
+  strategy="afterInteractive"
+/>
+
+// Chatbot: lazy load on user interaction
+<Script
+  src="https://chat.example.com/widget.js"
+  strategy="lazyOnload"
+/>
+
+// Inline script: blocked until DOM is ready
+<Script id="schema" type="application/ld+json" strategy="beforeInteractive">
+  {JSON.stringify(schemaData)}
+</Script>
+```
+
+**Strategy reference:**
+- `beforeInteractive` — Blocks page load. Only for critical inline scripts (structured data).
+- `afterInteractive` — Loads after page is interactive. For analytics, tag managers.
+- `lazyOnload` — Loads during browser idle time. For chat widgets, non-critical scripts.
+- `worker` — Runs in a web worker. For heavy computation.
+
+### Font Optimization
+
+Fonts are a hidden performance killer. The `next/font` module self-hosts fonts and eliminates render-blocking requests.
+
+```jsx
+// app/layout.jsx
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",          // Shows fallback font while loading
+  preload: true,             // Preload above-fold font
+  variable: "--font-poppins",
+});
+
+// Only preload fonts that appear above the fold
+// Below-fold fonts: preload: false
+```
+
+**Rules:**
+- Preload the primary body font and any above-fold display font
+- Do NOT preload fonts used only in footer or modals
+- Use `display: "swap"` to avoid invisible text (FOIT)
+- Subset fonts to only the characters you need (most `next/font` subsets handle this)
+
+### Core Web Vitals Targets
+
+| Metric | Good | What It Measures |
+|--------|------|------------------|
+| LCP (Largest Contentful Paint) | < 2.5s | Time until the largest visible element renders |
+| INP (Interaction to Next Paint) | < 200ms | Responsiveness to user interactions |
+| CLS (Cumulative Layout Shift) | < 0.1 | Visual stability — unexpected layout movement |
+| FCP (First Contentful Paint) | < 1.8s | Time until first content appears |
+| TTFB (Time to First Byte) | < 800ms | Server response time |
+
+---
+
+## Part 6 — Advanced Metadata Patterns
+
+This section covers production-grade patterns that go beyond the basics.
+
+### Metadata Factory Pattern
+
+When you have many pages with similar metadata structures, create a factory function that guarantees complete objects every time. This prevents the "missing OG image on one page" problem.
+
+```jsx
+// lib/seo.js
+const SITE_NAME = "Your Site";
+const DEFAULT_IMAGE = "/og-image.png";
+
+export function createMetadata({
+  title,
+  description,
+  path,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  images = [],
+  noIndex = false,
+}) {
+  const canonical = path === "/" ? "/" : path.replace(/\/+$/, "");
+  const resolvedImages = images.length ? images : [DEFAULT_IMAGE];
+
+  const articleFields =
+    type === "article"
+      ? {
+          publishedTime,
+          modifiedTime: modifiedTime ?? publishedTime,
+          authors: [SITE_NAME],
+          ...(tags.length ? { tags } : {}),
+        }
+      : {};
+
+  return {
+    title,
+    description,
+    ...(tags.length ? { keywords: tags } : {}),
+    alternates: { canonical },
+    openGraph: {
+      type,
+      url: canonical,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      title,
+      description,
+      images: resolvedImages,
+      ...articleFields,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: resolvedImages,
+      creator: "@yourhandle",
+    },
+    ...(noIndex ? { robots: { index: false, follow: false } } : {}),
+  };
+}
+```
+
+**Usage in pages:**
+
+```jsx
+// app/projects/[slug]/page.jsx
+export async function generateMetadata({ params }) {
+  const project = await getProject(params.slug);
+  return createMetadata({
+    title: project.title,
+    description: project.description,
+    path: `/projects/${params.slug}`,
+    type: "article",
+    publishedTime: project.date,
+    images: project.thumbnail ? [project.thumbnail] : [],
+  });
+}
+```
+
+### Handling Next.js Full-Replace Semantics
+
+Next.js does a **full replace** of `openGraph` and `twitter` from child segments. If your layout defines `openGraph.images` and your page defines `openGraph.title` but not `openGraph.images`, the images are gone.
+
+**The fix:** Always emit complete objects from `generateMetadata`. The factory pattern above handles this.
+
+### Layout vs Page Metadata Responsibilities
+
+```
+app/layout.jsx        → Site-wide: title template, default OG, robots, metadataBase
+app/(home)/page.jsx   → Home-specific: inherits layout defaults
+app/projects/page.jsx → Listing: title, description only (OG from layout)
+app/projects/[slug]/page.jsx → Detail: full OG + article fields + structured data
+```
+
+**Rule:** Layout provides defaults. Pages override only what they need to change, but must provide complete `openGraph`/`twitter` objects when overriding.
+
+### The metadataBase Field
+
+Set this in your root layout. It resolves relative URLs in metadata to absolute URLs.
+
+```jsx
+// app/layout.jsx
+export const metadata = {
+  metadataBase: new URL("https://yoursite.com"),
+  // Now "/og-image.png" resolves to "https://yoursite.com/og-image.png"
+};
+```
+
+---
+
+## Part 7 — SEO for Dynamic Routes
+
+Dynamic routes (`[slug]`, `[id]`) need special attention because each variant can have different metadata.
+
+### Project Pages
+
+```jsx
+// app/projects/[slug]/page.jsx
+import { generateProjectSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
+import { createMetadata } from "@/lib/seo";
+import Script from "next/script";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  return createMetadata({
+    title: project.title,
+    description: project.description,
+    path: `/projects/${slug}`,
+    type: "article",
+    publishedTime: project.date,
+    images: project.thumbnail ? [project.thumbnail] : [],
+  });
+}
+
+export default async function ProjectPage({ params }) {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  const projectSchema = generateProjectSchema(project);
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "https://yoursite.com" },
+    { name: "Projects", url: "https://yoursite.com/#projects" },
+    { name: project.title, url: `https://yoursite.com/projects/${slug}` },
+  ]);
+
+  return (
+    <>
+      <Script
+        id="json-ld-project"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <Script
+        id="json-ld-breadcrumb"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+### Blog/Writing Pages
+
+```jsx
+// app/writing/[slug]/page.jsx
+export async function generateMetadata({ params }) {
+  const post = await getPost(params.slug);
+
+  return createMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/writing/${params.slug}`,
+    type: "article",
+    publishedTime: post.publishedAt,
+    modifiedTime: post.updatedAt,
+    tags: post.tags,
+    images: post.thumbnail ? [post.thumbnail] : [],
+  });
+}
+```
+
+### Not-Found Pages
+
+A custom 404 page should have `noIndex` to prevent indexing of error pages.
+
+```jsx
+// app/not-found.jsx
+import { createMetadata } from "@/lib/seo";
+
+export const metadata = createMetadata({
+  title: "Page Not Found",
+  description: "The page you are looking for does not exist.",
+  path: "/404",
+  noIndex: true,
+});
+```
+
+---
+
+## Part 8 — Sitemap Deep Dive
+
+The sitemap is your direct communication channel with search engines. A bad sitemap means wasted crawl budget and missed pages.
+
+### Multi-Source Sitemap
+
+For sites with multiple content types (projects, writings, docs), combine them into one sitemap.
+
+```jsx
+// app/sitemap.js
+import { projectSource, writingSource } from "@/lib/source";
+import { websiteDomain } from "@/data/site";
+
+export default async function sitemap() {
+  const projects = projectSource.getPages();
+  const writings = writingSource.getPages();
+
+  const projectUrls = projects.map((page) => ({
+    url: `${websiteDomain}/projects/${page.url}`,
+    lastModified: page.data.date ? new Date(page.data.date) : new Date(),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  const writingUrls = writings.map((page) => ({
+    url: `${websiteDomain}/writing/${page.url}`,
+    lastModified: page.data.date ? new Date(page.data.date) : new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  const staticUrls = [
+    {
+      url: websiteDomain,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+  ];
+
+  return [...staticUrls, ...projectUrls, ...writingUrls];
+}
+```
+
+### Sitemap Best Practices
+
+| Rule | Why |
+|------|-----|
+| Use absolute URLs | Crawlers expect `https://...` not `/path` |
+| Set `lastModified` accurately | Helps crawlers prioritize recently updated content |
+| Set `changeFrequency` honestly | Signals how often to re-crawl |
+| Keep `priority` relative | Homepage = 1.0, detail pages = 0.6–0.8, utility pages = 0.3 |
+| Max 50,000 URLs per sitemap | If larger, use sitemap index |
+| Include only indexable pages | No 404s, no redirects, no noindex pages |
+
+### Sitemap Index for Large Sites
+
+```jsx
+// app/sitemap-index.js
+export default function sitemapIndex() {
+  return [
+    {
+      url: "https://yoursite.com/sitemap-pages.xml",
+      lastModified: new Date(),
+    },
+    {
+      url: "https://yoursite.com/sitemap-projects.xml",
+      lastModified: new Date(),
+    },
+  ];
+}
+```
+
+---
+
+## Part 9 — SEO Refinement & Monitoring
+
+Implementation is half the battle. The other half is measuring, iterating, and fixing what breaks.
+
+### Pre-Deployment Checklist
+
+Before every deploy, verify:
+
+1. **Every page has a unique title and description** — no duplicates
+2. **Every page has a canonical URL** — matches the actual URL
+3. **Every page has OG images** — no broken image links
+4. **Structured data validates** — use Google's Rich Results Test
+5. **Sitemap is accessible** — `yourdomain.com/sitemap.xml` returns 200
+6. **robots.txt allows crawling** — check for accidental `disallow: /`
+7. **No noindex on pages you want indexed** — check layout metadata
+8. **Images have alt text** — every `<img>` or `<Image>` component
+
+### Post-Deployment Verification
+
+After deploying, run these checks:
+
+**Google Search Console:**
+- Submit your sitemap URL
+- Check for crawl errors (404s, 500s)
+- Monitor coverage reports
+- Request indexing for critical new pages
+
+**Rich Results Test:**
+- Paste each page URL
+- Verify structured data renders without errors
+- Check that all required fields are present
+
+**PageSpeed Insights:**
+- Test your most important pages
+- Focus on LCP, INP, and CLS
+- Check both mobile and desktop
+
+### Continuous Monitoring
+
+```jsx
+// lib/seo-audit.js
+// A simple audit function you can run in CI
+
+export function auditMetadata(pages) {
+  const issues = [];
+
+  for (const page of pages) {
+    if (!page.title || page.title.length > 60) {
+      issues.push(`${page.path}: title missing or too long (${page.title?.length} chars)`);
+    }
+    if (!page.description || page.description.length > 160) {
+      issues.push(`${page.path}: description missing or too long`);
+    }
+    if (!page.canonical) {
+      issues.push(`${page.path}: missing canonical URL`);
+    }
+    if (!page.ogImage) {
+      issues.push(`${page.path}: missing OG image`);
+    }
+  }
+
+  return issues;
+}
+```
+
+### Common SEO Mistakes in Next.js
+
+| Mistake | Fix |
+|---------|-----|
+| Missing `metadataBase` | Add to root layout — resolves relative OG URLs |
+| OG images as relative paths | Use absolute URLs or `metadataBase` |
+| Forgetting `suppressHydrationWarning` on `<html>` | Required for next-themes — otherwise hydration mismatch |
+| Duplicate meta descriptions | Use `generateMetadata` to create unique descriptions per page |
+| Blocking JS with `noscript` tags | Next.js SSR handles this — avoid unnecessary `noscript` |
+| Missing `alt` text on images | Every `<Image>` component needs `alt` |
+| Indexing API routes | Disallow `/api/` in `robots.txt` |
+| Stale sitemap dates | Update `lastModified` when content changes |
+| No structured data on detail pages | Add JSON-LD for Article, Product, or SoftwareApplication |
+| OG images that are too small | Use 1200×630 minimum for social platforms |
+
+---
+
+## Part 10 — Putting It All Together
+
+Here is a complete, production-ready SEO setup for a Next.js App Router project.
+
+### File Structure
+
+```
+app/
+  layout.jsx              # Root: title template, metadataBase, root JSON-LD
+  sitemap.js              # Dynamic sitemap
+  robots.js               # Robots.txt
+  (home)/page.jsx         # Home: ProfilePage schema
+  projects/[slug]/
+    page.jsx              # Project: generateMetadata + SoftwareApplication schema
+  writing/[slug]/
+    page.jsx              # Article: generateMetadata + BlogPosting schema
+lib/
+  seo.js                  # createMetadata factory
+  structured-data.js      # JSON-LD generators (Person, WebSite, etc.)
+```
+
+### Root Layout
+
+```jsx
+// app/layout.jsx
+import Script from "next/script";
+import { generatePersonSchema, generateWebSiteSchema } from "@/lib/structured-data";
+
+export const metadata = {
+  metadataBase: new URL("https://yoursite.com"),
+  title: {
+    default: "Your Name — Portfolio",
+    template: "%s | Your Name",
+  },
+  description: "Your one-line description.",
+  alternates: { canonical: "./" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    url: "https://yoursite.com",
+    siteName: "Your Name",
+    title: "Your Name — Portfolio",
+    description: "Your one-line description.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Your Name — Portfolio",
+    description: "Your one-line description.",
+    images: ["/og-image.png"],
+    creator: "@yourhandle",
+  },
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="json-ld-person"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generatePersonSchema()),
+          }}
+        />
+        <Script
+          id="json-ld-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateWebSiteSchema()),
+          }}
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+### Metadata Factory
+
+```jsx
+// lib/seo.js
+const SITE_NAME = "Your Name";
+const DEFAULT_IMAGE = "/og-image.png";
+
+export function createMetadata({
+  title,
+  description,
+  path,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  images = [],
+  noIndex = false,
+}) {
+  const canonical = path === "/" ? "/" : path.replace(/\/+$/, "");
+  const resolvedImages = images.length
+    ? images.map((img) =>
+        typeof img === "string"
+          ? { url: img, width: 1200, height: 630, alt: title }
+          : img
+      )
+      : [{ url: DEFAULT_IMAGE, width: 1200, height: 630, alt: title }];
+
+  const articleFields =
+    type === "article"
+      ? {
+          publishedTime,
+          modifiedTime: modifiedTime ?? publishedTime,
+          authors: [SITE_NAME],
+          ...(tags.length ? { tags } : {}),
+        }
+      : {};
+
+  return {
+    title,
+    description,
+    ...(tags.length ? { keywords: tags } : {}),
+    alternates: { canonical },
+    openGraph: {
+      type,
+      url: canonical,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      title,
+      description,
+      images: resolvedImages,
+      ...articleFields,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: resolvedImages.map((img) =>
+        typeof img === "string" ? img : img.url
+      ),
+      creator: "@yourhandle",
+    },
+    ...(noIndex ? { robots: { index: false, follow: false } } : {}),
+  };
+}
+```
+
+### Structured Data Generator
+
+```jsx
+// lib/structured-data.js
+const PERSON_ID = "https://yoursite.com/#person";
+const WEBSITE_ID = "https://yoursite.com/#website";
+
+export function generatePersonSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: "Your Name",
+    url: "https://yoursite.com",
+    image: "https://yoursite.com/avatar.jpg",
+    jobTitle: "Software Engineer",
+    sameAs: [
+      "https://github.com/yourusername",
+      "https://linkedin.com/in/yourusername",
+    ],
+  };
+}
+
+export function generateWebSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name: "Your Site",
+    url: "https://yoursite.com",
+    publisher: { "@id": PERSON_ID },
+  };
+}
+
+export function generateBlogPostingSchema(post) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    image: post.thumbnail,
+    datePublished: post.date,
+    dateModified: post.modifiedDate ?? post.date,
+    author: { "@type": "Person", "@id": PERSON_ID },
+    publisher: { "@type": "Person", "@id": PERSON_ID },
+  };
+}
+
+export function generateProjectSchema(project) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: project.description,
+    applicationCategory: project.category,
+    author: { "@type": "Person", "@id": PERSON_ID },
+    publisher: { "@type": "Person", "@id": PERSON_ID },
+    url: project.liveUrl,
+    codeRepository: project.githubUrl,
+  };
+}
+
+export function generateBreadcrumbSchema(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+```
+
+---
+
+## Quick Reference — SEO Scorecard
+
+Use this to evaluate any page before shipping:
+
+| Check | Status |
+|-------|--------|
+| Unique `<title>` (50–60 chars) | ☐ |
+| Unique meta description (120–160 chars) | ☐ |
+| Canonical URL set | ☐ |
+| One `<h1>` per page | ☐ |
+| Heading hierarchy (h1 → h2 → h3) | ☐ |
+| OG image (1200×630, absolute URL) | ☐ |
+| Twitter Card metadata | ☐ |
+| Structured data validates (Rich Results Test) | ☐ |
+| Images have `alt` text | ☐ |
+| Internal links to related pages | ☐ |
+| Page loads in < 2.5s (LCP) | ☐ |
+| CLS < 0.1 | ☐ |
+| Mobile responsive | ☐ |
+| Accessible (keyboard + screen reader) | ☐ |
+| Sitemap includes this page | ☐ |
+| Not blocked by robots.txt | ☐ |
+| No noIndex (unless intended) | ☐ |
+
+---
+
+SEO is not a one-time task. It is a discipline you practice with every page you ship, every meta tag you write, and every performance optimization you make. The code in this guide gives you the foundation. The monitoring and iteration make it compound.

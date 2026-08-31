@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { Footer } from "./Footer";
-import { Chatbot } from "@/components/chatbot/Chatbot";
-import BottomDock from "@/components/layout/BottomDock"
+import { AIAssistant } from "@/components/chatbot/AIAssistant";
+import BottomDock from "@/components/layout/BottomDock";
 import TopBar from "@/components/layout/TopBar";
+import { GlowEffect } from "../common/top-glow";
 
 /* ------------------------------------------------------------------ */
 /*  HomeLayout — Master Application Shell with Continuous Dual-Tone Layout */
@@ -43,18 +44,18 @@ function HomeLayout({ children }) {
 
   return (
     <div className="relative min-h-screen w-full bg-background text-foreground flex flex-col justify-between overflow-x-clip">
+      {/* Top Sunshine Lightning Glow Effect */}
+      <GlowEffect position="top" />
       <TopBar isVisible={isNavVisible} />
 
       {/* Main Content Area — pb-28 ensures Dock never occludes bottom content */}
-      <main className="relative z-10 w-full flex-1">
-        <Suspense fallback={null}>{children}</Suspense>
-      </main>
+      <div className="relative z-10 w-full flex-1">{children}</div>
 
       <BottomDock
         isVisible={isNavVisible}
         onAIClick={() => setIsAIOpen(true)}
       />
-      <Chatbot open={isAIOpen} onClose={() => setIsAIOpen(false)} />
+      <AIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />
       <Footer />
     </div>
   );

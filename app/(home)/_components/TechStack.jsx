@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/Heading";
 import { IconSparkles } from "@tabler/icons-react";
 import { TechPill } from "@/components/common/TechPill";
 import { Section } from "@/components/layout/Section";
-import { ScrollWrapper } from "@/components/ui/HorizontalScroll";
+import { LazyHorizontalScroll } from "@/components/lazy";
 import { SkillsAndTools } from "@/data/idx";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,7 @@ export function TechHeader() {
       <Heading
         variant="gradient"
         text="Technologies & Stack"
+        as="h2"
         className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground"
       />
       <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-md font-normal leading-normal">
@@ -41,7 +42,7 @@ export function TechClusterCard({ group, index, totalGroups }) {
         "group relative shrink-0 flex flex-col justify-between",
         "w-[320px] sm:w-[380px] md:w-[430px] lg:w-[480px]",
         "rounded-xl border p-4 sm:p-5 md:p-6 transition-all duration-300 select-none overflow-hidden shadow-xs hover:shadow-md hover:scale-[1.01]",
-        group.shade ?? "shade-card-canvas"
+        group.shade ?? "shade-card-canvas",
       )}
     >
       {/* Top subtle highlight line */}
@@ -53,7 +54,8 @@ export function TechClusterCard({ group, index, totalGroups }) {
           {/* Header row with index badge & Icon */}
           <div className="flex items-center justify-between">
             <span className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase">
-              {String(index + 1).padStart(2, "0")} / {String(totalGroups).padStart(2, "0")}
+              {String(index + 1).padStart(2, "0")} /{" "}
+              {String(totalGroups).padStart(2, "0")}
             </span>
             <div className="flex items-center justify-center size-8 sm:size-9 rounded-lg border border-current/20 bg-current/10 shrink-0">
               <Icon className="size-4 sm:size-4.5" strokeWidth={1.75} />
@@ -97,7 +99,7 @@ export default function TechStack() {
       innerClassName="max-w-none px-0 w-full"
       className="p-0! bg-surface w-full overflow-visible!"
     >
-      <ScrollWrapper
+      <LazyHorizontalScroll
         itemCount={SkillsAndTools.length}
         scrollLengthVh={320}
         header={<TechHeader />}
@@ -110,7 +112,7 @@ export default function TechStack() {
             totalGroups={SkillsAndTools.length}
           />
         ))}
-      </ScrollWrapper>
+      </LazyHorizontalScroll>
     </Section>
   );
 }

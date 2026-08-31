@@ -92,7 +92,7 @@ export default function FAQClient() {
           className="w-full lg:w-5/12 flex flex-col gap-4 lg:sticky lg:top-24"
         >
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-medium">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary-text text-xs font-medium">
               <IconSparkles className="h-3 w-3" />
               <span>{FrequentQuestions.badge || "FAQ"}</span>
             </div>
@@ -100,6 +100,7 @@ export default function FAQClient() {
             <Heading
               variant="gradient"
               text={FrequentQuestions.heading}
+              as="h2"
               className="text-2xl! sm:text-3xl! text-center! lg:text-left!"
             />
 
@@ -122,7 +123,7 @@ export default function FAQClient() {
             </p>
             <a
               href={`mailto:${personal.email}`}
-              className="group inline-flex items-center gap-1.5 text-xs text-primary font-medium hover:underline pt-0.5"
+              className="group inline-flex items-center gap-1.5 text-xs text-primary-text font-medium hover:underline pt-0.5"
             >
               <span>Get in touch directly</span>
               <IconArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />

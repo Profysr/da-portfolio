@@ -53,3 +53,6 @@ opencode*
 .opencode
 .agents
 graphify-out
+.playwright-mcp
+
+video-project/node_modules

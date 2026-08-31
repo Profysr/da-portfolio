@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { projects, TAG_META } from "@/data/idx";
 import { ContinuousTabs } from "@/components/common/Tabs";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import ProjectCard from "./ProjectCard";
+import { LazyProjectCard } from "@/components/lazy";
 import { MasonryGrid } from "@/components/MasonryGrid";
 import { ExpandableList } from "@/components/ui/expandable-list";
 
@@ -37,7 +37,7 @@ export const ProjectsEmptyState = ({ onReset }) => {
         <button
           type="button"
           onClick={onReset}
-          className="mt-1 text-xs font-medium text-primary hover:underline"
+          className="mt-1 text-xs font-medium text-primary-text hover:underline"
         >
           Reset Filter
         </button>
@@ -66,7 +66,7 @@ const renderProjectItem = (project, idx) => (
       duration={0.6}
       once={false}
     >
-      <ProjectCard project={project} />
+      <LazyProjectCard project={project} />
     </ScrollReveal>
   </div>
 );
@@ -93,6 +93,7 @@ const Projects = () => {
           <Heading
             variant="gradient"
             text="Featured Engineering Projects"
+            as="h2"
             className="text-3xl! sm:text-5xl!"
           />
           <p className="text-xs sm:text-sm text-muted-foreground/80 max-w-lg">

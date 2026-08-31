@@ -12,10 +12,9 @@ import {
   IconGitBranch,
   IconBrandGithub,
 } from "@tabler/icons-react";
-import { HeatmapGrid } from "@/components/Heatmap";
-import { ViewOnMap } from "@/components/common/ViewOnMap";
+import { LazyHeatmap, LazyViewOnMap } from "@/components/lazy";
 import { NumberSlider } from "@/components/common/NumberSlider";
-import { downloadResume } from "@/lib/download";
+import { downloadResume } from "@/utils/download";
 import { useState, useEffect } from "react";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 
@@ -151,7 +150,8 @@ export default function About() {
               Resume
             </button>
           )}
-          <ViewOnMap />
+
+          <LazyViewOnMap />
 
           {/* Live Clock */}
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -187,7 +187,7 @@ export default function About() {
                 <IconBrandGithub className="h-4.5 w-4.5" strokeWidth={1.5} />
               </span>
               <div>
-                <h4 className="text-base font-semibold">GitHub Rhythm</h4>
+                <h3 className="text-base font-semibold">GitHub Rhythm</h3>
                 <p className="text-xs text-muted-foreground">
                   Commits, open-source PRs, and build cadence
                 </p>
@@ -206,7 +206,7 @@ export default function About() {
             />
           </div>
           <div className="overflow-x-auto px-5 py-5">
-            <HeatmapGrid
+            <LazyHeatmap
               key={heatmapWeeks}
               weeks={heatmapWeeks}
               githubUsername={stats?.username || personal.githubUsername}

@@ -1,19 +1,14 @@
-import { defineDocs } from "fumadocs-mdx/macro";
+import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
 import { loader } from "fumadocs-core/source";
-
-const writingDocs = defineDocs({
-  dir: "content/writings",
-});
-
-const projectDocs = defineDocs({
-  dir: "content/projects",
-});
+import { writings, writingsMeta } from "@/.source/server";
+import { projects, projectsMeta } from "@/.source/server";
 
 export const writingSource = loader({
   baseUrl: "/writing",
-  source: writingDocs.toFumadocsSource(),
+  source: toFumadocsSource(writings, writingsMeta),
 });
+
 export const projectSource = loader({
   baseUrl: "/projects",
-  source: projectDocs.toFumadocsSource(),
+  source: toFumadocsSource(projects, projectsMeta),
 });

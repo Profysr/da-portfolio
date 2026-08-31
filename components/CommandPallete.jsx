@@ -89,10 +89,41 @@ function PaletteGroup({ heading, items, filteredItems, flatItems, activeIndex, s
 }
 
 /* ------------------------------------------------------------------ */
+/*  CommandPaletteButton — trigger that lives in the TopBar           */
+/* ------------------------------------------------------------------ */
+
+export function CommandPaletteButton() {
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPod|iPad/i.test(navigator.userAgent));
+  }, []);
+
+  const open = () => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT));
+
+  return (
+    <button
+      type="button"
+      onClick={open}
+      aria-label="Open command palette"
+      className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/40 hover:bg-background/70 hover:border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <IconSearch className="h-3.5 w-3.5" />
+      <span className="hidden sm:inline">Search</span>
+      <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+        <span className="text-[11px] leading-none">{isMac ? "⌘" : "Ctrl"}</span>
+        K
+      </kbd>
+    </button>
+  );
+}
+
+
+/* ------------------------------------------------------------------ */
 /*  Main CommandPalette Component                                      */
 /* ------------------------------------------------------------------ */
 
-export function CommandPalette() {
+function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -282,32 +313,4 @@ export function CommandPalette() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  CommandPaletteButton — trigger that lives in the TopBar           */
-/* ------------------------------------------------------------------ */
-
-export function CommandPaletteButton() {
-  const [isMac, setIsMac] = useState(false);
-
-  useEffect(() => {
-    setIsMac(/Mac|iPhone|iPod|iPad/i.test(navigator.userAgent));
-  }, []);
-
-  const open = () => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT));
-
-  return (
-    <button
-      type="button"
-      onClick={open}
-      aria-label="Open command palette"
-      className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-background/40 hover:bg-background/70 hover:border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-    >
-      <IconSearch className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">Search</span>
-      <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-        <span className="text-[11px] leading-none">{isMac ? "⌘" : "Ctrl"}</span>
-        K
-      </kbd>
-    </button>
-  );
-}
+export default CommandPalette;

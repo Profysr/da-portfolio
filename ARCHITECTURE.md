@@ -138,15 +138,15 @@ Special tokens:
 │   │                           (ScrollReveal, HorizontalScroll, GSAPScrollRail, tracing-beam,
 │   │                            ScrollRail, MagneticButton, dock, shimmer-button, etc.)
 │   ├── common/                 custom primitives: Tabs, Markdown, OptimizedImage, Skeleton,
-│   │                           CodeBlock, ViewOnMap, NumberSlider, ContentCarousel, lazy, ExtendedLink
+│   │                           CodeBlock, ViewOnMap, NumberSlider, ContentCarousel, ExtendedLink
+│   │                           (lazy.jsx → LEGACY, replaced by components/lazy/index.jsx in P22)
 │   ├── common/markdown-styles.js   Shared style engine: `markdownScales.doc` + `markdownScales.chat` + `createMarkdownElements(scale)` — single source of truth for both reading pages and AI chat bubbles
-│   ├── chatbot/                Chatbot, Message, QuickActions, ChatInputForm, AutoResizeTextArea
-│   ├── lazy/                   next/dynamic registry (index.jsx) + Skeleton.jsx
+│   ├── lazy/                   next/dynamic registry (index.jsx) + SkeletonShapes — **P22 CREATED**
+│   ├── chatbot/                AIAssistant (LIVE, P22 dynamic) + QuickActions + NEW: Chatbot, Message, ChatInputForm, AutoResizeTextArea (P17/18 planned)
+│   ├── ai-elements/            LEGACY chat components (conversation, message, prompt-input, shimmer, sources, suggestion, reasoning, attachments) — used by AIAssistant only
 │   ├── docs/                   reading-experience layer: TableOfContents, DocsTopBar, SimilarContent,
 │   │                           ZoomImage, Callout, mdx-custom-components, DocsComponents (UNUSED)
 │   ├── layout/                 TopBar, BottomDock, Footer, HomeLayout, ReadingLayout, Section, Layout, Logo
-│   ├── analytics/              WebVitals, NavLink
-│   ├── watermelon/             ComposeEmail, JournalNavigation (Tabs/ViewOnMap/NumberSlider moved to common/)
 │   └── *.jsx                   feature components (FavoriteStack, TechPill, AvatarStatus, Heatmap,
 │                               StatCard, ContactCard, CommandPallete, MasonryGrid,
 │                               StackedCards, Timeline))
@@ -172,6 +172,18 @@ Special tokens:
 | INP <200ms | No scroll listeners; Motion values not useState for continuous input; heavy work in islands |
 | Dep weight | Drop `ai` SDK (−70KB) → custom chatbot; optimizePackageImports for icon libraries |
 | Caching | Edge API routes; immutable static asset headers; ISR revalidation endpoint |
+
+### 🎨 PREMIUM LOADING STATE STRATEGY (Phase 22)
+
+**Philosophy:** Loading states are not "fallbacks" — they are **designed states** that mirror the final component's visual identity. Every dynamic import gets a shape-matched skeleton that transitions invisibly.
+
+| Layer | Implementation |
+|-------|---------------|
+| **Registry** | `components/lazy/index.jsx` — 11 dynamic components with per-component `ssr` control |
+| **Shapes** | `components/common/Skeleton.jsx` exports `SkeletonShapes` — 7 component-specific skeletons (card, techCard, chatDrawer, commandPalette, heatmap, mapModal, section) |
+| **Choreography** | Each component defines its entry animation; skeleton holds → cross-fade 200ms `ease-out` (respects `prefers-reduced-motion`) |
+| **Global** | `app/loading.jsx` renders full-page section-aware skeleton mirroring home page structure (Hero → About → TechStack → Experience → Projects → Credentials/Writings/FAQ) |
+| **Zero CLS** | Skeletons use exact final dimensions (aspect-ratio, min-height, grid tracks) — no layout shift on hydration |
 
 ---
 
@@ -213,7 +225,7 @@ Special tokens:
 | **Prompt** | Two-tier: active page context + global RAG context; last 6 messages for multi-turn |
 | **Streaming** | Direct `createTextStreamResponse` + `toTextStream`; sources via `X-Sources` header |
 | **Client** | Custom fetch + ReadableStream reader (no `useChat`); canned fallback on any error |
-| **Frontend** | Chatbot.jsx · ChatInputForm (Zod validation · char counter · rate-limit display · 1000-char max) |
+| **Frontend** | AIAssistant.tsx (live, ai-elements) → Chatbot.jsx (P17/18 swap) · ChatInputForm (Zod validation · char counter · rate-limit display · 1000-char max) |
 | **Dependencies** | `groq-sdk` or direct `fetch` · `@ai-sdk/google` (library) · `@upstash/vector` · `@upstash/redis` · `zod` |
 
 ### Free-tier → Premium Path

@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/tooltip";
 import { nav, socials, personal, footer } from "@/data/idx";
 import { Heading } from "@/components/ui/Heading";
-import { downloadResume } from "@/lib/download";
-import { ExtendedLink } from "@/components/common/ExtendedLink";
+import { downloadResume } from "@/utils/download";
+import { NavLink } from "@/components/common/NavLink";
+import { AnimatedShinyText } from "../ui/animated-shiny-text";
+import { GlowEffect } from "../common/top-glow";
 // import { ViewOnMap } from "@/components/watermelon/ViewOnMap";
 
 /* ─────────────────────────────────────────────────────────────
@@ -26,14 +28,14 @@ import { ExtendedLink } from "@/components/common/ExtendedLink";
 const FooterActions = () => (
   <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
     {/* Main Contact CTA */}
-    <ExtendedLink
+    <NavLink
       href={personal.email ? `mailto:${personal.email}` : "#"}
       newTab={false}
       className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-semibold text-xs sm:text-sm transition-transform active:scale-95"
     >
       <span>{footer?.ctaLabel || "Let's Talk"}</span>
       <IconArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-    </ExtendedLink>
+    </NavLink>
 
     {/* Resume Download */}
     {(personal.resumeUrl || footer?.resumePath) && (
@@ -61,21 +63,21 @@ const FooterNavStrip = () => {
   };
 
   return (
-    <div className="w-full rounded-md bg-surface-muted/60 border border-border py-3 px-4 sm:px-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+    <div className="w-full rounded-md bg-background border border-border py-3 px-4 sm:px-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
       {/* Left: Quick Nav Links */}
       <nav
         className="flex items-center gap-1 flex-wrap justify-center"
         aria-label="Footer Navigation"
       >
         {nav.map((item) => (
-          <ExtendedLink
+          <NavLink
             key={item.id}
             href={`#${item.id}`}
             newTab={false}
             className="px-2.5 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-surface transition-colors font-medium"
           >
             {item.label}
-          </ExtendedLink>
+          </NavLink>
         ))}
       </nav>
 
@@ -85,13 +87,13 @@ const FooterNavStrip = () => {
           {socials.map(({ platform, icon: Icon, label, url }) => (
             <Tooltip key={platform}>
               <TooltipTrigger asChild>
-                <ExtendedLink
+                <NavLink
                   href={url}
                   aria-label={label}
-                  className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+                  className="p-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
                 >
                   <Icon size={16} stroke={1.8} />
-                </ExtendedLink>
+                </NavLink>
               </TooltipTrigger>
               <TooltipContent side="top" className="text-xs">
                 {label}
@@ -109,7 +111,7 @@ const FooterNavStrip = () => {
               type="button"
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="p-1.5 rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors active:scale-95"
+              className="p-3 rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors active:scale-95"
             >
               <IconArrowUp size={16} stroke={1.8} />
             </button>
@@ -134,12 +136,12 @@ const BottomMetadata = () => (
     </p>
 
     {/* Center: Powered By / Built By Attribution */}
-    <p className="text-[11px] text-muted-foreground/80">
+    <p className="text-xs text-muted-foreground/80">
       Built with <span className="text-foreground font-bold">Magic UI</span>
     </p>
 
     {/* Right: Operational Status */}
-    <div className="flex items-center gap-2 text-[11px]">
+    <div className="flex items-center gap-2 text-xs">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
       <span>Systems Operational ({personal.timezone || "UTC"})</span>
     </div>
@@ -153,12 +155,18 @@ export const Footer = () => {
   return (
     <TooltipProvider delayDuration={0}>
       <Section noFade>
-        <footer className="w-full font-sans space-y-4">
+        {/* <GlowEffect position="bottom" height="400px" /> */}
+        <footer className="relative w-full font-sans space-y-4">
           {/* Unified Primary Card */}
-          <div className="rounded-lg bg-surface border border-border p-6 sm:p-10 flex flex-col items-center text-center gap-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-primary/10 text-primary text-xs font-medium">
-              <IconSparkles className="h-3.5 w-3.5" />
-              <span>{footer?.badge || "Get in Touch"}</span>
+          <div className="rounded-lg bg-surface-muted backdrop-blur-md border border-border p-6 sm:p-10 flex flex-col items-center text-center gap-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/25 bg-surface-muted text-xs font-medium">
+              <IconSparkles className="h-3.5 w-3.5 text-primary" />
+              <AnimatedShinyText
+                shimmerWidth={120}
+                className="text-xs font-medium text-muted-foreground/50"
+              >
+                {footer?.badge || "Get in Touch"}
+              </AnimatedShinyText>
             </div>
 
             <div className="space-y-2 max-w-xl">

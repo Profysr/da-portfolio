@@ -52,6 +52,8 @@ export const TECH_ICON_MAP = {
     img: "/tools/djangorest.svg",
     category: "Backend",
   },
+  FastAPI: { img: "/tools/fastapi.svg", category: "Backend" },
+  SQLAlchemy: { img: "/tools/sqlalchemy.svg", category: "Backend" },
   "Node.js": { img: "/tools/nodejs.svg", category: "Runtime" },
   "Express.js": {
     img: "/tools/express.svg",

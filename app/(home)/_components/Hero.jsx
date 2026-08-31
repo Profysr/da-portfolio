@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -10,10 +10,10 @@ import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import { personal, socials } from "@/data/idx.js";
 import { cn } from "@/lib/utils";
 import { AvatarStatus } from "@/components/AvatarStatus";
-
+import { HeroConstellation } from "@/components/ui/hero-constellation";
 import Heading from "@/components/ui/Heading";
 import { TypingAnimation } from "@/components/ui/typing-animation";
-import { MagneticLink } from "@/components/ui/MagneticButton";
+import { ShimmerLink } from "@/components/ui/shimmer-button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Section } from "@/components/layout/Section";
 
@@ -46,16 +46,7 @@ function Headline() {
  *  Actions — socials + single primary CTA (one cluster)
  * ============================================================ */
 function HeroActions() {
-  const ctaRef = useRef(null);
   const [wiggleIcon, setWiggleIcon] = useState(null);
-
-  const handleCtaMove = (e) => {
-    const el = ctaRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
-  };
 
   const handleIconClick = (name) => {
     setWiggleIcon(name.toLowerCase());
@@ -77,7 +68,7 @@ function HeroActions() {
                 rel="noopener noreferrer"
                 aria-label={aria || label}
                 onClick={() => handleIconClick(label)}
-                className="p-2 rounded-md hover:bg-foreground/5 transition-colors"
+                className="p-3 rounded-md hover:bg-foreground/5 transition-colors"
               >
                 <Icon
                   className={cn(
@@ -97,18 +88,14 @@ function HeroActions() {
 
       <span className="hidden sm:block h-6 w-0.5 bg-border" aria-hidden />
 
-      <MagneticLink
-        ref={ctaRef}
-        onMouseMove={handleCtaMove}
+      <ShimmerLink
         href="#projects"
-        variant="premium"
-        className="inline-flex items-center justify-center"
-        icon={<IconArrowRight />}
+        icon={<IconArrowRight size={18} />}
         iconPosition="right"
-        magneticStrength={0.2}
+        className="inline-flex items-center justify-center"
       >
         <span>View my work</span>
-      </MagneticLink>
+      </ShimmerLink>
     </div>
   );
 }
@@ -118,7 +105,8 @@ function HeroActions() {
  * ============================================================ */
 export default function Hero() {
   return (
-    <Section id="hero">
+    <Section id="hero" className="relative">
+      <HeroConstellation desktopDots={300} mobileDots={75} />
       <div className="flex w-full flex-col items-center justify-center gap-7 text-center pt-18 md:pt-32">
         <ScrollReveal variant="fade" duration={0.6}>
           <AvatarStatus />
@@ -154,9 +142,9 @@ export default function Hero() {
               .getElementById("about")
               ?.scrollIntoView({ behavior: "smooth" })
           }
-          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground/50 hover:text-muted-foreground transition-colors group"
+          className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors group"
         >
-          <span className="text-[10px] font-mono tracking-[0.2em] uppercase opacity-70 group-hover:opacity-100 transition-opacity">
+          <span className="text-[10px] font-mono tracking-[0.2em] uppercase group-hover:text-foreground transition-colors">
             Scroll
           </span>
           <IconChevronDown size={24} strokeWidth={2.5} />

@@ -1,39 +1,7 @@
 "use client";
 
+import { QUICK_ACTIONS } from "@/data/botContent";
 import { cn } from "@/lib/utils";
-import {
-  IconCode,
-  IconBriefcase,
-  IconStack,
-  IconMail,
-} from "@tabler/icons-react";
-
-const QUICK_ACTIONS = [
-  {
-    id: "projects",
-    label: "Projects",
-    icon: IconCode,
-    query: "What projects have you built?",
-  },
-  {
-    id: "experience",
-    label: "Experience",
-    icon: IconBriefcase,
-    query: "Tell me about your work experience",
-  },
-  {
-    id: "stack",
-    label: "Tech Stack",
-    icon: IconStack,
-    query: "What's your tech stack?",
-  },
-  {
-    id: "contact",
-    label: "Contact",
-    icon: IconMail,
-    query: "How can I contact you?",
-  },
-];
 
 export function QuickActions({ onActionClick, disabled }) {
   return (

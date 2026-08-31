@@ -1,0 +1,618 @@
+---
+title: "Migrating to fumadocs-mdx: Lessons, Mistakes, and a Cleaner Content Pipeline"
+description: "How we replaced a custom MDX rendering system with fumadocs-mdx and fumadocs-ui — the mistakes we made, the gotchas we hit, and the patterns that actually work."
+date: "2026-08-30"
+tags: ["Next.js", "fumadocs", "MDX", "Content Engineering"]
+readTime: "14 min"
+---
+
+If you're building a content-driven Next.js site — a portfolio, docs site, or blog — and you've considered fumadocs-mdx, this post covers what the docs don't tell you. We migrated a fully custom MDX rendering pipeline to fumadocs-mdx and fumadocs-ui, and along the way we hit every category of mistake: wrong imports, missing schema fields, broken TOC, invisible similar content, and broken images.
+
+Here's exactly what happened and how to avoid it.
+
+---
+
+## The before state
+
+Our setup before migration:
+
+- Next.js 16 with App Router
+- `@next/mdx` + `@mdx-js/react` for basic MDX rendering
+- Hand-rolled `ReadingLayout`, `FrontmatterHeader`, `TocNav` components
+- Custom hooks for active heading tracking (`useActiveHeading`, `useIsMobile`)
+- Content stored in `content/writings/*.mdx` and `content/projects/*.mdx`
+
+It worked, but everything was manual. Frontmatter fields were typed loosely, there was no standard TOC integration, and every content type needed its own layout wrapper.
+
+---
+
+## Why fumadocs-mdx
+
+fumadocs-mdx gives you:
+
+1. **Typed frontmatter** via Zod schemas — no more guessing if `tags` exists
+2. **Built-in TOC extraction** — headings parsed from MDX, no custom rehype plugin
+3. **Collection-based routing** — `generateParams()` and `getPage()` out of the box
+4. **fumadocs-ui components** — TOC primitives, code blocks, callouts that just work
+
+The promise is strong. The reality required some work.
+
+---
+
+## Setting up fumadocs-mdx from scratch
+
+If you're starting fresh or migrating an existing Next.js project, here's the complete setup path.
+
+### Step 1: Install packages
+
+```bash
+npm install fumadocs-mdx fumadocs-core fumadocs-ui
+```
+
+- `fumadocs-mdx` — the MDX source loader and collection system
+- `fumadocs-core` — low-level primitives (TOC, source loader, schema)
+- `fumadocs-ui` — ready-made UI components (optional, but saves time)
+
+### Step 2: Create `source.config.ts` at project root
+
+This file tells fumadocs-mdx where your content lives and what frontmatter fields exist.
+
+```ts
+// source.config.ts
+import { defineDocs } from "fumadocs-mdx/config";
+import { pageSchema } from "fumadocs-core/source/schema";
+import { z } from "zod";
+
+export const { docs: writings, meta: writingsMeta } = defineDocs({
+  dir: "content/writings",
+  docs: {
+    schema: pageSchema.extend({
+      date: z.string().optional(),
+      readTime: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      thumbnail: z.string().optional(),
+    }),
+  },
+});
+```
+
+Every frontmatter field your MDX files use **must** be declared here. If you add `tags: ["foo"]` in your MDX but forget to extend the schema, it gets silently dropped.
+
+### Step 3: Create your content directory
+
+```
+content/
+  writings/
+    my-first-post.mdx
+  projects/
+    my-project.mdx
+```
+
+A minimal MDX file:
+
+```mdx
+---
+title: "My First Post"
+description: "A short description."
+date: "2026-08-30"
+tags: ["Next.js", "Tutorial"]
+---
+
+## Introduction
+
+Your content starts here.
+```
+
+### Step 4: Create the source loader
+
+```ts
+// lib/source.ts
+import { loader } from "fumadocs-core/source";
+import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
+import { writings } from "@/.source/server";
+
+export const writingSource = loader({
+  source: toFumadocsSource(writings),
+  baseUrl: "/writing",
+});
+```
+
+**Important:** The import path is `fumadocs-mdx/runtime/server`, not `fumadocs-mdx`. This is not obvious from the docs.
+
+The `@/.source/server` import works because fumadocs-mdx generates files into `.source/` at build time. You may need to add `.source/` to your `.gitignore`.
+
+### Step 5: Create `mdx-components.tsx` at project root
+
+```tsx
+// mdx-components.tsx
+import { getMDXComponents } from "@/mdx-components";
+
+export function useMDXComponents(components) {
+  return getMDXComponents(components);
+}
+```
+
+Or the simpler version if you're using fumadocs defaults:
+
+```tsx
+// mdx-components.tsx
+import { defaultMdxComponents } from "fumadocs-ui/mdx";
+
+export function useMDXComponents(components) {
+  return {
+    ...defaultMdxComponents,
+    ...components,
+  };
+}
+```
+
+### Step 6: Wire up the route
+
+```jsx
+// app/writing/[...slug]/page.jsx
+import { writingSource } from "@/lib/source";
+import { notFound } from "next/navigation";
+import { getMDXComponents } from "@/mdx-components";
+
+export async function generateStaticParams() {
+  return writingSource.generateParams();
+}
+
+export default async function WritingPage({ params }) {
+  const { slug } = await params;
+  const slugParam = Array.isArray(slug) ? slug : [slug];
+  const page = writingSource.getPage(slugParam);
+
+  if (!page) notFound();
+
+  const MDXContent = page.data.body;
+  const toc = page.data.toc || [];
+
+  return (
+    <article>
+      <h1>{page.data.title}</h1>
+      <MDXContent components={getMDXComponents()} />
+    </article>
+  );
+}
+```
+
+The key pieces:
+- `writingSource.generateParams()` — generates static paths at build time
+- `writingSource.getPage(slugParam)` — retrieves the page by slug
+- `page.data.body` — the rendered MDX component
+- `page.data.toc` — extracted headings for the table of contents
+
+### Step 7: Verify the build
+
+```bash
+npm run build
+```
+
+If fumadocs-mdx can't find your content or the schema is wrong, the build will fail with a clear error. If it succeeds, you'll see your pages in the route output.
+
+### Step 8: Add fumadocs-ui components (optional)
+
+fumadocs-ui provides TOC, code blocks, callouts, and other components. To use them:
+
+```bash
+npm install fumadocs-ui
+```
+
+Then import from `fumadocs-ui/toc`, `fumadocs-ui/code`, etc. in your layout components. We used `fumadocs-core/toc` primitives directly for more control.
+
+---
+
+## That's the baseline
+
+With these 8 steps, you have a working fumadocs-mdx setup. The rest of this post covers the mistakes we hit after the basics were working.
+
+## Mistake 1: Forgetting to extend the schema
+
+The default `pageSchema` from fumadocs-core only includes `title`, `description`, `icon`, and `full`. Any custom frontmatter fields you add — `date`, `tags`, `readTime`, `thumbnail`, `tech`, `strategies` — get **silently stripped** by Zod validation.
+
+We spent 20 minutes wondering why `page.data.tags` was always `undefined` before realizing the schema wasn't extended.
+
+The fix — `source.config.ts`:
+
+```ts
+import { defineDocs } from "fumadocs-mdx/config";
+import { pageSchema } from "fumadocs-core/source/schema";
+import { z } from "zod";
+
+export const { docs: writings, meta: writingsMeta } = defineDocs({
+  dir: "content/writings",
+  docs: {
+    schema: pageSchema.extend({
+      date: z.string().optional(),
+      readTime: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      thumbnail: z.string().optional(),
+    }),
+  },
+});
+```
+
+Every field you use in frontmatter **must** be declared here, or it vanishes.
+
+---
+
+## Mistake 2: Wrong import for `toFumadocsSource`
+
+The fumadocs docs show `source.ts` using `toFumadocsSource` from `fumadocs-mdx`, but the actual import path is:
+
+```ts
+import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
+```
+
+Not `fumadocs-mdx`. Not `fumadocs-mdx/server`. The `runtime/server` subpath is the one that works. This isn't prominently documented, and the error you get when you use the wrong path is unhelpful.
+
+---
+
+## Mistake 3: TOC `newItems is not iterable`
+
+When we first wired up fumadocs-core's TOC primitives (`AnchorProvider`, `ScrollProvider`, `TOCItem`), the page crashed with:
+
+```
+TypeError: newItems is not iterable
+```
+
+The cause: we weren't passing `toc` and `containerRef` to the providers. The `AnchorProvider` needs the heading items, and `ScrollProvider` needs a ref to the scrollable container. Without both, the internal state machine breaks.
+
+The working pattern:
+
+```jsx
+<Base.AnchorProvider toc={items}>
+  <Base.ScrollProvider containerRef={scrollRef}>
+    <main ref={scrollRef}>...</main>
+  </Base.ScrollProvider>
+</Base.AnchorProvider>
+```
+
+---
+
+## Mistake 4: Similar content never rendering
+
+Our `getSimilarPosts` function returned an empty array for every post. The reason: with only 7-8 posts and unique tags per post, no two posts shared any tags. The function filtered out everything with `sharedCount === 0`.
+
+The fix: add a fallback to show recent posts when no tag matches exist.
+
+```js
+// If we have tag matches, return them
+if (candidates.length > 0) {
+  return candidates.sort(...).slice(0, limit);
+}
+
+// Fallback: show most recent posts
+return allPages
+  .filter((p) => p.slugs.join("/") !== currentSlugStr)
+  .map((p) => ({ slug: p.slugs.join("/"), title: p.data.title, ... }))
+  .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+  .slice(0, limit);
+```
+
+With small content sets, always have a fallback.
+
+---
+
+## Mistake 5: Next.js Image + SVGs = broken icons
+
+Our `TechPill` component used `next/image` with `fill` to render technology icons from `/public/tools/*.svg`. On the surface, this should work — the files exist, the paths are correct.
+
+But Next.js `<Image>` tries to optimize SVGs through its image optimization pipeline, and SVGs with complex structures (gradients, clipPaths, transforms) often fail silently. The result: broken image icons in the browser.
+
+The fix: use a plain `<img>` for SVG icons. They don't benefit from optimization anyway.
+
+```jsx
+// Before (broken)
+<Image src={config.img} alt={name} fill sizes="32px" className="object-contain" />
+
+// After (works)
+<img src={config.img} alt={name} loading="lazy" className={iconSize} />
+```
+
+---
+
+## Mistake 6: Missing entries in `TECH_ICON_MAP`
+
+FastAPI and SQLAlchemy were used in project tech stacks, but had no entries in `TECH_ICON_MAP`. When `getTechIcon("FastAPI")` returned `undefined`, the TechPill fell back to text-only rendering — which is fine, but the icons should have been there.
+
+The lesson: maintain your icon registry as a single source of truth. When you add a new tech to any project's frontmatter, add the icon entry at the same time.
+
+---
+
+## How fumadocs actually works under the hood
+
+Before we show the final architecture, it helps to understand what fumadocs-mdx is actually doing behind the scenes. If you've ever wondered how a `.mdx` file becomes a rendered React page with a table of contents, typed frontmatter, and custom components — this section breaks it down.
+
+### The rendering pipeline
+
+Here's the full journey from an MDX file to pixels on screen:
+
+```
+  YOUR MDX FILE                    BUILD TIME                        RUNTIME (Browser)
+  ────────────                    ──────────                        ─────────────────
+
+  ┌─────────────────┐
+  │ content/        │
+  │  writings/      │
+  │   my-post.mdx   │
+  │  ─────────────  │
+  │  ---            │
+  │  title: "..."   │───────┐
+  │  tags: [...]    │       │
+  │  ---            │       │
+  │  ## Heading     │       │
+  │  Body text...   │       │
+  └─────────────────┘       │
+                            ▼
+                ┌───────────────────────┐
+                │  source.config.ts     │
+                │                       │
+                │  defineDocs({        │
+                │    dir: "content/    │
+                │      writings",      │
+                │    docs: {           │
+                │      schema:         │
+                │        pageSchema    │
+                │        .extend({     │
+                │          tags: [...] │
+                │          date: ...   │
+                │        })            │
+                │    }                 │
+                │  })                  │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  npx fumadocs-mdx     │
+                │  (build plugin)       │
+                │                       │
+                │  1. Reads source.     │
+                │     config.ts         │
+                │  2. Finds all .mdx    │
+                │     files in dirs     │
+                │  3. Compiles each     │
+                │     MDX → React       │
+                │  4. Validates front-  │
+                │     matter vs schema  │
+                │  5. Extracts TOC      │
+                │     (h1-h6 headings)  │
+                │  6. Generates typed   │
+                │     entry files       │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  .source/             │
+                │  (generated, gitignore)│
+                │                       │
+                │  writings.mjs         │
+                │  ├── body: React      │
+                │  │   Component        │
+                │  │   (compiled MDX)   │
+                │  ├── toc: [{          │
+                │  │   title, url,      │
+                │  │   depth }]         │
+                │  ├── frontmatter: {   │
+                │  │   title, tags,     │
+                │  │   date, ... }      │
+                │  └── slugs: ["my-    │
+                │       post"]          │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  lib/source.ts        │
+                │  (source loader)      │
+                │                       │
+                │  loader({            │
+                │    source:           │
+                │      toFumadocsSource│
+                │      (writings),     │
+                │    baseUrl: "/writing"│
+                │  })                  │
+                │                       │
+                │  Adds: getPage()     │
+                │  generateParams()    │
+                │  getPages()          │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  app/writing/         │
+                │  [...slug]/page.jsx   │
+                │                       │
+                │  page = source        │
+                │    .getPage(slug)     │
+                │                       │
+                │  <MDX = page.data     │
+                │    .body />           │
+                │  toc = page.data.toc  │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  <MDX components={    │
+                │    getMDXComponents() │
+                │  } />                 │
+                │                       │
+                │  Your custom h1, h2,  │
+                │  pre, code, img, a... │
+                │  override defaults    │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │  React Server Component│
+                │  renders to HTML      │
+                │  → Sent to browser    │
+                │  → Interactivity      │
+                │    hydrated client-   │
+                │    side (TOC scroll,  │
+                │    copy button, etc.) │
+                └───────────────────────┘
+```
+
+### The three-phase model
+
+Think of it as three distinct phases:
+
+**Phase 1: Configuration** — You tell fumadocs *what* your content looks like. `source.config.ts` defines collections (writings, projects) and their Zod schemas (what frontmatter fields exist and their types). This is the single source of truth.
+
+**Phase 2: Compilation** — At build time, `npx fumadocs-mdx` (or the Next.js plugin) reads your config, finds every `.mdx` file, and runs two processes:
+
+1. **MDX compilation** — The `@mdx-js/mdx` compiler transforms your MDX (markdown + JSX) into a JavaScript module that exports a React component. Headings get anchor IDs, code blocks get language tags, and images get normalized. The compiled output goes into `.source/` as a `.mjs` file.
+
+2. **Schema validation** — Your frontmatter is validated against the Zod schema. Fields you declared in `pageSchema.extend()` are kept; undeclared fields are silently stripped. TOC headings are extracted from the compiled output (h1–h6 with their depth levels).
+
+The `.source/` directory is the bridge — it contains typed entry files that your code imports. It's auto-generated and should be in `.gitignore`.
+
+**Phase 3: Rendering** — At runtime, your route page calls `source.getPage(slug)` which returns:
+
+- `page.data.body` — A **React component** (the compiled MDX). This is not a string or HTML — it's a function that React renders like any other component.
+- `page.data.toc` — An array of heading objects `{ title, url, depth }` for your table of contents.
+- `page.data.title`, `page.data.tags`, etc. — Your validated frontmatter fields.
+
+You then render it like any React component:
+
+```jsx
+const MDX = page.data.body;
+return <MDX components={getMDXComponents()} />;
+```
+
+The `components` prop is how you override default rendering. Want `<h2>` to have an anchor link? Pass a custom `h2` component. Want code blocks to have a copy button? Override `pre`. This is standard MDX behavior — fumadocs just makes it convenient.
+
+### Why this matters
+
+Understanding this pipeline explains several gotchas from earlier in this post:
+
+- **Schema fields disappear** — Because Phase 2 validates and strips undeclared fields. If `tags` isn't in your schema, it never makes it to Phase 3.
+- **`toFumadocsSource` import path matters** — The compiled output format is specific to the runtime server module. Using the wrong import means the loader can't read your `.source/` files.
+- **TOC crashes without `containerRef`** — Phase 3's TOC primitives need to know *which* scrollable container to observe. Without the ref, the IntersectionObserver has no target.
+- **`page.data.body` is a React component, not HTML** — You can't do `dangerouslySetInnerHTML` on it. You render it with `<MDX />` and let React handle the DOM.
+
+The magic of fumadocs is that it turns a static analysis problem (reading files, parsing frontmatter, extracting headings) into a standard React rendering problem. Once you understand that `page.data.body` is just a component, everything else is configuration.
+
+---
+
+## The final architecture
+
+Here's how everything fits together now:
+
+### Content layer
+
+```
+content/
+  writings/*.mdx       # Blog posts with frontmatter
+  projects/*.mdx       # Project docs with frontmatter
+```
+
+### Schema definition (`source.config.ts`)
+
+Defines Zod schemas for each content type. Custom fields are declared via `pageSchema.extend()`. This is the single source of truth for what frontmatter fields exist.
+
+### Source loader (`lib/source.ts`)
+
+```ts
+import { loader } from "fumadocs-core/source";
+import { writings, projects } from "@/.source/server";
+
+export const writingSource = loader({
+  source: toFumadocsSource(writings),
+  baseUrl: "/writing",
+});
+
+export const projectSource = loader({
+  source: toFumadocsSource(projects),
+  baseUrl: "/projects",
+});
+```
+
+### Route pages
+
+Each content type has a dynamic route:
+
+- `app/writing/[...slug]/page.jsx` — uses `writingSource.getPage()` and `writingSource.generateParams()`
+- `app/projects/[...slug]/page.jsx` — same pattern with `projectSource`
+
+Both pass `getMDXComponents()` to the MDX body for standard component rendering.
+
+### Layout system
+
+- `ReadingLayout` — shared layout with FrontmatterHeader, TOC sidebar, SimilarContent
+- `ProjectContent` — project-specific wrapper (strategies, tech stack, changelog)
+- `WritingContent` — thin wrapper that passes meta to ReadingLayout
+
+### TOC
+
+fumadocs-core primitives handle active heading tracking:
+
+- `AnchorProvider` — manages heading registry
+- `ScrollProvider` — tracks scroll position within a container
+- `TOCItem` — renders individual heading links with `data-active` state
+
+No custom hooks needed.
+
+---
+
+## What we removed
+
+After migration, we deleted:
+
+- `components/docs/TableOfContents.jsx` — replaced by fumadocs-core TOC
+- `hooks/useActiveHeading.js` — handled by `ScrollProvider`
+- `hooks/useIsMobile.js` — no longer needed
+- `components/docs/Callout.jsx` — fumadocs-ui provides this
+- `components/docs/ZoomImage.jsx` — not needed for our content
+
+Fewer components means fewer bugs.
+
+---
+
+## Data consistency
+
+We also cleaned up `data/projects.js` and `data/writings.js` to use consistent structures. Every object now has all fields defined (even if `null`), and we added TypeScript type definitions in `data/types.ts`:
+
+```ts
+export interface Project {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  tech: string[];
+  tags: string[];
+  industry: string | null;
+  access: "Open Source" | "Private" | "Hosted" | null;
+  status: "live" | "in-progress";
+  // ... all fields explicit
+}
+```
+
+This catches missing fields at build time instead of runtime.
+
+---
+
+## Responsive design passes
+
+We made three passes on mobile responsiveness:
+
+1. **FrontmatterHeader** — stacks date/buttons vertically on mobile, smaller text sizes
+2. **ProjectContent** — smaller action buttons, strategies, tech pills, changelog
+3. **Article CSS** — mobile-first typography with tighter margins that expand at `sm` breakpoint
+
+The key pattern: define mobile defaults, then override with `sm:` variants. Don't try to make desktop the default and retrofit mobile.
+
+---
+
+## Key takeaways
+
+1. **Extend the schema first** — before writing any content, declare every frontmatter field in `source.config.ts`
+2. **Use `runtime/server` imports** — `toFumadocsSource` lives in `fumadocs-mdx/runtime/server`, not the top-level export
+3. **Always pass `toc` and `containerRef`** — fumadocs-core TOC primitives crash without them
+4. **Fallback for empty results** — with small content sets, similar-content algorithms need a recent-posts fallback
+5. **Skip image optimization for SVGs** — use `<img>` instead of `next/image` for icon files
+6. **Maintain a single icon registry** — keep `TECH_ICON_MAP` in sync with all content that references tech names
+7. **Type your data** — TypeScript interfaces for static data catch missing fields before they reach production
+
+The migration took about a day. The result: fewer custom components, typed frontmatter, built-in TOC, and a content pipeline that scales without hand-rolling layout logic for every new content type.
