@@ -54,7 +54,7 @@ Libraries involved in blog processing and UI
   - Tailwind CSS utility classes (animations & layout)
   - TypeScript + React
 - (Repository-wide/likely) other packages used by blog pages:
-  - framer-motion (used in repository for animations elsewhere)
+  - motion (used in repository for animations elsewhere)
   - next-themes (site dark/light theming used with code theme switching)
   - Any custom UI library files in src/components/ui/ (BlurFade, TransitionLink, etc.)
 
