@@ -201,7 +201,7 @@ const Experience = () => (
                 >
                   {exp.company}
                 </a>
-                <div className="text-[10px] sm:text-[11px] text-muted-foreground font-medium leading-relaxed">
+                <div className="text-[10px] sm:text-[11px] text-foreground/75 font-medium leading-relaxed">
                   <span className="inline-block font-mono text-[10px] font-semibold bg-pastel-blue-bg text-pastel-blue-text px-1.5 py-0.5 rounded tracking-wide uppercase mr-1.5 align-middle">
                     {exp.locationType}
                   </span>
