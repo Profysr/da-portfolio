@@ -10,12 +10,12 @@ export const LazyAIAssistant = dynamic(
 );
 
 export const LazyCommandPallete = dynamic(
-  () => import("@/components/CommandPallete").then((m) => ({ default: m.default })),
+  () => import("@/components/CommandPallete"),
   { ssr: false, loading: () => <SkeletonShapes.commandPalette /> }
 );
 
 export const LazyHeatmap = dynamic(
-  () => import("@/components/Heatmap").then((m) => ({ default: m.Heatmap })),
+  () => import("@/components/Heatmap"),
   { ssr: false, loading: () => <SkeletonShapes.heatmap /> }
 );
 
