@@ -21,7 +21,7 @@
 
 | Component | What it does | Used in | Similar to | Score | Disposition |
 |-----------|-------------|---------|------------|-------|-------------|
-| Hero.jsx | Avatar status, typewriter roles, socials, magnetic CTA; LightRays removed P12 | Home | — | 7 | **P12 rebuild done**: LightRays+Particles+Suspense dropped; stack = status → kinetic headline → tagline → socials+CTA on plain solid bg |
+| Hero.jsx | Avatar status, typewriter roles, socials, shimmer CTA; LightRays removed P12 | Home | — | 7 | **P12 rebuild done**: LightRays+Particles+Suspense dropped; stack = status → kinetic headline → tagline → socials+ShimmerLink CTA on plain solid bg |
 | About.jsx | Bio editorial split · DoubleBezel portrait (removed P12d; portrait content now inline/asymmetric) · NumberTicker stats · NumberSlider heatmap range · ViewOnMap | Home | — | 8 | ✅ **P12 DONE**: single-column max-w-3xl; NumberTicker on numeric stats; ViewOnMap and NumberSlider integrated P12bc |
 | TechStack.jsx | GSAP dual-dimensional horizontal scroller · shade-differentiated cards | Home | FavoriteStack (marquee overlap) | 7 | ✅ **P13 DONE**: GSAP pin-scrub engine `components/ui/HorizontalScroll.tsx` · solid shade cards · no FavoriteStack; envItem wrap fix included |
 | Experience.jsx | Work history scroll stories | Home | ScrollRail, GSAPScrollRail | 8 | ✅ **P14 DONE**: Timeline renderer (Rule #14 refactored — motion/react, tokens, scaleY spine, ResizeObserver, reduced-motion static); ScrollRail retired from this section (live in Credentials) |
@@ -37,7 +37,7 @@
 | Component | What it does | Used in | Score | Disposition |
 |-----------|-------------|---------|-------|-------------|
 | HomeLayout.jsx | App shell: TopBar, dock, footer, AmbientBackground retracted P08d | Home route | Layout.jsx | 8 | Replace banned scroll-listener with IO/Motion; plain solid bg confirmed (AmbientBackground DEPRECATED, file kept UNUSED) |
-| TopBar.jsx | Fixed top navigation · theme toggle · NavLink | HomeLayout | FluidIslandNav | 8 | ✅ Integrated: theme switch + NavLink prefetching; Logo.jsx mounted |
+| TopBar.jsx | Fixed top navigation · AnimatedThemeToggler · NavLink | HomeLayout | FluidIslandNav | 8 | ✅ Integrated: AnimatedThemeToggler (replaced ThemeSwitcher) + NavLink prefetching; Logo.jsx mounted |
 | BottomDock.jsx | Bottom macOS-style dock · chatbot trigger | HomeLayout | dock.tsx, MagneticDock.tsx | 9 | ✅ Kept; ChatInputForm wired |
 | Footer.jsx | Site footer | HomeLayout | ContactCard | 9 | Keep; ComposeEmail/ViewOnMap integration candidates |
 | Section.jsx | Section wrapper | All sections | — | 9 | Add overlap/fade-mask variants (seamless system) |
@@ -72,10 +72,11 @@ Files previously misplaced to `components/animations/` in older docs live here. 
 |-----------|-------|-------------|
 | ScrollReveal.tsx | 9 | ✅ **P10/P09 UPGRADED (LIVE)** — unified system with StaggeredReveal + ScrollRevealText; CSS data-visible keyframes; reduced-motion handled; consumer: Hero, About, Projects, Credentials, ContentCarousel, EditorialHeading |
 | StaggeredList.tsx | 5 | Role merged into ScrollReveal (file kept) |
-| MagneticButton.tsx / MagneticDock.tsx | — | MagneticLink/MagneticButton LIVE in Hero, live pattern in TechPill, About; **MagneticDock → UNUSED** (P10 Option B: zero consumers, 12KB, file kept) |
+| MagneticButton.tsx / MagneticDock.tsx | — | **UNUSED** — MagneticLink replaced by ShimmerLink in Hero (P22); MagneticDock UNUSED (P10); zero consumers; files kept |
 | dock.tsx | 9 | ⭐ Dock A/B WINNER — live production dock inside BottomDock (P10 Option B verdict) |
 | GSAPScrollRail.tsx | 6→UNUSED | Zero consumers; superseded by Timeline spine (P14) — file kept |
-| shimmer-button.tsx | 5 | Fold styling into Magnetic variants (file kept) |
+| shimmer-button.tsx | 9 | ✅ **LIVE** — exports ShimmerButton + ShimmerLink (anchor variant); dark/light mode via `var(--color-foreground)`; used in Hero CTA |
+| animated-theme-toggler.tsx | 9 | ✅ **LIVE** — view-transition animated theme toggle with clip-path shapes; replaces ThemeSwitcher in TopBar; uses @tabler/icons-react (IconMoon/IconSun) |
 | animated-shiny-text.tsx | 6 | Max once (badge accent); check live use |
 | CurtainReveal.tsx | 6 | Route-transition candidate — future decision |
 | EditorialHeading.tsx / Heading.tsx | 6 | Two heading systems — consolidate (files kept); EditorialHeading uses ScrollRevealText internally |
@@ -102,6 +103,8 @@ Files previously misplaced to `components/animations/` in older docs live here. 
 |-----------|--------|
 | AmbientBackground.jsx | ⛔ P08 DEPRECATED by user: plain solid backgrounds preferred; simplification pass. Kept for future revisit — grain still awaits noise asset |
 | StackedCards.jsx | **FILESYSTEM NOTE:** lives at `components/StackedCards.jsx` (root, NOT `components/animations/`). P14 CSS-sticky deck + GSAP scrub scale-handoff (0.92/0.55, reversible, reduced-motion-safe). **User-directed: reserved for a FUTURE section (not Experience)** — zero consumers today, file kept |
+| MagneticButton.tsx | MagneticLink replaced by ShimmerLink in Hero (shimmer-button.tsx); zero consumers; file kept |
+| MagneticDock.tsx | UNUSED (P10 Option B: zero consumers, 12KB); file kept |
 | light-rays.tsx | User removing from Hero; superseded by plain-solid directive; file kept |
 | particles.tsx | Replaced by CSS-only approach; superseded by plain-solid directive; file kept |
 | ripple.tsx / pointer.tsx / background-gradient.tsx | Decorative redundancy — verify zero live imports then mark UNUSED permanently |
@@ -109,7 +112,7 @@ Files previously misplaced to `components/animations/` in older docs live here. 
 
 ### shadcn primitives (all kept, token-migrated Phase 3–4)
 
-button · button-group · card · badge · input · input-group · textarea · label · select · checkbox · switch · slider · tooltip · hover-card · collapsible · dropdown-menu · separator · scroll-area · spinner · sonner · drawer · dialog · expandable-list · terminal · breadcrumb · alert · carousel · accordion · theme-switcher
+button · button-group · card · badge · input · input-group · textarea · label · select · checkbox · switch · slider · tooltip · hover-card · collapsible · dropdown-menu · separator · scroll-area · spinner · sonner · drawer · dialog · expandable-list · terminal · breadcrumb · alert · carousel · accordion · theme-switcher (still used in DocsTopBar; TopBar swapped to animated-theme-toggler)
 
 ---
 
@@ -208,7 +211,7 @@ button · button-group · card · badge · input · input-group · textarea · l
 | File | Score | Disposition |
 |------|-------|-------------|
 | layout.tsx | 8 | P6: providers, Analytics, SpeedInsights, WebVitals, dual themeColor (stays .tsx — Next root convention) |
-| globals.css | 9 | Token injection P4, keyframes P9, seamless masks, reveal system, ambient-orb block removed P08d |
+| globals.css | 9 | Token injection P4, keyframes P9, seamless masks, reveal system, ambient-orb block removed P08d; hero glow SVG U-curve added (primary/foreground/destructive paths with Gaussian blur); shimmer-slide + spin-around keyframes via @theme inline |
 | loading.jsx / error.jsx / not-found.jsx | 9 | Polish during relevant passes |
 | sitemap.ts / robots.ts / manifest.ts | 9 | Dynamic MDX slugs |
 | api/github/route.ts | 8 | Cache headers pass |
@@ -226,3 +229,5 @@ button · button-group · card · badge · input · input-group · textarea · l
 | Marquees | FavoriteStack (zero marquee consumers, data source kept) · TechStack shade cards | Page budget ≤1 post-P14 |
 | Chat stacks | AssistantAi (UNUSED, kept) · ai-elements (DELETED 2026-08-26) → chatbot/* + common/Markdown | ✅ chatbot/* LIVE; AssistantAi swap completes at P18 |
 | mdx exports | Root `mdx-components.jsx` (8-line thin wrapper → delegates to docs/mdx-custom-components) · `components/mdx-components.jsx` (244-line dead duplicate, **DELETED 2026-08-28**) · `components/docs/mdx-custom-components.jsx` (live map: 3 overrides — headings, links, images; base elements from shared markdown-styles.js) | ✅ Clean: root wrapper is canonical; dead duplicate removed; shared style engine via markdown-styles.js |
+| CTA buttons | MagneticButton/MagneticLink → ShimmerLink (shimmer-button.tsx) | ✅ RESOLVED: MagneticLink zero consumers; ShimmerLink live in Hero |
+| Theme toggles | ThemeSwitcher → AnimatedThemeToggler (animated-theme-toggler.tsx) | ✅ RESOLVED in TopBar; ThemeSwitcher still live in DocsTopBar |

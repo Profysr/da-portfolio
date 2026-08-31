@@ -88,19 +88,19 @@ export function CarouselCard({ item, index, type = "writing" }) {
         proximity={60}
         spread={25}
         interiorColor={shade.glowColor}
-        className="h-full rounded-2xl"
+        className="h-full rounded-md"
       >
         <Link
           href={href}
           aria-label={`Open ${isProject ? "project" : "article"}: ${item.title}`}
           className={cn(
-            "group relative flex h-full flex-col rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all duration-300",
+            "group relative flex h-full flex-col rounded-md border border-border/80 bg-card p-3 shadow-xs transition-all duration-300",
             "hover:shadow-e2 hover:border-primary/50 no-underline",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           )}
         >
           {/* Media Header with Image */}
-          <div className="relative aspect-16/10 w-full overflow-hidden rounded-xl border border-border/50 bg-surface-muted">
+          <div className="relative aspect-16/10 w-full overflow-hidden rounded-md border border-border/50 bg-surface-muted">
             {imageSrc ? (
               <Image
                 src={imageSrc}
