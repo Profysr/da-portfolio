@@ -11,7 +11,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/data/idx";
 import { TechPill } from "@/components/common/TechPill";
-import { Timeline } from "@/components/Timeline";
+import { LazyTimeline } from "@/components/lazy";
 import { cn } from "@/lib/utils";
 
 const MONTHS = [
@@ -182,7 +182,7 @@ const Experience = () => (
     <ExperienceHeader />
 
     <div className="mt-8">
-      <Timeline
+      <LazyTimeline
         data={experiences.map((exp) => {
           // >50-char company names downshift the era-label type so the
           // sticky column stays compact (Timeline wraps within its row).

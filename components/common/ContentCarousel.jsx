@@ -349,5 +349,3 @@ export function ContentCarousel({
     </section>
   );
 }
-
-export default ContentCarousel;

@@ -2,19 +2,7 @@
 
 import { Suspense } from "react";
 import { BentoCard } from "./ui/bento-grid";
-import { LazyNumberTicker } from "@/components/common/lazy";
-
-const NumberTicker = ({ value, ...props }) => (
-  <Suspense
-    fallback={
-      <span className="inline-flex items-center text-white" {...props}>
-        {typeof value === "number" ? value.toLocaleString() : value}
-      </span>
-    }
-  >
-    <LazyNumberTicker value={value} {...props} />
-  </Suspense>
-);
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 /* ─────────────────────────────────────────────────────────────
  *  Reusable Stat Card Component

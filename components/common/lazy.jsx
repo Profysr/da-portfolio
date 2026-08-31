@@ -1,5 +1,20 @@
 "use client";
 
+/**
+ * @deprecated — LEGACY React.lazy registry (Phase 22)
+ *
+ * Replaced by `components/lazy/index.jsx` using `next/dynamic` with:
+ * - Per-component SSR control
+ * - Premium SkeletonShapes fallbacks
+ * - Proper loading choreography
+ *
+ * CONSUMERS MIGRATED:
+ * - ContactCard.jsx → LazyAnimatedBeam inlined (component unused anyway)
+ * - StatCard.jsx → NumberTicker imported directly from ui/number-ticker.tsx
+ *
+ * FILE KEPT per Rule #13 (no deletions), marked UNUSED.
+ */
+
 import React from "react";
 const lazy = (importFn) => React.lazy(() => importFn());
 
