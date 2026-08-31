@@ -90,4 +90,4 @@ export const about = {
   ],
 };
 
-export const websiteDomain = "https://bilalahmad.dev";
+export const websiteDomain = "https://profysr.vercel.app/";

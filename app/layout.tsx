@@ -1,7 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import "./globals.css";
 import { Providers } from "@/app/providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
@@ -10,6 +7,9 @@ import {
 } from "@/lib/structured-data";
 import { websiteDomain } from "@/data/personal";
 import { geistMono, poppins } from "@/utils/fonts";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import "./globals.css";
 
 export const viewport: Viewport = {
   themeColor: [
