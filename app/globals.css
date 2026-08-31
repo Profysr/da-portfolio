@@ -278,15 +278,6 @@ a {
   }
 }
 
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
 /* ── Animations ────────────────────────────────────────────────────────── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }

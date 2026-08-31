@@ -28,8 +28,9 @@ function Headline() {
         loop
         typeSpeed={70}
         deleteSpeed={40}
-        pauseDelay={1800}
+        pauseDelay={1500}
         startOnView={false}
+        showCursor={false}
         className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground text-center"
       />
     </Heading>
@@ -111,8 +112,8 @@ export default function Hero() {
         </ScrollReveal>
 
         <ScrollReveal variant="slide-up" duration={0.7} delay={0.15}>
-          <p className="max-w-xl text-balance text-base sm:text-lg text-muted-foreground">
-            {personal.tagline}
+          <p className="max-w-xl text-balance text-base text-muted-foreground">
+            Hi, I'm <span className="text-lg font-bold tracking-wide text-foreground">{personal.name}</span>
           </p>
         </ScrollReveal>
 
