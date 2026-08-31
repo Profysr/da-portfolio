@@ -1,10 +1,5 @@
 import type { NextConfig } from "next";
 import { createMDX } from "fumadocs-mdx/next";
-import bundleAnalyzer from "@next/bundle-analyzer";
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -28,4 +23,4 @@ const nextConfig: NextConfig = {
 };
 
 const withMDX = createMDX();
-export default withBundleAnalyzer(withMDX(nextConfig));
+export default withMDX(nextConfig);
