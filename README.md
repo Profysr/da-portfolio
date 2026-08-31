@@ -122,6 +122,9 @@ npm start
 
 # lint
 npm run lint
+
+# build vector index for RAG chatbot (uploads content to Upstash Vector)
+npm run build:index
 ```
 
 Copy `.env.example` to `.env.local` and fill in the keys you want. The site runs without them; the live widgets (GitHub, Chatbot) just fall back to placeholder data until keys are set.
@@ -139,6 +142,39 @@ Copy `.env.example` to `.env.local` and fill in the keys you want. The site runs
 | `UPLOADTHING_APP_ID` | UploadThing app ID | File uploads in chat |
 | `GITHUB_TOKEN` | GitHub personal access token | Contributions heatmap |
 | `GITHUB_USERNAME` | Your GitHub username | Contributions heatmap |
+
+### Building the Vector Index (RAG Chatbot)
+
+The chatbot uses **Upstash Vector** for Retrieval-Augmented Generation (RAG). You must build the vector index after adding/updating content:
+
+```bash
+# Requires UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN in .env.local
+npm run build:index
+```
+
+**What `npm run build:index` does** (`scripts/build-index.js`):
+
+1. **Resets** the Upstash Vector index (clears existing vectors)
+2. **Chunks and indexes** content from all data sources:
+   - **Projects & Writings MDX files** — parses frontmatter + body, splits by headings/paragraphs
+   - **Experience** — roles, descriptions, skills from `data/experience.js`
+   - **Skills & Tools** — categories and items from `data/skills.js`
+   - **Credentials** — education, awards, certificates from `data/credentials.js`
+   - **Bot Knowledge** — custom profile facts from `data/botContent.js`
+   - **Project/Writing index entries** — summaries from `data/projects.js` and `data/writings.js`
+3. **Upserts in batches** of 100 vectors with metadata (URL, title, heading, category)
+4. **Uses Upstash's built-in embedding model** (no external embedding API needed)
+
+**When to run it:**
+- After adding new projects/writings (both data file + MDX)
+- After updating experience, skills, credentials, or bot knowledge
+- After changing chunking logic in `scripts/build-index.js`
+- On first deploy (CI/CD should run it)
+
+**Requirements:**
+- `UPSTASH_VECTOR_REST_URL` and `UPSTASH_VECTOR_REST_TOKEN` in `.env.local`
+- Upstash Vector index created (free tier works)
+- The index uses Upstash's **model-based indexing** — embeddings generated server-side
 
 ---
 
