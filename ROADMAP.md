@@ -694,7 +694,18 @@ Phase 23c ✅ COMPLETED 2026-08-31 — Lint cleanup (5 requested) + pre-existing
 - **Quality gates**: tsc 0 · lint 0 on all touched files · BUILD 0.
 - **REMAINING (pre-existing, deferred per user scope)**: `shimmer.tsx:56` static-components false-positive + 3 warnings (Credentials `total`, TechPill `<img>`, SimilarContent `currentSlug`) — logged P24/pending-decision candidates.
 
+Phase 24 ✅ COMPLETED 2026-08-31 — CI Pipeline & Final Regression:
+- **Files (2):** `lighthouserc.json` · `.github/workflows/ci.yml`
+- **Lighthouse budgets enforced in CI**: desktop preset, categories performance/accessibility/seo ≥0.95 (error), LCP <2500ms, CLS <0.1 (error), best-practices ≥0.9 (warn), errors-in-console (warn). Upload to temporary-public-storage.
+- **GitHub Actions workflow**: two jobs — `quality` (lint + tsc --noEmit + build) → `lighthouse` (needs quality; lhci collect + assert + artifact upload). Concurrency cancel-in-progress on push/PR to main.
+- **Desktop Lighthouse baseline (this session)**: Perf 98, A11y 100, Best Practices 96, SEO 100; LCP 1.1s, CLS 0.004, TBT 40ms, unused JS 44 KiB (was 841 KiB pre-P23). BP 96 is localhost artifact — Vercel /analytics + /speed-insights scripts 404 outside platform (not a production bug).
+- **Mobile (throttle-inflated, manual-only)**: Perf 50, LCP 5.4s — logged as future Performance-fix phase candidate (Phase 25+).
+- **Local lhci collect blocker**: Windows chrome-launcher EPERM on temp dir teardown (CI runs ubuntu-latest — unaffected). Workarounds documented for local validation (CHROME_PATH, --no-sandbox, or standalone npx lighthouse).
+- **Quality gates**: lint 0 errors · tsc 0 · build 27 routes ✅
+
 ---
+
+**🚀 24-PHASE ROADMAP COMPLETE** — All phases delivered, CI pipeline live, Lighthouse budgets enforced, zero blocking issues.
 
 
 
