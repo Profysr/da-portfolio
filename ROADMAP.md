@@ -537,7 +537,7 @@ export const LazyTimeline = dynamic(
 
 ---
 
-## Phase 23 — Bundle Budgets & Dep Pruning
+## Phase 23 — Bundle Budgets & Dep Pruning ✅
 **Files (2):** `next.config.js` · `package.json`
 - Performance budgets (150KB/component), optimizePackageImports for icon packs
 - Verify removed deps: ai SDK; audit icon library usage concentration
@@ -668,7 +668,13 @@ Phase 22 ✅ COMPLETED 2026-08-31 — Prompt Input upgrade (usage-driven chatbot
 - **Files:** `components/chatbot/ChatPrompt.tsx` rewritten.
 - **Quality gates:** tsc ✅ · BUILD ✅ (26 pages).
 
-Phase 23 🔄 IN PROGRESS — Bundle Budgets & Dep Pruning
+Phase 23 ✅ COMPLETED 2026-08-31 — Bundle Budgets & Dep Pruning:
+- **optimizePackageImports** added to `next.config.ts` for `@tabler/icons-react`, `motion`, `gsap`, `fumadocs-ui`, `fumadocs-core` — Next.js now tree-shakes these at the module level (only imported symbols in bundle).
+- **Images config**: `formats: ["image/avif", "image/webp"]` + `minimumCacheTTL: 30 days` added.
+- **lucide-react ELIMINATED** — replaced with `@tabler/icons-react` in all 6 consumers: `ui/command.tsx`, `ai-elements/conversation.tsx`, `ai-elements/message.tsx`, `ai-elements/reasoning.tsx`, `ai-elements/sources.tsx`, `ai-elements/attachments.tsx`. All JSX usages updated to new tabler icon names. `lucide-react` removed from `package.json`.
+- **Unused deps removed** from `package.json`: `@ai-sdk/react` (0 imports), `dompurify` + `@types/dompurify` (0 imports), `jsdom` + `@types/jsdom` (0 imports), `sonner` (0 imports), `nanoid` (0 imports). **−7 packages**.
+- **Kept (verified active)**: `ai` (type imports in ai-elements), `@radix-ui/react-use-controllable-state` (reasoning.tsx), `@streamdown/*` (Markdown/reasoning), `use-stick-to-bottom` (conversation.tsx).
+- **Files:** `next.config.ts` · `package.json` · 6 icon swap files.
 
 ---
 
