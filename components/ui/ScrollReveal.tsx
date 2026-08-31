@@ -95,8 +95,8 @@ export function ScrollReveal({
   delay = 0,
   duration = 0.6,
   once = true,
-  margin = "0px 0px -10% 0px",
-  amount = 0.1,
+  margin = "0px 0px -5% 0px",
+  amount = 0.05,
   style,
   as: Tag = "div",
 }: ScrollRevealProps) {
@@ -142,8 +142,8 @@ export function StaggeredReveal({
   delay = 0,
   duration = 0.5,
   once = true,
-  margin = "0px 0px -10% 0px",
-  amount = 0.1,
+  margin = "0px 0px -5% 0px",
+  amount = 0.05,
   containerClassName,
   itemClassName,
 }: StaggeredRevealProps) {

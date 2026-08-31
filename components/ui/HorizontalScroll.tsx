@@ -56,9 +56,9 @@ export const ScrollWrapper: React.FC<ScrollWrapperProps> = ({
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 25,
-    restDelta: 0.001,
+    stiffness: 140,
+    damping: 30,
+    restDelta: 0.0001,
   });
 
   const x = useTransform(smoothProgress, [0, 1], [0, -scrollDistance]);

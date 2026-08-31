@@ -216,6 +216,9 @@ a {
   transform: translate3d(var(--rv-x, 0), var(--rv-y, 0), 0)
     scale(var(--rv-s, 1)) rotateX(var(--rv-rx, 0deg));
   filter: blur(var(--rv-blur, 0px));
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transition:
     opacity var(--rv-dur, 0.6s) var(--ease-smooth) var(--rv-delay, 0s),
     transform var(--rv-dur, 0.6s) var(--ease-smooth) var(--rv-delay, 0s),
@@ -226,30 +229,34 @@ a {
   opacity: 1;
   transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
   filter: blur(0);
+  will-change: auto;
 }
 
 .reveal-v-fade { --rv-y: 0px; }
-.reveal-v-slide-up { --rv-y: 40px; }
-.reveal-v-slide-down { --rv-y: -40px; }
-.reveal-v-slide-left { --rv-x: 40px; }
-.reveal-v-slide-right { --rv-x: -40px; }
+.reveal-v-slide-up { --rv-y: 28px; }
+.reveal-v-slide-down { --rv-y: -28px; }
+.reveal-v-slide-left { --rv-x: 28px; }
+.reveal-v-slide-right { --rv-x: -28px; }
 .reveal-v-top-left,
-.reveal-v-slide-top-left { --rv-x: -36px; --rv-y: -36px; --rv-blur: 6px; }
+.reveal-v-slide-top-left { --rv-x: -24px; --rv-y: -24px; --rv-blur: 4px; }
 .reveal-v-top-right,
-.reveal-v-slide-top-right { --rv-x: 36px; --rv-y: -36px; --rv-blur: 6px; }
+.reveal-v-slide-top-right { --rv-x: 24px; --rv-y: -24px; --rv-blur: 4px; }
 .reveal-v-bottom-left,
-.reveal-v-slide-bottom-left { --rv-x: -36px; --rv-y: 36px; --rv-blur: 6px; }
+.reveal-v-slide-bottom-left { --rv-x: -24px; --rv-y: 24px; --rv-blur: 4px; }
 .reveal-v-bottom-right,
-.reveal-v-slide-bottom-right { --rv-x: 36px; --rv-y: 36px; --rv-blur: 6px; }
-.reveal-v-scale { --rv-s: 0.9; }
-.reveal-v-flip { --rv-rx: -90deg; }
-.reveal-v-reveal { --rv-y: 30px; --rv-blur: 8px; }
+.reveal-v-slide-bottom-right { --rv-x: 24px; --rv-y: 24px; --rv-blur: 4px; }
+.reveal-v-scale { --rv-s: 0.95; }
+.reveal-v-flip { --rv-rx: -60deg; }
+.reveal-v-reveal { --rv-y: 16px; --rv-blur: 4px; }
 
 .reveal .reveal-item,
 .sr-text .sr-part {
   opacity: 0;
   transform: translate3d(0, var(--rv-y, 0), 0);
   filter: blur(var(--rv-blur, 0px));
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transition:
     opacity var(--rv-dur, 0.5s) var(--ease-smooth) var(--rv-delay, 0s),
     transform var(--rv-dur, 0.5s) var(--ease-smooth) var(--rv-delay, 0s),
@@ -261,6 +268,7 @@ a {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   filter: blur(0);
+  will-change: auto;
 }
 
 .sr-text .sr-part {
