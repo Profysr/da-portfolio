@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Footer } from "./Footer";
-import { LazyAIAssistant } from "@/components/lazy";
+import { AIAssistant } from "@/components/chatbot/AIAssistant";
 import BottomDock from "@/components/layout/BottomDock";
 import TopBar from "@/components/layout/TopBar";
 import { GlowEffect } from "../common/top-glow";
@@ -55,7 +55,7 @@ function HomeLayout({ children }) {
         isVisible={isNavVisible}
         onAIClick={() => setIsAIOpen(true)}
       />
-      {isAIOpen && <LazyAIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />}
+      <AIAssistant open={isAIOpen} onClose={() => setIsAIOpen(false)} />
       <Footer />
     </div>
   );
